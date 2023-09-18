@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { UserProvider } from '@/hooks/UserContext'
 import { NextUIProvider } from '@nextui-org/react'
 

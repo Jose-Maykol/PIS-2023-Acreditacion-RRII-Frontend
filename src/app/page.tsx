@@ -1,15 +1,17 @@
 'use client'
 
-import { Button } from '@nextui-org/react'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+	const { push } = useRouter()
+
+	useEffect(() => {
+		push('/auth/login')
+	}, [])
+
 	return (
 		<main>
-			<section className='relative py-40 min-h-screen w-screen h-screen'>
-				<div>
-					<Button>Click me</Button>
-				</div>
-			</section>
 		</main>
 	)
 }

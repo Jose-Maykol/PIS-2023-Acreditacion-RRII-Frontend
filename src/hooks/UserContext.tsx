@@ -1,5 +1,8 @@
+'use client'
+
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { UserAuth } from '@/types/User'
+import { log } from 'console'
 
 interface UserContextType {
   userAuth: UserAuth;
@@ -22,22 +25,16 @@ export const useUserContext = (): UserContextType => {
 }
 
 export const UserProvider: React.FC<UserProviderProps> = ({ children }) => {
-	const storedUserAuthString = localStorage.getItem('userAuth')
-
-	// Comprueba si `storedUserAuthString` es una cadena válida
-	const initialUserAuth = storedUserAuthString
-		? JSON.parse(storedUserAuthString)
-		: {
-			access_token: null,
-			userData: {
-				id: 0,
-				name: '',
-				lastname: '',
-				rol: ''
-			},
-			foto: ''
-		}
-
+	const initialUserAuth = {
+		access_token: null,
+		userData: {
+			id: 0,
+			name: '',
+			lastname: '',
+			rol: ''
+		},
+		foto: ''
+	}
 
 	const [userAuth, setUserAuth] = useState<UserAuth>(initialUserAuth)
 

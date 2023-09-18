@@ -1,15 +1,17 @@
 'use client'
 
-import { AuthService } from '@/api/Auth/authService.js'
+
 import CustomSelect from '@/components/selects/CustomSelect'
 import { useUserContext } from '@/hooks/UserContext'
 import { semesterOptions, yearOptions } from '@/utils/dataSelect'
 import { useEffect, useState } from 'react'
-import puertaunsa from '../../assets/img/puertaunsa.jpg'
-import logoUnsa from '../../assets/img/logo unsa.png'
-import { SERVER_PATH } from '../../../config'
+import puertaunsa from '../../../assets/img/puertaunsa.jpg'
+import logoUnsa from '../../../assets/img/logo unsa.png'
 import { Selection } from '@nextui-org/react'
 import Image from 'next/image'
+import AuthService from '@/api/Auth/authService.js'
+import { SERVER_PATH } from '../../../../config'
+import { useRouter } from 'next/navigation'
 
 type alertStyle = { display: 'none' | 'block' }
 
@@ -18,15 +20,28 @@ export function useAlertStyle() {
 }
 
 export default function AuthPage() {
-	const paramsGoogle = location.search
-
+	const { push } = useRouter()
 	const [msgError, setMsgError] = useState('')
 	const [loginAlert, setLoginAlert] = useAlertStyle()
 	const [year, setYear] = useState<Selection>(new Set([yearOptions[0].value]))
 	const [semester, setSemester] = useState<Selection>(new Set(['A']))
 	const { setUserAuth } = useUserContext()
 
+	const handleButtonClick = () => {
+		const filters = {
+			YEAR_FILTER: Array.from(year).join(''),
+			SEMESTER_FILTER: Array.from(semester).join('')
+		}
+		console.log(filters)
+		// Almacenar la cadena JSON en el localStorage
+		localStorage.setItem('ACADEMIC_SEMESTER', JSON.stringify(filters))
+
+		window.location.href = `${SERVER_PATH}/api/auth/login/google`
+		console.log(filters)
+	}
+
 	useEffect(() => {
+		const paramsGoogle = location.search
 		if (paramsGoogle) {
 			AuthService.googleLogin(paramsGoogle)
 				.then((response) => {
@@ -53,7 +68,7 @@ export default function AuthPage() {
 
 						localStorage.setItem('userAuth', JSON.stringify(userAuth))
 						setUserAuth(userAuth)
-						// history.push("/dashboard");
+						push('/dashboard')
 					} else {
 						setMsgError(response.data.message)
 						setLoginAlert({ display: 'block' })
@@ -97,17 +112,7 @@ export default function AuthPage() {
 									<button
 										className='bg-white hover:bg-blueGray-300 text-blueGray-700 px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150'
 										type='button'
-										onClick={() => {
-											const filters = {
-												YEAR_FILTER: [...year][0],
-												SEMESTER_FILTER: [...semester][0]
-											}
-
-											// Almacenar la cadena JSON en el localStorage
-											localStorage.setItem('ACADEMIC_SEMESTER', JSON.stringify(filters))
-
-											window.location.href = `${SERVER_PATH}/api/auth/login/google`
-										}}
+										onClick={handleButtonClick}
 									>
 										<Image
 											alt='...'
@@ -119,7 +124,7 @@ export default function AuthPage() {
 								</div>
 
 								<div className='text-red-500 font-bold' style={loginAlert}>
-                                    Error al iniciar sesión con Google. {msgError}
+                  Error al iniciar sesión con Google. {msgError}
 								</div>
 							</div>
 
