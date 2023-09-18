@@ -1,7 +1,7 @@
 export default function DashboardPage() {
-  return (
-    <div>
+	return (
+		<div>
       Este es el dash
-    </div>
-  )
+		</div>
+	)
 }

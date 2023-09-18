@@ -7,7 +7,7 @@ export interface User {
 }
 
 export interface UserData {
-  id: numberstring,
+  id: number,
   name: string,
   lastname: string,
   email?: string,

@@ -5,14 +5,14 @@ declare module '@/api/Evidencias/evidenciaService.js' {
   }
 
   class EvidenciaService {
-    listEvidencias(id: string, tipo:string, params:any): Promise<EvidenciaResponse>;
-    uploadEvidencias(params: any): Promise<EvidenciaResponse>;
-    donwloadEvidencia(id: string): Promise<EvidenciaResponse>;
-    updateEvidencia(id: string, params: any): Promise<EvidenciaResponse>;
-    renameEvidencia(id: string, params: any): Promise<EvidenciaResponse>;
-    deleteEvidencia(): Promise<EvidenciaResponse>;
+  	listEvidencias(id: string, tipo:string, params:any): Promise<EvidenciaResponse>;
+  	uploadEvidencias(params: any): Promise<EvidenciaResponse>;
+  	donwloadEvidencia(id: string): Promise<EvidenciaResponse>;
+  	updateEvidencia(id: string, params: any): Promise<EvidenciaResponse>;
+  	renameEvidencia(id: string, params: any): Promise<EvidenciaResponse>;
+  	deleteEvidencia(): Promise<EvidenciaResponse>;
   }
 
-  const evidenciaService: EvidenciaService;
-  export default evidenciaService;
+  const evidenciaService: EvidenciaService
+  export default evidenciaService
 }
