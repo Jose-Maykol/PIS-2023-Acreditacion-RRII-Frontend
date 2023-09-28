@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,4 +27,62 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+@layer base {
+  h1 {
+    @apply font-bebas-neue text-4xl;
+  }
+
+  h2 {
+    @apply font-bebas-neue text-[2rem] leading-9;
+  }
+
+  h3 {
+    @apply font-bebas-neue text-[1.75rem] leading-8;
+  }
+}
+
+@layer components {
+
+  /* ===== TYPOGRAPHY ==== */
+
+  /* LARGE */
+  .text-large-regular {
+    @apply font-montserrat font-normal text-[21px] leading-7;
+  }
+
+  .text-large-medium {
+    @apply font-montserrat font-medium text-[21px] leading-7;
+  }
+
+  .text-large-bold {
+    @apply font-montserrat font-bold text-[21px] leading-7;
+  }
+
+  /* BASE */
+  .text-base-regular {
+    @apply font-montserrat font-normal text-base;
+  }
+
+  .text-base-medi {
+    @apply font-montserrat font-medium text-base;
+  }
+
+  .text-base-bold {
+    @apply font-montserrat font-bold text-base;
+  }
+
+  /* SMALL */
+  .text-small-regular {
+    @apply font-montserrat font-normal text-[12px] leading-5;
+  }
+
+  .text-small-medium {
+    @apply font-montserrat font-medium text-[12px] leading-5;
+  }
+
+  .text-small-bold {
+    @apply font-montserrat font-bold text-[12px] leading-5;
+  }
 }
