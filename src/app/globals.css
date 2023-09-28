@@ -65,7 +65,7 @@ body {
     @apply font-montserrat font-normal text-base;
   }
 
-  .text-base-medi {
+  .text-base-medium {
     @apply font-montserrat font-medium text-base;
   }
 
