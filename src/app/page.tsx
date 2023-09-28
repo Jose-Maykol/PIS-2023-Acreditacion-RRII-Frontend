@@ -1,17 +1,17 @@
 'use client'
 
-import { Button } from '@nextui-org/react'
-import CustomSelect from '@/components/selects/CustomSelect'
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+	const { push } = useRouter()
+
+	useEffect(() => {
+		push('/auth/login')
+	}, [])
+
 	return (
 		<main>
-			<section className='relative py-40 min-h-screen w-screen h-screen'>
-				<div>
-					<Button onClick={() => alert("Hello world")}>Click me</Button>
-					<CustomSelect options={[{label: "dog", value: "dog"}, {label: "cat", value: "cat"}]} onChange={() => {}} />
-				</div>
-			</section>
 		</main>
 	)
 }

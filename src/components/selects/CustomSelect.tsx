@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { Select, SelectItem } from '@nextui-org/select'
+import { Selection } from '@nextui-org/react'
 
 interface CustomSelectProps {
-  initValue?: any;
-  options: any;
+  initValue?: Selection;
+  options: { label: string; value: string; }[],
   label?: string;
   placeholder?: string;
   sm?: boolean;
   disabled?: boolean;
-  onChange: any;
+  onChange: Dispatch<SetStateAction<Selection>>;
 }
 
 const CustomSelect = (props: CustomSelectProps) => {
@@ -29,11 +30,11 @@ const CustomSelect = (props: CustomSelectProps) => {
 			variant='faded'
 			placeholder={placeholder}
 			selectedKeys={initValue}
-			className={`max-w-xs rounded-xl text-sm p-1 ${sm ? 'w-48' : 'w-full'} ${disabled ? 'hidden' : ''}`}
+			className={`max-w-xs rounded-xl text-black text-sm p-1 ${sm ? 'w-48' : 'w-full'} ${disabled ? 'hidden' : ''}`}
 			onSelectionChange={onChange}
 		>
-			{options.map((option: any) => (
-				<SelectItem key={option.value} value={option.value}>
+			{options.map((option) => (
+				<SelectItem key={option.value} value={option.value} className='text-black'>
 					{option.label}
 				</SelectItem>
 			))}

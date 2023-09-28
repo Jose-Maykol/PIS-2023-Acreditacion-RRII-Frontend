@@ -11,14 +11,14 @@ export interface UserData {
   name: string,
   lastname: string,
   email?: string,
-  password?: string | nullstring,
-  estado?: booleanstring,
+  password?: string | NonNullable,
+  estado?: boolean,
   rol: string,
 }
 
 export interface UserAuth {
-  access_token: string | nullstring,
-  userData: UserDatastring,
+  access_token: string | null,
+  userData: UserData,
   foto: string,
 }
 

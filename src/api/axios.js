@@ -14,11 +14,9 @@ const api = axios.create({
 api.interceptors.request.use(
 	config => {
 		const userToken = localStorage.getItem('access_token')
-
 		if (userToken) {
 			config.headers.Authorization = `Bearer ${userToken}`
 		}
-
 		return config
 	},
 	error => {
@@ -34,7 +32,7 @@ api.interceptors.response.use(
 	error => {
 		if (error.response.status === 401) {
 			localStorage.removeItem('access_token')
-			useHistory().push('/auth')
+			// useHistory().push('/auth')
 		}
 		return Promise.reject(error)
 	}
