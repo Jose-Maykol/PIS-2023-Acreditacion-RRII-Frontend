@@ -22,7 +22,7 @@ export default function SideBarItem ({ isOpen, icon, text, link }: SideBarItemPr
 
 	return (
 		<li className={`${isOpen ? 'p-3' : 'p-1'} w-full h-8 my-1 hover:bg-gray-300 rounded-md ${backgroundColor}`}>
-			<Link href={link} className={`flex flex-row items-center h-full w-full ${isOpen ? '' : 'justify-center'}`}>
+			<Link href={link} className={`text-base-regular flex flex-row items-center h-full w-full ${isOpen ? '' : 'justify-center'}`}>
 				{iconFill}
 				{isOpen && (<span className='pl-2 font-bold uppercase'>{text}</span>)}
 			</Link>

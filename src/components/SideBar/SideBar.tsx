@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 import Image from 'next/image'
 import Link from 'next/link'
@@ -6,25 +6,19 @@ import SideBarItem from './SideBarItem'
 import UsersIcon from '../Icons/UsersIcon'
 import BookMarkIcon from '../Icons/BookMarkIcon'
 import logoUnsa from '../../../public/img/logo-unsa.webp'
-import ArrowIcon from './../Icons/ArrowIcon'
-import { useState } from 'react'
+import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 
-export default function SideBar() {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-
-	const toggleSidebar = () => {
-		setIsSidebarOpen(!isSidebarOpen)
-	}
+export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpen: boolean, toggleSidebar: () => void }) {
 
 	return (
-		<nav className={`${isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'} text-lg min-h-screen p-4`}>
-			<div className={`w-full h-8 flex flex-row items-center my-3 ${isSidebarOpen ? 'justify-end' : 'justify-center pl-1'}`}>
+		<nav className={`fixed top-0 left-0 z-50 bg-white ${isSidebarOpen ? 'w-72 max-w-[18rem]' : 'w-20 max-w-[5rem]'} text-lg min-h-screen p-4`}>
+			<div className={`w-full h-8 flex flex-row items-center my-3 ${isSidebarOpen ? 'justify-end' : 'justify-center'}`}>
 				<button
-					className={`${isSidebarOpen ? 'rotate-180' : 'rotate-0'} transform transition duration-1000 ease-in-out`}
+					className={`${isSidebarOpen ? 'rotate-0' : 'rotate-180'} transform transition duration-1000 ease-in-out`}
 					onClick={toggleSidebar}>
-					<ArrowIcon
-						width={15}
-						height={15}
+					<AngleDoubleRightIcon
+						width={25}
+						height={25}
 						fill='hover:fill-lightBlue-600'
 					/>
 				</button>
@@ -39,7 +33,7 @@ export default function SideBar() {
 								width={55}
 								height={75}
 								className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]'/>
-							<h1 className='text-[0.5rem] p-1 uppercase'>escuela profesional de <br /> <span className='font-bold text-[14px]'>relaciones industriales</span></h1>
+							<h1 className='text-small-regular p-1'>escuela profesional de <br /> <span className='text-base-bold text-[14px]'>relaciones industriales</span></h1>
 						</div>
 					</Link>
 				)
@@ -52,34 +46,34 @@ export default function SideBar() {
 						className='h-[40px] w-[30px] min-h-[40px] min-w-[30px]'/>
 				)}
 			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>area personal</h3>)}
+			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>area personal</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<BookMarkIcon width={15} height={15}/>}
+					icon={<BookMarkIcon width={20} height={20}/>}
 					text='mis planes'
 					link='/dashboard'/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>)}
+			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>administrador</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={15} height={15}/>}
+					icon={<UsersIcon width={20} height={20}/>}
 					text='usuarios'
 					link='/users'/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>)}
+			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>gestión de estándares</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={15} height={15}/>}
+					icon={<UsersIcon width={20} height={20}/>}
 					text='estándares'
 					link='/standards'/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>)}
+			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>estándares</h3>)}
 		</nav>
 	)
 }
