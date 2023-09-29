@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode}) {
 		<html lang='en'>
 			<body>
 				<Providers>
-					{pathname === '/auth/login' ? null : <SideBar />}
+					{/* {pathname === '/auth/login' ? null : <SideBar />} */}
 					<main>
 						{children}
 					</main>
