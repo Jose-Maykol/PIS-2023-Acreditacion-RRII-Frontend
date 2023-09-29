@@ -10,8 +10,5 @@ export default function Home() {
 		push('/auth/login')
 	}, [])
 
-	return (
-		<main>
-		</main>
-	)
+	return null
 }
