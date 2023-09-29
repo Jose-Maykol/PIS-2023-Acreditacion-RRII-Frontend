@@ -49,40 +49,40 @@ body {
 
   /* LARGE */
   .text-large-regular {
-    @apply font-montserrat font-normal text-[21px] leading-7;
+    @apply font-montserrat font-normal text-[21px] leading-7 uppercase;
   }
 
   .text-large-medium {
-    @apply font-montserrat font-medium text-[21px] leading-7;
+    @apply font-montserrat font-medium text-[21px] leading-7 uppercase;
   }
 
   .text-large-bold {
-    @apply font-montserrat font-bold text-[21px] leading-7;
+    @apply font-montserrat font-bold text-[21px] leading-7 uppercase;
   }
 
   /* BASE */
   .text-base-regular {
-    @apply font-montserrat font-normal text-base;
+    @apply font-montserrat font-normal text-base uppercase;
   }
 
   .text-base-medium {
-    @apply font-montserrat font-medium text-base;
+    @apply font-montserrat font-medium text-base uppercase;
   }
 
   .text-base-bold {
-    @apply font-montserrat font-bold text-base;
+    @apply font-montserrat font-bold text-base uppercase;
   }
 
   /* SMALL */
   .text-small-regular {
-    @apply font-montserrat font-normal text-[12px] leading-5;
+    @apply font-montserrat font-normal text-[12px] leading-5 uppercase;
   }
 
   .text-small-medium {
-    @apply font-montserrat font-medium text-[12px] leading-5;
+    @apply font-montserrat font-medium text-[12px] leading-5 uppercase;
   }
 
   .text-small-bold {
-    @apply font-montserrat font-bold text-[12px] leading-5;
+    @apply font-montserrat font-bold text-[12px] leading-5 uppercase;
   }
 }
