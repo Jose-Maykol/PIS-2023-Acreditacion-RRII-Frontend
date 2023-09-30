@@ -32,7 +32,7 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 								alt='logo-unsa'
 								width={55}
 								height={75}
-								className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]'/>
+								className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]' />
 							<h1 className='text-small-regular p-1'>escuela profesional de <br /> <span className='text-base-bold text-[14px]'>relaciones industriales</span></h1>
 						</div>
 					</Link>
@@ -43,43 +43,58 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 						alt='logo-unsa'
 						width={30}
 						height={40}
-						className='h-[40px] w-[30px] min-h-[40px] min-w-[30px]'/>
+						className='h-[40px] w-[30px] min-h-[40px] min-w-[30px]' />
 				)}
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>area personal</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<BookMarkIcon width={20} height={20}/>}
+					icon={<BookMarkIcon width={20} height={20} />}
 					text='mis planes'
-					link='/dashboard'/>
+					link='/dashboard' />
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>administrador</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={20} height={20}/>}
+					icon={<UsersIcon width={20} height={20} />}
 					text='usuarios'
-					link='/dashboard/users'/>
+					link='/dashboard/users' />
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>gestión de estándares</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={20} height={20}/>}
+					icon={<UsersIcon width={20} height={20} />}
 					text='estándares'
-					link='/dashboard/standards-management'/>
+					link='/dashboard/standards-management' />
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>estándares</h3>)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
 					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={20} height={20}/>}
+					icon={<UsersIcon width={20} height={20} />}
 					text='estándar 1'
-					link='/dashboard/standards'/>
+					link='/dashboard/standards/1' />
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={20} height={20} />}
+					text='estándar 2'
+					link='/dashboard/standards/2' />
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={20} height={20} />}
+					text='estándar 3'
+					link='/dashboard/standards/3' />
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={20} height={20} />}
+					text='estándar 4'
+					link='/dashboard/standards/4' />
 			</ul>
 		</nav>
 	)
