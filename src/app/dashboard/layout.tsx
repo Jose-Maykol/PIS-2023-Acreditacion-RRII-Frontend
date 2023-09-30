@@ -17,7 +17,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
 			<div className={`grow ${isSidebarOpen ? 'ml-72' : 'ml-20'}`}>
 				<Header />
-				<section className='h-screen'>{children}</section>
+				<main className='h-screen'>
+					{children}
+				</main>
 			</div>
 		</div>
 	)
