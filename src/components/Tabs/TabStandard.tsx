@@ -1,41 +1,56 @@
 "use client"
 
-import React from "react";
+import React, {useState} from "react";
 
 import { Tabs, Tab, Card, CardBody } from "@nextui-org/react";
+import { useRouter, usePathname } from 'next/navigation'
 
-export default function TabStandard({ children }: { children: React.ReactNode }) {
+
+
+export default function TabStandard({ id, children }: { id: string, children: React.ReactNode }) {
+    const { push } = useRouter()
+	const pathname = usePathname()
+
+    const [selected, setSelected] = useState("narrative");
+
     let tabs = [
         {
-            id: "narrativa",
+            id: "narrative",
             label: "narrativas",
-            content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
         },
         {
-            id: "panificacion",
+            id: "evidence_planning",
             label: "evidencia de planificacion",
-            content: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur."
         },
         {
-            id: "resultados",
+            id: "evidence_results",
             label: "evidencia de resultados",
-            content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         },
         {
-            id: "mejoras",
+            id: "evidence_improvements",
             label: "evidencia de mejoras",
-            content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        },
-        {
-            id: "actas",
-            label: "actas",
-            content: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         }
     ];
 
+    const handleClick = (value: string) => {
+		push(`/dashboard/standards/${id}/${value}`)
+        setSelected(value)
+    }
+
     return (
-        <div className="flex h-full w-full flex-col absolute -top-11 -left-1 -right-">
-            <Tabs aria-label="Dynamic tabs" items={tabs} variant="light" classNames={{ base: '', tab: 'rounded-t-xl rounded-b-none h-10', tabContent: 'text-white text-lg uppercase', cursor: 'bg-gray-200 rounded-t-xl rounded-b-none', panel: 'absolute top-[42px] bg-gray-200 h-full p-10 w-full' }}>
+        <div className="flex h-full w-full flex-col absolute -top-12 -left-1 -right-">
+            <Tabs aria-label="Dynamic tabs"
+                items={tabs}
+                variant="light"
+                classNames={{
+                    tab: 'rounded-t-xl rounded-b-none h-11',
+                    tabContent: 'group-data-[selected=true]:text-blue-600 text-white text-md uppercase',
+                    cursor: 'bg-gray-100 rounded-t-xl rounded-b-none',
+                    panel: 'absolute top-[42px] bg-gray-100 h-full p-10 w-full'
+                }}
+                selectedKey={selected}
+                onSelectionChange={(key) => handleClick(key.toString())}
+            >
                 {(item) => (
                     <Tab key={item.id} title={item.label}>
                         {children}
