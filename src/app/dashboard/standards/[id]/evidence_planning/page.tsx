@@ -1,7 +1,7 @@
 export default function EvidencePlanningPage() {
 	return (
-		<div>
-      Pagina de evidencias de planificacion
+		<div className="w-[96%] h-full bg-green-300 m-auto">
+			Aqui se muestran la lista de evidencias de planificacion
 		</div>
 	)
 }

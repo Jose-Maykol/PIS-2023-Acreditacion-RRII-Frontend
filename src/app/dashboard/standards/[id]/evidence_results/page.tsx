@@ -1,7 +1,7 @@
 export default function EvidenceResultsPage() {
 	return (
-		<div>
-      Pagina de evidencias de resultados
+		<div className="w-[96%] h-full bg-red-300 m-auto">
+			Aqui se muestran la lista de evidencia de resultados
 		</div>
 	)
 }

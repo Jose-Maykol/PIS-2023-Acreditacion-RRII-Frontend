@@ -1,6 +1,7 @@
 export default function StandardsPage() {
 	return (
-		<div>
-      Aqui se muestran la narrativa		</div>
+		<div className="w-[96%] h-full bg-white m-auto">
+			Aqui se muestran la lista de narrativas
+		</div>
 	)
 }
