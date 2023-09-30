@@ -13,7 +13,7 @@ interface SideBarItemProps {
 
 export default function SideBarItem ({ isOpen, icon, text, link }: SideBarItemProps) {
 	const pathname = usePathname()
-	const isCurrentPath = pathname.startsWith(link)
+	const isCurrentPath = pathname === link
 	const backgroundColor = isCurrentPath ? 'bg-lightBlue-600 bg-opacity-30 text-lightBlue-600' : 'text-gray-700'
 	const fillClassName = isCurrentPath ? 'fill-lightBlue-600' : 'fill-black'
 	const iconFill = React.cloneElement(icon as React.ReactElement, {

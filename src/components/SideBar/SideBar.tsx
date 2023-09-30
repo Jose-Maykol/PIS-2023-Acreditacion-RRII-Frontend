@@ -61,7 +61,7 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20}/>}
 					text='usuarios'
-					link='/users'/>
+					link='/dashboard/users'/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>gestión de estándares</h3>)}
@@ -70,10 +70,17 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20}/>}
 					text='estándares'
-					link='/standards'/>
+					link='/dashboard/standards-management'/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-base-bold text-gray-600'>estándares</h3>)}
+			<ul className='text-sm list-none my-3'>
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={20} height={20}/>}
+					text='estándar 1'
+					link='/dashboard/standards'/>
+			</ul>
 		</nav>
 	)
 }
