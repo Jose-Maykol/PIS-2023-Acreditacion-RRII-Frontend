@@ -79,22 +79,22 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20} />}
 					text='estándar 1'
-					link='/dashboard/standards/1' />
+					link='/dashboard/standards/1/narrative' />
 				<SideBarItem
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20} />}
 					text='estándar 2'
-					link='/dashboard/standards/2' />
+					link='/dashboard/standards/2/narrative' />
 				<SideBarItem
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20} />}
 					text='estándar 3'
-					link='/dashboard/standards/3' />
+					link='/dashboard/standards/3/narrative' />
 				<SideBarItem
 					isOpen={isSidebarOpen}
 					icon={<UsersIcon width={20} height={20} />}
 					text='estándar 4'
-					link='/dashboard/standards/4' />
+					link='/dashboard/standards/4/narrative' />
 			</ul>
 		</nav>
 	)
