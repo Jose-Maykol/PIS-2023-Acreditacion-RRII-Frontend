@@ -5,6 +5,7 @@ import React from 'react'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 import SideBar from '@/components/SideBar/SideBar'
+import { ToastProvider } from '@/hooks/ToastContext'
 import { usePathname } from 'next/navigation'
 
 export const metadata: Metadata = {
@@ -12,16 +13,18 @@ export const metadata: Metadata = {
 	description: 'Sistema de Gestión de Calidad'
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	const pathname = usePathname()
 	return (
 		<html lang='en'>
 			<body>
 				<Providers>
-					{/* {pathname === '/auth/login' ? null : <SideBar />} */}
-					<main>
-						{children}
-					</main>
+					<ToastProvider>
+						{/* {pathname === '/auth/login' ? null : <SideBar />} */}
+						<main>
+							{children}
+						</main>
+					</ToastProvider>
 				</Providers>
 			</body>
 		</html>
