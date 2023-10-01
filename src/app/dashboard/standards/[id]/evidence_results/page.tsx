@@ -1,7 +1,15 @@
+"use client"
+
+import ContentWrapper from "@/components/ContentWrapper/ContentWrapper"
+import UserTable from "@/components/Table/UserTable"
+
 export default function EvidenceResultsPage() {
 	return (
-		<div className="w-[96%] h-full bg-red-300 m-auto">
-			Aqui se muestran la lista de evidencia de resultados
-		</div>
+		<ContentWrapper className="bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10">
+			<div className="flex w-full mb-5">
+				<h2>Evidencia de Resultados</h2>
+			</div>
+			<UserTable />
+		</ContentWrapper>
 	)
 }
