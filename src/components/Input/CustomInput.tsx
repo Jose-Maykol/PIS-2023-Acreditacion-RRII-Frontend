@@ -16,6 +16,8 @@ const CustomInput = ({
   validationMessage = 'Invalid input', // Mensaje de validación por defecto
   className,
   isRequired,
+  isClearable,
+  onClear,
   onValueChange
 } : any) => {
   const [value, setValue] = useState(defaultValue || '');
@@ -39,10 +41,12 @@ const CustomInput = ({
       endContent={endContent}
       labelPlacement={labelPlacement}
       isRequired={isRequired}
+      isClearable={isClearable}
       color={isInvalid ? 'danger' : color}
       isInvalid={isInvalid}
       errorMessage={isInvalid && validationMessage}
       onValueChange={handleChange}
+      onClear={onClear}
       className={className}
     />
   );
