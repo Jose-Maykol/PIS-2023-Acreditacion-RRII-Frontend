@@ -9,7 +9,7 @@ import {
     Selection,
     Button,
 } from "@nextui-org/react";
-import { EyeIcon } from "../Icons/EyeIcon";
+import EyeIcon  from "../Icons/EyeIcon";
 import PencilIcon from "../Icons/PencilIcon";
 import TrashIcon from "../Icons/TrashIcon";
 import { PlusIcon } from "../Icons/PlusIcon";
