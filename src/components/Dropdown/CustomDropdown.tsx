@@ -1,26 +1,59 @@
 import React from "react";
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
-function CustomDropdown({ triggerElement, items, handleAction }: any) {
+type DropdownMode = "selector" | "action";
+
+interface CustomDropdownProps {
+    placement?: any;
+    triggerElement: React.ReactNode;
+    triggerClassName?: string;
+    disallowEmptySelection?: boolean;
+    closeOnSelect?: boolean;
+    selectedKeys?: any;
+    selectionMode?: any;
+    items: any[];
+    itemsClassName?: string;
+    onSelectionChange?: (key: any) => void;
+    onAction?: (key: any) => void;
+    mode: DropdownMode;
+}
+
+function CustomDropdown({
+    placement,
+    triggerElement,
+    triggerClassName,
+    disallowEmptySelection,
+    closeOnSelect,
+    selectedKeys,
+    selectionMode,
+    items,
+    itemsClassName,
+    onSelectionChange,
+    onAction,
+    mode
+}: CustomDropdownProps) {
     return (
-        <Dropdown
-            placement="bottom-end"
-        >
-            <DropdownTrigger>
+        <Dropdown placement={placement}>
+            <DropdownTrigger className={triggerClassName}>
                 {triggerElement}
             </DropdownTrigger>
             <DropdownMenu
-                variant="solid"
-                aria-label="Custom dropdown menu"
-                onAction={(key) => handleAction(key)}>
+                aria-label="Dropdown"
+                disallowEmptySelection={disallowEmptySelection}
+                closeOnSelect={closeOnSelect}
+                selectedKeys={selectedKeys}
+                selectionMode={selectionMode}
+                onSelectionChange={mode === "selector" ? onSelectionChange : undefined}
+                onAction={mode === "action" ? onAction : undefined}
+            >
                 {items.map((item: any) => (
                     <DropdownItem
-                        key={item.key}
-                        className={`${item.className} py-2`}
+                        key={item.uid}
+                        className={itemsClassName}
                         color={item.color}
                         startContent={item.startContent}
                     >
-                        {item.label}
+                        {item.name}
                     </DropdownItem>
                 ))}
             </DropdownMenu>
