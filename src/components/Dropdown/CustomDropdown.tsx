@@ -52,8 +52,9 @@ function CustomDropdown({
                         className={itemsClassName}
                         color={item.color}
                         startContent={item.startContent}
+                        endContent={item.endContent}
                     >
-                        {item.name}
+                        {item.label}
                     </DropdownItem>
                 ))}
             </DropdownMenu>
