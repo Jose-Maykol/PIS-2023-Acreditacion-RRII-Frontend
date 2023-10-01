@@ -30,33 +30,34 @@ const Header = () => {
           />}
           items={[
             {
-              key: "new",
+              uid: "new",
               label: "New file",
               color: "primary",
               startContent: <UbuntuIcon width={25} height={25} />
             },
             {
-              key: "copy",
+              uid: "copy",
               color: "primary",
               label: "Copy link",
               startContent: <UbuntuIcon width={25} height={25} />
             },
             {
-              key: "edit",
+              uid: "edit",
               color: "primary",
               label: "Edit file",
-              // className: "hidden",
               startContent: <UbuntuIcon width={25} height={25} />
             },
             {
-              key: "delete",
+              uid: "delete",
               label: "Delete file change text large ajj",
               className: "text-danger",
               color: "danger",
-              startContent: <UbuntuIcon width={25} height={25} fill='fill-danger'/>
+              startContent: <UbuntuIcon width={25} height={25} fill='fill-danger' />
             }
           ]}
-          handleAction={(key:string) => console.log(key)}
+          placement="bottom-end"
+          mode='action'
+          onAction={(key: string) => console.log(key)}
         />
       </NavbarContent>
     </Navbar>
