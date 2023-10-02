@@ -4,8 +4,13 @@ import React, { useState } from "react";
 import CustomModal from "@/components/Modal/CustomModal"
 import { Button } from '@nextui-org/react';
 import { useToast } from "@/hooks/ToastContext";
+import CustomInput from "@/components/Input/CustomInput";
+import { SearchIcon } from "@/components/Icons/SearchIcon";
+import CustomSelect from "@/components/Select/CustomSelect";
+import { Selection } from "@nextui-org/react";
 
 export default function StandardsPage() {
+	//Modal
 	const [isModalOpen, setModalOpen] = useState(false);
 
 	const handleOpenModal = () => {
@@ -17,18 +22,29 @@ export default function StandardsPage() {
 	};
 
 	const handleDeleteArticle = () => {
-		// Aquí iría la lógica para eliminar el artículo
 		console.log("Artículo eliminado");
 		handleCloseModal();
 	};
 
-	const demoToast = useToast();
+	//Toast
+	const { showToast } = useToast();
+
+	//Select
+	const [value, setValue] = React.useState<Selection>(new Set(["3"]));
+	const [values, setValues] = React.useState<Selection>(new Set([]));
+	const options = [
+		{ label: "Opción 1", value: "1" },
+		{ label: "Opción 2", value: "2" },
+		{ label: "Opción 3", value: "3" },
+		{ label: "Opción 4", value: "4" },
+		{ label: "Opción 5", value: "5" }
+	];
 
 	return (
-		<div className="w-[96%] h-full bg-white m-auto">
+		<div className="w-[96%] h-full bg-white m-auto flex flex-col gap-5 px-10">
 			Aqui se muestran la lista de narrativas
 			<div>
-				<Button onClick={handleOpenModal}>Eliminar artículo</Button>
+				<Button onClick={handleOpenModal}>Abrir Modal</Button>
 
 				<CustomModal
 					isOpen={isModalOpen}
@@ -46,13 +62,52 @@ export default function StandardsPage() {
 						</>
 					}
 				/>
+			</div>
 
-				<button
-					onClick={() => demoToast.showToast('Mensaje de éxito', 'danger')}
+			<div>
+				<Button
+					onClick={() => showToast('Mensaje de éxito', 'danger')}
 					className="bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
 				>
 					Mostrar Toast
-				</button>
+				</Button>
+			</div>
+
+			<div>
+				<CustomInput
+					label="Correo"
+					type="number"
+					placeholder="whuaracha@unsa.edu.pe"
+					startContent={<SearchIcon />}
+					labelPlacement="outside"
+					isRequired
+					onValueChange={(value: any) => console.log(value)}
+					className="text-blue-600 p-2 rounded hover:bg-blue-200 w-1/3"
+				/>
+			</div>
+
+			<div>
+				<CustomSelect
+					label="Selecciona una opción"
+					placeholder="Elige..."
+					values={value}
+					handleChangeValues={setValue}
+					options={options}
+					className="p-2 rounded w-1/3"
+				/>
+				<p>Valor selccionado {[...value][0]}</p>
+
+				<CustomSelect
+					label="Selecciona varias opciones"
+					placeholder="Elige..."
+					multiple
+					values={values}
+					handleChangeValues={setValues}
+					options={options}
+					className="p-2 rounded w-2/3"
+				/>
+				<p>Valores seleccionados {[...values].join(", ")}</p>
+
 			</div>
 		</div>
 	)
