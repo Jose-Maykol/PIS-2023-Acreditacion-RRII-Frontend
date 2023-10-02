@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 
 interface ContentWrapperProps {
   children?: JSX.Element | Array<JSX.Element>;
@@ -6,9 +6,9 @@ interface ContentWrapperProps {
 }
 
 export default function ContentWrapper({ children, className }: ContentWrapperProps) {
-  return (
-    <div className={`relative px-4 ${className}`}>
-      {children}
-    </div>
-  );
+	return (
+		<div className={`relative px-4 ${className}`}>
+			{children}
+		</div>
+	)
 }

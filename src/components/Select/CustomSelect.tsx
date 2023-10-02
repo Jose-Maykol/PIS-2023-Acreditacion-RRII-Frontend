@@ -1,5 +1,5 @@
-import React from 'react';
-import { Select, SelectItem } from '@nextui-org/react';
+import React from 'react'
+import { Select, SelectItem } from '@nextui-org/react'
 
 const CustomSelect = ({
 	label,
@@ -17,9 +17,8 @@ const CustomSelect = ({
 	options
 
 }: any) => {
-
 	return (
-		<div className="flex w-full flex-col gap-2">
+		<div className='flex w-full flex-col gap-2'>
 			<Select
 				label={label}
 				placeholder={placeholder}
@@ -35,7 +34,7 @@ const CustomSelect = ({
 				onSelectionChange={handleChangeValues}
 				scrollShadowProps={{
 					isEnabled: false
-				  }}
+				}}
 			>
 				{options.map((option: any) => (
 					<SelectItem key={option.value} value={option.value}>
@@ -44,7 +43,7 @@ const CustomSelect = ({
 				))}
 			</Select>
 		</div>
-	);
-};
+	)
+}
 
-export default CustomSelect;
+export default CustomSelect

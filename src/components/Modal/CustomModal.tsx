@@ -1,5 +1,5 @@
-import React from 'react';
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button} from '@nextui-org/react';
+import React from 'react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
 
 interface CustomModalProps {
   header: React.ReactNode;
@@ -12,33 +12,32 @@ interface CustomModalProps {
 }
 
 const CustomModal = ({
-  header,
-  body,
-  footer,
-  size = 'md',
-  classNames,
-  isOpen,
-  onClose,
+	header,
+	body,
+	footer,
+	size = 'md',
+	classNames,
+	isOpen,
+	onClose
 }: any) => {
+	return (
+		<Modal
+			size={size}
+			isOpen={isOpen}
+			onOpenChange={onClose}
+			classNames={classNames}
+		>
+			<ModalContent>
+				{() => (
+					<>
+						<ModalHeader className='flex flex-col gap-1'>{header}</ModalHeader>
+						<ModalBody>{body}</ModalBody>
+						<ModalFooter>{footer}</ModalFooter>
+					</>
+				)}
+			</ModalContent>
+		</Modal>
+	)
+}
 
-  return (
-    <Modal
-      size={size}
-      isOpen={isOpen}
-      onOpenChange={onClose}
-      classNames={classNames}
-    >
-      <ModalContent>
-        {() => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{header}</ModalHeader>
-            <ModalBody>{body}</ModalBody>
-            <ModalFooter>{footer}</ModalFooter>
-          </>
-        )}
-      </ModalContent>
-    </Modal>
-  );
-};
-
-export default CustomModal;
+export default CustomModal

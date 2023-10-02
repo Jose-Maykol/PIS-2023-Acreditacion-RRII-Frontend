@@ -1,5 +1,3 @@
-import React from "react";
-
 export const generateYearOptions = () => {
 	const currentYear = new Date().getFullYear()
 	const yearOptions = []

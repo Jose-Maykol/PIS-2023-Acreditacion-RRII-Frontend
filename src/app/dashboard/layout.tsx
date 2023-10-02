@@ -1,11 +1,10 @@
-"use client"
+'use client'
 
 import React, { useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 
 	const toggleSidebar = () => {
@@ -15,7 +14,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
 			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar}/>
-			<div className={`grow ${isSidebarOpen ? 'ml-72' : 'ml-20'}`}>
+			<div className={`grow ${isSidebarOpen ? 'ml-[210px]' : 'ml-[60px]'}`}>
 				<Header />
 				<main className='h-screen'>
 					{children}

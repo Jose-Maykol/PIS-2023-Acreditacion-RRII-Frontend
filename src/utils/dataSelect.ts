@@ -1,4 +1,4 @@
-import { generateYearOptions } from "./utils"
+import { generateYearOptions } from './utils'
 
 export const semesterOptions = [
 	{ label: 'A', value: 'A' },
