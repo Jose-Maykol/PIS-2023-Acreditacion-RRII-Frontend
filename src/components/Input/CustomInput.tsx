@@ -12,8 +12,8 @@ const CustomInput = ({
   endContent,
   labelPlacement,
   color,
-  validationFn, // Función de validación personalizada
-  validationMessage = 'Invalid input', // Mensaje de validación por defecto
+  validationFn,
+  validationMessage = 'Invalid input',
   className,
   isRequired,
   isClearable,
