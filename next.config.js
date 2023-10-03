@@ -14,3 +14,15 @@ module.exports = {
 		]
 	}
 }
+
+module.exports = {
+	async redirects() {
+		return [
+			{
+				source: '/dashboard/standards/:id',
+				destination: '/dashboard/standards/:id/narrative',
+				permanent: true
+			}
+		]
+	}
+}

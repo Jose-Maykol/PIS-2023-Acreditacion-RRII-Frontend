@@ -1,4 +1,4 @@
-export interface Estandar {
+export interface Standard {
   id: number,
   name: string,
   nro_standard: number,
@@ -11,6 +11,5 @@ export interface Estandar {
   user_name?: string,
   user_email?: string,
   date_id?: number,
-  egistration_status_id?: number,
+  registration_status_id?: number,
 }
-

@@ -7,8 +7,11 @@ import UsersIcon from '../Icons/UsersIcon'
 import BookMarkIcon from '../Icons/BookMarkIcon'
 import logoUnsa from '../../../public/img/logo-unsa.webp'
 import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
+import { Standard } from '@/types/Standard'
+import StandardIcon from '../Icons/StandardIcon'
 
-export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpen: boolean, toggleSidebar: () => void }) {
+export default function SideBar({ isSidebarOpen, toggleSidebar, standards }: { isSidebarOpen: boolean, toggleSidebar: () => void, standards: Standard[] }) {
+	console.log(standards)
 	return (
 		<nav className={`fixed top-0 left-0 z-50 bg-white ${isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'} text-lg min-h-screen p-4`}>
 			<div className={`w-full h-8 flex flex-row items-center my-3 ${isSidebarOpen ? 'justify-end' : 'justify-center pl-1'}`}>
@@ -76,26 +79,14 @@ export default function SideBar({ isSidebarOpen, toggleSidebar }: { isSidebarOpe
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>)}
 			<ul className='text-sm list-none my-3'>
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='estándar 1'
-					link='/dashboard/standards/1/narrative' />
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='estándar 2'
-					link='/dashboard/standards/2/narrative' />
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='estándar 3'
-					link='/dashboard/standards/3/narrative' />
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='estándar 4'
-					link='/dashboard/standards/4/narrative' />
+				{Array.isArray(standards) && standards.map((standard: Standard, index: number) => (
+					<SideBarItem
+						key={index}
+						isOpen={isSidebarOpen}
+						icon={<StandardIcon width={18} height={18} />}
+						text={`estándares ${standard.nro_standard}`}
+						link={`/dashboard/standards/${standard.id}`} />
+				))}
 			</ul>
 		</nav>
 	)
