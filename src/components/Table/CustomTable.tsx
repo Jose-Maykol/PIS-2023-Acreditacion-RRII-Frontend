@@ -22,6 +22,7 @@ type Column = {
     topContent?: React.ReactNode;
     bottomContent?: React.ReactNode;
     emptyContent: React.ReactNode;
+	classNames?: any;
   };
 
 const CustomTable = (
@@ -31,28 +32,10 @@ const CustomTable = (
 		renderCell,
 		topContent,
 		bottomContent,
-		emptyContent
+		emptyContent,
+		classNames
 	}: TableProps
 ) => {
-	const classNames = React.useMemo(
-		() => ({
-			wrapper: ['min-h-[590px]'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
-			td: [
-				// changing the rows border radius
-				// first
-				'group-data-[first=true]:first:before:rounded-none',
-				'group-data-[first=true]:last:before:rounded-none',
-				// middle
-				'group-data-[middle=true]:before:rounded-none',
-				// last
-				'group-data-[last=true]:first:before:rounded-none',
-				'group-data-[last=true]:last:before:rounded-none'
-			],
-			tr: ['hover:bg-default-300']
-		}),
-		[]
-	)
 
 	return (
 		<Table
