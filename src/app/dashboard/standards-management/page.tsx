@@ -1,7 +1,7 @@
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import UserTable from '@/components/Table/UserTable'
+import StandardTable from '@/components/Table/StandardTable'
 
 const page = () => {
 	return (
@@ -18,7 +18,7 @@ const page = () => {
 				<div className='flex w-full mb-5'>
 					<h2>Encargados de estándares del sistema</h2>
 				</div>
-				<UserTable />
+				<StandardTable />
 			</ContentWrapper>
 		</div>
 	)
