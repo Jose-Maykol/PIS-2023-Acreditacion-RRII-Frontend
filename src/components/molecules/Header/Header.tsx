@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
-import UbuntuIcon from '@/components/Icons/UbuntuIcon'
-import CustomDropdown from '../Dropdown/CustomDropdown'
+import UbuntuIcon from '@/components/atoms/Icons/UbuntuIcon'
+import CustomDropdown from '../../atoms/Dropdown/CustomDropdown'
 
 const Header = () => {
 	return (

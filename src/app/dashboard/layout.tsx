@@ -1,8 +1,8 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import SideBar from '@/components/SideBar/SideBar'
-import Header from '@/components/Header/Header'
+import SideBar from '@/components/molecules/SideBar/SideBar'
+import Header from '@/components/molecules/Header/Header'
 import { StandardService } from '@/api/Estandar/standardService'
 import { Standard } from '@/types/Standard'
 

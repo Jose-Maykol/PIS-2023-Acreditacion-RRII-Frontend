@@ -1,9 +1,9 @@
 'use client'
 
 import React, { useState } from 'react'
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import BookMarkIcon from '@/components/Icons/BookMarkIcon'
-import UserTable from '@/components/Table/UserTable'
+import ContentWrapper from '@/components/atoms/ContentWrapper/ContentWrapper'
+import BookMarkIcon from '@/components/atoms/Icons/BookMarkIcon'
+import UserTable from '@/components/molecules/Tables/UserTable'
 
 export default function DashboardPage() {
 	const [openModal, setOpenModal] = useState(false)

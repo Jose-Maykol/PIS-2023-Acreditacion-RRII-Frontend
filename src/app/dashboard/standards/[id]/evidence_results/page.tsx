@@ -1,7 +1,7 @@
 'use client'
 
-import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import UserTable from '@/components/Table/UserTable'
+import ContentWrapper from '@/components/atoms/ContentWrapper/ContentWrapper'
+import UserTable from '@/components/molecules/Tables/UserTable'
 
 export default function EvidenceResultsPage() {
 	return (
