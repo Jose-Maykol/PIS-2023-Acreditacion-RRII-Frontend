@@ -15,7 +15,7 @@ module.exports = {
 	}
 }
 
-module.exports = {
+/* module.exports = {
 	async redirects() {
 		return [
 			{
@@ -25,4 +25,4 @@ module.exports = {
 			}
 		]
 	}
-}
+} */
