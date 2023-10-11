@@ -4,11 +4,11 @@ import React, { useEffect, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { StandardService } from '@/api/Estandar/standardService'
-import { Standard } from '@/types/Standard'
+import { PartialStandard } from '@/types/Standard'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-	const [standards, setStandards] = useState<Standard[]>([])
+	const [standards, setStandards] = useState<PartialStandard[]>([])
 
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen)

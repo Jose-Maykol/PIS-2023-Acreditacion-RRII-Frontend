@@ -14,7 +14,7 @@ export const StandardService = {
 		return res
 	},
 	getPartial: async () => {
-		const res = await api.get('/2023/A/standards/parcial')
+		const res = await api.get('/2023/A/standards/partial')
 		return res.data
 	},
 
