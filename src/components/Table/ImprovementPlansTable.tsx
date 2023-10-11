@@ -31,7 +31,11 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 // Create a type with properties of improvementPlans
 type ImprovementPlans = typeof improvementPlans[0];
 
-export default function ImprovementPlansTable() {
+type TableProps = {
+	handleOpenModal: () => void
+}
+
+export default function ImprovementPlansTable({ handleOpenModal }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -140,106 +144,6 @@ export default function ImprovementPlansTable() {
 		setPage(1)
 	}, [])
 
-	// TODO: CREATE A PLAN
-	const handleAsignImprovementPlan = () => {
-		// /api/{year}/{semester}/plans - POST /api/2023/A/plans
-		const data = {
-			code: 'OM01-12-2023',
-			name: 'Plan de Mejora 1',
-			opportunity_for_improvement: 'Oportunidad',
-			semester_execution: '2023-A',
-			advance: 60,
-			duration: 8,
-			efficacy_evaluation: false,
-			standard_id: 1,
-			plan_status_id: 2,
-			sources: [
-				{
-					description: 'Fuente 1'
-				}
-			],
-			problems_opportunities: [
-				{
-					description: 'Problema 1'
-				},
-				{
-					description: 'Problema 2'
-				}
-			],
-			root_causes: [
-				{
-					description: 'Causa raíz 1'
-				},
-				{
-					description: 'Causa raíz 2'
-				}
-			],
-			improvement_actions: [
-				{
-					description: 'Acción de mejora 1'
-				},
-				{
-					description: 'Acción de mejora 2'
-				}
-			],
-			resources: [
-				{
-					description: 'Recurso 1'
-				},
-				{
-					description: 'Recurso 2'
-				}
-			],
-			goals: [
-				{
-					description: 'Meta 1'
-				},
-				{
-					description: 'Meta 2'
-				}
-			],
-			responsibles: [
-				{
-					description: 'Responsable 1'
-				},
-				{
-					description: 'Responsable 2'
-				}
-			],
-			observations: [
-				{
-					description: 'Observación 1'
-				},
-				{
-					description: 'Observación 2'
-				}
-			]
-		}
-
-		console.log(data)
-
-		// {
-		// 	"message": "!Plan de mejora creado exitosamente",
-		// 	"data": {
-		// 		"code": "OM01-12-2023",
-		// 		"name": "Plan de Mejora 1",
-		// 		"opportunity_for_improvement": "Oportunidad",
-		// 		"semester_execution": "2023-A",
-		// 		"advance": 60,
-		// 		"duration": 8,
-		// 		"efficacy_evaluation": false,
-		// 		"plan_status_id": 2,
-		// 		"standard_id": 1,
-		// 		"user_id": 1,
-		// 		"date_id": 1,
-		// 		"registration_status_id": 1,
-		// 		"updated_at": "2023-10-02T01:21:28.000000Z",
-		// 		"created_at": "2023-10-02T01:21:28.000000Z",
-		// 		"id": 1
-		// 	}
-		// }
-	}
-
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
@@ -271,7 +175,7 @@ export default function ImprovementPlansTable() {
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button onClick={handleAsignImprovementPlan} color='primary' endContent={<PlusIcon />}>
+						<Button onClick={handleOpenModal} color='primary' endContent={<PlusIcon />}>
                             Asignar PM
 						</Button>
 					</div>
