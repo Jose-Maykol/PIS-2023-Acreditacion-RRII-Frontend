@@ -6,7 +6,8 @@ import {
 	ChipProps,
 	Pagination,
 	Selection,
-	Button
+	Button,
+	Progress
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
@@ -20,9 +21,11 @@ import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	active: 'success',
-	paused: 'danger',
-	vacation: 'warning'
+	'En proceso': 'danger',
+	Concluido: 'success',
+	Programado: 'secondary',
+	Reprogramado: 'warning',
+	Planificado: 'primary'
 }
 
 // Create a type with properties of improvementPlans
@@ -63,8 +66,8 @@ export default function ImprovementPlansTable() {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((improvementPlans: ImprovementPlans, columnKey: React.Key) => {
-		const cellValue = improvementPlans[columnKey as keyof ImprovementPlans]
+	const renderCell = React.useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
+		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 
 		switch (columnKey) {
 		case 'code':
@@ -88,18 +91,19 @@ export default function ImprovementPlansTable() {
 		case 'advance':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm text-default-600 text-center'>{cellValue}</p>
+					<p className='text-bold text-sm text-default-600 text-center'>{cellValue}%</p>
+					<Progress color='primary' size='sm' value={improvementPlan.advance} />
 				</div>
 			)
 		case 'status':
 			return (
-				<Chip className='capitalize' color={statusColorMap.active} size='sm' variant='flat'>
+				<Chip className='capitalize' color={statusColorMap[improvementPlan.status]} size='sm' variant='flat'>
 					{cellValue}
 				</Chip>
 			)
 		case 'actions':
 			return (
-				<div className='relative flex items-center gap-2'>
+				<div className='relative flex items-center gap-4 justify-center'>
 					<Tooltip content='Detalle'>
 						<span className='text-default-400 cursor-pointer active:opacity-50'>
 							<EyeIcon width={15} height={15} />
@@ -136,6 +140,106 @@ export default function ImprovementPlansTable() {
 		setPage(1)
 	}, [])
 
+	// TODO: CREATE A PLAN
+	const handleAsignImprovementPlan = () => {
+		// /api/{year}/{semester}/plans - POST /api/2023/A/plans
+		const data = {
+			code: 'OM01-12-2023',
+			name: 'Plan de Mejora 1',
+			opportunity_for_improvement: 'Oportunidad',
+			semester_execution: '2023-A',
+			advance: 60,
+			duration: 8,
+			efficacy_evaluation: false,
+			standard_id: 1,
+			plan_status_id: 2,
+			sources: [
+				{
+					description: 'Fuente 1'
+				}
+			],
+			problems_opportunities: [
+				{
+					description: 'Problema 1'
+				},
+				{
+					description: 'Problema 2'
+				}
+			],
+			root_causes: [
+				{
+					description: 'Causa raíz 1'
+				},
+				{
+					description: 'Causa raíz 2'
+				}
+			],
+			improvement_actions: [
+				{
+					description: 'Acción de mejora 1'
+				},
+				{
+					description: 'Acción de mejora 2'
+				}
+			],
+			resources: [
+				{
+					description: 'Recurso 1'
+				},
+				{
+					description: 'Recurso 2'
+				}
+			],
+			goals: [
+				{
+					description: 'Meta 1'
+				},
+				{
+					description: 'Meta 2'
+				}
+			],
+			responsibles: [
+				{
+					description: 'Responsable 1'
+				},
+				{
+					description: 'Responsable 2'
+				}
+			],
+			observations: [
+				{
+					description: 'Observación 1'
+				},
+				{
+					description: 'Observación 2'
+				}
+			]
+		}
+
+		console.log(data)
+
+		// {
+		// 	"message": "!Plan de mejora creado exitosamente",
+		// 	"data": {
+		// 		"code": "OM01-12-2023",
+		// 		"name": "Plan de Mejora 1",
+		// 		"opportunity_for_improvement": "Oportunidad",
+		// 		"semester_execution": "2023-A",
+		// 		"advance": 60,
+		// 		"duration": 8,
+		// 		"efficacy_evaluation": false,
+		// 		"plan_status_id": 2,
+		// 		"standard_id": 1,
+		// 		"user_id": 1,
+		// 		"date_id": 1,
+		// 		"registration_status_id": 1,
+		// 		"updated_at": "2023-10-02T01:21:28.000000Z",
+		// 		"created_at": "2023-10-02T01:21:28.000000Z",
+		// 		"id": 1
+		// 	}
+		// }
+	}
+
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
@@ -167,7 +271,7 @@ export default function ImprovementPlansTable() {
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon />}>
+						<Button onClick={handleAsignImprovementPlan} color='primary' endContent={<PlusIcon />}>
                             Asignar PM
 						</Button>
 					</div>
