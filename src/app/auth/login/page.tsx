@@ -33,7 +33,6 @@ export default function AuthPage() {
 		const yearIsValid = (yearValue as any).size > 0
 		const semesterIsValid = (semesterValue as any).size > 0
 		setIsValid({ year: yearIsValid, semester: semesterIsValid })
-		console.log(isValid)
 		if ((isValid.year && isValid.semester) === true && touched === true) {
 			if (typeof window !== 'undefined' && window.localStorage) {
 				localStorage.setItem('year', (yearValue as any).values().next().value)

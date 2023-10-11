@@ -10,14 +10,7 @@ module.exports = {
 				source: '/',
 				destination: '/auth/login',
 				permanent: true
-			}
-		]
-	}
-}
-
-/* module.exports = {
-	async redirects() {
-		return [
+			},
 			{
 				source: '/dashboard/standards/:id',
 				destination: '/dashboard/standards/:id/narrative',
@@ -25,4 +18,4 @@ module.exports = {
 			}
 		]
 	}
-} */
+}

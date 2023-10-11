@@ -14,8 +14,8 @@ export default function DashboardPage() {
 				<div className='flex items-center gap-2 pt-16 pl-6'>
 					<BookMarkIcon width={40} height={40} fill='fill-white' variant='line' />
 					<div className='text-white'>
-						<h1>Mis planes de mejora</h1>
-						<p className='text-lg'>Aqui se muestran los planes de mejora que creaste y modificaste</p>
+						<h1 className='text-2xl font-bold'>Mis planes de mejora</h1>
+						<p className='text-base'>Aqui se muestran los planes de mejora que creaste y modificaste</p>
 					</div>
 				</div>
 			</ContentWrapper>
