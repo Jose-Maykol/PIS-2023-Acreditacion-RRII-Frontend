@@ -3,7 +3,7 @@
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ImprovementPlanModal from '@/components/Modal/ImprovementPlanModal'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
-import { Button } from '@nextui-org/react'
+import { Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { useState } from 'react'
 
 export default function EvidenceImprovementsPage() {
@@ -96,7 +96,7 @@ export default function EvidenceImprovementsPage() {
 		console.log(data)
 
 		// {
-		// 	"message": "!Plan de mejora creado exitosamente",
+		// 	'message": "!Plan de mejora creado exitosamente",
 		// 	"data": {
 		// 		"code": "OM01-12-2023",
 		// 		"name": "Plan de Mejora 1",
@@ -119,6 +119,20 @@ export default function EvidenceImprovementsPage() {
 		handleCloseModal()
 	}
 
+	// TODO: DELETE TEST DATA
+	const users = [
+		{ label: 'WALTER HUARACHA', value: 'wh' },
+		{ label: 'JOSE PANIURA', value: 'jp' },
+		{ label: 'ALEX TURPO', value: 'at' }
+	]
+
+	const standards = [
+		{ label: 'Estádar 1', value: 'e1' },
+		{ label: 'Estádar 2', value: 'e2' },
+		{ label: 'Estádar 3', value: 'e3' },
+		{ label: 'Estádar 4', value: 'e4' }
+	]
+
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
 			<ImprovementPlansTable handleOpenModal={handleOpenModal} />
@@ -127,15 +141,47 @@ export default function EvidenceImprovementsPage() {
 				<ImprovementPlanModal
 					isOpen={isModalOpen}
 					onClose={handleCloseModal}
-					header='Confirmar eliminación'
-					body='¿Estás seguro de que deseas eliminar este artículo?'
+					header='ASIGNAR PLAN DE MEJORA'
+					body={
+						<>
+							<Input
+								autoFocus
+								label='CÓDIGO'
+								placeholder='OMXX-YY-ZZZZ'
+								variant='bordered'
+							/>
+							<Select
+								label='USUARIO ENCARGADO'
+							>
+								{users.map((user) => (
+									<SelectItem key={user.value} value={user.value}>
+										{user.label}
+									</SelectItem>
+								))}
+							</Select>
+							<Select
+								label='ESTÁNDAR'
+							>
+								{standards.map((standard) => (
+									<SelectItem key={standard.value} value={standard.value}>
+										{standard.label}
+									</SelectItem>
+								))}
+							</Select>
+							<Input
+								label='NOMBRE DEL PLAN DE MEJORA'
+								placeholder='Ej. Plan...'
+								variant='bordered'
+							/>
+						</>
+					}
 					footer={
 						<>
-							<Button color='danger' variant='flat' onPress={handleCloseModal}>
+							<Button color='danger' variant='flat' onPress={handleCloseModal} className='mt-3'>
 								Cancelar
 							</Button>
-							<Button color='primary' onPress={handleAsignImprovementPlan}>
-								Confirmar
+							<Button color='primary' onPress={handleAsignImprovementPlan} className='mt-3'>
+								Asignar PM
 							</Button>
 						</>
 					}
