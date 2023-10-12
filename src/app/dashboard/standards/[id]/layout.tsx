@@ -1,7 +1,7 @@
 import React from 'react'
-import ContentWrapper from '@/components/atoms/ContentWrapper/ContentWrapper'
-import HeaderStandards from '@/components/molecules/Header/HeaderStandards'
-import TabStandard from '@/components/atoms/Tabs/TabStandard'
+import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
+import HeaderStandards from '@/components/Header/HeaderStandards'
+import TabStandard from '@/components/Tabs/TabStandard'
 
 export default function StandardsIdPage({ params, children }: { params: { id: string }, children: React.ReactNode }) {
 	const { id } = params

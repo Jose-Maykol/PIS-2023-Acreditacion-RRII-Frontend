@@ -1,12 +1,12 @@
 'use client'
 
 import React, { useState } from 'react'
-import CustomModal from '@/components/atoms/Modal/CustomModal'
+import CustomModal from '@/components/Modal/CustomModal'
 import { Button, Selection } from '@nextui-org/react'
 import { useToast } from '@/hooks/ToastContext'
-import CustomInput from '@/components/atoms/Input/CustomInput'
-import { SearchIcon } from '@/components/atoms/Icons/SearchIcon'
-import CustomSelect from '@/components/atoms/Select/CustomSelect'
+import CustomInput from '@/components/Input/CustomInput'
+import { SearchIcon } from '@/components/Icons/SearchIcon'
+import CustomSelect from '@/components/Select/CustomSelect'
 
 
 export default function StandardsPage() {

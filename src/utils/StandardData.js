@@ -7,8 +7,8 @@ const columns = [
 ]
 
 const valorationOptions = [
-    { label: 'Completado', uid: 'completado' },
-    { label: 'No Completado', uid: 'no completado' },
+    { label: 'Completado', uid: 'completed' },
+    { label: 'No Completado', uid: 'not completed' },
     { label: 'Completado Plenamente', uid: 'plenamente completado' }
 ]
 
