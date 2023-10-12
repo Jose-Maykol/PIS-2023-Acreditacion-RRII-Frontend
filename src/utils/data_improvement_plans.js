@@ -1,21 +1,19 @@
 const columns = [
 	{ name: 'CÓDIGO', uid: 'code', sortable: true },
-	{ name: 'ESTÁNDAR', uid: 'standard', sortable: true },
-	{ name: 'ASIGNADO A', uid: 'assigned', sortable: true },
+	{ name: 'ESTÁNDAR', uid: 'standard_name', sortable: true },
+	{ name: 'ASIGNADO A', uid: 'user_name', sortable: true },
 	{ name: 'AVANCE (%)', uid: 'advance' },
-	{ name: 'ESTADO', uid: 'status', sortable: true },
+	{ name: 'ESTADO', uid: 'plan_status', sortable: true },
 	{ name: 'ACCIONES', uid: 'actions' }
 ]
 
 const statusOptions = [
-	{ label: 'Planificado', uid: 'Planificado' },
-	{ label: 'En desarrollo', uid: 'En desarrollo' },
-	{ label: 'Completado', uid: 'Completado' },
-	{ label: 'Postergado', uid: 'Postergado' },
-	{ label: 'Anulado', uid: 'Anulado' }
+	{ label: 'planificado', uid: 'planificado' },
+	{ label: 'en desarrollo', uid: 'en desarrollo' },
+	{ label: 'Completado', uid: 'completado' },
+	{ label: 'postergado', uid: 'postergado' },
+	{ label: 'anulado', uid: 'anulado' }
 ]
-
-// const users = []
 
 const improvementPlans = [
 	{
@@ -24,7 +22,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 10,
-		status: 'Planificado'
+		status: 'planificado'
 	},
 	{
 		id: 2,
@@ -32,7 +30,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Walter Huaracha',
 		advance: 20,
-		status: 'Completado'
+		status: 'completado'
 	},
 	{
 		id: 3,
@@ -40,7 +38,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'José Paniura',
 		advance: 90,
-		status: 'En desarrollo'
+		status: 'en desarrollo'
 	},
 	{
 		id: 4,
@@ -48,7 +46,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 80,
-		status: 'Postergado'
+		status: 'postergado'
 	},
 	{
 		id: 5,
@@ -56,63 +54,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Walter Huaracha',
 		advance: 50,
-		status: 'Anulado'
-	},
-	{
-		id: 6,
-		code: 'OM04-03-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'José Paniura',
-		advance: 60,
-		status: 'En desarrollo'
-	},
-	{
-		id: 7,
-		code: 'OM04-04-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 40,
-		status: 'Completado'
-	},
-	{
-		id: 8,
-		code: 'OM04-05-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 10,
-		status: 'Postergado'
-	},
-	{
-		id: 9,
-		code: 'OM04-06-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 10,
-		status: 'Postergado'
-	},
-	{
-		id: 10,
-		code: 'OM04-07-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 10,
-		status: 'Planificado'
-	},
-	{
-		id: 11,
-		code: 'OM04-08-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 10,
-		status: 'En desarrollo'
-	},
-	{
-		id: 12,
-		code: 'OM04-09-2024',
-		standard: 'Propósitos articulados',
-		assigned: 'Alex Turpo',
-		advance: 10,
-		status: 'Completado'
+		status: 'anulado'
 	}
 ]
 

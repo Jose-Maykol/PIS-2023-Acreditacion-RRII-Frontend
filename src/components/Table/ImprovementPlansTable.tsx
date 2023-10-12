@@ -17,28 +17,40 @@ import TrashIcon from '../Icons/TrashIcon'
 import { PlusIcon } from '../Icons/PlusIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
 import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
-import { columns, improvementPlans, statusOptions } from '../../utils/data_improvement_plans'
+import { columns, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	Planificado: 'secondary',
-	'En desarrollo': 'primary',
-	Completado: 'success',
-	Postergado: 'warning',
-	Anulado: 'danger'
+	planificado: 'secondary',
+	'en desarrollo': 'primary',
+	completado: 'success',
+	postergado: 'warning',
+	anulado: 'danger'
 }
 
 // Create a type with properties of improvementPlans
-type ImprovementPlans = typeof improvementPlans[0];
+// type ImprovementPlans = typeof improvementPlans[0];
 
-type TableProps = {
-	id: string
+type ImprovementPlans = {
+	advance: number,
+	code: string,
+	id: number,
+	isCreator: boolean,
+	name: string,
+	plan_status: string,
+	standard_name: string,
+	user_name: string
 }
 
-export default function ImprovementPlansTable({ id }: TableProps) {
+type TableProps = {
+	id: string,
+	improvementPlans: Array<ImprovementPlans>
+}
+
+export default function ImprovementPlansTable({ id, improvementPlans }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -57,7 +69,7 @@ export default function ImprovementPlansTable({ id }: TableProps) {
 		}
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
 			filteredPlans = filteredPlans.filter((plan) =>
-				Array.from(statusFilter).includes(plan.status)
+				Array.from(statusFilter).includes(plan.plan_status)
 			)
 		}
 
@@ -83,13 +95,13 @@ export default function ImprovementPlansTable({ id }: TableProps) {
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
 				</div>
 			)
-		case 'standard':
+		case 'standard_name':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
 				</div>
 			)
-		case 'assigned':
+		case 'user_name':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
@@ -102,9 +114,9 @@ export default function ImprovementPlansTable({ id }: TableProps) {
 					<Progress aria-label='Loading...' color='primary' size='sm' value={improvementPlan.advance} />
 				</div>
 			)
-		case 'status':
+		case 'plan_status':
 			return (
-				<Chip className='capitalize' color={statusColorMap[improvementPlan.status]} size='sm' variant='flat'>
+				<Chip className='capitalize' color={statusColorMap[improvementPlan.plan_status]} size='sm' variant='flat'>
 					{cellValue}
 				</Chip>
 			)
