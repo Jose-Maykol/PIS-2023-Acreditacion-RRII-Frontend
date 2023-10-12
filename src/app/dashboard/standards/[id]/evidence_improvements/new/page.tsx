@@ -1,11 +1,13 @@
 'use client'
 
+import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 const years = [
 	{ label: '2020', value: '2020' },
@@ -35,7 +37,94 @@ type NewImprovementPlanPageProps = {
 }
 
 export default function NewImprovementPlanPage({ params }: NewImprovementPlanPageProps) {
+	const router = useRouter()
+
 	const [isSelected, setIsSelected] = useState(false)
+
+	const handleCreateImprovementPlan = () => {
+		const data = {
+			code: 'OM01-11-2023',
+			name: 'Plan de Mejora 2',
+			opportunity_for_improvement: 'Oportunidad',
+			semester_execution: '2023-A',
+			advance: 60,
+			duration: 8,
+			efficacy_evaluation: false,
+			standard_id: 1,
+			plan_status_id: 2,
+			sources: [
+				{
+					description: 'Fuente 1'
+				}
+			],
+			problems_opportunities: [
+				{
+					description: 'Problema 1'
+				},
+				{
+					description: 'Problema 2'
+				}
+			],
+			root_causes: [
+				{
+					description: 'Causa raíz 1'
+				},
+				{
+					description: 'Causa raíz 2'
+				}
+			],
+			improvement_actions: [
+				{
+					description: 'Acción de mejora 1'
+				},
+				{
+					description: 'Acción de mejora 2'
+				}
+			],
+			resources: [
+				{
+					description: 'Recurso 1'
+				},
+				{
+					description: 'Recurso 2'
+				}
+			],
+			goals: [
+				{
+					description: 'Meta 1'
+				},
+				{
+					description: 'Meta 2'
+				}
+			],
+			responsibles: [
+				{
+					description: 'Responsable 1'
+				},
+				{
+					description: 'Responsable 2'
+				}
+			],
+			observations: [
+				{
+					description: 'Observación 1'
+				},
+				{
+					description: 'Observación 2'
+				}
+			]
+		}
+
+		PlanMejoraService.create(data)
+			.then((res) => {
+				if (res.statusText === 'Created') {
+					router.push(`/dashboard/standards/${params.id}/evidence_improvements`)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
@@ -62,7 +151,6 @@ export default function NewImprovementPlanPage({ params }: NewImprovementPlanPag
 			<div className='flex'>
 				<Input
 					isRequired
-
 					type='text'
 					label='Problemas/Oportunidades'
 					labelPlacement='outside-left'
@@ -182,7 +270,6 @@ export default function NewImprovementPlanPage({ params }: NewImprovementPlanPag
 			<div className='mb-3'>
 				<Input
 					isRequired
-
 					type='number'
 					label='Avance'
 					labelPlacement='outside-left'
@@ -208,6 +295,7 @@ export default function NewImprovementPlanPage({ params }: NewImprovementPlanPag
 					color='success'
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} />}
+					onClick={handleCreateImprovementPlan}
 				>
 					Guardar
 				</Button>
