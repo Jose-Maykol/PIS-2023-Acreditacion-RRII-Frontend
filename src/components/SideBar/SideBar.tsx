@@ -7,10 +7,10 @@ import UsersIcon from '../Icons/UsersIcon'
 import BookMarkIcon from '../Icons/BookMarkIcon'
 import logoUnsa from '../../../public/img/logo-unsa.webp'
 import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
-import { Standard } from '@/types/Standard'
+import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 
-export default function SideBar({ isSidebarOpen, toggleSidebar, standards }: { isSidebarOpen: boolean, toggleSidebar: () => void, standards: Standard[] }) {
+export default function SideBar({ isSidebarOpen, toggleSidebar, standards }: { isSidebarOpen: boolean, toggleSidebar: () => void, standards: PartialStandard[] }) {
 	console.log(standards)
 	return (
 		<nav className={`fixed top-0 left-0 z-50 bg-white ${isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'} text-lg min-h-screen p-4`}>
@@ -79,12 +79,12 @@ export default function SideBar({ isSidebarOpen, toggleSidebar, standards }: { i
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>)}
 			<ul className='text-sm list-none my-3'>
-				{Array.isArray(standards) && standards.map((standard: Standard, index: number) => (
+				{Array.isArray(standards) && standards.map((standard: PartialStandard, index: number) => (
 					<SideBarItem
 						key={index}
 						isOpen={isSidebarOpen}
 						icon={<StandardIcon width={18} height={18} />}
-						text={`estándares ${standard.nro_standard}`}
+						text={`estándar ${standard.nro_standard}`}
 						link={`/dashboard/standards/${standard.id}`} />
 				))}
 			</ul>

@@ -1,10 +1,8 @@
 export interface User {
   id: number,
   name: string,
-  lastname?: string,
+  lastname: string,
   email: string,
-  role?: string,
-  registrationStatus: number,
 }
 
 export interface AuthUser {

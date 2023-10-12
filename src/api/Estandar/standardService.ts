@@ -14,23 +14,23 @@ export const StandardService = {
 		return res
 	},
 	getPartial: async () => {
-		const res = await api.get('/2023/A/standards')
+		const res = await api.get('/2023/A/standards/partial')
 		return res.data
 	},
 
 	listEstandar: async () => {
-		return await api.get(url.listEstandar);
+		return await api.get(url.listEstandar)
 	},
 
 	listEstandarValues: async () => {
-		return await api.get(url.listEstandarValues);
+		return await api.get(url.listEstandarValues)
 	},
 
 	showEstandar: async (id: string) => {
-		return await api.get(`${url.detailEstandard}${id}`);
+		return await api.get(`${url.detailEstandard}${id}`)
 	},
 
 	updateEstandar: async (id: string, params: any) => {
-		return await api.put(`${url.updateEstandar}${id}`, params);
+		return await api.put(`${url.updateEstandar}${id}`, params)
 	}
 }
