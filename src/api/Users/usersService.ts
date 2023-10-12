@@ -1,9 +1,10 @@
+import { CreateUser } from '@/types/User'
 import api from '../axios'
 
 const url = {
 	listUsers: '/users',
 	detailUser: '/users/profile',
-	createUser: '/users/register',
+	createUser: '/users',
 	updateUser: '/users/',
 	deleteUser: '/user/',
 	enableUsers: '/users/enabled_users'
@@ -11,15 +12,17 @@ const url = {
 
 export const UsersService = {
 	listUsers: async () => {
-		return await api.get(url.listUsers)
+		const res = await api.get(url.listUsers)
+		return res.data
 	},
 
 	detailUser: async () => {
 		return await api.get(url.detailUser)
 	},
 
-	createUser: async (params: any) => {
-		return await api.post(url.createUser, params)
+	createUser: async (params: CreateUser) => {
+		const res = await api.post(url.createUser, params)
+		return res.data
 	},
 
 	updateUser: async (id: string, params: any) => {

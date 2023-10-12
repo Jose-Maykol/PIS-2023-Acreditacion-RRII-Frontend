@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { StandardService } from '@/api/Estandar/standardService'
@@ -14,11 +14,17 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
-	useEffect(() => {
-		StandardService.getPartial().then((res) => {
-			setStandards(res.data)
-		})
+	const loadStandards = useMemo(() => {
+		return () => {
+			StandardService.getPartial().then((res) => {
+				setStandards(res.data)
+			})
+		}
 	}, [])
+
+	useEffect(() => {
+		loadStandards()
+	}, [loadStandards])
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>

@@ -12,3 +12,8 @@ export interface AuthUser {
   role: string,
   user: User,
 }
+
+export interface CreateUser {
+  role: string,
+  email: string,
+}

@@ -20,6 +20,7 @@ import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { UsersService } from '@/api/Users/usersService'
 import { User } from '@/types/User'
+import AddUserModal from '../Modal/User/AddUserModal'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
@@ -50,7 +51,7 @@ export default function UserTable() {
 	]
 
 	useEffect(() => {
-		UsersService.enableUsers().then((res) => {
+		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
 		})
 	}, [])
@@ -108,12 +109,12 @@ export default function UserTable() {
 				<div className='relative flex items-center gap-2'>
 					<Tooltip content='Detalle'>
 						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<EyeIcon width={15} height={15} />
+							<EyeIcon width={15} height={15} fill='fill-lightBlue-600'/>
 						</span>
 					</Tooltip>
 					<Tooltip content='Editar Usuario'>
 						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<PencilIcon width={15} height={15} fill='fill-warning' />
+							<PencilIcon width={15} height={15} />
 						</span>
 					</Tooltip>
 					<Tooltip color='danger' content='Eliminar usuario'>
@@ -171,11 +172,8 @@ export default function UserTable() {
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
-						<Button color='primary' endContent={<PlusIcon />}>
-              Añadir Usuario
-						</Button>
+						<AddUserModal/>
 					</div>
 				</div>
 			</div>
