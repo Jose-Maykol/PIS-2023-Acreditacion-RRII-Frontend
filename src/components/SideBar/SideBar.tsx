@@ -3,12 +3,12 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import SideBarItem from './SideBarItem'
-import UsersIcon from '../../atoms/Icons/UsersIcon'
-import BookMarkIcon from '../../atoms/Icons/BookMarkIcon'
+import UsersIcon from '../Icons/UsersIcon'
+import BookMarkIcon from '../Icons/BookMarkIcon'
 import logoUnsa from '../../../public/img/logo-unsa.webp'
-import AngleDoubleRightIcon from '../../atoms/Icons/AngleDoubleRightIcon'
+import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { Standard } from '@/types/Standard'
-import StandardIcon from '../../atoms/Icons/StandardIcon'
+import StandardIcon from '../Icons/StandardIcon'
 
 export default function SideBar({ isSidebarOpen, toggleSidebar, standards }: { isSidebarOpen: boolean, toggleSidebar: () => void, standards: Standard[] }) {
 	console.log(standards)

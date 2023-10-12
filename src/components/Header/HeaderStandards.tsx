@@ -2,8 +2,8 @@
 
 import React from 'react'
 import { Textarea, Button } from '@nextui-org/react'
-import RatingSwitch from '../../atoms/RatingSwitch/RatingSwitch'
-import PencilIcon from '../../atoms/Icons/PencilIcon'
+import RatingSwitch from '../RatingSwitch/RatingSwitch'
+import PencilIcon from '../Icons/PencilIcon'
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardDescription, setStandardDescription] = React.useState('NextUI is a React UI library that provides a set of accessible, reusable, and beautiful components. contenido mas largo aaa ppp')
