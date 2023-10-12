@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { UsersService } from '@/api/Users/usersService'
 import { PlusIcon } from '@/components/Icons/PlusIcon'
 import {
@@ -14,8 +15,9 @@ import {
 	Selection
 } from '@nextui-org/react'
 import { useMemo, useState } from 'react'
+import { toast } from 'react-toastify'
 
-export default function AddUserModal () {
+export default function AddUserModal ({ onUserCreated }: { onUserCreated: () => void }) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
@@ -30,11 +32,39 @@ export default function AddUserModal () {
 	}, [emailValue])
 
 	const handleSubmit = async () => {
+		const notification = toast.loading('Procesando...')
 		UsersService.createUser({
 			email: emailValue,
-			role: roleValue.values().next().value
+			role: (roleValue as any).values().next().value
 		}).then((res) => {
-			console.log(res)
+			if (res.status === 1) {
+				toast.update(notification, {
+					render: res.message,
+					type: 'success',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
+			} else {
+				toast.update(notification, {
+					render: res.message,
+					type: 'error',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
+			}
+			setEmailValue('')
+			setRoleValue(new Set([]))
+			onUserCreated()
 		})
 	}
 
@@ -43,7 +73,6 @@ export default function AddUserModal () {
 			<Button
 				onClick={onOpen}
 				color='primary'
-				variant='bordered'
 				endContent={<PlusIcon />}
 			>
         Añadir Usuario
@@ -86,7 +115,7 @@ export default function AddUserModal () {
 									color='primary'
 									onPress={() => {
 										handleSubmit()
-										// onClose()
+										onClose()
 									}}>
                   Agregar
 								</Button>

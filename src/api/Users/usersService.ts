@@ -21,8 +21,14 @@ export const UsersService = {
 	},
 
 	createUser: async (params: CreateUser) => {
-		const res = await api.post(url.createUser, params)
-		return res.data
+		try {
+			const res = await api.post(url.createUser, params)
+			return res.data
+		} catch (error: any) {
+			if (error.response.status === 422) {
+				return error.response.data
+			}
+		}
 	},
 
 	updateUser: async (id: string, params: any) => {

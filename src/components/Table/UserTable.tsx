@@ -12,7 +12,6 @@ import {
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
-import { PlusIcon } from '../Icons/PlusIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
 import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
@@ -55,6 +54,12 @@ export default function UserTable() {
 			setUsers(res.data)
 		})
 	}, [])
+
+	const handleUserCreated = () => {
+		UsersService.listUsers().then((res) => {
+			setUsers(res.data)
+		})
+	}
 
 	const filteredItems = React.useMemo(() => {
 		let filteredUsers = [...users]
@@ -173,7 +178,7 @@ export default function UserTable() {
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
 						/>
-						<AddUserModal/>
+						<AddUserModal onUserCreated={handleUserCreated}/>
 					</div>
 				</div>
 			</div>
