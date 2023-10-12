@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 
 import {
@@ -19,6 +21,7 @@ import { columns, improvementPlans, statusOptions } from '../../utils/data_impro
 import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import Link from 'next/link'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'En proceso': 'danger',
@@ -32,10 +35,10 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 type ImprovementPlans = typeof improvementPlans[0];
 
 type TableProps = {
-	handleOpenModal: () => void
+	id: string
 }
 
-export default function ImprovementPlansTable({ handleOpenModal }: TableProps) {
+export default function ImprovementPlansTable({ id }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -96,7 +99,7 @@ export default function ImprovementPlansTable({ handleOpenModal }: TableProps) {
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm text-default-600 text-center'>{cellValue}%</p>
-					<Progress color='primary' size='sm' value={improvementPlan.advance} />
+					<Progress aria-label='Loading...' color='primary' size='sm' value={improvementPlan.advance} />
 				</div>
 			)
 		case 'status':
@@ -151,7 +154,7 @@ export default function ImprovementPlansTable({ handleOpenModal }: TableProps) {
 					<CustomInput
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre...'
+						placeholder='Buscar por código...'
 						startContent={<SearchIcon />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
@@ -175,9 +178,11 @@ export default function ImprovementPlansTable({ handleOpenModal }: TableProps) {
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button onClick={handleOpenModal} color='primary' endContent={<PlusIcon />}>
-                            Asignar PM
-						</Button>
+						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
+							<Button color='primary' endContent={<PlusIcon />}>
+								Asignar PM
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>
