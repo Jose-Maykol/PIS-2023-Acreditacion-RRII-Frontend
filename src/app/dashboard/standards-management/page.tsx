@@ -1,8 +1,7 @@
 'use client'
 
-import ContentWrapper from '@/components/atoms/ContentWrapper/ContentWrapper'
-import StandardTable from '@/components/molecules/Tables/StandardTable'
-import CustomModal from '@/components/atoms/Modal/CustomModal'
+import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
+import StandardTable from '@/components/Table/StandardTable'
 
 const page = () => {
 	return (

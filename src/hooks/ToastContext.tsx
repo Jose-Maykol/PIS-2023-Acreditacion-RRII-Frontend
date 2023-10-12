@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react'
-import Toast from '@/components/atoms/Toast/Toast'
+import Toast from '@/components/Toast/Toast'
 
 
 type ToastContextType = {
