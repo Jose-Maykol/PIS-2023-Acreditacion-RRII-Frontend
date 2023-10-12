@@ -13,3 +13,10 @@ export interface Standard {
   date_id?: number,
   registration_status_id?: number,
 }
+
+
+export interface PartialStandard {
+  id: number,
+  name: string,
+  nro_standard: number
+}
