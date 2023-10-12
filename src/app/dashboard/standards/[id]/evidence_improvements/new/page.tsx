@@ -1,7 +1,10 @@
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import { Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import CloseIcon from '@/components/Icons/CloseIcon'
+import SaveIcon from '@/components/Icons/SaveIcon'
+import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import Link from 'next/link'
 import { useState } from 'react'
 
 const years = [
@@ -25,7 +28,13 @@ const status = [
 	{ label: 'Planificado', value: 4 }
 ]
 
-export default function NewImprovementPlanPage() {
+type NewImprovementPlanPageProps = {
+	params: {
+		id: string
+	}
+}
+
+export default function NewImprovementPlanPage({ params }: NewImprovementPlanPageProps) {
 	const [isSelected, setIsSelected] = useState(false)
 
 	return (
@@ -34,7 +43,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Nombre del plan de mejora'
 				labelPlacement='outside-left'
@@ -44,7 +52,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Código'
 				labelPlacement='outside-left'
@@ -55,7 +62,7 @@ export default function NewImprovementPlanPage() {
 			<div className='flex'>
 				<Input
 					isRequired
-					key='outside-left'
+
 					type='text'
 					label='Problemas/Oportunidades'
 					labelPlacement='outside-left'
@@ -66,7 +73,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Causa/Raíz'
 				labelPlacement='outside-left'
@@ -76,7 +82,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Oportunidad de mejora'
 				labelPlacement='outside-left'
@@ -86,7 +91,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Acciones de mejora'
 				labelPlacement='outside-left'
@@ -113,7 +117,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='number'
 				label='Duración (meses)'
 				labelPlacement='outside-left'
@@ -125,7 +128,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Recursos'
 				labelPlacement='outside-left'
@@ -135,7 +137,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Metas'
 				labelPlacement='outside-left'
@@ -145,7 +146,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Responsables'
 				labelPlacement='outside-left'
@@ -155,7 +155,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Observaciones'
 				labelPlacement='outside-left'
@@ -173,7 +172,6 @@ export default function NewImprovementPlanPage() {
 
 			<Input
 				isRequired
-				key='outside-left'
 				type='text'
 				label='Evidencias'
 				labelPlacement='outside-left'
@@ -184,7 +182,7 @@ export default function NewImprovementPlanPage() {
 			<div className='mb-3'>
 				<Input
 					isRequired
-					key='outside-left'
+
 					type='number'
 					label='Avance'
 					labelPlacement='outside-left'
@@ -196,13 +194,30 @@ export default function NewImprovementPlanPage() {
 				/>
 			</div>
 
-			<div className='flex gap-2'>
+			<div className='flex gap-2 mb-7'>
 				<label className='text-default-900 text-sm'>
 					Eficacia<span className='text-red-600'>*</span>
 				</label>
 				<Checkbox isSelected={isSelected} onValueChange={setIsSelected}>
 					{isSelected ? 'Sí' : 'No'}
 				</Checkbox>
+			</div>
+
+			<div className='flex gap-4 items-end mb-5'>
+				<Button
+					color='success'
+					className='text-white'
+					startContent={<SaveIcon width={16} height={16} />}
+				>
+					Guardar
+				</Button>
+				<Button
+					color='danger'
+					className='text-white'
+					startContent={<CloseIcon width={16} height={16} />}
+				>
+					<Link href={`/dashboard/standards/${params.id}/evidence_improvements`}>Cancelar</Link>
+				</Button>
 			</div>
 		</ContentWrapper>
 	)
