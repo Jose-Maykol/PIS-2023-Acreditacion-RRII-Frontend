@@ -31,6 +31,7 @@ export const UsersService = {
 	},
 
 	enableUsers: async () => {
-		return await api.get(url.enableUsers)
+		const res = await api.get(url.enableUsers)
+		return res.data
 	}
 }
