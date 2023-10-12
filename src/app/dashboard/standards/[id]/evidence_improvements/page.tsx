@@ -1,13 +1,26 @@
 'use client'
 
+import { UsersService } from '@/api/Users/usersService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ImprovementPlanModal from '@/components/Modal/ImprovementPlanModal'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
+import { User } from '@/types/User'
 import { Button, Input, Select, SelectItem } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function EvidenceImprovementsPage() {
 	const [isModalOpen, setModalOpen] = useState(false)
+	const [users, setUsers] = useState([])
+
+	useEffect(() => {
+		UsersService.listUsers()
+			.then((res) => {
+				setUsers(res.data.data)
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}, [])
 
 	const handleOpenModal = () => {
 		setModalOpen(true)
@@ -119,13 +132,6 @@ export default function EvidenceImprovementsPage() {
 		handleCloseModal()
 	}
 
-	// TODO: DELETE TEST DATA
-	const users = [
-		{ label: 'WALTER HUARACHA', value: 'wh' },
-		{ label: 'JOSE PANIURA', value: 'jp' },
-		{ label: 'ALEX TURPO', value: 'at' }
-	]
-
 	const standards = [
 		{ label: 'Estádar 1', value: 'e1' },
 		{ label: 'Estádar 2', value: 'e2' },
@@ -144,24 +150,15 @@ export default function EvidenceImprovementsPage() {
 					header='ASIGNAR PLAN DE MEJORA'
 					body={
 						<>
-							<Input
-								autoFocus
-								label='CÓDIGO'
-								placeholder='OMXX-YY-ZZZZ'
-								variant='bordered'
-							/>
-							<Select
-								label='USUARIO ENCARGADO'
-							>
-								{users.map((user) => (
-									<SelectItem key={user.value} value={user.value}>
-										{user.label}
+							<Input autoFocus label='CÓDIGO' placeholder='OMXX-YY-ZZZZ' variant='bordered' />
+							<Select label='USUARIO ENCARGADO'>
+								{users.map((user: User) => (
+									<SelectItem key={user.id} value={user.id}>
+										{`${user.name} ${user.lastname}`}
 									</SelectItem>
 								))}
 							</Select>
-							<Select
-								label='ESTÁNDAR'
-							>
+							<Select label='ESTÁNDAR'>
 								{standards.map((standard) => (
 									<SelectItem key={standard.value} value={standard.value}>
 										{standard.label}
