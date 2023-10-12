@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
-	User,
+	// User,
 	Chip,
 	Tooltip,
 	ChipProps,
@@ -15,27 +15,45 @@ import TrashIcon from '../Icons/TrashIcon'
 import { PlusIcon } from '../Icons/PlusIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
 import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
-import { columns, users, statusOptions } from '../../utils/data'
 import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import { UsersService } from '@/api/Users/usersService'
+import { User } from '@/types/User'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	active: 'success',
-	paused: 'danger',
-	vacation: 'warning'
+	activo: 'success',
+	inactivo: 'danger',
+	'pendiente de autenticación': 'warning'
 }
-
-type User = typeof users[0];
 
 export default function UserTable() {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-
-	const rowsPerPage = 7
+	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
+	const [users, setUsers] = useState<User[]>([])
+	const columns = [
+		{ name: 'N°', uid: 'id', sortable: true },
+		{ name: 'Nombres', uid: 'name', sortable: true },
+		{ name: 'Rol', uid: 'role', sortable: true },
+		{ name: 'Email', uid: 'email' },
+		{ name: 'Status', uid: 'status', sortable: true },
+		{ name: 'Acciones', uid: 'actions' }
+	]
 
+	const statusOptions = [
+		{ label: 'activo', uid: 'activo' },
+		{ label: 'inactivo', uid: 'inactivo' },
+		{ label: 'pendiente de autenticación', uid: 'pendiente de autenticación' }
+	]
+
+	useEffect(() => {
+		UsersService.enableUsers().then((res) => {
+			setUsers(res.data)
+		})
+	}, [])
 
 	const filteredItems = React.useMemo(() => {
 		let filteredUsers = [...users]
@@ -69,19 +87,14 @@ export default function UserTable() {
 		switch (columnKey) {
 		case 'name':
 			return (
-				<User
-					avatarProps={{ radius: 'lg', src: user.avatar }}
-					description={user.email}
-					name={cellValue}
-				>
-					{user.email}
-				</User>
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`}</p>
+				</div>
 			)
 		case 'role':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
-					<p className='text-bold text-sm capitalize text-default-400'>{user.team}</p>
 				</div>
 			)
 		case 'status':
@@ -147,7 +160,7 @@ export default function UserTable() {
 							mode='selector'
 							triggerElement={
 								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
-                                    Estado
+                  Estado
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
@@ -161,7 +174,7 @@ export default function UserTable() {
 
 						/>
 						<Button color='primary' endContent={<PlusIcon />}>
-                            Añadir Usuario
+              Añadir Usuario
 						</Button>
 					</div>
 				</div>
