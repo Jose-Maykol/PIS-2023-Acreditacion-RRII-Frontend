@@ -24,11 +24,11 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	'En proceso': 'danger',
-	Concluido: 'success',
-	Programado: 'secondary',
-	Reprogramado: 'warning',
-	Planificado: 'primary'
+	Planificado: 'secondary',
+	'En desarrollo': 'primary',
+	Completado: 'success',
+	Postergado: 'warning',
+	Anulado: 'danger'
 }
 
 // Create a type with properties of improvementPlans

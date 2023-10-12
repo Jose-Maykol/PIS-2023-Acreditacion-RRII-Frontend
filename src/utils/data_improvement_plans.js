@@ -8,11 +8,11 @@ const columns = [
 ]
 
 const statusOptions = [
-	{ label: 'En proceso', uid: 'En proceso' },
-	{ label: 'Concluido', uid: 'Concluido' },
-	{ label: 'Programado', uid: 'Programado' },
-	{ label: 'Reprogramado', uid: 'Reprogramado' },
-	{ label: 'Planificado', uid: 'Planificado' }
+	{ label: 'Planificado', uid: 'Planificado' },
+	{ label: 'En desarrollo', uid: 'En desarrollo' },
+	{ label: 'Completado', uid: 'Completado' },
+	{ label: 'Postergado', uid: 'Postergado' },
+	{ label: 'Anulado', uid: 'Anulado' }
 ]
 
 // const users = []
@@ -32,7 +32,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Walter Huaracha',
 		advance: 20,
-		status: 'Concluido'
+		status: 'Completado'
 	},
 	{
 		id: 3,
@@ -40,7 +40,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'José Paniura',
 		advance: 90,
-		status: 'Reprogramado'
+		status: 'En desarrollo'
 	},
 	{
 		id: 4,
@@ -48,7 +48,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 80,
-		status: 'Programado'
+		status: 'Postergado'
 	},
 	{
 		id: 5,
@@ -56,7 +56,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Walter Huaracha',
 		advance: 50,
-		status: 'Planificado'
+		status: 'Anulado'
 	},
 	{
 		id: 6,
@@ -64,7 +64,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'José Paniura',
 		advance: 60,
-		status: 'En proceso'
+		status: 'En desarrollo'
 	},
 	{
 		id: 7,
@@ -72,7 +72,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 40,
-		status: 'Concluido'
+		status: 'Completado'
 	},
 	{
 		id: 8,
@@ -80,7 +80,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 10,
-		status: 'Reprogramado'
+		status: 'Postergado'
 	},
 	{
 		id: 9,
@@ -88,7 +88,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 10,
-		status: 'reReprogramado'
+		status: 'Postergado'
 	},
 	{
 		id: 10,
@@ -104,7 +104,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 10,
-		status: 'En proceso'
+		status: 'En desarrollo'
 	},
 	{
 		id: 12,
@@ -112,7 +112,7 @@ const improvementPlans = [
 		standard: 'Propósitos articulados',
 		assigned: 'Alex Turpo',
 		advance: 10,
-		status: 'Concluido'
+		status: 'Completado'
 	}
 ]
 
