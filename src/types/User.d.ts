@@ -3,8 +3,9 @@ export interface User {
   name: string,
   lastname: string,
   email: string,
+  status: number,
+  role: string,
 }
-
 export interface AuthUser {
   token: string,
   picture: string,
