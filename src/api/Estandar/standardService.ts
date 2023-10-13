@@ -18,6 +18,11 @@ export const StandardService = {
 		return res.data
 	},
 
+	getStandardsAndAssignedUsers: async () => {
+		const res = await api.get(`/2023/A/standards/users`);
+		return res.data
+	},
+
 	listEstandar: async () => {
 		return await api.get(url.listEstandar)
 	},
