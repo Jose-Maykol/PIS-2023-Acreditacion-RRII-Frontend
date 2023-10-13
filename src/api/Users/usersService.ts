@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CreateUser } from '@/types/User'
 import api from '../axios'
 

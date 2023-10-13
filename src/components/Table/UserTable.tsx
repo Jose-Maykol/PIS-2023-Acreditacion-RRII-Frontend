@@ -112,19 +112,14 @@ export default function UserTable() {
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2'>
-					<Tooltip content='Detalle'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<EyeIcon width={15} height={15} fill='fill-lightBlue-600'/>
-						</span>
-					</Tooltip>
 					<Tooltip content='Editar Usuario'>
 						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<PencilIcon width={15} height={15} />
+							<PencilIcon width={20} height={20} />
 						</span>
 					</Tooltip>
 					<Tooltip color='danger' content='Eliminar usuario'>
 						<span className='text-danger cursor-pointer active:opacity-50'>
-							<TrashIcon width={15} height={15} fill='fill-danger' />
+							<TrashIcon width={20} height={20} fill='fill-danger' />
 						</span>
 					</Tooltip>
 				</div>
