@@ -15,7 +15,6 @@ const CustomSelect = ({
 	values,
 	handleChangeValues,
 	options
-
 }: any) => {
 	return (
 		<div className='flex w-full flex-col gap-2'>

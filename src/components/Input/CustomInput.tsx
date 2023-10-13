@@ -19,7 +19,7 @@ const CustomInput = ({
 	isClearable,
 	onClear,
 	onValueChange
-} : any) => {
+}: any) => {
 	const [value, setValue] = useState(defaultValue || '')
 	const [isInvalid, setIsInvalid] = useState(false)
 

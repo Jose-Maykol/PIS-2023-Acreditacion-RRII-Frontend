@@ -6,10 +6,14 @@ import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
 
 const HeaderStandards = ({ id }: { id: string }) => {
-	const [standardDescription, setStandardDescription] = React.useState('NextUI is a React UI library that provides a set of accessible, reusable, and beautiful components. contenido mas largo aaa ppp')
+	const [standardDescription, setStandardDescription] = React.useState(
+		'NextUI is a React UI library that provides a set of accessible, reusable, and beautiful components. contenido mas largo aaa ppp'
+	)
 	const [factor, setFactor] = React.useState('Factor 1')
 	const [dimension, setDimension] = React.useState('Dimension 1')
-	const [standardRelated, setStandardRelated] = React.useState('Estandar 1 \nEstandar 2 \nEstandar 3')
+	const [standardRelated, setStandardRelated] = React.useState(
+		'Estandar 1 \nEstandar 2 \nEstandar 3'
+	)
 
 	return (
 		<div className='text-white flex flex-col gap-1 pl-8'>
@@ -66,7 +70,13 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					<p className='text-white text-xl mb-3'>Valoracion Estandar</p>
 					<RatingSwitch />
 				</div>
-				<Button className='text-white self-end uppercase' color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white'/>}>Editar</Button>
+				<Button
+					className='text-white self-end uppercase'
+					color='success'
+					startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
+				>
+					Editar
+				</Button>
 			</div>
 		</div>
 	)

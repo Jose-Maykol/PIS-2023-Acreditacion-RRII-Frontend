@@ -12,24 +12,24 @@ const api = axios.create({
 
 // Interceptor de solicitud: se ejecuta antes de que la solicitud sea enviada
 api.interceptors.request.use(
-	config => {
+	(config) => {
 		const userToken = localStorage.getItem('access_token')
 		if (userToken) {
 			config.headers.Authorization = `Bearer ${userToken}`
 		}
 		return config
 	},
-	error => {
+	(error) => {
 		return Promise.reject(error)
 	}
 )
 
 // Interceptor de respuesta: se ejecuta después de que la respuesta sea recibida
 api.interceptors.response.use(
-	response => {
+	(response) => {
 		return response
 	},
-	error => {
+	(error) => {
 		if (error.response.status === 401) {
 			localStorage.removeItem('access_token')
 			// useHistory().push('/auth')

@@ -23,12 +23,17 @@ const Header = () => {
 		}
 	}, [])
 
-
 	return (
-		<Navbar classNames={{ base: 'bg-lightBlue-600', wrapper: 'px-6' }} maxWidth='full' height='5.25rem'>
+		<Navbar
+			classNames={{ base: 'bg-lightBlue-600', wrapper: 'px-6' }}
+			maxWidth='full'
+			height='5.25rem'
+		>
 			<NavbarBrand className='hidden md:flex gap-3'>
 				<UbuntuIcon width={25} height={25} fill='fill-white' />
-				<p className='text-base font-bold text-white uppercase'>sistema de gestion de acreditacion</p>
+				<p className='text-base font-bold text-white uppercase'>
+					sistema de gestion de acreditacion
+				</p>
 			</NavbarBrand>
 
 			<NavbarContent className='hidden md:flex' justify='center'>
@@ -38,14 +43,16 @@ const Header = () => {
 			<NavbarContent as='div' justify='end'>
 				<p className='text-base text-white opacity-80'>{`${user.name} ${user.lastname}`}</p>
 				<CustomDropdown
-					triggerElement={<Avatar
-						as='button'
-						className='transition-transform'
-						color='secondary'
-						name='Jason Hughes'
-						size='md'
-						src={picture}
-					/>}
+					triggerElement={
+						<Avatar
+							as='button'
+							className='transition-transform'
+							color='secondary'
+							name='Jason Hughes'
+							size='md'
+							src={picture}
+						/>
+					}
 					items={[
 						{
 							uid: 'my-perfil',

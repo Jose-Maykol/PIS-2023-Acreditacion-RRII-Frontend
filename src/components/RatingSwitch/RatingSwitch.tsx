@@ -18,10 +18,11 @@ const RatingSwitch = () => {
 						</span>
 						<div
 							key={index}
-							className={`w-20 h-6 rounded-full ${selectedRating === index ? 'bg-green-500' : 'bg-gray-300'}`}
+							className={`w-20 h-6 rounded-full ${
+								selectedRating === index ? 'bg-green-500' : 'bg-gray-300'
+							}`}
 							onClick={handleSwitchClick}
-						>
-						</div>
+						></div>
 					</div>
 				))}
 			</div>

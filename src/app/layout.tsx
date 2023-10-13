@@ -10,14 +10,12 @@ export const metadata: Metadata = {
 	description: 'Sistema de Gestión de Calidad'
 }
 
-export default function RootLayout({ children }: { children: React.ReactNode}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
 		<html lang='en'>
 			<body>
 				<Providers>
-					<main>
-						{children}
-					</main>
+					<main>{children}</main>
 				</Providers>
 			</body>
 		</html>

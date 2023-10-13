@@ -17,15 +17,18 @@ import {
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function AddUserModal ({ onUserCreated }: { onUserCreated: () => void }) {
+export default function AddUserModal({ onUserCreated }: { onUserCreated: () => void }) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
 
-	const roles = useMemo(() => [
-		{ label: 'Administrador', value: 'administrador' },
-		{ label: 'Docente', value: 'docente' }
-	], [])
+	const roles = useMemo(
+		() => [
+			{ label: 'Administrador', value: 'administrador' },
+			{ label: 'Docente', value: 'docente' }
+		],
+		[]
+	)
 
 	const isInvalid = useMemo(() => {
 		if (emailValue === '') return false
@@ -70,22 +73,16 @@ export default function AddUserModal ({ onUserCreated }: { onUserCreated: () => 
 
 	return (
 		<>
-			<Button
-				onClick={onOpen}
-				color='primary'
-				endContent={<PlusIcon />}
-			>
-        Añadir Usuario
+			<Button onClick={onOpen} color='primary' endContent={<PlusIcon />}>
+				Añadir Usuario
 			</Button>
-			<Modal
-				isOpen={isOpen}
-				onOpenChange={onOpenChange}
-				placement='center'
-			>
+			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center'>
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600'>Agregar usuario</ModalHeader>
+							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600'>
+								Agregar usuario
+							</ModalHeader>
 							<ModalBody>
 								<Input
 									autoFocus
@@ -109,15 +106,16 @@ export default function AddUserModal ({ onUserCreated }: { onUserCreated: () => 
 							</ModalBody>
 							<ModalFooter>
 								<Button color='danger' variant='flat' onPress={onClose}>
-                  Cancelar
+									Cancelar
 								</Button>
 								<Button
 									color='primary'
 									onPress={() => {
 										handleSubmit()
 										onClose()
-									}}>
-                  Agregar
+									}}
+								>
+									Agregar
 								</Button>
 							</ModalFooter>
 						</>

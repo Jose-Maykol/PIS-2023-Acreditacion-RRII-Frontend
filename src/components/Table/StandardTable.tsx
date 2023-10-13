@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react'
 
 import {
-	User,
 	Chip,
 	Tooltip,
 	ChipProps,
@@ -19,17 +18,15 @@ import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { StandardService } from '@/api/Estandar/standardService'
-import { useRouter } from 'next/navigation'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'plenamente completado': 'success',
-	'completado': 'warning',
-	'no completado': 'danger',
+	completado: 'warning',
+	'no completado': 'danger'
 }
 
 
-export default function StandardTable({onOpenModal} : {onOpenModal: (id: string) => void}) {
-	const router = useRouter()
+export default function StandardTable({ onOpenModal } : {onOpenModal: (id: string) => void}) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -82,57 +79,57 @@ export default function StandardTable({onOpenModal} : {onOpenModal: (id: string)
 		const cellValue = standard[columnKey as keyof Standard]
 
 		switch (columnKey) {
-			case 'name':
+		case 'name':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm capitalize text-default-400'>{standard.name}</p>
+				</div>
+			)
+		case 'users':
+			if (Array.isArray(cellValue)) {
 				return (
 					<div className='flex flex-col'>
-						<p className='text-bold text-sm capitalize text-default-400'>{standard.name}</p>
+						{
+							cellValue.map((user, index) => (
+								<div key={index}>
+									<p className='text-bold text-sm capitalize'>{user.fullname} - {user.email}</p>
+								</div>
+							))
+						}
 					</div>
 				)
-			case 'users':
-				if (Array.isArray(cellValue)) {
-					return (
-						<div className='flex flex-col'>
-							{
-								cellValue.map((user, index) => (
-									<div key={index}>
-										<p className='text-bold text-sm capitalize'>{user.fullname} - {user.email}</p>
-									</div>
-								))
-							}
-						</div>
-					)
-				}
-				return '';
+			}
+			return ''
 
-			case 'valoration':
-				if (typeof cellValue === 'string') {
-					return (
-						<Chip className='capitalize' color={statusColorMap[standard.valoration]} size='sm' variant='flat'>
-							{cellValue}
-						</Chip>
-					)
-				}
-				return '';
-
-			case 'actions':
+		case 'valoration':
+			if (typeof cellValue === 'string') {
 				return (
-					<div className='relative flex items-center gap-2'>
-						<Tooltip content='Editar Encargados'>
-							<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
-								onOpenModal(standard.id)
-							}>
-								<PencilIcon width={15} height={15} fill='fill-warning' />
-							</span>
-						</Tooltip>
-						<Tooltip content='Ver Estandar'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<EyeIcon width={15} height={15} />
-							</span>
-						</Tooltip>
-					</div>
+					<Chip className='capitalize' color={statusColorMap[standard.valoration]} size='sm' variant='flat'>
+						{cellValue}
+					</Chip>
 				)
-			default:
-				return <div>{cellValue.toString()}</div>
+			}
+			return ''
+
+		case 'actions':
+			return (
+				<div className='relative flex items-center gap-2'>
+					<Tooltip content='Editar Encargados'>
+						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
+							onOpenModal(standard.id)
+						}>
+							<PencilIcon width={15} height={15} fill='fill-warning' />
+						</span>
+					</Tooltip>
+					<Tooltip content='Ver Estandar'>
+						<span className='text-default-400 cursor-pointer active:opacity-50'>
+							<EyeIcon width={15} height={15} />
+						</span>
+					</Tooltip>
+				</div>
+			)
+		default:
+			return <div>{cellValue.toString()}</div>
 		}
 	}, [])
 
@@ -157,7 +154,7 @@ export default function StandardTable({onOpenModal} : {onOpenModal: (id: string)
 					<CustomInput
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre de estandar ...'
+						placeholder='Buscar por nombre de estándar ...'
 						startContent={<SearchIcon />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}

@@ -1,42 +1,32 @@
 import React from 'react'
 
-import {
-	Table,
-	TableHeader,
-	TableColumn,
-	TableBody,
-	TableRow,
-	TableCell
-} from '@nextui-org/react'
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
 
 type Column = {
-    uid: string;
-    name: string;
-    sortable?: boolean;
-  };
+	uid: string
+	name: string
+	sortable?: boolean
+}
 
-  type TableProps = {
-    items: any[];
-    columns: Column[];
-    renderCell: (item: any, columnKey: React.Key) => React.ReactNode;
-    topContent?: React.ReactNode;
-    bottomContent?: React.ReactNode;
-    emptyContent: React.ReactNode;
-	classNames?: any;
-  };
+type TableProps = {
+	items: any[]
+	columns: Column[]
+	renderCell: (item: any, columnKey: React.Key) => React.ReactNode
+	topContent?: React.ReactNode
+	bottomContent?: React.ReactNode
+	emptyContent: React.ReactNode
+	classNames?: any
+}
 
-const CustomTable = (
-	{
-		items,
-		columns,
-		renderCell,
-		topContent,
-		bottomContent,
-		emptyContent,
-		classNames
-	}: TableProps
-) => {
-
+const CustomTable = ({
+	items,
+	columns,
+	renderCell,
+	topContent,
+	bottomContent,
+	emptyContent,
+	classNames
+}: TableProps) => {
 	return (
 		<Table
 			aria-label='Example table with custom cells'

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
 import {
-	// User,
 	Chip,
 	Tooltip,
 	ChipProps,
@@ -9,7 +8,6 @@ import {
 	Selection,
 	Button
 } from '@nextui-org/react'
-import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
@@ -17,9 +15,8 @@ import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { UsersService } from '@/api/Users/usersService'
-import { User } from '@/types/User'
 import AddUserModal from '../Modal/User/AddUserModal'
+import { User } from '@/types/User'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',

@@ -19,7 +19,7 @@ export const StandardService = {
 	},
 
 	getStandardsAndAssignedUsers: async () => {
-		const res = await api.get(`/2023/A/standards/users`);
+		const res = await api.get(`/2023/A/standards/users`)
 		return res.data
 	},
 
