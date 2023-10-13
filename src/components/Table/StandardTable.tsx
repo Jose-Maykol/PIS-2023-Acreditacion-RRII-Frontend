@@ -14,10 +14,12 @@ import PencilIcon from '../Icons/PencilIcon'
 import { PlusIcon } from '../Icons/PlusIcon'
 import { SearchIcon } from '../Icons/SearchIcon'
 import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
-import { columns, standarsManagement, valorationOptions } from '../../utils/StandardData'
+import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import { StandardService } from '@/api/Estandar/standardService'
+import { useRouter } from 'next/navigation'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'plenamente completado': 'success',
@@ -25,20 +27,33 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 	'no completado': 'danger',
 }
 
-type Standard = typeof standarsManagement[0];
 
-export default function StandardTable() {
-
+export default function StandardTable({onOpenModal} : {onOpenModal: (id: string) => void}) {
+	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-
-	const rowsPerPage = 7
+	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
+	const [standardsManagement, setStandardsManagement] = React.useState<any>([])
+	const columns = [
+		{ name: '#', uid: 'nro_standard', sortable: true },
+		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
+		{ name: 'ENCARGADOS', uid: 'users', sortable: true },
+		{ name: 'VALORACION ESTANDAR', uid: 'valoration' },
+		{ name: 'ACCIONES', uid: 'actions' }
+	]
 
+	useEffect(() => {
+		StandardService.getStandardsAndAssignedUsers().then((res) => {
+			setStandardsManagement(res.data)
+		})
+	})
+
+	type Standard = typeof standardsManagement[0];
 
 	const filteredItems = React.useMemo(() => {
-		let filteredStandards = [...standarsManagement]
+		let filteredStandards = [...standardsManagement]
 
 		if (hasSearchFilter) {
 			filteredStandards = filteredStandards.filter((standard) =>
@@ -52,7 +67,7 @@ export default function StandardTable() {
 		}
 
 		return filteredStandards
-	}, [standarsManagement, filterValue, statusFilter])
+	}, [standardsManagement, filterValue, statusFilter])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -73,7 +88,7 @@ export default function StandardTable() {
 						<p className='text-bold text-sm capitalize text-default-400'>{standard.name}</p>
 					</div>
 				)
-			case 'managers':
+			case 'users':
 				if (Array.isArray(cellValue)) {
 					return (
 						<div className='flex flex-col'>
@@ -103,7 +118,9 @@ export default function StandardTable() {
 				return (
 					<div className='relative flex items-center gap-2'>
 						<Tooltip content='Editar Encargados'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
+							<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
+								onOpenModal(standard.id)
+							}>
 								<PencilIcon width={15} height={15} fill='fill-warning' />
 							</span>
 						</Tooltip>
@@ -175,7 +192,7 @@ export default function StandardTable() {
 		filterValue,
 		statusFilter,
 		onSearchChange,
-		standarsManagement.length,
+		standardsManagement.length,
 		hasSearchFilter
 	])
 
