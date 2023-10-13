@@ -60,10 +60,10 @@ export default function AuthPage() {
 						picture: res.data.image,
 						role: res.data.role,
 						user: {
-							id: res.data.user.id,
-							name: res.data.user.name,
-							lastname: res.data.user.lastname,
-							email: res.data.user.email
+							id: res.data.user.id as number,
+							name: res.data.user.name as string,
+							lastname: res.data.user.lastname as string,
+							email: res.data.user.email as string
 						}
 					}
 					localStorage.setItem('access_token', token)

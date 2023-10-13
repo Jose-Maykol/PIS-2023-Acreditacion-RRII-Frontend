@@ -10,5 +10,15 @@ export interface AuthUser {
   token: string,
   picture: string,
   role: string,
-  user: User,
+  user: {
+    id: number,
+    name: string,
+    lastname: string,
+    email: string,
+  },
+}
+
+export interface CreateUser {
+  role: string,
+  email: string,
 }
