@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UsersService } from '@/api/Users/usersService'
-import { PlusIcon } from '@/components/Icons/PlusIcon'
+import PlusIcon from '@/components/Icons/PlusIcon'
 import {
 	Button,
 	Input,
@@ -73,7 +73,7 @@ export default function AddUserModal({ onUserCreated }: { onUserCreated: () => v
 
 	return (
 		<>
-			<Button onClick={onOpen} color='primary' endContent={<PlusIcon />}>
+			<Button onClick={onOpen} color='primary' endContent={<PlusIcon width={24} height={24}/>}>
 				Añadir Usuario
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center'>

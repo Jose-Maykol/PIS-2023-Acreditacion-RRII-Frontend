@@ -1,23 +1,15 @@
-import React from 'react'
+import { IconProps } from '@/types/IconProps'
 
-export const ChevronDownIcon = ({ strokeWidth = 1.5, ...otherProps }) => (
-	<svg
-		aria-hidden='true'
-		fill='none'
-		focusable='false'
-		height='1em'
-		role='presentation'
-		viewBox='0 0 24 24'
-		width='1em'
-		{...otherProps}
-	>
-		<path
-			d='m19.92 8.95-6.52 6.52c-.77.77-2.03.77-2.8 0L4.08 8.95'
-			stroke='currentColor'
-			strokeLinecap='round'
-			strokeLinejoin='round'
-			strokeMiterlimit={10}
-			strokeWidth={strokeWidth}
-		/>
-	</svg>
-)
+export default function ChevronDownIcon({ width, height, fill = 'fill-black' }: IconProps) {
+	return (
+		<svg
+			className={fill}
+			xmlns='http://www.w3.org/2000/svg'
+			width={width}
+			height={height}
+			viewBox='0 0 448 512'
+		>
+			<path d='M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z' />
+		</svg>
+	)
+}

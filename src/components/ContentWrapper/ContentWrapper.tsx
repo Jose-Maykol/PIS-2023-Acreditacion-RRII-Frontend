@@ -1,7 +1,7 @@
 import React from 'react'
 
 interface ContentWrapperProps {
-	children?: JSX.Element | Array<JSX.Element>
+	children?: React.JSX.Element | Array<React.JSX.Element>
 	className?: string
 }
 

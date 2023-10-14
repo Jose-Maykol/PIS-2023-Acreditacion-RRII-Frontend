@@ -1,5 +1,5 @@
 import api from '../axios'
-import { AxiosResponse } from 'axios';
+import { AxiosResponse } from 'axios'
 
 const url = {
 	read: '/2023/A/plans',
