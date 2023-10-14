@@ -5,14 +5,14 @@ import ImprovementPlanForm from '@/components/Form/ImprovementPlanForm'
 
 type NewImprovementPlanPageProps = {
 	params: {
-		standardId: string
+		id: string
 	}
 }
 
 export default function NewImprovementPlanPage({ params }: NewImprovementPlanPageProps) {
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
-			<ImprovementPlanForm standardId={params.standardId} />
+			<ImprovementPlanForm standardId={params.id} />
 		</ContentWrapper>
 	)
 }
