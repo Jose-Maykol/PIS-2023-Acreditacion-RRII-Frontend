@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import StandardTable from '@/components/Table/StandardTable'
-import AssignmentModal from '@/components/Modal/AssignmentModal'
+import AssignmentModal from '@/components/Modal/StandardManagement/AssignmentModal'
 
 const page = () => {
 	const [showModal, setShowModal] = useState(false)
