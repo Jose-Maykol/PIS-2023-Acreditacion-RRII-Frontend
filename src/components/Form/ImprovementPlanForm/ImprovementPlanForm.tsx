@@ -60,42 +60,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			efficacy_evaluation: false,
 			standard_id: Number(standardId),
 			plan_status_id: null,
-			sources: [
-				{
-					description: ''
-				}
-			],
+			sources: [],
 			problems_opportunities: [],
-			root_causes: [
-				{
-					description: ''
-				}
-			],
-			improvement_actions: [
-				{
-					description: ''
-				}
-			],
-			resources: [
-				{
-					description: ''
-				}
-			],
-			goals: [
-				{
-					description: ''
-				}
-			],
-			responsibles: [
-				{
-					description: ''
-				}
-			],
-			observations: [
-				{
-					description: ''
-				}
-			]
+			root_causes: [],
+			improvement_actions: [],
+			resources: [],
+			goals: [],
+			responsibles: [],
+			observations: []
 		},
 		validationSchema,
 		onSubmit: (values) => {
@@ -145,28 +117,13 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					errorMessage={formik.touched.code && formik.errors.code}
 				/>
 
-				{/* TODO: Handle as an array of strings */}
 				<DynamicInput
 					identifier='problems_opportunities'
 					label='Problemas/Oportunidades'
 					onChange={handleChangeGeneric}
 				/>
 
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='root_causes'
-					name='root_causes'
-					className='mb-3'
-					label='Causa/Raíz'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.root_causes[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/>
+				<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleChangeGeneric} />
 
 				<Input
 					// isRequired
@@ -189,20 +146,10 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					}
 				/>
 
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='improvement_actions'
-					name='improvement_actions'
-					className='mb-3'
+				<DynamicInput
+					identifier='improvement_actions'
 					label='Acciones de mejora'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.improvement_actions[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
+					onChange={handleChangeGeneric}
 				/>
 
 				{/* TODO: Implement Formik and Yup */}
@@ -254,68 +201,19 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					errorMessage={formik.touched.duration && formik.errors.duration}
 				/>
 
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='resources'
-					name='resources'
-					className='mb-3'
-					label='Recursos'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.resources[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/>
+				<DynamicInput identifier='resources' label='Recursos' onChange={handleChangeGeneric} />
 
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='goals'
-					name='goals'
-					className='mb-3'
-					label='Metas'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.goals[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/>
+				<DynamicInput identifier='goals' label='Metas' onChange={handleChangeGeneric} />
 
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='responsibles'
-					name='responsibles'
-					className='mb-3'
+				<DynamicInput
+					identifier='responsibles'
 					label='Responsables'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.responsibles[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
+					onChange={handleChangeGeneric}
 				/>
-
-				{/* TODO: Handle as an array of strings */}
-				<Input
-					// isRequired
-					id='observations'
-					name='observations'
-					className='mb-3'
+				<DynamicInput
+					identifier='observations'
 					label='Observaciones'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.observations[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
+					onChange={handleChangeGeneric}
 				/>
 
 				<Select
@@ -332,21 +230,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					))}
 				</Select>
 
-				{/* TODO: Handle as an array of strings - Check if is it sources attibute */}
-				<Input
-					// isRequired
-					id='evidences'
-					name='evidences'
-					className='mb-3'
-					label='Evidencias'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.sources[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/>
+				<DynamicInput identifier='sources' label='Fuentes' onChange={handleChangeGeneric} />
 
 				<Input
 					// isRequired

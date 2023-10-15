@@ -58,7 +58,7 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 					name={identifier}
 					className='mb-3'
 					label={label}
-					placeholder='Uno o varios'
+					placeholder='Agrega uno o varios elementos'
 					size='sm'
 					type='text'
 					variant='underlined'
