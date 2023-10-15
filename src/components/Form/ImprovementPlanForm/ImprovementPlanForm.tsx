@@ -2,8 +2,9 @@ import { Button, Checkbox, Input, Link, Select, SelectItem } from '@nextui-org/r
 import { useFormik } from 'formik'
 import { useState } from 'react'
 import * as yup from 'yup'
-import SaveIcon from '../Icons/SaveIcon'
-import CloseIcon from '../Icons/CloseIcon'
+import SaveIcon from '../../Icons/SaveIcon'
+import CloseIcon from '../../Icons/CloseIcon'
+import DynamicInput from './DynamicInput'
 
 const years = [
 	{ label: '2020', value: '2020' },
@@ -162,7 +163,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				{/* TODO: Handle as an array of strings */}
-				<Input
+				<DynamicInput identifier='problems_opportunities' label='Problemas/Oportunidades' />
+				{/* <Input
 					isRequired
 					id='problems_opportunities'
 					name='problems_opportunities'
@@ -175,7 +177,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					value={formik.values.problems_opportunities[0].description}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
-				/>
+				/> */}
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
