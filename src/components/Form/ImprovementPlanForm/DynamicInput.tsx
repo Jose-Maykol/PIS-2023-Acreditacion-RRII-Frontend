@@ -1,13 +1,15 @@
 import { PlusIcon } from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
 import { ChangeEvent, useState } from 'react'
+import DynamicInputItem from './DynamicInputItem'
 
 type DynamicInputProps = {
 	identifier: string
 	label: string
 }
 
-type ItemValue = {
+// TODO: Create global type
+export type ItemValue = {
 	id: string
 	description: string
 }
@@ -23,23 +25,26 @@ export default function DynamicInput({ identifier, label }: DynamicInputProps) {
 			setError(true)
 		} else {
 			setError(false)
-			const newValues = [
-				...inputValues,
+			setInputValues((prevValues) => [
+				...prevValues,
 				{ id: `${identifier}-${counter}`, description: singleInputValue }
-			]
-			setInputValues(newValues)
+			])
 			setSingleInputValue('')
-			setCounter((c) => c + 1)
+			setCounter((counter) => counter + 1)
 		}
 	}
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
 		const { value } = ev.target
+
 		if (value.trim().length > 0) {
 			setError(false)
 		}
+
 		setSingleInputValue(value)
 	}
+
+	// console.log(inputValues)
 
 	return (
 		<div>
@@ -66,11 +71,10 @@ export default function DynamicInput({ identifier, label }: DynamicInputProps) {
 					<PlusIcon />
 				</Button>
 			</div>
-			<hr />
 			<div>
 				{/* TODO: Change for item component */}
-				{inputValues.map((item: ItemValue) => (
-					<h1 key={item.id}>{item.description}</h1>
+				{inputValues.map((item: ItemValue, index: number) => (
+					<DynamicInputItem key={index} item={item} />
 				))}
 			</div>
 		</div>
