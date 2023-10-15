@@ -65,11 +65,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					description: ''
 				}
 			],
-			problems_opportunities: [
-				{
-					description: ''
-				}
-			],
+			problems_opportunities: [],
 			root_causes: [
 				{
 					description: ''
@@ -107,8 +103,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 		}
 	})
 
-	const handleChangeProblemsOpportunities = (values: Array<DynamicInputGeneric>) => {
-		formik.setFieldValue('problems_opportunities', values)
+	const handleChangeGeneric = (identifier: string, values: Array<DynamicInputGeneric>) => {
+		formik.setFieldValue(identifier, values)
 	}
 
 	return (
@@ -153,7 +149,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				<DynamicInput
 					identifier='problems_opportunities'
 					label='Problemas/Oportunidades'
-					onChange={handleChangeProblemsOpportunities}
+					onChange={handleChangeGeneric}
 				/>
 
 				{/* TODO: Handle as an array of strings */}

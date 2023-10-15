@@ -7,7 +7,7 @@ import { DynamicInputGeneric } from './ImprovementPlanForm'
 type DynamicInputProps = {
 	identifier: string
 	label: string
-	onChange: (values: Array<DynamicInputGeneric>) => void
+	onChange: (identifier: string, values: Array<DynamicInputGeneric>) => void
 }
 
 // TODO: Create global type
@@ -28,7 +28,7 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 			setError(false)
 			setInputValues(newValues)
 			setSingleInputValue('')
-			onChange(newValues)
+			onChange(identifier, newValues)
 		}
 	}
 
