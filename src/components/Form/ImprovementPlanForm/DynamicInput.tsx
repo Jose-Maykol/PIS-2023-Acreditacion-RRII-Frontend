@@ -2,36 +2,41 @@ import { PlusIcon } from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
 import { ChangeEvent, useState } from 'react'
 import DynamicInputItem from './DynamicInputItem'
+import { DynamicInputGeneric } from './ImprovementPlanForm'
 
 type DynamicInputProps = {
 	identifier: string
 	label: string
+	onChange: (values: Array<DynamicInputGeneric>) => void
 }
 
 // TODO: Create global type
 export type ItemValue = {
-	id: string
 	description: string
 }
 
-export default function DynamicInput({ identifier, label }: DynamicInputProps) {
+export default function DynamicInput({ identifier, label, onChange }: DynamicInputProps) {
 	const [error, setError] = useState(false)
 	const [singleInputValue, setSingleInputValue] = useState('')
 	const [inputValues, setInputValues] = useState(Array<ItemValue>)
-	const [counter, setCounter] = useState(0)
 
 	const handleAdd = () => {
 		if (singleInputValue.trim() === '') {
 			setError(true)
 		} else {
+			const newValues = [...inputValues, { description: singleInputValue }]
 			setError(false)
-			setInputValues((prevValues) => [
-				...prevValues,
-				{ id: `${identifier}-${counter}`, description: singleInputValue }
-			])
+			setInputValues(newValues)
 			setSingleInputValue('')
-			setCounter((counter) => counter + 1)
+			onChange(newValues)
 		}
+	}
+
+	// TODO: Check Delete handler
+	const handleDelete = (index: number) => {
+		const newValues = [...inputValues]
+		newValues.splice(index, 1)
+		setInputValues(newValues)
 	}
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
@@ -44,13 +49,11 @@ export default function DynamicInput({ identifier, label }: DynamicInputProps) {
 		setSingleInputValue(value)
 	}
 
-	// console.log(inputValues)
-
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
 				<Input
-					isRequired
+					// isRequired
 					id={identifier}
 					name={identifier}
 					className='mb-3'
@@ -73,8 +76,13 @@ export default function DynamicInput({ identifier, label }: DynamicInputProps) {
 			</div>
 			<div>
 				{/* TODO: Change for item component */}
-				{inputValues.map((item: ItemValue, index: number) => (
-					<DynamicInputItem key={index} item={item} />
+				{inputValues?.map((item: ItemValue, index: number) => (
+					<DynamicInputItem
+						key={`${identifier}-${index}`}
+						item={item}
+						onDelete={handleDelete}
+						indexOnList={index}
+					/>
 				))}
 			</div>
 		</div>

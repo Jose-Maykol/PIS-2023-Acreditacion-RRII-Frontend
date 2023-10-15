@@ -31,6 +31,10 @@ type ImprovementPlanFormProps = {
 	standardId: string
 }
 
+export type DynamicInputGeneric = {
+	description: string
+}
+
 // TODO: Add all validations
 const validationSchema = yup.object({
 	name: yup.string().trim().required('Nombre de plan necesario'),
@@ -52,7 +56,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			opportunity_for_improvement: '',
 			semester_execution: '',
 			advance: 0,
-			duration: 0,
+			duration: 1,
 			efficacy_evaluation: false,
 			standard_id: Number(standardId),
 			plan_status_id: null,
@@ -64,15 +68,9 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			problems_opportunities: [
 				{
 					description: ''
-				},
-				{
-					description: ''
 				}
 			],
 			root_causes: [
-				{
-					description: ''
-				},
 				{
 					description: ''
 				}
@@ -80,15 +78,9 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			improvement_actions: [
 				{
 					description: ''
-				},
-				{
-					description: ''
 				}
 			],
 			resources: [
-				{
-					description: ''
-				},
 				{
 					description: ''
 				}
@@ -96,23 +88,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			goals: [
 				{
 					description: ''
-				},
-				{
-					description: ''
 				}
 			],
 			responsibles: [
 				{
 					description: ''
-				},
-				{
-					description: ''
 				}
 			],
 			observations: [
-				{
-					description: ''
-				},
 				{
 					description: ''
 				}
@@ -124,13 +107,17 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 		}
 	})
 
+	const handleChangeProblemsOpportunities = (values: Array<DynamicInputGeneric>) => {
+		formik.setFieldValue('problems_opportunities', values)
+	}
+
 	return (
 		<div>
 			<form onSubmit={formik.handleSubmit}>
 				<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
 				<Input
-					isRequired
+					// isRequired
 					id='name'
 					name='name'
 					className='mb-3'
@@ -146,7 +133,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				<Input
-					isRequired
+					// isRequired
 					className='mb-3'
 					id='code'
 					name='code'
@@ -163,25 +150,15 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				{/* TODO: Handle as an array of strings */}
-				<DynamicInput identifier='problems_opportunities' label='Problemas/Oportunidades' />
-				{/* <Input
-					isRequired
-					id='problems_opportunities'
-					name='problems_opportunities'
-					className='mb-3'
+				<DynamicInput
+					identifier='problems_opportunities'
 					label='Problemas/Oportunidades'
-					placeholder='Uno o varios'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.problems_opportunities[0].description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/> */}
+					onChange={handleChangeProblemsOpportunities}
+				/>
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='root_causes'
 					name='root_causes'
 					className='mb-3'
@@ -196,7 +173,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				<Input
-					isRequired
+					// isRequired
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
 					className='mb-3'
@@ -218,7 +195,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='improvement_actions'
 					name='improvement_actions'
 					className='mb-3'
@@ -234,14 +211,26 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Implement Formik and Yup */}
 				<div className='mb-3 flex gap-5'>
-					<Select isRequired className='max-w-xs' label='Año' size='sm' variant='underlined'>
+					<Select
+						// isRequired
+						className='max-w-xs'
+						label='Año'
+						size='sm'
+						variant='underlined'
+					>
 						{years.map((year) => (
 							<SelectItem key={year.value} value={year.value}>
 								{year.label}
 							</SelectItem>
 						))}
 					</Select>
-					<Select isRequired className='max-w-xs' label='Semestre' size='sm' variant='underlined'>
+					<Select
+						// isRequired
+						className='max-w-xs'
+						label='Semestre'
+						size='sm'
+						variant='underlined'
+					>
 						{semesters.map((semester) => (
 							<SelectItem key={semester.value} value={semester.value}>
 								{semester.label}
@@ -252,7 +241,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Check type number to string */}
 				<Input
-					isRequired
+					// isRequired
 					id='duration'
 					name='duration'
 					className='max-w-xs mb-3'
@@ -271,7 +260,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='resources'
 					name='resources'
 					className='mb-3'
@@ -287,7 +276,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='goals'
 					name='goals'
 					className='mb-3'
@@ -303,7 +292,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='responsibles'
 					name='responsibles'
 					className='mb-3'
@@ -319,7 +308,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings */}
 				<Input
-					isRequired
+					// isRequired
 					id='observations'
 					name='observations'
 					className='mb-3'
@@ -333,7 +322,13 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					onBlur={formik.handleBlur}
 				/>
 
-				<Select isRequired className='max-w-xs mb-3' label='Estado' size='sm' variant='underlined'>
+				<Select
+					// isRequired
+					className='max-w-xs mb-3'
+					label='Estado'
+					size='sm'
+					variant='underlined'
+				>
 					{status.map((stat) => (
 						<SelectItem key={stat.value} value={stat.value}>
 							{stat.label}
@@ -343,7 +338,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				{/* TODO: Handle as an array of strings - Check if is it sources attibute */}
 				<Input
-					isRequired
+					// isRequired
 					id='evidences'
 					name='evidences'
 					className='mb-3'
@@ -358,7 +353,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				<Input
-					isRequired
+					// isRequired
 					type='number'
 					label='Avance'
 					className='max-w-xs mb-3'
