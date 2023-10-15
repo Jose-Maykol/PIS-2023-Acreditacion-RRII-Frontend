@@ -112,15 +112,15 @@ export default function ImprovementPlanFormBk({ standardId }: ImprovementPlanFor
 
 		console.log(data)
 
-		// PlanMejoraService.create(data)
-		// 	.then((res) => {
-		// 		if (res.statusText === 'Created') {
-		// 			router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error)
-		// 	})
+		PlanMejoraService.create(data)
+			.then((res) => {
+				if (res.statusText === 'Created') {
+					router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	return (

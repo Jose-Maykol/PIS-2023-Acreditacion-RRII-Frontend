@@ -5,6 +5,8 @@ import * as yup from 'yup'
 import SaveIcon from '../../Icons/SaveIcon'
 import CloseIcon from '../../Icons/CloseIcon'
 import DynamicInput from './DynamicInput'
+import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { useRouter } from 'next/navigation'
 
 const years = [
 	{ label: '2020', value: '2020' },
@@ -20,11 +22,11 @@ const semesters = [
 ]
 
 const status = [
-	{ label: 'En proceso', value: 0 },
-	{ label: 'Concluido', value: 1 },
-	{ label: 'Programado', value: 2 },
-	{ label: 'Reprogramado', value: 3 },
-	{ label: 'Planificado', value: 4 }
+	{ label: 'Planificado', value: 1 },
+	{ label: 'En desarrollo', value: 2 },
+	{ label: 'Completado', value: 3 },
+	{ label: 'Postergado', value: 4 },
+	{ label: 'Anulado', value: 5 }
 ]
 
 type ImprovementPlanFormProps = {
@@ -35,7 +37,14 @@ export type DynamicInputGeneric = {
 	description: string
 }
 
-// TODO: Add all validations
+/*
+	TODO
+	* Add all validations
+	* Filter by standard id
+	* Edit Dynamic Field
+	* Delete Dynamic Field
+	* Improve styles
+*/
 const validationSchema = yup.object({
 	name: yup.string().trim().required('Nombre de plan necesario'),
 	code: yup
@@ -47,6 +56,8 @@ const validationSchema = yup.object({
 })
 
 export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormProps) {
+	const router = useRouter()
+
 	const [isSelected, setIsSelected] = useState(false)
 
 	const formik = useFormik({
@@ -73,7 +84,35 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 		},
 		validationSchema,
 		onSubmit: (values) => {
-			alert(JSON.stringify(values, null, 2))
+			const data = {
+				code: values.code,
+				name: values.name,
+				opportunity_for_improvement: values.opportunity_for_improvement,
+				semester_execution: values.semester_execution,
+				advance: Number(values.advance),
+				duration: Number(values.duration),
+				efficacy_evaluation: Boolean(values.efficacy_evaluation),
+				standard_id: Number(values.standard_id),
+				plan_status_id: Number(values.plan_status_id),
+				sources: values.sources,
+				problems_opportunities: values.problems_opportunities,
+				root_causes: values.root_causes,
+				improvement_actions: values.improvement_actions,
+				resources: values.resources,
+				goals: values.goals,
+				responsibles: values.responsibles,
+				observations: values.observations
+			}
+
+			PlanMejoraService.create(data)
+				.then((res) => {
+					if (res.statusText === 'Created') {
+						router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
+					}
+				})
+				.catch((error) => {
+					console.log(error)
+				})
 		}
 	})
 
@@ -157,7 +196,6 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					onChange={handleChangeGeneric}
 				/>
 
-				{/* TODO: Implement Formik and Yup */}
 				<div className='mb-3 flex gap-5'>
 					<Select
 						isRequired
@@ -272,7 +310,6 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				</div>
 
 				<div className='flex gap-4 justify-end p-3'>
-					{/* TODO: Implement create PM functionality */}
 					<Button
 						color='success'
 						className='text-white mb-5'
