@@ -1,6 +1,6 @@
 import { Button, Checkbox, Input, Link, Select, SelectItem } from '@nextui-org/react'
 import { useFormik } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import * as yup from 'yup'
 import SaveIcon from '../../Icons/SaveIcon'
 import CloseIcon from '../../Icons/CloseIcon'
@@ -59,7 +59,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			duration: 1,
 			efficacy_evaluation: false,
 			standard_id: Number(standardId),
-			plan_status_id: null,
+			plan_status_id: 0,
 			sources: [],
 			problems_opportunities: [],
 			root_causes: [],
@@ -67,7 +67,9 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 			resources: [],
 			goals: [],
 			responsibles: [],
-			observations: []
+			observations: [],
+			year: '',
+			semester: ''
 		},
 		validationSchema,
 		onSubmit: (values) => {
@@ -79,14 +81,19 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 		formik.setFieldValue(identifier, values)
 	}
 
+	// Updating 'semester_execution' parameter
+	useEffect(() => {
+		const updatedSemesterExecution = `${formik.values.year}-${formik.values.semester}`
+		formik.setFieldValue('semester_execution', updatedSemesterExecution)
+	}, [formik.values.year, formik.values.semester])
+
 	return (
 		<div>
 			<form onSubmit={formik.handleSubmit}>
 				<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
 				<Input
-					// isRequired
-					id='name'
+					isRequired
 					name='name'
 					className='mb-3'
 					label='Nombre del Plan de Mejora'
@@ -101,9 +108,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				<Input
-					// isRequired
+					isRequired
 					className='mb-3'
-					id='code'
 					name='code'
 					label='Código'
 					placeholder='OMXX-YY-ZZZZ'
@@ -126,8 +132,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleChangeGeneric} />
 
 				<Input
-					// isRequired
-					id='opportunity_for_improvement'
+					isRequired
 					name='opportunity_for_improvement'
 					className='mb-3'
 					label='Oportunidad de mejora'
@@ -155,11 +160,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				{/* TODO: Implement Formik and Yup */}
 				<div className='mb-3 flex gap-5'>
 					<Select
-						// isRequired
+						isRequired
+						name='year'
 						className='max-w-xs'
 						label='Año'
 						size='sm'
 						variant='underlined'
+						value={formik.values.year}
+						onChange={formik.handleChange}
 					>
 						{years.map((year) => (
 							<SelectItem key={year.value} value={year.value}>
@@ -168,11 +176,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 						))}
 					</Select>
 					<Select
-						// isRequired
+						isRequired
+						name='semester'
 						className='max-w-xs'
 						label='Semestre'
 						size='sm'
 						variant='underlined'
+						value={formik.values.semester}
+						onChange={formik.handleChange}
 					>
 						{semesters.map((semester) => (
 							<SelectItem key={semester.value} value={semester.value}>
@@ -182,10 +193,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					</Select>
 				</div>
 
-				{/* TODO: Check type number to string */}
 				<Input
-					// isRequired
-					id='duration'
+					isRequired
 					name='duration'
 					className='max-w-xs mb-3'
 					label='Duración (meses)'
@@ -217,11 +226,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				/>
 
 				<Select
-					// isRequired
+					isRequired
+					name='plan_status_id'
 					className='max-w-xs mb-3'
 					label='Estado'
 					size='sm'
 					variant='underlined'
+					value={formik.values.plan_status_id}
+					onChange={formik.handleChange}
 				>
 					{status.map((stat) => (
 						<SelectItem key={stat.value} value={stat.value}>
@@ -233,11 +245,13 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				<DynamicInput identifier='sources' label='Fuentes' onChange={handleChangeGeneric} />
 
 				<Input
-					// isRequired
+					isRequired
+					name='advance'
 					type='number'
 					label='Avance'
 					className='max-w-xs mb-3'
-					defaultValue='0'
+					value={formik.values.advance.toString()}
+					onChange={formik.handleChange}
 					min={0}
 					max={100}
 					variant='underlined'
@@ -247,7 +261,12 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					<label className='text-default-900 text-sm'>
 						Eficacia<span className='text-red-600'>*</span>
 					</label>
-					<Checkbox isSelected={isSelected} onValueChange={setIsSelected}>
+					<Checkbox
+						name='efficacy_evaluation'
+						isSelected={isSelected}
+						onValueChange={setIsSelected}
+						onChange={formik.handleChange}
+					>
 						{isSelected ? 'Sí' : 'No'}
 					</Checkbox>
 				</div>

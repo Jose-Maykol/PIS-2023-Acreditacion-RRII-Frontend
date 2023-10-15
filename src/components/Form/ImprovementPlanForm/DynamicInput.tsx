@@ -54,7 +54,6 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 			<div className='flex items-center gap-3'>
 				<Input
 					// isRequired
-					id={identifier}
 					name={identifier}
 					className='mb-3'
 					label={label}
