@@ -39,6 +39,19 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 		setInputValues(newValues)
 	}
 
+	// Filter updated item
+	const handleUpdate = (value: ItemValue, index: number) => {
+		const newValues = inputValues.map((item, i) => {
+			if (index === i) {
+				return value
+			} else {
+				return item
+			}
+		})
+		setInputValues(newValues)
+		onChange(identifier, newValues)
+	}
+
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
 		const { value } = ev.target
 
@@ -65,9 +78,6 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 					errorMessage={error && 'El campo no puede estar vacío'}
 					value={singleInputValue}
 					onChange={handleChange}
-					// value={formik.values.problems_opportunities[0].description}
-					// onChange={formik.handleChange}
-					// onBlur={formik.handleBlur}
 				/>
 				<Button isIconOnly color='primary' aria-label='Add' variant='flat' onClick={handleAdd}>
 					<PlusIcon />
@@ -81,6 +91,7 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 						item={item}
 						onDelete={handleDelete}
 						indexOnList={index}
+						onUpdate={handleUpdate}
 					/>
 				))}
 			</div>

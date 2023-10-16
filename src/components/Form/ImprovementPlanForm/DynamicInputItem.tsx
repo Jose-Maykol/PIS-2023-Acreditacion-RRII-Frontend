@@ -10,9 +10,15 @@ type DynamicInputItemProps = {
 	item: ItemValue
 	onDelete: (index: number) => void
 	indexOnList: number
+	onUpdate: (value: ItemValue, index: number) => void
 }
 
-export default function DynamicInputItem({ item, onDelete, indexOnList }: DynamicInputItemProps) {
+export default function DynamicInputItem({
+	item,
+	onDelete,
+	indexOnList,
+	onUpdate
+}: DynamicInputItemProps) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [value, setValue] = useState(item.description)
 	const [error, setError] = useState(false)
@@ -24,6 +30,7 @@ export default function DynamicInputItem({ item, onDelete, indexOnList }: Dynami
 			} else {
 				setError(false)
 				setIsEditing(false)
+				onUpdate({ description: value }, indexOnList)
 			}
 		} else {
 			setIsEditing(true)

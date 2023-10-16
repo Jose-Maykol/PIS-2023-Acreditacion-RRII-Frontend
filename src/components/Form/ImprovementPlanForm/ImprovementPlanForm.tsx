@@ -104,6 +104,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				observations: values.observations
 			}
 
+			// console.log(data)
+
 			PlanMejoraService.create(data)
 				.then((res) => {
 					if (res.statusText === 'Created') {
