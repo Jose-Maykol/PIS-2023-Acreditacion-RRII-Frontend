@@ -22,7 +22,7 @@ export default function SideBar({
 	console.log(standards)
 	return (
 		<nav
-			className={`fixed top-0 left-0 z-50 bg-white ${
+			className={`overflow-y-auto bg-white no-scrollbar border-gray-100 border ${
 				isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'
 			} text-lg min-h-screen p-4`}
 		>
@@ -40,31 +40,33 @@ export default function SideBar({
 					<AngleDoubleRightIcon width={20} height={20} fill='hover:fill-lightBlue-600' />
 				</button>
 			</div>
-			{isSidebarOpen ? (
-				<Link href='/dashboard'>
-					<div className='flex flex-row items-center leading-5'>
-						<Image
-							src={logoUnsa}
-							alt='logo-unsa'
-							width={55}
-							height={75}
-							className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]'
-						/>
-						<h1 className='uppercase text-[0.5rem] p-2'>
+			{isSidebarOpen
+				? (
+					<Link href='/dashboard'>
+						<div className='flex flex-row items-center leading-5'>
+							<Image
+								src={logoUnsa}
+								alt='logo-unsa'
+								width={55}
+								height={75}
+								className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]'
+							/>
+							<h1 className='uppercase text-[0.5rem] p-2'>
 							escuela profesional de <br />{' '}
-							<span className='font-bold text-[14px]'>relaciones industriales</span>
-						</h1>
-					</div>
-				</Link>
-			) : (
-				<Image
-					src={logoUnsa}
-					alt='logo-unsa'
-					width={30}
-					height={40}
-					className='h-[40px] w-[30px] min-h-[40px] min-w-[30px]'
-				/>
-			)}
+								<span className='font-bold text-[14px]'>relaciones industriales</span>
+							</h1>
+						</div>
+					</Link>
+				)
+				: (
+					<Image
+						src={logoUnsa}
+						alt='logo-unsa'
+						width={30}
+						height={40}
+						className='h-[40px] w-[30px] min-h-[40px] min-w-[30px]'
+					/>
+				)}
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>area personal</h3>

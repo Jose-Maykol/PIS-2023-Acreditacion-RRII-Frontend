@@ -17,6 +17,7 @@ import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
+import { UsersService } from '@/api/Users/usersService'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
