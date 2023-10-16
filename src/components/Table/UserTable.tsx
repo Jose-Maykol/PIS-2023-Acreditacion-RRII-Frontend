@@ -6,14 +6,14 @@ import {
 	ChipProps,
 	Pagination,
 	Selection,
+	Input,
 	Button
 } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
-import { SearchIcon } from '../Icons/SearchIcon'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
+import SearchIcon from '../Icons/SearchIcon'
+import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
-import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
@@ -145,11 +145,11 @@ export default function UserTable() {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
-					<CustomInput
+					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar por nombre...'
-						startContent={<SearchIcon />}
+						startContent={<SearchIcon width={24} height={24} />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -158,7 +158,7 @@ export default function UserTable() {
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={20} height={20}/>} variant='flat'>
                   Estado
 								</Button>
 							}

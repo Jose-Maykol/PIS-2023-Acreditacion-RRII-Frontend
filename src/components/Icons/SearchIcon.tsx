@@ -1,29 +1,15 @@
-import React from 'react'
+import { IconProps } from '@/types/IconProps'
 
-export const SearchIcon = (props: any) => (
-	<svg
-		aria-hidden='true'
-		fill='none'
-		focusable='false'
-		height='1em'
-		role='presentation'
-		viewBox='0 0 24 24'
-		width='1em'
-		{...props}
-	>
-		<path
-			d='M11.5 21C16.7467 21 21 16.7467 21 11.5C21 6.25329 16.7467 2 11.5 2C6.25329 2 2 6.25329 2 11.5C2 16.7467 6.25329 21 11.5 21Z'
-			stroke='currentColor'
-			strokeLinecap='round'
-			strokeLinejoin='round'
-			strokeWidth='2'
-		/>
-		<path
-			d='M22 22L20 20'
-			stroke='currentColor'
-			strokeLinecap='round'
-			strokeLinejoin='round'
-			strokeWidth='2'
-		/>
-	</svg>
-)
+export default function SearchIcon({ width, height, fill = 'fill-black' }: IconProps) {
+	return (
+		<svg
+			className={fill}
+			xmlns='http://www.w3.org/2000/svg'
+			width={width}
+			height={height}
+			viewBox='0 0 512 512'
+		>
+			<path d='M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z' />
+		</svg>
+	)
+}

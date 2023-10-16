@@ -6,16 +6,16 @@ import {
 	ChipProps,
 	Pagination,
 	Selection,
+	Input,
 	Button
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import { PlusIcon } from '../Icons/PlusIcon'
-import { SearchIcon } from '../Icons/SearchIcon'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
+import PlusIcon from '../Icons/PlusIcon'
+import SearchIcon from '../Icons/SearchIcon'
+import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
-import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { StandardService } from '@/api/Estandar/standardService'
 
@@ -151,11 +151,11 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
-					<CustomInput
+					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar por nombre de estándar ...'
-						startContent={<SearchIcon />}
+						startContent={<SearchIcon width={24} height={24}/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -164,7 +164,7 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={20} height={20} />} variant='flat'>
 									Estado
 								</Button>
 							}
@@ -178,7 +178,7 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon />}>
+						<Button color='primary' endContent={<PlusIcon width={24} height={24}/>}>
 							Añadir Usuario
 						</Button>
 					</div>
