@@ -73,8 +73,8 @@ export default function AddUserModal({ onUserCreated }: { onUserCreated: () => v
 
 	return (
 		<>
-			<Button onClick={onOpen} color='primary' endContent={<PlusIcon width={24} height={24}/>}>
-				Añadir Usuario
+			<Button onClick={onOpen} color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+				Añadir usuario
 			</Button>
 			<Modal isOpen={isOpen} onOpenChange={onOpenChange} placement='center'>
 				<ModalContent>

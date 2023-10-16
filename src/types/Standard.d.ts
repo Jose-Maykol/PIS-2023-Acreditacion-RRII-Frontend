@@ -1,3 +1,5 @@
+import { User } from './User'
+
 export interface Standard {
 	id: number
 	name: string
@@ -18,4 +20,12 @@ export interface PartialStandard {
 	id: number
 	name: string
 	nro_standard: number
+}
+
+export interface StandardUsers {
+	id: number
+	name: string
+	nro_standard: number
+	valoration: number
+	users: User[] | []
 }

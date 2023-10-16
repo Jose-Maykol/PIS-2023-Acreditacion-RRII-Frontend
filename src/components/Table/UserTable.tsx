@@ -50,12 +50,14 @@ export default function UserTable() {
 	useEffect(() => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
+			console.log('no el use effect ta mal xd')
 		})
 	}, [])
 
 	const handleUserCreated = () => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
+			console.log('esto esta mal')
 		})
 	}
 
@@ -148,8 +150,8 @@ export default function UserTable() {
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre...'
-						startContent={<SearchIcon width={24} height={24} />}
+						placeholder='Buscar por nombre'
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}

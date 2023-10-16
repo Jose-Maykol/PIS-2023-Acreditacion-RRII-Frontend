@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
 	Chip,
@@ -18,6 +18,7 @@ import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { StandardService } from '@/api/Estandar/standardService'
+import { StandardUsers } from '@/types/Standard'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'plenamente completado': 'success',
@@ -27,12 +28,12 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 
 
 export default function StandardTable({ onOpenModal } : {onOpenModal: (id: string) => void}) {
-	const [filterValue, setFilterValue] = React.useState('')
+	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
-	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
+	const [statusFilter, setStatusFilter] = useState<Selection>('all')
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
-	const [standardsManagement, setStandardsManagement] = React.useState<any>([])
+	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const columns = [
 		{ name: '#', uid: 'nro_standard', sortable: true },
 		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
@@ -44,8 +45,9 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
 			setStandardsManagement(res.data)
+			console.log(res.data)
 		})
-	})
+	}, [])
 
 	type Standard = typeof standardsManagement[0];
 
@@ -92,7 +94,7 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 						{
 							cellValue.map((user, index) => (
 								<div key={index}>
-									<p className='text-bold text-sm capitalize'>{user.fullname} - {user.email}</p>
+									<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`} - {user.email}</p>
 								</div>
 							))
 						}
@@ -116,7 +118,7 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 				<div className='relative flex items-center gap-2'>
 					<Tooltip content='Editar Encargados'>
 						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
-							onOpenModal(standard.id)
+							onOpenModal(standard.id.toString())
 						}>
 							<PencilIcon width={15} height={15} fill='fill-warning' />
 						</span>
@@ -154,8 +156,8 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre de estándar ...'
-						startContent={<SearchIcon width={24} height={24}/>}
+						placeholder='Buscar por nombre de estándar'
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -178,7 +180,7 @@ export default function StandardTable({ onOpenModal } : {onOpenModal: (id: strin
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon width={24} height={24}/>}>
+						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
 							Añadir Usuario
 						</Button>
 					</div>
