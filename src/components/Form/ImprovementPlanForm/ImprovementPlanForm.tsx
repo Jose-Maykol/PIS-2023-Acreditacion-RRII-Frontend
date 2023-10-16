@@ -41,7 +41,6 @@ export type DynamicInputGeneric = {
 	TODO
 	* Add all validations
 	* Filter by standard id
-	* Edit Dynamic Field
 	* Delete Dynamic Field
 	* Improve styles
 */
@@ -104,7 +103,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				observations: values.observations
 			}
 
-			// console.log(data)
+			console.log(data)
 
 			PlanMejoraService.create(data)
 				.then((res) => {

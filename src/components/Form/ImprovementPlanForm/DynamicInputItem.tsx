@@ -2,7 +2,7 @@ import { Button, Input } from '@nextui-org/react'
 import { ItemValue } from './DynamicInput'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import React, { ChangeEvent, useState } from 'react'
+import React, { ChangeEvent, useEffect, useState } from 'react'
 import SaveIcon from '@/components/Icons/SaveIcon'
 
 // TODO: Check Delete handler
@@ -37,6 +37,10 @@ export default function DynamicInputItem({
 		}
 	}
 
+	const handleDelete = () => {
+		onDelete(indexOnList)
+	}
+
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
 		const { value } = ev.target
 
@@ -61,13 +65,7 @@ export default function DynamicInputItem({
 			<Button isIconOnly color='success' aria-label='Edit' variant='flat' onClick={handleEditSave}>
 				{isEditing ? <SaveIcon width={16} height={16} /> : <PencilIcon width={16} height={16} />}
 			</Button>
-			<Button
-				isIconOnly
-				color='danger'
-				aria-label='Delete'
-				variant='flat'
-				onClick={() => onDelete(indexOnList)}
-			>
+			<Button isIconOnly color='danger' aria-label='Delete' variant='flat' onClick={handleDelete}>
 				<TrashIcon width={16} height={16} />
 			</Button>
 		</div>

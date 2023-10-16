@@ -34,9 +34,9 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 
 	// TODO: Check Delete handler
 	const handleDelete = (index: number) => {
-		const newValues = [...inputValues]
-		newValues.splice(index, 1)
+		const newValues = inputValues.filter((item, i) => index !== i)
 		setInputValues(newValues)
+		onChange(identifier, newValues)
 	}
 
 	// Filter updated item
@@ -84,7 +84,6 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 				</Button>
 			</div>
 			<div>
-				{/* TODO: Change for item component */}
 				{inputValues?.map((item: ItemValue, index: number) => (
 					<DynamicInputItem
 						key={`${identifier}-${index}`}
