@@ -1,60 +1,72 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import {
-	User,
 	Chip,
 	Tooltip,
 	ChipProps,
 	Pagination,
 	Selection,
+	Input,
 	Button
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import TrashIcon from '../Icons/TrashIcon'
-import { PlusIcon } from '../Icons/PlusIcon'
-import { SearchIcon } from '../Icons/SearchIcon'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
-import { columns, users, statusOptions } from '../../utils/data'
+import PlusIcon from '../Icons/PlusIcon'
+import SearchIcon from '../Icons/SearchIcon'
+import ChevronDownIcon from '../Icons/ChevronDownIcon'
+import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
-import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-
 import { StandardService } from '@/api/Estandar/standardService'
+import { StandardUsers } from '@/types/Standard'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	active: 'success',
-	paused: 'danger',
-	vacation: 'warning'
+	'plenamente completado': 'success',
+	completado: 'warning',
+	'no completado': 'danger'
 }
 
-type User = typeof users[0];
 
-export default function StandardTable() {
-	const [filterValue, setFilterValue] = React.useState('')
+export default function StandardTable({ onOpenModal } : {onOpenModal: (id: string) => void}) {
+	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
-	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-
-	const rowsPerPage = 7
+	const [statusFilter, setStatusFilter] = useState<Selection>('all')
+	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
+	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
+	const columns = [
+		{ name: '#', uid: 'nro_standard', sortable: true },
+		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
+		{ name: 'ENCARGADOS', uid: 'users', sortable: true },
+		{ name: 'VALORACION ESTANDAR', uid: 'valoration' },
+		{ name: 'ACCIONES', uid: 'actions' }
+	]
 
+	useEffect(() => {
+		StandardService.getStandardsAndAssignedUsers().then((res) => {
+			setStandardsManagement(res.data)
+			console.log(res.data)
+		})
+	}, [])
+
+	type Standard = typeof standardsManagement[0];
 
 	const filteredItems = React.useMemo(() => {
-		let filteredUsers = [...users]
+		let filteredStandards = [...standardsManagement]
 
 		if (hasSearchFilter) {
-			filteredUsers = filteredUsers.filter((user) =>
-				user.name.toLowerCase().includes(filterValue.toLowerCase())
+			filteredStandards = filteredStandards.filter((standard) =>
+				standard.name.toLowerCase().includes(filterValue.toLowerCase())
 			)
 		}
-		if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
-			filteredUsers = filteredUsers.filter((user) =>
-				Array.from(statusFilter).includes(user.status)
+		if (statusFilter !== 'all' && Array.from(statusFilter).length !== valorationOptions.length) {
+			filteredStandards = filteredStandards.filter((standard) =>
+				Array.from(statusFilter).includes(standard.valoration)
 			)
 		}
 
-		return filteredUsers
-	}, [users, filterValue, statusFilter])
+		return filteredStandards
+	}, [standardsManagement, filterValue, statusFilter])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -65,55 +77,61 @@ export default function StandardTable() {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
-		const cellValue = user[columnKey as keyof User]
+	const renderCell = React.useCallback((standard: Standard, columnKey: React.Key) => {
+		const cellValue = standard[columnKey as keyof Standard]
 
 		switch (columnKey) {
 		case 'name':
 			return (
-				<User
-					avatarProps={{ radius: 'lg', src: user.avatar }}
-					description={user.email}
-					name={cellValue}
-				>
-					{user.email}
-				</User>
-			)
-		case 'role':
-			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{cellValue}</p>
-					<p className='text-bold text-sm capitalize text-default-400'>{user.team}</p>
+					<p className='text-bold text-sm capitalize text-default-400'>{standard.name}</p>
 				</div>
 			)
-		case 'status':
-			return (
-				<Chip className='capitalize' color={statusColorMap[user.status]} size='sm' variant='flat'>
-					{cellValue}
-				</Chip>
-			)
+		case 'users':
+			if (Array.isArray(cellValue)) {
+				return (
+					<div className='flex flex-col'>
+						{
+							cellValue.map((user, index) => (
+								<div key={index}>
+									<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`} - {user.email}</p>
+								</div>
+							))
+						}
+					</div>
+				)
+			}
+			return ''
+
+		case 'valoration':
+			if (typeof cellValue === 'string') {
+				return (
+					<Chip className='capitalize' color={statusColorMap[standard.valoration]} size='sm' variant='flat'>
+						{cellValue}
+					</Chip>
+				)
+			}
+			return ''
+
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2'>
-					<Tooltip content='Detalle'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<EyeIcon width={15} height={15} />
-						</span>
-					</Tooltip>
-					<Tooltip content='Editar Usuario'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
+					<Tooltip content='Editar Encargados'>
+						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
+							onOpenModal(standard.id.toString())
+						}>
 							<PencilIcon width={15} height={15} fill='fill-warning' />
 						</span>
 					</Tooltip>
-					<Tooltip color='danger' content='Eliminar usuario'>
-						<span className='text-danger cursor-pointer active:opacity-50'>
-							<TrashIcon width={15} height={15} fill='fill-danger' />
+					<Tooltip content='Ver Estandar'>
+						<span className='text-default-400 cursor-pointer active:opacity-50'>
+							<EyeIcon width={15} height={15} />
 						</span>
 					</Tooltip>
 				</div>
 			)
 		default:
-			return cellValue
+			return <div>{cellValue.toString()}</div>
 		}
 	}, [])
 
@@ -135,11 +153,11 @@ export default function StandardTable() {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
-					<CustomInput
+					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre...'
-						startContent={<SearchIcon />}
+						placeholder='Buscar por nombre de estándar'
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -148,12 +166,12 @@ export default function StandardTable() {
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
-                                    Estado
+								<Button endContent={<ChevronDownIcon width={20} height={20} />} variant='flat'>
+									Estado
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
-							items={statusOptions}
+							items={valorationOptions}
 							itemsClassName='capitalize'
 							disallowEmptySelection
 							closeOnSelect={false}
@@ -162,8 +180,8 @@ export default function StandardTable() {
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon />}>
-                            Añadir Usuario
+						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+							Añadir Usuario
 						</Button>
 					</div>
 				</div>
@@ -173,7 +191,7 @@ export default function StandardTable() {
 		filterValue,
 		statusFilter,
 		onSearchChange,
-		users.length,
+		standardsManagement.length,
 		hasSearchFilter
 	])
 

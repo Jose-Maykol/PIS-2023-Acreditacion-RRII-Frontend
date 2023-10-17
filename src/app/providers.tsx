@@ -2,14 +2,12 @@
 
 import React from 'react'
 import { NextUIProvider } from '@nextui-org/react'
-import { ToastProvider } from '@/hooks/ToastContext'
+import ToastProvider from '@/hooks/toastProvider'
 
 export function Providers({ children }: { children: React.ReactNode }) {
 	return (
-		<NextUIProvider>
-			<ToastProvider>
-				{children}
-			</ToastProvider>
-		</NextUIProvider>
+		<ToastProvider>
+			<NextUIProvider>{children}</NextUIProvider>
+		</ToastProvider>
 	)
 }

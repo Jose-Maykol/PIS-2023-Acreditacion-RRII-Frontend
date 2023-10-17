@@ -18,6 +18,11 @@ export const StandardService = {
 		return res.data
 	},
 
+	getStandardsAndAssignedUsers: async () => {
+		const res = await api.get('/2023/A/standards/users')
+		return res.data
+	},
+
 	listEstandar: async () => {
 		return await api.get(url.listEstandar)
 	},
@@ -28,9 +33,5 @@ export const StandardService = {
 
 	showEstandar: async (id: string) => {
 		return await api.get(`${url.detailEstandard}${id}`)
-	},
-
-	updateEstandar: async (id: string, params: any) => {
-		return await api.put(`${url.updateEstandar}${id}`, params)
 	}
 }

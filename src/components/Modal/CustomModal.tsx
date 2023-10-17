@@ -1,32 +1,19 @@
 import React from 'react'
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@nextui-org/react'
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react'
 
 interface CustomModalProps {
-  header: React.ReactNode;
-  body: React.ReactNode;
-  footer?: React.ReactNode;
-  size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl';
-  classNames?: any;
-  isOpen: boolean;
-  onClose: () => void;
+	header: React.ReactNode
+	body: React.ReactNode
+	footer?: React.ReactNode
+	size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+	classNames?: any
+	isOpen: boolean
+	onClose: () => void
 }
 
-const CustomModal = ({
-	header,
-	body,
-	footer,
-	size = 'md',
-	classNames,
-	isOpen,
-	onClose
-}: any) => {
+const CustomModal = ({ header, body, footer, size = 'md', classNames, isOpen, onClose }: CustomModalProps) => {
 	return (
-		<Modal
-			size={size}
-			isOpen={isOpen}
-			onOpenChange={onClose}
-			classNames={classNames}
-		>
+		<Modal size={size} isOpen={isOpen} onOpenChange={onClose} classNames={classNames}>
 			<ModalContent>
 				{() => (
 					<>

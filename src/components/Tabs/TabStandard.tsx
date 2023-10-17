@@ -5,9 +5,7 @@ import React, { useState } from 'react'
 import { Tabs, Tab } from '@nextui-org/react'
 import { useRouter } from 'next/navigation'
 
-
-
-export default function TabStandard({ id, children }: { id: string, children: React.ReactNode }) {
+export default function TabStandard({ id, children }: { id: string; children: React.ReactNode }) {
 	const { push } = useRouter()
 	const [selected, setSelected] = useState('narrative')
 
@@ -37,7 +35,8 @@ export default function TabStandard({ id, children }: { id: string, children: Re
 
 	return (
 		<div className='flex h-full w-full flex-col absolute -top-12 -left-1 -right-'>
-			<Tabs aria-label='Dynamic tabs'
+			<Tabs
+				aria-label='Dynamic tabs'
 				items={tabs}
 				variant='light'
 				classNames={{
