@@ -19,7 +19,7 @@ export default function SideBar({
 	toggleSidebar: () => void
 	standards: PartialStandard[]
 }) {
-	console.log(standards)
+	// console.log(standards)
 	return (
 		<nav
 			className={`overflow-y-auto bg-white no-scrollbar border-gray-100 border ${
