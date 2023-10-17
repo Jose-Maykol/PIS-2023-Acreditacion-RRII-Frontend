@@ -36,7 +36,7 @@ export default function AuthPage() {
 		const yearIsValid = (yearValue as any).size > 0
 		const semesterIsValid = (semesterValue as any).size > 0
 		setIsValid({ year: yearIsValid, semester: semesterIsValid })
-		if ((isValid.year && isValid.semester) === false && touchedSemester === false) {
+		if ((isValid.year && isValid.semester) === true) {
 			if (typeof window !== 'undefined' && window.localStorage) {
 				localStorage.setItem('year', (yearValue as any).values().next().value)
 				localStorage.setItem('semester', (semesterValue as any).values().next().value)
@@ -127,7 +127,7 @@ export default function AuthPage() {
 				<Button
 					color='default'
 					radius='sm'
-					onClick={handleLoginWithGoogle}
+					onPress={() => handleLoginWithGoogle()}
 					isDisabled={!isValid.year || !isValid.semester || !touchedYear || !touchedSemester}
 					startContent={<Image
 						alt='logo-unsa'
