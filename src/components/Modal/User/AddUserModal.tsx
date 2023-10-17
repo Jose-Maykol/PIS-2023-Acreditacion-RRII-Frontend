@@ -17,7 +17,7 @@ import {
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function AddUserModal({ onUserCreated }: { onUserCreated: () => void }) {
+export default function AddUserModal({ onUserChanged }: { onUserChanged: () => void }) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
@@ -67,7 +67,7 @@ export default function AddUserModal({ onUserCreated }: { onUserCreated: () => v
 			}
 			setEmailValue('')
 			setRoleValue(new Set([]))
-			onUserCreated()
+			onUserChanged()
 		})
 	}
 

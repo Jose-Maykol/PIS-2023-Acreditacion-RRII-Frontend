@@ -10,7 +10,6 @@ import {
 	Button
 } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
-import TrashIcon from '../Icons/TrashIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
@@ -18,6 +17,7 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
 import { UsersService } from '@/api/Users/usersService'
+import ActivateUserModal from '../Modal/User/ActivateUserModal'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
@@ -54,7 +54,7 @@ export default function UserTable() {
 		})
 	}, [])
 
-	const handleUserCreated = () => {
+	const handleUsersChanged = () => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
 			console.log('esto esta mal')
@@ -113,15 +113,14 @@ export default function UserTable() {
 			return (
 				<div className='relative flex items-center gap-2'>
 					<Tooltip content='Editar Usuario'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<PencilIcon width={20} height={20} />
-						</span>
-					</Tooltip>
-					<Tooltip color='danger' content='Eliminar usuario'>
 						<span className='text-danger cursor-pointer active:opacity-50'>
-							<TrashIcon width={20} height={20} fill='fill-danger' />
+							<PencilIcon width={17} height={17} fill='fill-gray-400 hover:fill-gray-900'/>
 						</span>
 					</Tooltip>
+					<ActivateUserModal
+						userId={user.id}
+						onUserChanged={handleUsersChanged}
+					/>
 				</div>
 			)
 		default:
@@ -173,7 +172,7 @@ export default function UserTable() {
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
 						/>
-						<AddUserModal onUserCreated={handleUserCreated}/>
+						<AddUserModal onUserChanged={handleUsersChanged}/>
 					</div>
 				</div>
 			</div>
