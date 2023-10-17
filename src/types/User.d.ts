@@ -3,7 +3,7 @@ export interface User {
 	name: string
 	lastname: string
 	email: string
-	status: number
+	status: string
 	role: string
 }
 export interface AuthUser {

@@ -75,7 +75,7 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 		[]
 	)
 
-	const handleStatusValue = (value: Selection): void => {
+	const handleRoleValue = (value: Selection): void => {
 		setStatusValue(value)
 		setIsValid((value as any).size > 0)
 	}
@@ -109,7 +109,7 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 									variant='bordered'
 									errorMessage={isValid || !touched ? '' : 'Seleccione un rol'}
 									isInvalid={!(isValid || !touched)}
-									onSelectionChange={handleStatusValue}
+									onSelectionChange={handleRoleValue}
 									onClose={() => setTouched(true)}
 								>
 									{(roles) => <SelectItem key={roles.value}>{roles.label}</SelectItem>}

@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
 	Chip,
-	Tooltip,
 	ChipProps,
 	Pagination,
 	Selection,
 	Input,
 	Button
 } from '@nextui-org/react'
-import PencilIcon from '../Icons/PencilIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
@@ -30,7 +28,7 @@ export default function UserTable() {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-	const rowsPerPage = 8
+	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
 	const [users, setUsers] = useState<User[]>([])
 	const columns = [
@@ -43,9 +41,9 @@ export default function UserTable() {
 	]
 
 	const statusOptions = [
-		{ label: 'activo', uid: 'activo' },
-		{ label: 'inactivo', uid: 'inactivo' },
-		{ label: 'pendiente de autenticación', uid: 'pendiente de autenticación' }
+		{ label: 'Activo', uid: 'activo' },
+		{ label: 'Inactivo', uid: 'inactivo' },
+		{ label: 'Pendiente de autenticación', uid: 'pendiente de autenticación' }
 	]
 
 	useEffect(() => {
@@ -86,14 +84,20 @@ export default function UserTable() {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
+	const renderCell = useCallback((user: User, columnKey: React.Key) => {
 		const cellValue = user[columnKey as keyof User]
 
 		switch (columnKey) {
 		case 'name':
 			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`}</p>
+				<div className='flex flex-col min-w-[325px]'>
+					{user.status === 'pendiente de autenticación'
+						? (
+							<p className='text-bold text-sm capitalize'>---</p>
+						)
+						: (
+							<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`}</p>
+						)}
 				</div>
 			)
 		case 'role':
@@ -110,7 +114,7 @@ export default function UserTable() {
 			)
 		case 'actions':
 			return (
-				<div className='relative flex items-center gap-2'>
+				<div className='relative flex items-center gap-2 justify-center'>
 					<RoleUserModel
 						userId={user.id}
 						onUserChanged={handleUsersChanged}
@@ -157,13 +161,12 @@ export default function UserTable() {
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={20} height={20}/>} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={15} height={15}/>} variant='flat'>
                   Estado
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
 							items={statusOptions}
-							itemsClassName='capitalize'
 							disallowEmptySelection
 							closeOnSelect={false}
 							selectedKeys={statusFilter}

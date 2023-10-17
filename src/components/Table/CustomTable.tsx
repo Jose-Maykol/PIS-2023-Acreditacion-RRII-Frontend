@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react'
 
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
@@ -41,7 +42,7 @@ const CustomTable = ({
 		>
 			<TableHeader columns={columns}>
 				{(column) => (
-					<TableColumn key={column.uid} align={column.uid === 'actions' ? 'center' : 'start'}>
+					<TableColumn key={column.uid} align='center'>
 						{column.name}
 					</TableColumn>
 				)}
