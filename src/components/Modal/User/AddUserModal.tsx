@@ -21,7 +21,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
-	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: true })
+	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: false })
 	const [touched, setTouched] = useState(false)
 	const validateEmail = (value:string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i)
 

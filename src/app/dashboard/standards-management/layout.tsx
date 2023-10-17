@@ -1,9 +1,15 @@
 import type { ReactNode, FC } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
+import { Metadata } from 'next'
 
 
 interface RootLayoutProps {
     children: ReactNode
+}
+
+export const metadata: Metadata = {
+	title: 'Sistema de Gestión de Calidad',
+	description: 'Sistema de Gestión de Calidad'
 }
 
 const StandardsLayout: FC<RootLayoutProps> = ({ children }) => {

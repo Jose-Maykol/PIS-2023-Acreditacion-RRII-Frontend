@@ -19,7 +19,7 @@ import { toast } from 'react-toastify'
 
 export default function RoleUserModel({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
-	const [isValid, setIsValid] = useState<boolean>(true)
+	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
 	const [statusValue, setStatusValue] = useState<Selection>(new Set([]))
 
