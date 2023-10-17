@@ -22,7 +22,10 @@ export const StandardService = {
 		const res = await api.get('/2023/A/standards/users')
 		return res.data
 	},
-
+	getHeader: async(id:string) => {
+		const res = await api.get(`2023/A/standards/${id}/header`)
+		return res.data
+	},
 	listEstandar: async () => {
 		return await api.get(url.listEstandar)
 	},
