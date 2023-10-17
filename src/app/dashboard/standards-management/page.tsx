@@ -6,8 +6,9 @@ import StandardTable from '@/components/Table/StandardTable'
 import AssignmentModal from '@/components/Modal/StandardManagement/AssignmentModal'
 
 const page = () => {
-	const [showModal, setShowModal] = useState(false)
-	const [idStandard, setIdStandard] = useState('')
+	const [showModal, setShowModal] = useState<boolean>(false)
+	const [idStandard, setIdStandard] = useState<string>('')
+	const [reload, setReload] = useState<boolean>(false)
 
 	const handleOpenModal = (id: string) => {
 		setShowModal(true)
@@ -19,8 +20,8 @@ const page = () => {
 			<div className='flex w-full mb-5'>
 				<h2>Encargados de estándares del sistema</h2>
 			</div>
-			<StandardTable onOpenModal={(id) => handleOpenModal(id)}/>
-			{showModal ? <AssignmentModal idStandard={idStandard} openModal={showModal} onCloseModal={() => setShowModal(false)}/> : <></>}
+			<StandardTable reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
+			{showModal ? <AssignmentModal idStandard={idStandard} openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
 		</ContentWrapper>
 	)
 }
