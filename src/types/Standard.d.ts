@@ -29,3 +29,18 @@ export interface StandardUsers {
 	valoration: number
 	users: User[] | []
 }
+
+export interface StandardHeader {
+	description: string
+	dimension: string
+	factor: string
+	standardRelated: string
+	status: {
+		id: number
+		description: string
+	}
+	permissions: {
+		isAdministrator: boolean
+		isManager: boolean
+	}
+}

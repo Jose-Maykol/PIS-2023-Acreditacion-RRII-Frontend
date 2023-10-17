@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
-const RatingSwitch = () => {
+const RatingSwitch = ({ status } : {status: string}) => {
 	const ratings = ['No Logrado', 'Logrado', 'Logrado Plenamente']
 	const [selectedRating, setSelectedRating] = useState(0) // Start with 'Regular'
 
+	console.log(status)
 	const handleSwitchClick = () => {
 		setSelectedRating((prev) => (prev + 1) % 3)
 	}
