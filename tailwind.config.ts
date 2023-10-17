@@ -46,7 +46,11 @@ const config: Config = {
 							DEFAULT: '#0284c7',
 							foreground: '#ffffff'
 						},
-						focus: '#0284c7'
+						focus: '#0284c7',
+						default: {
+							DEFAULT: '#ffffff',
+							foreground: '#000000'
+						}
 					}
 				}
 			}
