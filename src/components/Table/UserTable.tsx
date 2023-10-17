@@ -18,6 +18,7 @@ import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
 import { UsersService } from '@/api/Users/usersService'
 import ActivateUserModal from '../Modal/User/ActivateUserModal'
+import RoleUserModel from '../Modal/User/RoleUserModel'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
@@ -50,14 +51,12 @@ export default function UserTable() {
 	useEffect(() => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
-			console.log('no el use effect ta mal xd')
 		})
 	}, [])
 
 	const handleUsersChanged = () => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
-			console.log('esto esta mal')
 		})
 	}
 
@@ -112,11 +111,10 @@ export default function UserTable() {
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2'>
-					<Tooltip content='Editar Usuario'>
-						<span className='text-danger cursor-pointer active:opacity-50'>
-							<PencilIcon width={17} height={17} fill='fill-gray-400 hover:fill-gray-900'/>
-						</span>
-					</Tooltip>
+					<RoleUserModel
+						userId={user.id}
+						onUserChanged={handleUsersChanged}
+					/>
 					<ActivateUserModal
 						userId={user.id}
 						onUserChanged={handleUsersChanged}

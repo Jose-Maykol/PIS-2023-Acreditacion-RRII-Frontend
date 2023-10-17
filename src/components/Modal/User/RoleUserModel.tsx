@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { UsersService } from '@/api/Users/usersService'
-import ActivateUserIcon from '@/components/Icons/ActivateUserIcon'
+import PencilIcon from '@/components/Icons/PencilIcon'
 import {
 	Button,
 	Modal,
@@ -17,7 +17,7 @@ import {
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function ActivateUserModal({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
+export default function RoleUserModel({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(true)
 	const [touched, setTouched] = useState(false)
@@ -27,10 +27,10 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 		setTouched(true)
 		if ((statusValue as any).size > 0) {
 			const notification = toast.loading('Procesando...')
-			UsersService.updateStatus(
+			UsersService.updateRole(
 				userId,
 				{
-					registration_status_id: (statusValue as any).values().next().value
+					role_id: (statusValue as any).values().next().value
 				}
 			).then((res) => {
 				if (res.status === 1) {
@@ -67,10 +67,10 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 		}
 	}
 
-	const states = useMemo(
+	const roles = useMemo(
 		() => [
-			{ label: 'Activo', value: 1 },
-			{ label: 'Inactivo', value: 2 }
+			{ label: 'Administrador', value: 1 },
+			{ label: 'Docente', value: 2 }
 		],
 		[]
 	)
@@ -82,9 +82,9 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 
 	return (
 		<div className='flex flex-col gap-2'>
-			<Tooltip color='primary' content='Cambiar estado'>
-				<span className='text-default-400 cursor-pointer active:opacity-50' onClick={onOpen}>
-					<ActivateUserIcon width={20} height={20} fill='fill-sky-300 hover:fill-sky-600' />
+			<Tooltip content='Cambiar rol'>
+				<span className='text-danger cursor-pointer active:opacity-50' onClick={onOpen}>
+					<PencilIcon width={17} height={17} fill='fill-gray-400 hover:fill-gray-900'/>
 				</span>
 			</Tooltip>
 			<Modal
@@ -99,20 +99,20 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 					{(onClose) => (
 						<>
 							<ModalHeader className='flex flex-col gap-1'>
-                Cambiar estado de usuario
+                Cambiar rol del usuario
 							</ModalHeader>
 							<ModalBody>
 								<Select
-									items={states}
-									label='Estado'
-									placeholder='Selecciona nuevo estado del usuario'
+									items={roles}
+									label='Rol'
+									placeholder='Selecciona rol de usuario'
 									variant='bordered'
-									errorMessage={isValid || !touched ? '' : 'Seleccione un estado'}
+									errorMessage={isValid || !touched ? '' : 'Seleccione un rol'}
 									isInvalid={!(isValid || !touched)}
 									onSelectionChange={handleStatusValue}
 									onClose={() => setTouched(true)}
 								>
-									{(states) => <SelectItem key={states.value}>{states.label}</SelectItem>}
+									{(roles) => <SelectItem key={roles.value}>{roles.label}</SelectItem>}
 								</Select>
 							</ModalBody>
 							<ModalFooter>
@@ -120,9 +120,9 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 									color='danger'
 									variant='flat'
 									onPress={() => {
-										onClose()
 										setTouched(false)
 										setIsValid(false)
+										onClose()
 									}}
 								>
                   Cancelar
@@ -132,9 +132,9 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 									isDisabled={!isValid || !touched}
 									onPress={() => {
 										handleSubmit()
-										onClose()
 										setTouched(false)
 										setIsValid(false)
+										onClose()
 									}}
 								>
                   Actualizar

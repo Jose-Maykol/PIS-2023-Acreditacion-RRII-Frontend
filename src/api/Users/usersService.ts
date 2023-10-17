@@ -7,7 +7,8 @@ const url = {
 	detailUser: '/users/profile',
 	createUser: '/users',
 	updateUser: '/users/',
-	deleteUser: '/users/update_status/',
+	updateRole: '/users/update_role/',
+	updateStatus: '/users/update_status/',
 	enableUsers: '/users/enabled_users'
 }
 
@@ -32,12 +33,13 @@ export const UsersService = {
 		}
 	},
 
-	updateUser: async (id: number, params: any) => {
-		return await api.put(`${url.updateUser}${id}`, params)
+	updateRole: async (id: number, params: any) => {
+		const res = await api.put(`${url.updateRole}${id}`, params)
+		return res.data
 	},
 
-	deleteUser: async (id: number, params: any) => {
-		const res = await api.put(`${url.deleteUser}${id}`, params)
+	updateStatus: async (id: number, params: any) => {
+		const res = await api.put(`${url.updateStatus}${id}`, params)
 		return res.data
 	},
 
