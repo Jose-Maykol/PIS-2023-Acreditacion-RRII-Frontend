@@ -5,32 +5,56 @@ import { Textarea, Button } from '@nextui-org/react'
 import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
 import { StandardService } from '@/api/Estandar/standardService'
+import { StandardHeader } from '@/types/Standard'
 
 const HeaderStandards = ({ id }: { id: string }) => {
-	const [standardDescription, setStandardDescription] = useState('')
-	const [dimension, setDimension] = useState('')
-	const [factor, setFactor] = useState('')
-	const [standardRelated, setStandardRelated] = useState('')
-	const [status, setStatus] = useState('')
+	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
+		description: '',
+		dimension: '',
+		factor: '',
+		standardRelated: '',
+		status: {
+			id: 0,
+			description: ''
+		},
+		permissions: {
+			isAdministrator: false,
+			isManager: false
+		}
+	})
 
-	const [isEdit, setIsEdit] = useState(true)
+	const [isEdit, setIsEdit] = useState<boolean>(true)
 
 	const handleSave = () => {
+		setIsEdit(false)
 	}
+
+	const handleChange = (key: string, value: string) => {
+		setStandardHeader((prev) => ({
+			...prev,
+			[key]: value
+		}))
+	}
+
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			console.log(res)
-			setDimension(res.data.dimension)
-			console.log(res.data.dimension)
-			setFactor(res.data.factor)
-			console.log(res.data.factor)
-			setStandardRelated(res.data.related_standards)
-			console.log(res.data.related_standards)
-			// setStandardDescription(res.descripcion)
-			setStatus(res.data.standard_status)
+			console.log(res.data)
+			const { description, dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
+			setStandardHeader({
+				description,
+				dimension,
+				factor,
+				standardRelated: relatedStandards,
+				status: standardStatus,
+				permissions: {
+					isAdministrator,
+					isManager
+				}
+			})
 		})
 	}, [])
 
+	console.log(standardHeader.permissions)
 	return (
 		<div className='text-white flex flex-col gap-1 pl-8'>
 			<div className='grow'>
@@ -41,8 +65,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					isReadOnly={isEdit}
 					maxRows={2}
 					variant='bordered'
-					value={standardDescription}
-					onValueChange={setStandardDescription}
+					value={standardHeader.description}
+					onValueChange={(value) => handleChange('description', value)}
 					classNames={{ input: 'scrollbar-hide' }}
 				/>
 			</div>
@@ -53,8 +77,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						isReadOnly={isEdit}
 						maxRows={1}
 						variant='bordered'
-						value={factor}
-						onValueChange={setFactor}
+						value={standardHeader.factor}
+						onValueChange={(value) => handleChange('factor', value)}
 						classNames={{ input: 'scrollbar-hide' }}
 					/>
 				</div>
@@ -64,8 +88,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						isReadOnly={isEdit}
 						maxRows={1}
 						variant='bordered'
-						value={dimension}
-						onValueChange={setDimension}
+						value={standardHeader.dimension}
+						onValueChange={(value) => handleChange('dimension', value)}
 						classNames={{ input: 'scrollbar-hide' }}
 					/>
 				</div>
@@ -76,18 +100,19 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					isReadOnly={isEdit}
 					maxRows={2}
 					variant='bordered'
-					value={standardRelated}
-					onValueChange={setStandardRelated}
+					value={standardHeader.standardRelated}
+					onValueChange={(value) => handleChange('standardRelated', value)}
 					classNames={{ input: 'scrollbar-hide' }}
 				/>
 			</div>
 			<div className='grow flex justify-between mt-2'>
 				<div>
 					<p className='text-white text-xl mb-3'>Valoracion Estandar</p>
-					<RatingSwitch valoration={status} />
+					<RatingSwitch status={standardHeader.status.description} />
 				</div>
-				{isEdit ? <Button className='text-white self-end uppercase' onPress={() => setIsEdit(!isEdit)} color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Editar</Button> :
-					<>
+				{isEdit
+					? <Button className='text-white self-end uppercase' onPress={() => setIsEdit(!isEdit)} color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Editar</Button>
+					: <>
 						<Button className='text-white self-end uppercase' onPress={() => setIsEdit(!isEdit)} color='danger' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Cancelar</Button>
 						<Button className='text-white self-end uppercase' onPress={() => handleSave} color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Guardar</Button>
 					</>
