@@ -6,7 +6,8 @@ const url = {
 	create: '/2023/A/plans',
 	delete: '/plan/',
 	update: '/plan/',
-	readUser: '/2023/A/plans/users'
+	readUser: '/2023/A/plans/users',
+	readByStandard: '/2023/A/plans?standard_id='
 }
 
 export const PlanMejoraService = {
@@ -16,6 +17,10 @@ export const PlanMejoraService = {
 
 	readUser: async (): Promise<AxiosResponse> => {
 		return await api.get(url.readUser)
+	},
+
+	readByStandard: async (standardId: string): Promise<AxiosResponse> => {
+		return await api.get(`${url.readByStandard}${standardId}`)
 	},
 
 	create: async (params: any): Promise<AxiosResponse> => {

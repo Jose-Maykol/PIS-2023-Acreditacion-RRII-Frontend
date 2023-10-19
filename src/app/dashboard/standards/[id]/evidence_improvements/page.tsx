@@ -15,11 +15,10 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 	const [improvementPlans, setImpmrovementPlans] = useState([])
 
 	useEffect(() => {
-		PlanMejoraService.read()
-			.then((res) => {
-				setImpmrovementPlans(res.data.data)
-			})
-			.catch(console.log)
+		PlanMejoraService.readByStandard(params.id).then((res) => {
+			console.log(res.data.data)
+			setImpmrovementPlans(res.data.data)
+		}).catch(console.log)
 	}, [])
 
 	return (

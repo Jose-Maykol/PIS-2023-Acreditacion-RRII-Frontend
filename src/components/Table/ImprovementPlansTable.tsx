@@ -40,9 +40,10 @@ type ImprovementPlans = {
 	id: number,
 	isCreator: boolean,
 	name: string,
+	nro_standard: number
 	plan_status: string,
 	standard_name: string,
-	user_name: string
+	user_name: string,
 }
 
 type TableProps = {
@@ -98,7 +99,7 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 		case 'standard_name':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
+					<p className='text-bold text-sm text-default-600'>{improvementPlan.nro_standard}. {cellValue}</p>
 				</div>
 			)
 		case 'user_name':
@@ -192,7 +193,7 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 						/>
 						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
 							<Button color='primary' endContent={<PlusIcon />}>
-								Asignar PM
+								Crear PM
 							</Button>
 						</Link>
 					</div>
