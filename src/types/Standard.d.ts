@@ -26,8 +26,21 @@ export interface StandardUsers {
 	id: number
 	name: string
 	nro_standard: number
-	valoration: number
+	standard_status: string
 	users: User[] | []
+}
+
+export interface EnabledUsers {
+	id: number
+	name: string
+	lastname: string
+	email: string
+	avatar: string
+	isManager: boolean
+}
+
+export interface AssignedUsers {
+	users: string[]
 }
 
 export interface StandardHeader {
