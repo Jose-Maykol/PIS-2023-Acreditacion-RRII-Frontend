@@ -9,6 +9,7 @@ import { StandardHeader } from '@/types/Standard'
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
+		name: '',
 		description: '',
 		dimension: '',
 		factor: '',
@@ -23,11 +24,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 		}
 	})
 
-	const [isEdit, setIsEdit] = useState<boolean>(true)
-
-	const handleSave = () => {
-		setIsEdit(false)
-	}
+	const [isRead, setIsRead] = useState<boolean>(true)
 
 	const handleChange = (key: string, value: string) => {
 		setStandardHeader((prev) => ({
@@ -38,9 +35,9 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			console.log(res.data)
-			const { description, dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
+			const { name, description, dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
 			setStandardHeader({
+				name,
 				description,
 				dimension,
 				factor,
@@ -54,69 +51,125 @@ const HeaderStandards = ({ id }: { id: string }) => {
 		})
 	}, [])
 
-	console.log(standardHeader.permissions)
+	const handleAdminSave = () => {
+		console.log('admin')
+		setIsRead(true)
+	}
+
+	const handleManagerSave = () => {
+		console.log('manager')
+		setIsRead(true)
+	}
+
 	return (
 		<div className='text-white flex flex-col gap-1 pl-8'>
 			<div className='grow'>
-				<h2 className='text-white'>Propósitos Articulados</h2>
+				<Textarea
+					isReadOnly={isRead || !standardHeader.permissions.isAdministrator}
+					maxRows={1}
+					className='max-w-4xl'
+					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
+					value={standardHeader.name}
+					onValueChange={(value) => handleChange('name', value)}
+					classNames={{
+						base: 'bg-transparent',
+						input: `scrollbar-hide text-3xl font-bold ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`,
+						inputWrapper: `border-none ${isRead || !standardHeader.permissions.isAdministrator ? 'bg-transparent px-0' : 'bg-white px-2'}`
+					}}
+				/>
 				<p className='text-white text-xl mb-2'>Estandar #{id}</p>
 				<hr className='my-4 w-full'></hr>
 				<Textarea
-					isReadOnly={isEdit}
+					isReadOnly={isRead || !standardHeader.permissions.isAdministrator}
 					maxRows={2}
-					variant='bordered'
+					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 					value={standardHeader.description}
 					onValueChange={(value) => handleChange('description', value)}
-					classNames={{ input: 'scrollbar-hide' }}
+					classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
 				/>
 			</div>
 			<div className='flex gap-20 grow mt-2'>
 				<div className='flex-1'>
 					<p className='text-white text-xl mb-1'>Factor</p>
 					<Textarea
-						isReadOnly={isEdit}
+						isReadOnly={isRead || !standardHeader.permissions.isAdministrator}
 						maxRows={1}
-						variant='bordered'
+						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.factor}
 						onValueChange={(value) => handleChange('factor', value)}
-						classNames={{ input: 'scrollbar-hide' }}
+						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
 					/>
 				</div>
 				<div className='flex-1'>
 					<p className='text-white text-xl mb-1'>Dimensión</p>
 					<Textarea
-						isReadOnly={isEdit}
+						isReadOnly={isRead || !standardHeader.permissions.isAdministrator}
 						maxRows={1}
-						variant='bordered'
+						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.dimension}
 						onValueChange={(value) => handleChange('dimension', value)}
-						classNames={{ input: 'scrollbar-hide' }}
+						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
 					/>
 				</div>
 			</div>
 			<div className='grow mt-2'>
 				<p className='text-white text-xl mb-2'>Estandares Relacionados</p>
 				<Textarea
-					isReadOnly={isEdit}
+					isReadOnly={isRead}
 					maxRows={2}
-					variant='bordered'
+					variant={isRead ? 'bordered' : 'faded'}
 					value={standardHeader.standardRelated}
 					onValueChange={(value) => handleChange('standardRelated', value)}
-					classNames={{ input: 'scrollbar-hide' }}
+					classNames={{ input: `scrollbar-hide ${isRead ? '' : 'text-black'}` }}
 				/>
 			</div>
-			<div className='grow flex justify-between mt-2'>
+			<div className='grow flex justify-between items-center mt-2'>
 				<div>
-					<p className='text-white text-xl mb-3'>Valoracion Estandar</p>
-					<RatingSwitch status={standardHeader.status.description} />
+					<p className='text-white text-xl'>Valoracion Estandar</p>
+					<RatingSwitch isManager={standardHeader.permissions.isManager} statusID={standardHeader.status.id} />
 				</div>
-				{isEdit
-					? <Button className='text-white self-end uppercase' onPress={() => setIsEdit(!isEdit)} color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Editar</Button>
-					: <>
-						<Button className='text-white self-end uppercase' onPress={() => setIsEdit(!isEdit)} color='danger' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Cancelar</Button>
-						<Button className='text-white self-end uppercase' onPress={() => handleSave} color='success' startContent={<PencilIcon width={15} height={15} fill='fill-white' />}>Guardar</Button>
-					</>
-				}
+				<div className='flex gap-2'>
+					{!isRead && (
+						<Button
+							className='text-white self-end uppercase'
+							onPress={() => setIsRead(true)}
+							color='danger'
+							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
+						>
+						Cancelar
+						</Button>
+					)}
+					{isRead && (
+						<Button
+							className='text-white self-end uppercase'
+							onPress={() => setIsRead(false)}
+							color='success'
+							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
+						>
+						Editar
+						</Button>
+					)}
+					{!isRead && standardHeader.permissions.isAdministrator && (
+						<Button
+							className='text-white self-end uppercase'
+							onPress={handleAdminSave}
+							color='success'
+							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
+						>
+						Guardar
+						</Button>
+					)}
+					{!isRead && !standardHeader.permissions.isAdministrator && (
+						<Button
+							className='text-white self-end uppercase'
+							onPress={handleManagerSave}
+							color='success'
+							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
+						>
+						Guardar
+						</Button>
+					)}
+				</div>
 			</div>
 		</div>
 	)
