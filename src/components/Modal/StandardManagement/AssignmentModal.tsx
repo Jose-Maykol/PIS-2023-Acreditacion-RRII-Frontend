@@ -47,18 +47,18 @@ const AssignmentModal = ({
 	}
 
 	const handleValidation = () => {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		if ((values as any).size === 0) {
 			setIsValid({ isEmpty: true, isChangeValues: isValid.isChangeValues })
 		}
 		setIsValid({ isEmpty: isValid.isEmpty, isChangeValues: hasValuesChanged() })
 	}
-
 	const handleSaveChanges = async () => {
 		const notification = toast.loading('Procesando...')
 		const users = [...values].map((item) => item.toString())
 		await StandardService.assignUsersToStandard(
 			idStandard,
-			{ users: users } as AssignedUsers
+			{ users } as AssignedUsers
 		).then((res) => {
 			if (res.status === 1) {
 				onReload()
