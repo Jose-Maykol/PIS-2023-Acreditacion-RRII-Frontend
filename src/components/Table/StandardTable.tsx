@@ -90,7 +90,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 			if (Array.isArray(cellValue)) {
 				return (<div className='flex flex-col'>
 					{
-						cellValue.length > 1
+						cellValue.length > 0
 							? cellValue.map((user, index) => (
 								<div key={index}>
 									<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
@@ -182,7 +182,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 
 						/>
 						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
-							Añadir Usuario
+							Crear Estandares
 						</Button>
 					</div>
 				</div>
