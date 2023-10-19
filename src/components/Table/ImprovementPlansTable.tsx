@@ -8,18 +8,18 @@ import {
 	ChipProps,
 	Pagination,
 	Selection,
+	Input,
 	Button,
 	Progress
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
-import { PlusIcon } from '../Icons/PlusIcon'
-import { SearchIcon } from '../Icons/SearchIcon'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
+import PlusIcon from '../Icons/PlusIcon'
+import SearchIcon from '../Icons/SearchIcon'
+import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import { columns, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
-import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 
@@ -35,19 +35,19 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 // type ImprovementPlans = typeof improvementPlans[0];
 
 type ImprovementPlans = {
-	advance: number,
-	code: string,
-	id: number,
-	isCreator: boolean,
-	name: string,
+	advance: number
+	code: string
+	id: number
+	isCreator: boolean
+	name: string
 	nro_standard: number
-	plan_status: string,
-	standard_name: string,
-	user_name: string,
+	plan_status: string
+	standard_name: string
+	user_name: string
 }
 
 type TableProps = {
-	id: string,
+	id: string
 	improvementPlans: Array<ImprovementPlans>
 }
 
@@ -58,7 +58,6 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 
 	const rowsPerPage = 7
 	const hasSearchFilter = Boolean(filterValue)
-
 
 	const filteredItems = React.useMemo(() => {
 		let filteredPlans = [...improvementPlans]
@@ -86,65 +85,80 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
-		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
+	const renderCell = React.useCallback(
+		(improvementPlan: ImprovementPlans, columnKey: React.Key) => {
+			const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 
-		switch (columnKey) {
-		case 'code':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{cellValue}</p>
-				</div>
-			)
-		case 'standard_name':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm text-default-600'>{improvementPlan.nro_standard}. {cellValue}</p>
-				</div>
-			)
-		case 'user_name':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
-				</div>
-			)
-		case 'advance':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm text-default-600 text-center'>{cellValue}%</p>
-					<Progress aria-label='Loading...' color='primary' size='sm' value={improvementPlan.advance} />
-				</div>
-			)
-		case 'plan_status':
-			return (
-				<Chip className='capitalize' color={statusColorMap[improvementPlan.plan_status]} size='sm' variant='flat'>
-					{cellValue}
-				</Chip>
-			)
-		case 'actions':
-			return (
-				<div className='relative flex items-center gap-4 justify-center'>
-					<Tooltip content='Detalle'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<EyeIcon width={15} height={15} />
-						</span>
-					</Tooltip>
-					<Tooltip content='Editar Usuario'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<PencilIcon width={15} height={15} fill='fill-warning' />
-						</span>
-					</Tooltip>
-					<Tooltip color='danger' content='Eliminar usuario'>
-						<span className='text-danger cursor-pointer active:opacity-50'>
-							<TrashIcon width={15} height={15} fill='fill-danger' />
-						</span>
-					</Tooltip>
-				</div>
-			)
-		default:
-			return cellValue
-		}
-	}, [])
+			switch (columnKey) {
+			case 'code':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm capitalize'>{cellValue}</p>
+					</div>
+				)
+			case 'standard_name':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm text-default-600'>
+							{id === '8' ? `${improvementPlan.nro_standard}.` : null} {cellValue}
+						</p>
+					</div>
+				)
+			case 'user_name':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
+					</div>
+				)
+			case 'advance':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm text-default-600 text-center'>{cellValue}%</p>
+						<Progress
+							aria-label='Loading...'
+							color='primary'
+							size='sm'
+							value={improvementPlan.advance}
+						/>
+					</div>
+				)
+			case 'plan_status':
+				return (
+					<Chip
+						className='capitalize'
+						color={statusColorMap[improvementPlan.plan_status]}
+						size='sm'
+						variant='flat'
+					>
+						{cellValue}
+					</Chip>
+				)
+			case 'actions':
+				return (
+					<div className='relative flex items-center gap-4 justify-center'>
+						<Tooltip content='Detalle'>
+							<span className='text-default-400 cursor-pointer active:opacity-50'>
+								<EyeIcon width={15} height={15} />
+							</span>
+						</Tooltip>
+						<Tooltip content='Editar Usuario'>
+							<span className='text-default-400 cursor-pointer active:opacity-50'>
+								<PencilIcon width={15} height={15} fill='fill-warning' />
+							</span>
+						</Tooltip>
+						<Tooltip color='danger' content='Eliminar usuario'>
+							<span className='text-danger cursor-pointer active:opacity-50'>
+								<TrashIcon width={15} height={15} fill='fill-danger' />
+							</span>
+						</Tooltip>
+					</div>
+				)
+			default:
+				return cellValue
+			}
+		},
+		[]
+	)
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
@@ -164,11 +178,11 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
-					<CustomInput
+					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar por código...'
-						startContent={<SearchIcon />}
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -177,8 +191,8 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
-                                    Estado
+								<Button endContent={<ChevronDownIcon width={15} height={15} />} variant='flat'>
+									Estado
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
@@ -189,10 +203,9 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
 						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
-							<Button color='primary' endContent={<PlusIcon />}>
+							<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white' />}>
 								Crear PM
 							</Button>
 						</Link>
@@ -200,13 +213,7 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 				</div>
 			</div>
 		)
-	}, [
-		filterValue,
-		statusFilter,
-		onSearchChange,
-		improvementPlans.length,
-		hasSearchFilter
-	])
+	}, [filterValue, statusFilter, onSearchChange, improvementPlans.length, hasSearchFilter])
 
 	const bottomContent = React.useMemo(() => {
 		return (
@@ -227,7 +234,15 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 	const classNames = React.useMemo(
 		() => ({
 			wrapper: ['min-h-[590px]'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
+			th: [
+				'bg-default-200',
+				'text-default-600',
+				'border-b',
+				'border-divider',
+				'px-4',
+				'py-3',
+				'text-md'
+			],
 			td: [
 				// changing the rows border radius
 				// first

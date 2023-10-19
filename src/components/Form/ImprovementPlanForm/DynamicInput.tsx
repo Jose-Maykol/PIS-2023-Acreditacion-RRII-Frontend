@@ -1,4 +1,4 @@
-import { PlusIcon } from '@/components/Icons/PlusIcon'
+import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
 import { ChangeEvent, useState } from 'react'
 import DynamicInputItem from './DynamicInputItem'
@@ -79,8 +79,8 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 					value={singleInputValue}
 					onChange={handleChange}
 				/>
-				<Button isIconOnly color='primary' aria-label='Add' variant='flat' onClick={handleAdd}>
-					<PlusIcon />
+				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
+					<PlusIcon width={15} height={15} fill='fill-white'/>
 				</Button>
 			</div>
 			<div>

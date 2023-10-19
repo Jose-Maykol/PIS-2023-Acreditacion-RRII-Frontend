@@ -312,17 +312,9 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 
 				<div className='flex gap-4 justify-end p-3'>
 					<Button
-						color='success'
-						className='text-white mb-5'
-						startContent={<SaveIcon width={16} height={16} />}
-						type='submit'
-					>
-						Guardar
-					</Button>
-					<Button
 						color='danger'
 						className='mb-5'
-						startContent={<CloseIcon width={16} height={16} />}
+						startContent={<CloseIcon width={16} height={16} fill='fill-white'/>}
 					>
 						<Link
 							className='text-white'
@@ -330,6 +322,14 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 						>
 							Cancelar
 						</Link>
+					</Button>
+					<Button
+						color='success'
+						className='text-white mb-5'
+						startContent={<SaveIcon width={16} height={16} fill='fill-white'/>}
+						type='submit'
+					>
+						Guardar
 					</Button>
 				</div>
 			</form>

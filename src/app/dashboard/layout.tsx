@@ -7,10 +7,10 @@ import { StandardService } from '@/api/Estandar/standardService'
 import { PartialStandard } from '@/types/Standard'
 import { Metadata } from 'next'
 
-export const metadata: Metadata = {
-	title: 'Sistema de Gestión de Calidad',
-	description: 'Sistema de Gestión de Calidad'
-}
+// export const metadata: Metadata = {
+// 	title: 'Sistema de Gestión de Calidad',
+// 	description: 'Sistema de Gestión de Calidad'
+// }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
