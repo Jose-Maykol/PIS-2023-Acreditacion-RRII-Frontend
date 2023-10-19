@@ -15,6 +15,19 @@ const config: Config = {
 		colors: {
 			...colors
 		},
+		fontWeight: {
+			regular: '400',
+			medium: '500',
+			bold: '700'
+		},
+		fontSize: {
+			lg: ['21px', '20px'],
+			base: ['16px', '20px'],
+			sm: ['12px', '20px'],
+			h1: ['36px', '20px'],
+			h2: ['32px', '20px'],
+			h3: ['28px', '20px']
+		},
 		extend: {
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
@@ -22,8 +35,9 @@ const config: Config = {
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))'
 			},
 			fontFamily: {
-				'bebas-neue': ['Bebas Neue', 'cursive'],
-				'montserrat': ['Montserrat', 'sans-serif']
+				'BebasNeue': ['Bebas Neue', 'cursive'],
+				'Montserrat': ['Montserrat', 'sans-serif'],
+				'sans': ['Montserrat', 'sans-serif']
 			}
 		}
 	},

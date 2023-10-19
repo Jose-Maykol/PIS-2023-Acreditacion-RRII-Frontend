@@ -58,8 +58,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 	return (
 		<div className='text-white flex flex-col gap-1 pl-8'>
 			<div className='grow'>
-				<h2 className='text-white'>Propósitos Articulados</h2>
-				<p className='text-white text-xl mb-2'>Estandar #{id}</p>
+				<h2 className='my-5 font-BebasNeue text-h1 text-white'>Propósitos Articulados</h2>
+				<p className='my-2.5 font-BebasNeue text-h3 text-white  mb-2'>Estandar #{id}</p>
 				<hr className='my-4 w-full'></hr>
 				<Textarea
 					isReadOnly={isEdit}
@@ -67,38 +67,44 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					variant='bordered'
 					value={standardHeader.description}
 					onValueChange={(value) => handleChange('description', value)}
-					classNames={{ input: 'scrollbar-hide' }}
+					classNames={{
+						input: 'scrollbar-hide lowercase'
+					}}
 				/>
 			</div>
 			<div className='flex gap-20 grow mt-2'>
 				<div className='flex-1'>
-					<p className='text-white text-xl mb-1'>Factor</p>
+					<p className='text-base font-bold text-white mb-1'>Factor</p>
 					<Textarea
+						className = 'lowercase text-base font-medium'
 						isReadOnly={isEdit}
 						maxRows={1}
 						variant='bordered'
 						value={standardHeader.factor}
 						onValueChange={(value) => handleChange('factor', value)}
-						classNames={{ input: 'scrollbar-hide' }}
+						classNames={{
+							input: 'scrollbar-hide lowercase'
+						}}
 					/>
 				</div>
 				<div className='flex-1'>
-					<p className='text-white text-xl mb-1'>Dimensión</p>
+					<p className='text-base font-bold text-white mb-1'>Dimensión</p>
 					<Textarea
 						isReadOnly={isEdit}
 						maxRows={1}
 						variant='bordered'
 						value={standardHeader.dimension}
 						onValueChange={(value) => handleChange('dimension', value)}
-						classNames={{ input: 'scrollbar-hide' }}
+						classNames={{ input: 'scrollbar-hide lowercase' }}
 					/>
 				</div>
 			</div>
 			<div className='grow mt-2'>
-				<p className='text-white text-xl mb-2'>Estandares Relacionados</p>
+				<p className='text-base font-bold text-white mb-2'>Estandares Relacionados</p>
 				<Textarea
 					isReadOnly={isEdit}
-					maxRows={2}
+					minRows={1}
+					maxRows={3}
 					variant='bordered'
 					value={standardHeader.standardRelated}
 					onValueChange={(value) => handleChange('standardRelated', value)}
@@ -107,7 +113,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 			</div>
 			<div className='grow flex justify-between mt-2'>
 				<div>
-					<p className='text-white text-xl mb-3'>Valoracion Estandar</p>
+					<p className='text-base font-bold text-white text-xl mb-3'>Valoracion Estandar</p>
 					<RatingSwitch status={standardHeader.status.description} />
 				</div>
 				{isEdit

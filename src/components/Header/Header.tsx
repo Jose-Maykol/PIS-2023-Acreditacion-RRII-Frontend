@@ -31,7 +31,7 @@ const Header = () => {
 		>
 			<NavbarBrand className='hidden md:flex gap-3'>
 				<UbuntuIcon width={25} height={25} fill='fill-white' />
-				<p className='text-base font-bold text-white uppercase'>
+				<p className='text-sm font-bold text-white uppercase'>
 					sistema de gestion de acreditacion
 				</p>
 			</NavbarBrand>
@@ -41,7 +41,7 @@ const Header = () => {
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>
-				<p className='text-base text-white opacity-80'>{`${user.name} ${user.lastname}`}</p>
+				<p className='text-base lowercase first-letter:uppercase text-white opacity-80'>{`${user.name} ${user.lastname}`}</p>
 				<CustomDropdown
 					triggerElement={
 						<Avatar
