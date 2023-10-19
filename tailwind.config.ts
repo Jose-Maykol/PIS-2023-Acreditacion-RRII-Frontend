@@ -1,3 +1,5 @@
+/* eslint-disable quote-props */
+/* eslint-disable @typescript-eslint/no-var-requires */
 import type { Config } from 'tailwindcss'
 const colors = require('tailwindcss/colors')
 const { nextui } = require('@nextui-org/react')
@@ -27,7 +29,32 @@ const config: Config = {
 	},
 	darkMode: 'class',
 	plugins: [
-		nextui()
+		nextui({
+			themes: {
+				dark: {
+					colors: {
+						primary: {
+							DEFAULT: '#0284c7',
+							foreground: '#000000'
+						},
+						focus: '#0284c7'
+					}
+				},
+				light: {
+					colors: {
+						primary: {
+							DEFAULT: '#0284c7',
+							foreground: '#ffffff'
+						},
+						focus: '#0284c7',
+						default: {
+							DEFAULT: '#ffffff',
+							foreground: '#000000'
+						}
+					}
+				}
+			}
+		})
 	]
 }
 export default config

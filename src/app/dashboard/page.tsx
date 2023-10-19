@@ -1,13 +1,11 @@
 'use client'
 
-import React, { useState } from 'react'
+import React from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
 import UserTable from '@/components/Table/UserTable'
 
 export default function DashboardPage() {
-	const [openModal, setOpenModal] = useState(false)
-
 	return (
 		<div className='h-full'>
 			<ContentWrapper className='bg-lightBlue-600 p-5 h-[300px]'>

@@ -1,21 +1,21 @@
 import React from 'react'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 
-type DropdownMode = 'selector' | 'action';
+type DropdownMode = 'selector' | 'action'
 
 interface CustomDropdownProps {
-	placement?: any;
-	triggerElement: React.ReactNode;
-	triggerClassName?: string;
-	disallowEmptySelection?: boolean;
-	closeOnSelect?: boolean;
-	selectedKeys?: any;
-	selectionMode?: any;
-	items: any[];
-	itemsClassName?: string;
-	onSelectionChange?: (key: any) => void;
-	onAction?: (key: any) => void;
-	mode: DropdownMode;
+	placement?: any
+	triggerElement: React.ReactNode
+	triggerClassName?: string
+	disallowEmptySelection?: boolean
+	closeOnSelect?: boolean
+	selectedKeys?: any
+	selectionMode?: any
+	items: any[]
+	itemsClassName?: string
+	onSelectionChange?: (key: any) => void
+	onAction?: (key: any) => void
+	mode: DropdownMode
 }
 
 function CustomDropdown({
@@ -34,9 +34,7 @@ function CustomDropdown({
 }: CustomDropdownProps) {
 	return (
 		<Dropdown placement={placement}>
-			<DropdownTrigger className={triggerClassName}>
-				{triggerElement}
-			</DropdownTrigger>
+			<DropdownTrigger className={triggerClassName}>{triggerElement}</DropdownTrigger>
 			<DropdownMenu
 				aria-label='Dropdown'
 				disallowEmptySelection={disallowEmptySelection}

@@ -7,8 +7,8 @@ export default function StandardsIdPage({ params, children }: { params: { id: st
 	const { id } = params
 
 	return (
-		<div className='h-full'>
-			<ContentWrapper className='bg-lightBlue-600 p-4 h-full max-h-[580px]'>
+		<div className='h-full bg-gray mb-5'>
+			<ContentWrapper className='bg-lightBlue-600 pb-20 pmax-h-[580px]'>
 				<HeaderStandards id={id}/>
 			</ContentWrapper>
 			<ContentWrapper className='bg-white p-2 h-[600px] m-auto rounded-md'>

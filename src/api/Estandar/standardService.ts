@@ -1,3 +1,4 @@
+import { AssignedUsers } from '@/types/Standard'
 import api from '../axios'
 
 const url = {
@@ -18,19 +19,31 @@ export const StandardService = {
 		return res.data
 	},
 
-	listEstandar: async () => {
-		return await api.get(url.listEstandar)
+	getStandardsAndAssignedUsers: async () => {
+		const res = await api.get('/2023/A/standards/users')
+		return res.data
+	},
+	getHeader: async(id:string) => {
+		const res = await api.get(`2023/A/standards/${id}/header`)
+		return res.data
+	},
+	assignUsersToStandard: async (IdStandard: string, params: AssignedUsers) => {
+		try {
+			const res = await api.put(`/2023/A/standards/${IdStandard}/assignment`, params)
+			return res.data
+		} catch (error: any) {
+			if (error.response.status === 422) {
+				return error.response.data
+			}
+		}
 	},
 
-	listEstandarValues: async () => {
-		return await api.get(url.listEstandarValues)
+	getListOfEnabledUsers: async (IdStandard: string) => {
+		const res = await api.get(`/2023/A/standards/${IdStandard}/users`)
+		return res.data
 	},
 
 	showEstandar: async (id: string) => {
 		return await api.get(`${url.detailEstandard}${id}`)
-	},
-
-	updateEstandar: async (id: string, params: any) => {
-		return await api.put(`${url.updateEstandar}${id}`, params)
 	}
 }

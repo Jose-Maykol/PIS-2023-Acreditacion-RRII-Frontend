@@ -1,10 +1,16 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { StandardService } from '@/api/Estandar/standardService'
 import { PartialStandard } from '@/types/Standard'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+	title: 'Sistema de Gestión de Calidad',
+	description: 'Sistema de Gestión de Calidad'
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
@@ -14,18 +20,24 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
-	useEffect(() => {
-		StandardService.getPartial().then((res) => {
-			setStandards(res.data)
-		})
+	const loadStandards = useMemo(() => {
+		return () => {
+			StandardService.getPartial().then((res) => {
+				setStandards(res.data)
+			})
+		}
 	}, [])
+
+	useEffect(() => {
+		loadStandards()
+	}, [loadStandards])
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
 			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards = {standards}/>
-			<div className={`grow ${isSidebarOpen ? 'ml-[210px]' : 'ml-[60px]'}`}>
+			<div className={'grow'}>
 				<Header />
-				<main className='h-screen'>
+				<main className='h-screen max-h-96'>
 					{children}
 				</main>
 			</div>

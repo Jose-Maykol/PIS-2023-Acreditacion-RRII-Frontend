@@ -1,41 +1,62 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import {
-	User,
 	Chip,
-	Tooltip,
 	ChipProps,
 	Pagination,
 	Selection,
+	Input,
 	Button
 } from '@nextui-org/react'
-import EyeIcon from '../Icons/EyeIcon'
-import PencilIcon from '../Icons/PencilIcon'
-import TrashIcon from '../Icons/TrashIcon'
-import { PlusIcon } from '../Icons/PlusIcon'
-import { SearchIcon } from '../Icons/SearchIcon'
-import { ChevronDownIcon } from '../Icons/ChevronDownIcon'
-import { columns, users, statusOptions } from '../../utils/data'
+import SearchIcon from '../Icons/SearchIcon'
+import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
-import CustomInput from '../Input/CustomInput'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import AddUserModal from '../Modal/User/AddUserModal'
+import { User } from '@/types/User'
+import { UsersService } from '@/api/Users/usersService'
+import ActivateUserModal from '../Modal/User/ActivateUserModal'
+import RoleUserModel from '../Modal/User/RoleUserModel'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	active: 'success',
-	paused: 'danger',
-	vacation: 'warning'
+	activo: 'success',
+	inactivo: 'danger',
+	'pendiente de autenticación': 'warning'
 }
-
-type User = typeof users[0];
 
 export default function UserTable() {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-
-	const rowsPerPage = 7
+	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
+	const [users, setUsers] = useState<User[]>([])
+	const columns = [
+		{ name: 'N°', uid: 'id', sortable: true },
+		{ name: 'Nombres', uid: 'name', sortable: true },
+		{ name: 'Rol', uid: 'role', sortable: true },
+		{ name: 'Email', uid: 'email' },
+		{ name: 'Status', uid: 'status', sortable: true },
+		{ name: 'Acciones', uid: 'actions' }
+	]
 
+	const statusOptions = [
+		{ label: 'Activo', uid: 'activo' },
+		{ label: 'Inactivo', uid: 'inactivo' },
+		{ label: 'Pendiente de autenticación', uid: 'pendiente de autenticación' }
+	]
+
+	useEffect(() => {
+		UsersService.listUsers().then((res) => {
+			setUsers(res.data)
+		})
+	}, [])
+
+	const handleUsersChanged = () => {
+		UsersService.listUsers().then((res) => {
+			setUsers(res.data)
+		})
+	}
 
 	const filteredItems = React.useMemo(() => {
 		let filteredUsers = [...users]
@@ -63,25 +84,26 @@ export default function UserTable() {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((user: User, columnKey: React.Key) => {
+	const renderCell = useCallback((user: User, columnKey: React.Key) => {
 		const cellValue = user[columnKey as keyof User]
 
 		switch (columnKey) {
 		case 'name':
 			return (
-				<User
-					avatarProps={{ radius: 'lg', src: user.avatar }}
-					description={user.email}
-					name={cellValue}
-				>
-					{user.email}
-				</User>
+				<div className='flex flex-col min-w-[325px]'>
+					{user.status === 'pendiente de autenticación'
+						? (
+							<p className='text-bold text-sm capitalize'>---</p>
+						)
+						: (
+							<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`}</p>
+						)}
+				</div>
 			)
 		case 'role':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
-					<p className='text-bold text-sm capitalize text-default-400'>{user.team}</p>
 				</div>
 			)
 		case 'status':
@@ -92,22 +114,15 @@ export default function UserTable() {
 			)
 		case 'actions':
 			return (
-				<div className='relative flex items-center gap-2'>
-					<Tooltip content='Detalle'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<EyeIcon width={15} height={15} />
-						</span>
-					</Tooltip>
-					<Tooltip content='Editar Usuario'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
-							<PencilIcon width={15} height={15} fill='fill-warning' />
-						</span>
-					</Tooltip>
-					<Tooltip color='danger' content='Eliminar usuario'>
-						<span className='text-danger cursor-pointer active:opacity-50'>
-							<TrashIcon width={15} height={15} fill='fill-danger' />
-						</span>
-					</Tooltip>
+				<div className='relative flex items-center gap-2 justify-center'>
+					<RoleUserModel
+						userId={user.id}
+						onUserChanged={handleUsersChanged}
+					/>
+					<ActivateUserModal
+						userId={user.id}
+						onUserChanged={handleUsersChanged}
+					/>
 				</div>
 			)
 		default:
@@ -133,11 +148,11 @@ export default function UserTable() {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
-					<CustomInput
+					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre...'
-						startContent={<SearchIcon />}
+						placeholder='Buscar por nombre'
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -146,23 +161,19 @@ export default function UserTable() {
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon className='text-small' />} variant='flat'>
-                                    Estado
+								<Button endContent={<ChevronDownIcon width={15} height={15}/>} variant='flat'>
+                  Estado
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
 							items={statusOptions}
-							itemsClassName='capitalize'
 							disallowEmptySelection
 							closeOnSelect={false}
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
-						<Button color='primary' endContent={<PlusIcon />}>
-                            Añadir Usuario
-						</Button>
+						<AddUserModal onUserChanged={handleUsersChanged}/>
 					</div>
 				</div>
 			</div>

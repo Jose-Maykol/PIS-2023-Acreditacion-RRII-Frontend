@@ -1,8 +1,12 @@
 import api from '../axios'
 
+const url = {
+	login: '/auth/login/google/callback'
+}
+
 export const AuthService = {
-	login: async (params:string) => {
-		const res = await api.get(`auth/login/google/callback${params}`)
+	login: async (params: string) => {
+		const res = await api.get(`${url.login}${params}`)
 		return res
 	},
 	// falta implementar
