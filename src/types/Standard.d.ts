@@ -44,6 +44,7 @@ export interface AssignedUsers {
 }
 
 export interface StandardHeader {
+	name: string
 	description: string
 	dimension: string
 	factor: string
