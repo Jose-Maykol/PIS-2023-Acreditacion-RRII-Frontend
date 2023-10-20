@@ -204,11 +204,11 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
 						/>
-						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
-							<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white' />}>
+						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white' />}>
+							<Link href={'/dashboard/standards/[id]/evidence_improvements/new'} as={`/dashboard/standards/${id}/evidence_improvements/new`}>
 								Crear PM
-							</Button>
-						</Link>
+							</Link>
+						</Button>
 					</div>
 				</div>
 			</div>
