@@ -43,12 +43,15 @@ export interface AssignedUsers {
 	users: string[]
 }
 
-export interface StandardHeader {
+export interface StandardValues {
 	name: string
 	description: string
 	dimension: string
 	factor: string
 	standardRelated: string
+}
+
+export interface StandardHeader extends StandardValues {
 	status: {
 		id: number
 		description: string
