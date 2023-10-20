@@ -33,11 +33,11 @@ export default function UserTable() {
 	const [users, setUsers] = useState<User[]>([])
 	const columns = [
 		{ name: 'N°', uid: 'id', sortable: true },
-		{ name: 'Nombres', uid: 'name', sortable: true },
-		{ name: 'Rol', uid: 'role', sortable: true },
-		{ name: 'Email', uid: 'email' },
-		{ name: 'Status', uid: 'status', sortable: true },
-		{ name: 'Acciones', uid: 'actions' }
+		{ name: 'NOMBRES', uid: 'name', sortable: true },
+		{ name: 'ROL', uid: 'role', sortable: true },
+		{ name: 'EMAIL', uid: 'email' },
+		{ name: 'STATUS', uid: 'status', sortable: true },
+		{ name: 'ACCIONES', uid: 'actions' }
 	]
 
 	const statusOptions = [
@@ -93,7 +93,7 @@ export default function UserTable() {
 				<div className='flex flex-col min-w-[325px]'>
 					{user.status === 'pendiente de autenticación'
 						? (
-							<p className='text-bold text-sm capitalize'>---</p>
+							<p className='text-bold text-sm'>Usuario registrado, detalles pendientes</p>
 						)
 						: (
 							<p className='text-bold text-sm capitalize'>{`${user.name} ${user.lastname}`}</p>
@@ -161,7 +161,7 @@ export default function UserTable() {
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={15} height={15}/>} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
                   Estado
 								</Button>
 							}
