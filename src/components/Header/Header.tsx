@@ -32,7 +32,7 @@ const Header = () => {
 			<NavbarBrand className='hidden md:flex gap-3'>
 				<UbuntuIcon width={25} height={25} fill='fill-white' />
 				<p className='text-base font-bold text-white uppercase'>
-					sistema de gestion de acreditacion
+					sistema de gestión de acreditación
 				</p>
 			</NavbarBrand>
 

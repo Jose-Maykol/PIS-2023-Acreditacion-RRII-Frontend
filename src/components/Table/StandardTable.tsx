@@ -23,7 +23,7 @@ import Link from 'next/link'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'plenamente completado': 'success',
-	completado: 'warning',
+	logrado: 'warning',
 	'no logrado': 'danger'
 }
 
@@ -114,19 +114,19 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 
 		case 'actions':
 			return (
-				<div className='relative flex items-center gap-2'>
+				<div className='relative flex items-center gap-2 justify-center'>
 					<Tooltip content='Editar Encargados'>
 						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
 							onOpenModal(standard.id.toString())
 						}>
-							<PencilIcon width={20} height={20} fill='fill-warning' />
+							<PencilIcon width={17} height={17} fill='fill-amber-300 hover:fill-amber-500' />
 						</span>
 					</Tooltip>
 					<Tooltip content='Ver Estandar'>
 						<Link
 							href={`/dashboard/standards/${standard.id}/narrative`}
 						>
-							<LinkIcon width={20} height={20} fill='fill-primary'/>
+							<LinkIcon width={17} height={17} fill='fill-sky-300 hover:fill-sky-600'/>
 						</Link>
 					</Tooltip>
 				</div>
@@ -167,7 +167,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={18} height={18} fill='fill-default'/>} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
 									Estado
 								</Button>
 							}

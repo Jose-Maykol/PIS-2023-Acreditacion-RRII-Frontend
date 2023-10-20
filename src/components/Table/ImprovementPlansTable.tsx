@@ -135,20 +135,20 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 				)
 			case 'actions':
 				return (
-					<div className='relative flex items-center gap-4 justify-center'>
+					<div className='relative flex gap-4'>
 						<Tooltip content='Detalle'>
 							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<EyeIcon width={15} height={15} />
+								<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900'/>
 							</span>
 						</Tooltip>
 						<Tooltip content='Editar Usuario'>
 							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<PencilIcon width={15} height={15} fill='fill-warning' />
+								<PencilIcon width={15} height={15} fill='fill-amber-300 hover:fill-amber-500' />
 							</span>
 						</Tooltip>
 						<Tooltip color='danger' content='Eliminar usuario'>
 							<span className='text-danger cursor-pointer active:opacity-50'>
-								<TrashIcon width={15} height={15} fill='fill-danger' />
+								<TrashIcon width={15} height={15} fill='fill-red-400 hover:fill-red-600' />
 							</span>
 						</Tooltip>
 					</div>
@@ -191,7 +191,7 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={15} height={15} />} variant='flat'>
+								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
 									Estado
 								</Button>
 							}

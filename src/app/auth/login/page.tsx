@@ -136,10 +136,12 @@ export default function AuthPage() {
 					<strong className='mx-2 uppercase text-xs'>Accede con tu cuenta institucional</strong>
 				</Button>
 			</div>
-			<div className='flex-1 bg-white w-max h-[600px]'>
+			<div className='flex-1 bg-white w-max h-full flex justify-center items-center'>
 				<Image
 					alt='logo-unsa'
-					className='w-auto h-full p-8'
+					height={500}
+					width={400}
+					className='w-auto h-[500px] p-8'
 					src={login}/>
 			</div>
 		</div>
