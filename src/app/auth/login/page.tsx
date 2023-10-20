@@ -10,6 +10,7 @@ import React, { useEffect, useState } from 'react'
 import { SERVER_PATH } from '../../../../config'
 import { AuthService } from '@/api/Auth/authService'
 import { AuthUser } from '@/types/User'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 export default function AuthPage() {
 	const years = [{ value: '2022' }]
@@ -55,7 +56,6 @@ export default function AuthPage() {
 		const paramsGoogle = location.search
 		if (paramsGoogle) {
 			AuthService.login(paramsGoogle).then((res) => {
-				console.log(res)
 				if (res.status === 200) {
 					const token = res.data.access_token
 					const authUser: AuthUser = {
@@ -69,8 +69,10 @@ export default function AuthPage() {
 							email: res.data.user.email as string
 						}
 					}
+					// Se guardan los datos en el local storage
 					localStorage.setItem('access_token', token)
 					localStorage.setItem('auth_user', JSON.stringify(authUser))
+					// Se guardan los datos de year y semester en el store
 					window.location.href = '/dashboard'
 				}
 			})
