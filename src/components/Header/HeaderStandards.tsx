@@ -5,7 +5,8 @@ import { Textarea, Button } from '@nextui-org/react'
 import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
 import { StandardService } from '@/api/Estandar/standardService'
-import { StandardHeader } from '@/types/Standard'
+import { StandardHeader, StandardValues } from '@/types/Standard'
+import { toast } from 'react-toastify'
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
@@ -25,6 +26,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 	})
 
 	const [isRead, setIsRead] = useState<boolean>(true)
+	const [isReload, setIsReload] = useState<boolean>(false)
 
 	const handleChange = (key: string, value: string) => {
 		setStandardHeader((prev) => ({
@@ -32,10 +34,11 @@ const HeaderStandards = ({ id }: { id: string }) => {
 			[key]: value
 		}))
 	}
+	console.log(standardHeader.status)
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description, dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
+			const { name, description = 'valor defecto', dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
 			setStandardHeader({
 				name,
 				description,
@@ -49,16 +52,54 @@ const HeaderStandards = ({ id }: { id: string }) => {
 				}
 			})
 		})
-	}, [])
+		setIsReload(false)
+	}, [isReload])
 
-	const handleAdminSave = () => {
-		console.log('admin')
+	const handleUpdateHeader = async () => {
+		const notification = toast.loading('Procesando...')
+		const { name, description, dimension, factor, standardRelated } : StandardValues = standardHeader
+		await StandardService.updateHeader(
+			id,
+			{
+				name,
+				description,
+				dimension,
+				factor,
+				standardRelated
+			}).then((res) => {
+			if (res.status === 1) {
+				setIsReload(true)
+				toast.update(notification, {
+					render: res.message,
+					type: 'success',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'colored'
+				})
+			} else {
+				toast.update(notification, {
+					render: res.message,
+					type: 'error',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'colored'
+				})
+			}
+		})
 		setIsRead(true)
 	}
 
-	const handleManagerSave = () => {
-		console.log('manager')
+	const handleCancelUpdateHeader = () => {
 		setIsRead(true)
+		setIsReload(true)
 	}
 
 	return (
@@ -126,20 +167,20 @@ const HeaderStandards = ({ id }: { id: string }) => {
 			<div className='grow flex justify-between items-center mt-2'>
 				<div>
 					<p className='text-white text-xl'>Valoracion Estandar</p>
-					<RatingSwitch isManager={standardHeader.permissions.isManager} statusID={standardHeader.status.id} />
+					<RatingSwitch standardID={id} isManager={standardHeader.permissions.isManager} statusID={standardHeader.status.id} />
 				</div>
 				<div className='flex gap-2'>
 					{!isRead && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={() => setIsRead(true)}
+							onPress={handleCancelUpdateHeader}
 							color='danger'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
 						Cancelar
 						</Button>
 					)}
-					{isRead && (
+					{isRead && (standardHeader.permissions.isAdministrator || standardHeader.permissions.isManager) && (
 						<Button
 							className='text-white self-end uppercase'
 							onPress={() => setIsRead(false)}
@@ -152,7 +193,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					{!isRead && standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={handleAdminSave}
+							onPress={handleUpdateHeader}
 							color='success'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
@@ -162,7 +203,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					{!isRead && !standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={handleManagerSave}
+							onPress={handleUpdateHeader}
 							color='success'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
