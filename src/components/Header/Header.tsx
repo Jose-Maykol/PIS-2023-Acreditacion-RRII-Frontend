@@ -4,17 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
 import UbuntuIcon from '@/components/Icons/UbuntuIcon'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 const Header = () => {
-	const [yearSemester, setYearSemester] = useState('')
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
+	const { year, semester } = useYearSemesterStore()
 
 	useEffect(() => {
-		const year = localStorage.getItem('year')
-		const semester = localStorage.getItem('semester')
-		const yearSemesterValue = `${year} - ${semester}`
-		setYearSemester(yearSemesterValue)
 		const authUserJSON = localStorage.getItem('auth_user')
 		if (authUserJSON) {
 			const { picture, user } = JSON.parse(authUserJSON)
@@ -37,7 +34,7 @@ const Header = () => {
 			</NavbarBrand>
 
 			<NavbarContent className='hidden md:flex' justify='center'>
-				<p className='text-base font-bold text-white border rounded-md p-2'>{yearSemester}</p>
+				<p className='text-base font-bold text-white border rounded-md p-2'>{`${year} - ${semester}`}</p>
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>
@@ -47,10 +44,11 @@ const Header = () => {
 						<Avatar
 							as='button'
 							className='transition-transform'
-							color='secondary'
-							name='Jason Hughes'
+							color='primary'
+							name={`${user.name} ${user.lastname}`}
 							size='md'
 							src={picture}
+							imgProps={{ referrerPolicy: 'no-referrer' }}
 						/>
 					}
 					items={[
