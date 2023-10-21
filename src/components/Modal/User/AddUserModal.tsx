@@ -23,7 +23,8 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
 	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: false })
 	const [touched, setTouched] = useState(false)
-	const validateEmail = (value:string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i)
+	const validateEmail = (value:string) => value.match(/^[A-Z0-9._%+-]+@unsa\.edu\.p$/i)
+
 
 	const roles = useMemo(
 		() => [

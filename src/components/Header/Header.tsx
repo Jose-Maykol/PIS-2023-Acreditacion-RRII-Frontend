@@ -13,7 +13,7 @@ const Header = () => {
 	useEffect(() => {
 		const year = localStorage.getItem('year')
 		const semester = localStorage.getItem('semester')
-		const yearSemesterValue = `${year} - ${semester}`
+		const yearSemesterValue = `2023 - B`
 		setYearSemester(yearSemesterValue)
 		const authUserJSON = localStorage.getItem('auth_user')
 		if (authUserJSON) {
