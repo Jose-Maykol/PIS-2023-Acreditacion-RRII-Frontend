@@ -22,7 +22,7 @@ export default function SideBar({
 	return (
 		<nav
 			className={`overflow-y-auto bg-white no-scrollbar border-gray-100 border ${
-				isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'
+				isSidebarOpen ? 'w-[210px] max-w-[210px] min-w-[210px]' : 'w-[60px] max-w-[60px] min-w-[60px]'
 			} text-lg min-h-screen p-4`}
 		>
 			<div

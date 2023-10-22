@@ -2,6 +2,7 @@ import { AssignedUsers, StandardValues } from '@/types/Standard'
 import api from '../axios'
 
 const url = {
+	listStandarPartial: 'standards/partial',
 	listEstandar: '/2023/A/standards',
 	listEstandarValues: '/2023/A/standards/standard-values',
 	detailEstandard: '/2023/A/standards/',
@@ -14,8 +15,8 @@ export const StandardService = {
 		const res = await api.get('/estandar')
 		return res
 	},
-	getPartial: async () => {
-		const res = await api.get('/2023/A/standards/partial')
+	getPartial: async (year: number, semester: 'A'| 'B') => {
+		const res = await api.get(`/${year}/${semester}/${url.listStandarPartial}`)
 		return res.data
 	},
 

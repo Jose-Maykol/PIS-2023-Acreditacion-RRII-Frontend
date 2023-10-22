@@ -6,31 +6,36 @@ import Header from '@/components/Header/Header'
 import { StandardService } from '@/api/Estandar/standardService'
 import { PartialStandard } from '@/types/Standard'
 import { Metadata } from 'next'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
-// export const metadata: Metadata = {
-// 	title: 'Sistema de Gestión de Calidad',
-// 	description: 'Sistema de Gestión de Calidad'
-// }
+export const metadata: Metadata = {
+	title: 'Sistema de Gestión de Calidad',
+	description: 'Sistema de Gestión de Calidad'
+}
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 	const [standards, setStandards] = useState<PartialStandard[]>([])
-
+	const { year, semester } = useYearSemesterStore()
+	console.log('year', year)
+	console.log('semester', semester)
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
 	const loadStandards = useMemo(() => {
-		return () => {
-			StandardService.getPartial().then((res) => {
+		return (year: number, semester: 'A' | 'B') => {
+			StandardService.getPartial(year, semester).then((res) => {
 				setStandards(res.data)
 			})
 		}
 	}, [])
 
 	useEffect(() => {
-		loadStandards()
-	}, [loadStandards])
+		if (year && semester) {
+			loadStandards(year, semester)
+		}
+	}, [year, semester, loadStandards])
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
