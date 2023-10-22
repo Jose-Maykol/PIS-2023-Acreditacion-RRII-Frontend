@@ -15,7 +15,7 @@ export const StandardService = {
 		const res = await api.get('/estandar')
 		return res
 	},
-	getPartial: async (year: number, semester: 'A'| 'B') => {
+	getPartial: async (year: number, semester: 'A' | 'B') => {
 		const res = await api.get(`/${year}/${semester}/${url.listStandarPartial}`)
 		return res.data
 	},

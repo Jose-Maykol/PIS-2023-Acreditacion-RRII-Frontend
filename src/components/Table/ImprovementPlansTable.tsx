@@ -47,7 +47,7 @@ type ImprovementPlans = {
 }
 
 type TableProps = {
-	id: string
+	id?: string
 	improvementPlans: Array<ImprovementPlans>
 }
 

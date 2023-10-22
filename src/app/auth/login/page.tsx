@@ -10,7 +10,6 @@ import React, { useEffect, useState } from 'react'
 import { SERVER_PATH } from '../../../../config'
 import { AuthService } from '@/api/Auth/authService'
 import { AuthUser } from '@/types/User'
-import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 export default function AuthPage() {
 	const years = [{ value: '2022' }]

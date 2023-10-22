@@ -12,12 +12,12 @@ type EvidenceImprovementsPageParams = {
 }
 
 export default function EvidenceImprovementsPage({ params }: EvidenceImprovementsPageParams) {
-	const [improvementPlans, setImpmrovementPlans] = useState([])
+	const [improvementPlans, setImprovementPlans] = useState([])
 
 	useEffect(() => {
 		PlanMejoraService.readByStandard(params.id).then((res) => {
 			console.log(res.data.data)
-			setImpmrovementPlans(res.data.data)
+			setImprovementPlans(res.data.data)
 		}).catch(console.log)
 	}, [])
 

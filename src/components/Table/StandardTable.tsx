@@ -7,7 +7,10 @@ import {
 	Pagination,
 	Selection,
 	Input,
-	Button
+	Button,
+	Popover,
+	PopoverTrigger,
+	PopoverContent
 } from '@nextui-org/react'
 import LinkIcon from '../Icons/LinkIcon'
 import PencilIcon from '../Icons/PencilIcon'
@@ -89,15 +92,30 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		case 'users':
 			if (Array.isArray(cellValue)) {
 				return (<div className='flex flex-col'>
-					{
-						cellValue.length > 0
-							? cellValue.map((user, index) => (
-								<div key={index}>
-									<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
-								</div>
-							))
-							: (<p>No se asignaron aun encargados</p>)
-					}
+					{cellValue.length > 0
+						? (
+							<Popover placement='right'>
+								<PopoverTrigger>
+									<Button
+										color='primary'
+										variant='ghost'
+										size='sm'
+										className='capitalize w-[100px]'>
+                Ver encargados
+									</Button>
+								</PopoverTrigger>
+								<PopoverContent>
+									{cellValue.map((user, index) => (
+										<div key={index}>
+											<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
+										</div>
+									))}
+								</PopoverContent>
+							</Popover>
+						)
+						: (
+							<p>No se asignaron aun encargados</p>
+						)}
 				</div>)
 			}
 			return ''
