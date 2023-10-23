@@ -16,7 +16,7 @@ export default function SideBarItem({ isOpen, icon, text, link }: SideBarItemPro
 	const isCurrentPath = link === '/dashboard' ? pathname === link : pathname.startsWith(link)
 	const backgroundColor = isCurrentPath
 		? 'bg-lightBlue-600 bg-opacity-30 text-lightBlue-600'
-		: 'text-gray-700'
+		: 'text-neutral-300'
 	const fillClassName = isCurrentPath ? 'fill-lightBlue-600' : 'fill-black'
 	const iconFill = React.cloneElement(icon as React.ReactElement, {
 		fill: fillClassName

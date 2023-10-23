@@ -57,10 +57,67 @@ const config: Config = {
 				light: {
 					colors: {
 						primary: {
-							DEFAULT: '#0284c7',
+							DEFAULT: '#39c270',
+							50: '#ebf3f9',
+							75: '#aecce6',
+							100: '#8cb7dc',
+							200: '#5b97cc',
+							300: '#3982c2',
+							400: '#285b88',
+							500: '#234f76',
 							foreground: '#ffffff'
 						},
-						focus: '#0284c7',
+						secondary: {
+							DEFAULT: '#39a9c2',
+							50: '#ebf6f9',
+							75: '#aedce6',
+							100: '#8ccddc',
+							200: '#5bb8cc',
+							300: '#39a9c2',
+							400: '#287688',
+							500: '#236776'
+						},
+						success: {
+							DEFAULT: '#39c270',
+							50: '#ebf9f1',
+							75: '#aee6c4',
+							100: '#8cdcac',
+							200: '#5bcc88',
+							300: '#39c270',
+							400: '#28884e',
+							500: '#237644'
+						},
+						warning: {
+							DEFAULT: '#dda332',
+							50: '#fcf6eb',
+							75: '#f1d9ab',
+							100: '#ebca88',
+							200: '#e3b355',
+							300: '#dda332',
+							400: '#9b7223',
+							500: '#87631f'
+						},
+						danger: {
+							DEFAULT: '#c23939',
+							50: '#f9ebeb',
+							75: '#e6aeae',
+							100: '#dc8c8c',
+							200: '#cc5b5b',
+							300: '#c23939',
+							400: '#882828',
+							500: '#762323'
+						},
+						neutral: {
+							DEFAULT: '#5d6b82',
+							0: 'ffffff',
+							50: '#c2c7d0',
+							75: '#a6aebb',
+							100: '#7a8699',
+							200: '#6b788e',
+							300: '#5d6b82',
+							400: '#505f79',
+							500: '#42526d'
+						},
 						default: {
 							DEFAULT: '#ffffff',
 							foreground: '#000000'

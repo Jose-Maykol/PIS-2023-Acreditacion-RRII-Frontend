@@ -50,9 +50,9 @@ export default function SideBar({
 								height={75}
 								className='h-[75px] w-[55px] min-h-[75px] min-w-[55px]'
 							/>
-							<h1 className='uppercase text-[0.5rem] p-2'>
+							<h1 className='text-neutral-300 uppercase text-[0.5rem] p-2'>
 							escuela profesional de <br />{' '}
-								<span className='font-bold text-[14px]'>relaciones industriales</span>
+								<span className='text-neutral-500 font-bold text-[14px]'>relaciones industriales</span>
 							</h1>
 						</div>
 					</Link>
@@ -68,7 +68,7 @@ export default function SideBar({
 				)}
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>area personal</h3>
+				<h3 className='text-base font-bold text-neutral-300 uppercase '>area personal</h3>
 			)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
@@ -80,7 +80,7 @@ export default function SideBar({
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
+				<h3 className='text-base font-bold text-neutral-300 uppercase'>administrador</h3>
 			)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
@@ -92,7 +92,7 @@ export default function SideBar({
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>
+				<h3 className='text-base font-bold text-neutral-300 uppercase '>gestión de estándares</h3>
 			)}
 			<ul className='text-sm list-none my-3'>
 				<SideBarItem
@@ -104,7 +104,7 @@ export default function SideBar({
 			</ul>
 			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
+				<h3 className='text-base font-bold text-neutral-300 uppercase '>estándares</h3>
 			)}
 			<ul className='text-sm list-none my-3'>
 				{Array.isArray(standards) &&
