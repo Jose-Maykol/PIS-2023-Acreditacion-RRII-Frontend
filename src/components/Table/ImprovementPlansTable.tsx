@@ -14,7 +14,6 @@ import {
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import TrashIcon from '../Icons/TrashIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
@@ -22,6 +21,7 @@ import { columns, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
+import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	planificado: 'secondary',
@@ -141,16 +141,12 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 								<EyeIcon width={15} height={15} />
 							</span>
 						</Tooltip>
-						<Tooltip content='Editar Usuario'>
+						<Tooltip content='Editar Plan de Mejora'>
 							<span className='text-default-400 cursor-pointer active:opacity-50'>
 								<PencilIcon width={15} height={15} fill='fill-warning' />
 							</span>
 						</Tooltip>
-						<Tooltip color='danger' content='Eliminar usuario'>
-							<span className='text-danger cursor-pointer active:opacity-50'>
-								<TrashIcon width={15} height={15} fill='fill-danger' />
-							</span>
-						</Tooltip>
+						<DeleteImprovementPlanModal />
 					</div>
 				)
 			default:
