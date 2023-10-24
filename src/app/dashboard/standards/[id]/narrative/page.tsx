@@ -18,7 +18,7 @@ type NarrativePageParams = {
 export default function NarrativePage({ params }: NarrativePageParams) {
 	const [editNarrative, setEditNarrative] = useState(false)
 	const { year, semester } = useYearSemesterStore()
-	const [narrative, setNarrative] = useState()
+	const [narrative, setNarrative] = useState<string>()
 	const id = Number(params.id)
 
 	const loadNarrative = useMemo(() => {
@@ -38,6 +38,10 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	const handleEditNarrative = () => {
 		console.log('Editando narrativa')
 		setEditNarrative(!editNarrative)
+	}
+
+	const createMarkup = () => {
+		return { __html: narrative }
 	}
 
 	return (
@@ -65,15 +69,13 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 				</div>
 				{editNarrative
 					? (
-						<NarrativeEditor handleEditNarrative={handleEditNarrative}/>
+						<NarrativeEditor id={id} content={narrative as string} handleEditNarrative={handleEditNarrative}/>
 					)
 					: (
 						<div>
 							{narrative
 								? (
-									<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1'>
-										{narrative}
-									</div>
+									<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1' dangerouslySetInnerHTML={createMarkup()} />
 								)
 								: (
 									<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>

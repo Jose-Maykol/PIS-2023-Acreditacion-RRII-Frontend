@@ -4,16 +4,54 @@ import { useRef } from 'react'
 import { TINY_API_KEY } from '../../../config'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { NarrativeService } from '@/api/Narrative/narrativeService'
+import { toast } from 'react-toastify'
 
 interface NarrativeEditorProps {
-  handleEditNarrative: () => void;
+  id: number
+  content: string
+  handleEditNarrative: () => void
 }
 
-export default function NarrativeEditor({ handleEditNarrative }: NarrativeEditorProps) {
+export default function NarrativeEditor({ id, content, handleEditNarrative }: NarrativeEditorProps) {
 	const editorRef = useRef(null)
+	const { year, semester } = useYearSemesterStore()
 
 	const handleSaveNarrative = () => {
-		console.log('Guardando narrativa')
+		const notification = toast.loading('Procesando...')
+		const contentNarrative = {
+			narrative: editorRef.current?.getContent() as string
+		}
+		if (year && semester) {
+			NarrativeService.updateNarrative(year, semester, id, contentNarrative).then((res) => {
+				if (res.status === 1) {
+					toast.update(notification, {
+						render: res.message,
+						type: 'success',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'light'
+					})
+				} else {
+					toast.update(notification, {
+						render: res.message,
+						type: 'error',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'light'
+					})
+				}
+			})
+		}
 		console.log(editorRef.current?.getContent())
 		handleEditNarrative()
 	}
@@ -24,7 +62,7 @@ export default function NarrativeEditor({ handleEditNarrative }: NarrativeEditor
 				<Editor
 					apiKey={TINY_API_KEY}
 					onInit={(evt, editor) => editorRef.current = editor}
-					initialValue=''
+					initialValue={content}
 					init={{
 						height: 600,
 						menubar: true,
