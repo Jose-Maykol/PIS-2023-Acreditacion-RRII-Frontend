@@ -140,45 +140,29 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 				<h2 className='text-sm'>{plan.opportunity_for_improvement}</h2>
 			</div>
 
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Problema/Oportunidad</h1>
-				{plan.problems_opportunities.length > 0 ? (plan.problems_opportunities.map((item: planItem) => <li className='ml-3'>{item.description}</li>)) : <p className='italic text-sm'>Campo por agregar</p> }
-			</div>
 
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Causa Raíz</h1>
-				{plan.root_causes.length > 0 ? (plan.root_causes.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Recursos</h1>
-				{plan.resources.length > 0 ? (plan.resources.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Metas</h1>
-				{plan.goals.length > 0 ? (plan.goals.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Responsables</h1>
-				{plan.responsibles.length > 0 ? (plan.responsibles.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Observaciones</h1>
-				{plan.observations.length > 0 ? (plan.observations.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Acciones de mejora</h1>
-				{plan.improvement_actions.length > 0 ? (plan.improvement_actions.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic text-sm'>Campo por completar</p>}
-			</div>
-
-			<div className='mb-3'>
-				<h1 className='uppercase text-sm font-bold'>Fuentes</h1>
-				{plan.sources.length > 0 ? (plan.sources.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
-			</div>
+			<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
+			<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
+			<PlanItemList itemList={plan.resources} label='Recursos' />
+			<PlanItemList itemList={plan.goals} label='Metas' />
+			<PlanItemList itemList={plan.responsibles} label='Responsables' />
+			<PlanItemList itemList={plan.observations} label='Observaciones' />
+			<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
+			<PlanItemList itemList={plan.sources} label='Fuentes' />
 		</ContentWrapper>
 	)
 }
+
+type PlanItemListProps = {
+	itemList: planItem[],
+	label: string
+}
+
+function PlanItemList({ itemList, label }: PlanItemListProps) {
+	return (
+		<div className='mb-3'>
+			<h1 className='uppercase text-sm font-bold'>{label}</h1>
+			{itemList.length > 0 ? (itemList.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
+		</div>
+	)
+};
