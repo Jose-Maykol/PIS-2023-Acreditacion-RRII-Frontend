@@ -4,24 +4,39 @@
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
 import { Button } from '@nextui-org/react'
-import { Editor } from '@tinymce/tinymce-react'
-import { useRef, useState } from 'react'
-import { TINY_API_KEY } from '../../../../../../config'
-import SaveIcon from '@/components/Icons/SaveIcon'
-import CloseIcon from '@/components/Icons/CloseIcon'
+import NarrativeEditor from '@/components/Editor/NarrativeEditor'
+import { useEffect, useMemo, useState } from 'react'
+import { NarrativeService } from '@/api/Narrative/narrativeService'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
-export default function NarrativePage() {
-	const editorRef = useRef(null)
+type NarrativePageParams = {
+	params: {
+		id: string
+	}
+}
+
+export default function NarrativePage({ params }: NarrativePageParams) {
 	const [editNarrative, setEditNarrative] = useState(false)
+	const { year, semester } = useYearSemesterStore()
+	const [narrative, setNarrative] = useState()
+	const id = Number(params.id)
+
+	const loadNarrative = useMemo(() => {
+		return (year: number, semester: 'A' | 'B', id: number) => {
+			NarrativeService.getNarrative(year, semester, id).then((res) => {
+				setNarrative(res.data.narrative)
+			})
+		}
+	}, [])
+
+	useEffect(() => {
+		if (year && semester) {
+			loadNarrative(year, semester, id)
+		}
+	}, [year, semester, loadNarrative])
 
 	const handleEditNarrative = () => {
 		console.log('Editando narrativa')
-		setEditNarrative(!editNarrative)
-	}
-
-	const handleSaveNarrative = () => {
-		console.log('Guardando narrativa')
-		console.log(editorRef.current.getContent())
 		setEditNarrative(!editNarrative)
 	}
 
@@ -50,41 +65,21 @@ export default function NarrativePage() {
 				</div>
 				{editNarrative
 					? (
-						<div className='min-h-[600px]'>
-							<Editor
-								apiKey={TINY_API_KEY}
-								onInit={(evt, editor) => editorRef.current = editor}
-								initialValue=''
-								init={{
-									height: 600,
-									menubar: true,
-									language: 'es',
-									plugins: 'anchor link image lists table powerpaste',
-									toolbar: 'undo redo | fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent removeformat',
-									content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-								}}
-							/>
-							<div className='flex flex-row w-full justify-end gap-2 pt-4'>
-								<Button
-									color='danger'
-									startContent={<CloseIcon width={15} height={15} fill='fill-white'/>}
-									className='text-white'
-									onPress={handleEditNarrative}>
-									Cancelar
-								</Button>
-								<Button
-									color='success'
-									startContent={<SaveIcon width={15} height={15} fill='fill-white'/>}
-									className='text-white'
-									onPress={handleSaveNarrative}>
-									Guardar
-								</Button>
-							</div>
-						</div>
+						<NarrativeEditor handleEditNarrative={handleEditNarrative}/>
 					)
 					: (
-						<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[600px] outline-dashed outline-1 text-gray-400'>
-							Narrativa vacia
+						<div>
+							{narrative
+								? (
+									<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1'>
+										{narrative}
+									</div>
+								)
+								: (
+									<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>
+										Aun no hay narrativa
+									</div>
+								)}
 						</div>
 					)}
 			</div>
