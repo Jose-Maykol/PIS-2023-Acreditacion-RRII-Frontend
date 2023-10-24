@@ -142,14 +142,18 @@ export default function ImprovementPlansTable({
 				return (
 					<div className='relative flex items-center gap-4 justify-center'>
 						<Tooltip content='Detalle'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<EyeIcon width={15} height={15} />
-							</span>
+							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/details`}>
+								<span className='text-default-400 cursor-pointer active:opacity-50'>
+									<EyeIcon width={15} height={15} />
+								</span>
+							</Link>
 						</Tooltip>
 						<Tooltip content='Editar Plan de Mejora'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<PencilIcon width={15} height={15} fill='fill-warning' />
-							</span>
+							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}>
+								<span className='text-default-400 cursor-pointer active:opacity-50'>
+									<PencilIcon width={15} height={15} fill='fill-warning' />
+								</span>
+							</Link>
 						</Tooltip>
 						<DeleteImprovementPlanModal
 							planId={improvementPlan.id}

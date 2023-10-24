@@ -2,9 +2,8 @@ import api from '../axios'
 import { AxiosResponse } from 'axios'
 
 const url = {
-	read: '/2023/A/plans',
+	readByPlan: '/2023/A/plans/',
 	create: '/2023/A/plans',
-	// delete: '/plan/',
 	delete: '/2023/A/plans/',
 	update: '/plan/',
 	readUser: '/2023/A/plans/users',
@@ -12,24 +11,24 @@ const url = {
 }
 
 export const PlanMejoraService = {
-	read: async (): Promise<AxiosResponse> => {
-		return await api.get(url.read)
-	},
-
-	readUser: async (): Promise<AxiosResponse> => {
-		return await api.get(url.readUser)
+	create: async (params: any): Promise<AxiosResponse> => {
+		return await api.post(url.create, params)
 	},
 
 	readByStandard: async (standardId: string): Promise<AxiosResponse> => {
 		return await api.get(`${url.readByStandard}${standardId}`)
 	},
 
-	create: async (params: any): Promise<AxiosResponse> => {
-		return await api.post(url.create, params)
-	},
-
 	delete: async (id: number): Promise<AxiosResponse> => {
 		return await api.delete(`${url.delete}${id}/`)
+	},
+
+	readByPlan: async (id: string): Promise<AxiosResponse> => {
+		return await api.get(`${url.readByPlan}${id}`)
+	},
+
+	readUser: async (): Promise<AxiosResponse> => {
+		return await api.get(url.readUser)
 	},
 
 	update: async (id: string, params: any): Promise<AxiosResponse> => {
