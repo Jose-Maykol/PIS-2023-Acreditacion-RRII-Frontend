@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import {
 	Chip,
@@ -34,7 +34,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 // Create a type with properties of improvementPlans
 // type ImprovementPlans = typeof improvementPlans[0];
 
-type ImprovementPlans = {
+export type ImprovementPlans = {
 	advance: number
 	code: string
 	id: number
@@ -49,9 +49,14 @@ type ImprovementPlans = {
 type TableProps = {
 	id: string
 	improvementPlans: Array<ImprovementPlans>
+	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
 }
 
-export default function ImprovementPlansTable({ id, improvementPlans }: TableProps) {
+export default function ImprovementPlansTable({
+	id,
+	improvementPlans,
+	setImprovementPlans
+}: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -146,7 +151,10 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 								<PencilIcon width={15} height={15} fill='fill-warning' />
 							</span>
 						</Tooltip>
-						<DeleteImprovementPlanModal />
+						<DeleteImprovementPlanModal
+							planId={improvementPlan.id}
+							setImprovementPlans={setImprovementPlans}
+						/>
 					</div>
 				)
 			default:
@@ -201,7 +209,10 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 							onSelectionChange={setStatusFilter}
 						/>
 						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
-							<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white' />}>
+							<Button
+								color='primary'
+								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+							>
 								Crear PM
 							</Button>
 						</Link>

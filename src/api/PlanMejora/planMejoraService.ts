@@ -4,7 +4,8 @@ import { AxiosResponse } from 'axios'
 const url = {
 	read: '/2023/A/plans',
 	create: '/2023/A/plans',
-	delete: '/plan/',
+	// delete: '/plan/',
+	delete: '/2023/A/plans/',
 	update: '/plan/',
 	readUser: '/2023/A/plans/users',
 	readByStandard: '/2023/A/plans?standard_id='
@@ -27,7 +28,7 @@ export const PlanMejoraService = {
 		return await api.post(url.create, params)
 	},
 
-	delete: async (id: string): Promise<AxiosResponse> => {
+	delete: async (id: number): Promise<AxiosResponse> => {
 		return await api.delete(`${url.delete}${id}/`)
 	},
 

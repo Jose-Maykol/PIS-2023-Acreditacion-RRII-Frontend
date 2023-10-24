@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
 import TrashIcon from '@/components/Icons/TrashIcon'
+import { ImprovementPlans } from '@/components/Table/ImprovementPlansTable'
 import {
 	Button,
 	Modal,
@@ -10,8 +12,18 @@ import {
 	Tooltip,
 	useDisclosure
 } from '@nextui-org/react'
+import { Dispatch, SetStateAction } from 'react'
+import { toast } from 'react-toastify'
 
-export default function DeleteImprovementPlanModal() {
+type DeleteImprovementPlanModalProps = {
+	planId: number
+	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
+}
+
+export default function DeleteImprovementPlanModal({
+	planId,
+	setImprovementPlans
+}: DeleteImprovementPlanModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
 	return (
@@ -45,6 +57,39 @@ export default function DeleteImprovementPlanModal() {
 								<Button
 									color='danger'
 									onPress={() => {
+										PlanMejoraService.delete(planId)
+											.then((res) => {
+												const notification = toast.loading('Procesando...')
+												if (res.data.status === 1) {
+													toast.update(notification, {
+														render: 'Plan de mejora eliminado satisfactoriamente',
+														type: 'success',
+														autoClose: 3000,
+														hideProgressBar: false,
+														closeOnClick: true,
+														pauseOnHover: true,
+														draggable: true,
+														isLoading: false,
+														theme: 'colored'
+													})
+													setImprovementPlans((previous: Array<ImprovementPlans>) =>
+														previous.filter((plan) => plan.id !== planId)
+													)
+												} else {
+													toast.update(notification, {
+														render: 'Ocurrió un error al elimnar plan de mejora',
+														type: 'error',
+														autoClose: 3000,
+														hideProgressBar: false,
+														closeOnClick: true,
+														pauseOnHover: true,
+														draggable: true,
+														isLoading: false,
+														theme: 'colored'
+													})
+												}
+											})
+											.catch(console.log)
 										onClose()
 									}}
 								>
