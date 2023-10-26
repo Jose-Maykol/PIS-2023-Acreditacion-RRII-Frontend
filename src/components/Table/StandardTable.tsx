@@ -20,7 +20,7 @@ import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardUsers } from '@/types/Standard'
 import Link from 'next/link'
 
