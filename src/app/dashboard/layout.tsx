@@ -3,10 +3,12 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { PartialStandard } from '@/types/Standard'
 import { Metadata } from 'next'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { BaseService } from '@/api/Base/BaseService'
+
 
 export const metadata: Metadata = {
 	title: 'Sistema de Gestión de Calidad',
@@ -24,8 +26,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	}
 
 	const loadStandards = useMemo(() => {
-		return (year: number, semester: 'A' | 'B') => {
-			StandardService.getPartial(year, semester).then((res) => {
+		return () => {
+			StandardService.getPartial().then((res) => {
 				setStandards(res.data)
 			})
 		}
@@ -33,7 +35,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 	useEffect(() => {
 		if (year && semester) {
-			loadStandards(year, semester)
+			BaseService.configure(year, semester)
+			loadStandards()
 		}
 	}, [year, semester, loadStandards])
 
