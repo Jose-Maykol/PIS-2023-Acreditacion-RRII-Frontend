@@ -57,9 +57,12 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		let filteredStandards = [...standardsManagement]
 
 		if (hasSearchFilter) {
-			filteredStandards = filteredStandards.filter((standard) =>
-				standard.name.toLowerCase().includes(filterValue.toLowerCase())
-			)
+			filteredStandards = filteredStandards
+				.filter((standard) => standard.users.length > 0)
+				.filter((standard) => standard.users.some((user) =>
+					user.email.toLowerCase().includes(filterValue.toLowerCase()) ||
+					user.name.toLowerCase().includes(filterValue.toLowerCase()) ||
+					user.lastname.toLowerCase().includes(filterValue.toLowerCase())))
 		}
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== valorationOptions.length) {
 			filteredStandards = filteredStandards.filter((standard) =>
@@ -175,7 +178,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre de estándar'
+						placeholder='Buscar por nombre, apellido o correo'
 						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
