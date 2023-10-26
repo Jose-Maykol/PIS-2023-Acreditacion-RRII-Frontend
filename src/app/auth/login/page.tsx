@@ -9,10 +9,11 @@ import { Selection, Button } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'
 import { SERVER_PATH } from '../../../../config'
 import { AuthService } from '@/api/Auth/authService'
+import { BaseService } from '@/api/Base/BaseService'
 import { AuthUser } from '@/types/User'
 
 export default function AuthPage() {
-	const years = [{ value: '2022' }]
+	const years = [{ value: '2022' }, { value: '2023' }]
 	const semesters = [{ value: 'A' }, { value: 'B' }]
 	const [yearValue, setYearValue] = useState<Selection>(new Set([]))
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
