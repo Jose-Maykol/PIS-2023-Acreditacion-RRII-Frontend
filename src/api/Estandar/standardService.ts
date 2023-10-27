@@ -69,5 +69,10 @@ export const StandardService = {
 	updateStatusStandard: async (standarID: string, statusID: number) => {
 		const res = await api.put(`/2023/A/standards/${standarID}/status/${statusID}`)
 		return res.data
+	},
+
+	getEvidences: async (id: number) => {
+		const res = await api.get(`/2023/A/standards/${id}/evidences`)
+		return res.data
 	}
 }

@@ -1,12 +1,15 @@
-import { Button } from '@nextui-org/react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable eqeqeq */
+import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
 import { Editor } from '@tinymce/tinymce-react'
-import { useRef } from 'react'
-import { TINY_API_KEY } from '../../../config'
+import { useEffect, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { toast } from 'react-toastify'
+import { StandardService } from '@/api/Estandar/standardService'
+import { TINY_API_KEY } from '../../../config'
 
 interface NarrativeEditorProps {
   id: number
@@ -15,7 +18,9 @@ interface NarrativeEditorProps {
 }
 
 export default function NarrativeEditor({ id, content, handleEditNarrative }: NarrativeEditorProps) {
-	const editorRef = useRef(null)
+	const editorRef = useRef<any>(null)
+	const [evidences, setEvidences] = useState<{ value: string, label: string, type: string }[]>([])
+	const [evidenceSelected, setEvidenceSelected] = useState<Selection>(new Set([]))
 	const { year, semester } = useYearSemesterStore()
 
 	const handleSaveNarrative = () => {
@@ -52,12 +57,56 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 				}
 			})
 		}
-		console.log(editorRef.current?.getContent())
 		handleEditNarrative()
+	}
+
+	useEffect(() => {
+		StandardService.getEvidences(id).then((res) => {
+			setEvidences(res.data)
+		})
+	}, [])
+
+	const insertEvidence = () => {
+		const evidenceId = (evidenceSelected as any).values().next().value
+		console.log(evidences)
+		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
+		console.log(evidenceId, evidenceLabel)
+		const evidenceToInsert = `<a href="/evidences/${evidenceId}/view" style="color: blue; cursor: pointer">${evidenceLabel}</a>`
+		const editor = editorRef.current
+		if (editor) {
+			editor.setContent(editor.getContent() + evidenceToInsert)
+		}
+	}
+
+	const handleEvidenceSelected = (value: Selection): void => {
+		console.log('evidence', value)
+		setEvidenceSelected(value)
 	}
 
 	return (
 		<div className='min-h-[600px]'>
+			<div className='flex flex-row py-4 w-full items-end'>
+				<Select
+					placeholder='Selecciona una evidencia'
+					label='Insertar evidencia'
+					labelPlacement='outside'
+					variant='bordered'
+					className='w-full'
+					onSelectionChange={handleEvidenceSelected}
+				>
+					{evidences?.map((evidence) => (
+						<SelectItem key={evidence.value} value={evidence.value}>
+							{evidence.label}
+						</SelectItem>
+					))}
+				</Select>
+				<Button
+					color='primary'
+					className='ml-2'
+					onPress={insertEvidence}>
+					Insertar
+				</Button>
+			</div>
 			<div className='h-[600px]'>
 				<Editor
 					apiKey={TINY_API_KEY}

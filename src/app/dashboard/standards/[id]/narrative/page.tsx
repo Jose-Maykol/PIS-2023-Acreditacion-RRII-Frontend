@@ -36,12 +36,11 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	}, [year, semester, loadNarrative])
 
 	const handleEditNarrative = () => {
-		console.log('Editando narrativa')
 		setEditNarrative(!editNarrative)
 	}
 
 	const createMarkup = () => {
-		return { __html: narrative }
+		return { __html: narrative || '' }
 	}
 
 	return (
