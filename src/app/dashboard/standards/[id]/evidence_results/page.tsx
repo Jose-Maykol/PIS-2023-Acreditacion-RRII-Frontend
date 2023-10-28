@@ -1,15 +1,35 @@
 'use client'
 
+import { useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import UserTable from '@/components/Table/UserTable'
+import EvidencesTable from '@/components/Table/EvidencesTable'
+import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 
-export default function EvidenceResultsPage() {
+
+type EvidenceResultsPageParams = {
+	params: {
+		id: string
+	}
+}
+
+export default function EvidenceResultsPage({ params }: EvidenceResultsPageParams) {
+	const [showModal, setShowModal] = useState<boolean>(false)
+	const [idStandard, setIdStandard] = useState<string>(params.id)
+	const [reload, setReload] = useState<boolean>(false)
+
+	const handleOpenModal = (id: string) => {
+		setShowModal(true)
+		setIdStandard(id)
+	}
+
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
 			<div className='flex w-full mb-5'>
 				<h2>Evidencia de Planes</h2>
 			</div>
-			<UserTable />
+			<EvidencesTable id={idStandard} type='2' reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
+			{showModal ? <UploadEvidenceModal idStandard={idStandard} openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
+
 		</ContentWrapper>
 	)
 }

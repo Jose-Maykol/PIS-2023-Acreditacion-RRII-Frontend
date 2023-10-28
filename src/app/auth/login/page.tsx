@@ -9,7 +9,6 @@ import { Selection, Button } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'
 import { SERVER_PATH } from '../../../../config'
 import { AuthService } from '@/api/Auth/authService'
-import { BaseService } from '@/api/Base/BaseService'
 import { AuthUser } from '@/types/User'
 
 export default function AuthPage() {
