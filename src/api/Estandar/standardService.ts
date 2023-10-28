@@ -10,7 +10,8 @@ const url = {
 	users: 'standards/:id/users',
 	assignment: 'standards/:id/assignment',
 	header: 'standards/:id/header',
-	status: 'standards/:id/status/:statusId'
+	status: 'standards/:id/status/:statusId',
+	evidences: 'standards/:id/evidences'
 }
 
 export class StandardService extends BaseService {
@@ -79,10 +80,11 @@ export class StandardService extends BaseService {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.put(`/${year}/${semester}/${url.status.replace(':id', id).replace(':statusId', statusID.toString())}`)
 		return res.data
-	},
+	}
 
-	getEvidences: async (id: number) => {
-		const res = await api.get(`/2023/A/standards/${id}/evidences`)
+	public static async getEvidences (id: string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id)}`)
 		return res.data
 	}
 }

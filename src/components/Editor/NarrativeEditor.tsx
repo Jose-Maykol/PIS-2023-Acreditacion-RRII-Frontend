@@ -8,7 +8,7 @@ import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { toast } from 'react-toastify'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { TINY_API_KEY } from '../../../config'
 
 interface NarrativeEditorProps {
@@ -61,7 +61,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 	}
 
 	useEffect(() => {
-		StandardService.getEvidences(id).then((res) => {
+		StandardService.getEvidences(id.toString()).then((res) => {
 			setEvidences(res.data)
 		})
 	}, [])
@@ -110,7 +110,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 			<div className='h-[600px]'>
 				<Editor
 					apiKey={TINY_API_KEY}
-					onInit={(evt, editor) => editorRef.current = editor}
+					onInit={(evt, editor) => { editorRef.current = editor }}
 					initialValue={content}
 					init={{
 						height: 600,
