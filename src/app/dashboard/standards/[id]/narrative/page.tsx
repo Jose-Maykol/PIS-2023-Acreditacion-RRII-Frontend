@@ -18,7 +18,7 @@ type NarrativePageParams = {
 export default function NarrativePage({ params }: NarrativePageParams) {
 	const [editNarrative, setEditNarrative] = useState(false)
 	const { year, semester } = useYearSemesterStore()
-	const [narrative, setNarrative] = useState<string>()
+	const [narrative, setNarrative] = useState<string>('')
 	const id = Number(params.id)
 
 	const loadNarrative = useMemo(() => {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Textarea, Button } from '@nextui-org/react'
 import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardHeader, StandardValues } from '@/types/Standard'
 import { toast } from 'react-toastify'
 
@@ -38,14 +38,14 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description = 'valor defecto', dimension, factor, related_standards: relatedStandards, standard_status: standardStatus, isAdministrator, isManager } = res.data
+			const { name, description = 'valor defecto', dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
 			setStandardHeader({
 				name,
 				description,
 				dimension,
 				factor,
-				standardRelated: relatedStandards,
-				status: standardStatus,
+				standardRelated,
+				status,
 				permissions: {
 					isAdministrator,
 					isManager

@@ -12,7 +12,7 @@ import { AuthService } from '@/api/Auth/authService'
 import { AuthUser } from '@/types/User'
 
 export default function AuthPage() {
-	const years = [{ value: '2023' }]
+	const years = [{ value: '2022' }, { value: '2023' }]
 	const semesters = [{ value: 'A' }, { value: 'B' }]
 	const [yearValue, setYearValue] = useState<Selection>(new Set([]))
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))

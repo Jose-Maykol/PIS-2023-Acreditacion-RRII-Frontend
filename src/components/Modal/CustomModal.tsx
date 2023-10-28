@@ -5,7 +5,7 @@ interface CustomModalProps {
 	header: React.ReactNode
 	body: React.ReactNode
 	footer?: React.ReactNode
-	size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl'
+	size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl'
 	classNames?: any
 	isOpen: boolean
 	onClose: () => void
