@@ -1,42 +1,52 @@
+// TODO: Add PM interfaces
+// import { AssignedUsers, StandardValues } from '@/types/Standard'
+import { BaseService } from '../Base/BaseService'
 import api from '../axios'
-import { AxiosResponse } from 'axios'
 
 const url = {
-	readByPlan: '/2023/A/plans/',
-	create: '/2023/A/plans',
-	delete: '/2023/A/plans/',
+	readByPlan: 'plans/',
+	create: 'plans',
+	delete: 'plans/',
 	update: '/plan/',
 	readUser: 'plans/users',
-	readByStandard: '/2023/A/plans?standard_id='
+	readByStandard: 'plans?standard_id='
 }
 
-export const PlanMejoraService = {
-	create: async (params: any): Promise<AxiosResponse> => {
-		return await api.post(url.create, params)
-	},
+export class PlanMejoraService extends BaseService {
+	public static async create(params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.create}`, params)
+		return res
+	}
 
-	readUser: async (year: number, semester: 'A' | 'B'): Promise<AxiosResponse> => {
+	public static async readUser() {
+		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.readUser}`)
 		return res.data
-	},
+	}
 
-	readByStandard: async (standardId: string): Promise<AxiosResponse> => {
-		return await api.get(`${url.readByStandard}${standardId}`)
-	},
+	public static async readByStandard(standardId: string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.readByStandard}${standardId}`)
+		return res
+	}
 
-	delete: async (id: number): Promise<AxiosResponse> => {
-		return await api.delete(`${url.delete}${id}/`)
-	},
+	public static async delete(id: number) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.delete(`/${year}/${semester}/${url.delete}${id}`)
+		return res
+	}
 
-	readByPlan: async (id: string): Promise<AxiosResponse> => {
-		return await api.get(`${url.readByPlan}${id}`)
-	},
+	// TODO: Modify UPDATE endpoint
+	public static async update(id: string, params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.put(`/${year}/${semester}/${url.update}${id}/`, params)
+		return res
+	}
 
-	// readUser: async (): Promise<AxiosResponse> => {
-	// 	return await api.get(url.readUser)
-	// },
-
-	update: async (id: string, params: any): Promise<AxiosResponse> => {
-		return await api.put(`${url.update}${id}/`, params)
+	public static async readByPlan(id: string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.readByPlan}${id}`)
+		return res
 	}
 }
