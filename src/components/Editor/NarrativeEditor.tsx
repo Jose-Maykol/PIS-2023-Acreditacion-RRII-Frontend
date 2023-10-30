@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
 import { Editor } from '@tinymce/tinymce-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
@@ -13,6 +13,7 @@ import { StandardService } from '@/api/Estandar/standardService'
 import PdfIcon from '../Icons/PdfIcon'
 import PowerPointIcon from '../Icons/PowerPointIcon'
 import FileIcon from '../Icons/FileIcon'
+import { useRouter } from 'next/navigation'
 
 interface Evidence {
   value: string
@@ -21,16 +22,34 @@ interface Evidence {
 }
 
 interface NarrativeEditorProps {
-  id: number
-  content: string
-  handleEditNarrative: () => void
+	id: number
 }
 
-export default function NarrativeEditor({ id, content, handleEditNarrative }: NarrativeEditorProps) {
+export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const editorRef = useRef<any>(null)
+	const router = useRouter()
+	const [content, setContent] = useState<string>('')
 	const [evidences, setEvidences] = useState<Evidence[]>([])
 	const [evidenceSelected, setEvidenceSelected] = useState<Selection>(new Set([]))
 	const { year, semester } = useYearSemesterStore()
+
+	const loadNarrative = useMemo(() => {
+		return (id: number) => {
+			NarrativeService.getNarrative(id).then((res) => {
+				setContent(res.data.narrative)
+			})
+		}
+	}, [])
+
+	useEffect(() => {
+		if (year && semester) {
+			loadNarrative(id)
+		}
+	}, [year, semester, loadNarrative])
+
+	const handleNotSaveNarrative = () => {
+		router.push(`/dashboard/standards/${id}/narrative`)
+	}
 
 	const handleSaveNarrative = () => {
 		const notification = toast.loading('Procesando...')
@@ -38,7 +57,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 			narrative: editorRef.current?.getContent() as string
 		}
 		if (year && semester) {
-			NarrativeService.updateNarrative(year, semester, id, contentNarrative).then((res) => {
+			NarrativeService.updateNarrative(id, contentNarrative).then((res) => {
 				if (res.status === 1) {
 					toast.update(notification, {
 						render: res.message,
@@ -65,8 +84,8 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 					})
 				}
 			})
+			router.push(`/dashboard/standards/${id}/narrative`)
 		}
-		handleEditNarrative()
 	}
 
 	useEffect(() => {
@@ -78,11 +97,11 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 	const insertEvidence = () => {
 		const evidenceId = (evidenceSelected as any).values().next().value
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-		const evidenceToInsert = `<a href="/evidences/${evidenceId}/view">${evidenceLabel}</a>`
+		const evidenceToInsert = `<a href="/evidences/${evidenceId}/view" style="color: blue;">${evidenceLabel}</a>`
 		const editor = editorRef.current
 		if (editor) {
 			editor.insertContent(evidenceToInsert)
-			console.log(editor.getContent())
+			editor.focus()
 		}
 	}
 
@@ -177,7 +196,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 					color='danger'
 					startContent={<CloseIcon width={15} height={15} fill='fill-white'/>}
 					className='text-white'
-					onPress={handleEditNarrative}>
+					onPress={handleNotSaveNarrative}>
 						Cancelar
 				</Button>
 				<Button
