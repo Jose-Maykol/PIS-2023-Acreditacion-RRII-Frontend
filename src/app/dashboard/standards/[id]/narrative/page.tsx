@@ -3,12 +3,13 @@
 
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { Button } from '@nextui-org/react'
+import { Button, useDisclosure } from '@nextui-org/react'
 import { useEffect, useMemo, useState } from 'react'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
+import DeleteNarrativeModal from '@/components/Modal/Narrative/DeleteNarrativeModal'
 
 type NarrativePageParams = {
 	params: {
@@ -17,6 +18,7 @@ type NarrativePageParams = {
 }
 
 export default function NarrativePage({ params }: NarrativePageParams) {
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { year, semester } = useYearSemesterStore()
 	const [narrative, setNarrative] = useState<string>('')
 	const id = Number(params.id)
@@ -38,38 +40,6 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 
 	const handleEditNarrative = () => {
 		router.push(`/dashboard/standards/${id}/narrative/edit`)
-	}
-
-	const deleteNarrative = () => {
-		const notification = toast.loading('Procesando...')
-		NarrativeService.deleteNarrative(id).then((res) => {
-			if (res.status === 1) {
-				loadNarrative(id)
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
-			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
-			}
-		})
 	}
 
 	const createMarkup = () => {
@@ -94,9 +64,10 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 								color='danger'
 								isDisabled={narrative === ''}
 								startContent={<TrashIcon width={15} height={15} fill='fill-white'/>}
-								onPress={deleteNarrative}>
+								onPress={onOpen}>
 									Eliminar
 							</Button>
+							<DeleteNarrativeModal id={id} isOpen={isOpen} onOpenChange={onOpenChange} onDelete={() => loadNarrative(id)} />
 						</>
 					</div>
 				</div>
