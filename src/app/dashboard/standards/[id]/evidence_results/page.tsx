@@ -28,7 +28,7 @@ export default function EvidenceResultsPage({ params }: EvidenceResultsPageParam
 				<h2>Evidencia de Planes</h2>
 			</div>
 			<EvidencesTable id={idStandard} type='2' reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
-			{showModal ? <UploadEvidenceModal idStandard={idStandard} openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
+			{showModal ? <UploadEvidenceModal id={idStandard} typeEvidence='2' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
 
 		</ContentWrapper>
 	)
