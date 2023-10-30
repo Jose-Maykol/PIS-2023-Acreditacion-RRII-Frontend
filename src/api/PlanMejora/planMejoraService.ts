@@ -19,11 +19,11 @@ export class PlanMejoraService extends BaseService {
 		return res
 	}
 
-	public static async readUser() {
-		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.readUser}`)
-		return res.data
-	}
+	// public static async readUser() {
+	// 	const { year, semester } = BaseService.getConfig()
+	// 	const res = await api.get(`/${year}/${semester}/${url.readUser}`)
+	// 	return res.data
+	// }
 
 	public static async readByStandard(standardId: string) {
 		const { year, semester } = BaseService.getConfig()
@@ -48,5 +48,10 @@ export class PlanMejoraService extends BaseService {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.readByPlan}${id}`)
 		return res
+	}
+
+	public static async readUser(year: number, semester: 'A' | 'B') {
+		const res = await api.get(`/${year}/${semester}/${url.readUser}`)
+		return res.data
 	}
 }

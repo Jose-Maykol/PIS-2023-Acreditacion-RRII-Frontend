@@ -1,9 +1,9 @@
 import { Button, Input } from '@nextui-org/react'
-import { ItemValue } from './DynamicInput'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
 import React, { ChangeEvent, useState } from 'react'
 import SaveIcon from '@/components/Icons/SaveIcon'
+import { ItemValue } from '@/types/PlanMejora'
 
 // TODO: Check Delete handler
 type DynamicInputItemProps = {

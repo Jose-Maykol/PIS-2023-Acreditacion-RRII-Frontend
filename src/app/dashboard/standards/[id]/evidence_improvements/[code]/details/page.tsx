@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
+import { ImprovementPlan, planItem } from '@/types/PlanMejora'
 
 const statusOptions = new Map([
 	[1, 'planificado'],
@@ -22,35 +23,10 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 	5: 'danger'
 }
 
-type planItem = {
-	id: number
-	description: string
-}
-
 interface ImprovementPlanDetailsPageProps {
 	params: {
 		code: string
 	}
-}
-
-type ImprovementPlan = {
-	advance: number
-	code: string
-	duration: number
-	name: string
-	plan_status_id: number
-	standard_id: number
-	semester_execution: string
-	efficacy_evaluation: boolean
-	opportunity_for_improvement: string
-	problems_opportunities: planItem[],
-	root_causes: planItem[],
-	goals: planItem[],
-	improvement_actions: planItem[],
-	observations: planItem[],
-	resources: planItem[],
-	responsibles: planItem[],
-	sources: planItem[]
 }
 
 export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDetailsPageProps) {

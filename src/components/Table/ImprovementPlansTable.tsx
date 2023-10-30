@@ -5,7 +5,6 @@ import React, { Dispatch, SetStateAction } from 'react'
 import {
 	Chip,
 	Tooltip,
-	ChipProps,
 	Pagination,
 	Selection,
 	Input,
@@ -17,34 +16,12 @@ import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
-import { columns, statusOptions } from '../../utils/data_improvement_plans'
+import { columns, statusColorMap, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
-
-const statusColorMap: Record<string, ChipProps['color']> = {
-	planificado: 'secondary',
-	'en desarrollo': 'primary',
-	completado: 'success',
-	postergado: 'warning',
-	anulado: 'danger'
-}
-
-// Create a type with properties of improvementPlans
-// type ImprovementPlans = typeof improvementPlans[0];
-
-export type ImprovementPlans = {
-	advance: number
-	code: string
-	id: number
-	isCreator: boolean
-	name: string
-	nro_standard: number
-	plan_status: string
-	standard_name: string
-	user_name: string
-}
+import { ImprovementPlans } from '@/types/PlanMejora'
 
 type TableProps = {
 	id?: string
@@ -139,6 +116,7 @@ export default function ImprovementPlansTable({
 					</Chip>
 				)
 			case 'actions':
+				// TODO: Handle ID when they're from My Plans (by User)
 				return (
 					<div className='relative flex gap-4'>
 						<Tooltip content='Detalle'>

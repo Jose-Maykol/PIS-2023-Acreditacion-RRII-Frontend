@@ -7,34 +7,11 @@ import CloseIcon from '../../Icons/CloseIcon'
 import DynamicInput from './DynamicInput'
 import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
 import { useRouter } from 'next/navigation'
-
-const years = [
-	{ label: '2020', value: '2020' },
-	{ label: '2021', value: '2021' },
-	{ label: '2022', value: '2022' },
-	{ label: '2023', value: '2023' },
-	{ label: '2024', value: '2024' }
-]
-
-const semesters = [
-	{ label: 'A', value: 'A' },
-	{ label: 'B', value: 'B' }
-]
-
-const status = [
-	{ label: 'Planificado', value: 1 },
-	{ label: 'En desarrollo', value: 2 },
-	{ label: 'Completado', value: 3 },
-	{ label: 'Postergado', value: 4 },
-	{ label: 'Anulado', value: 5 }
-]
+import { DynamicInputGeneric } from '@/types/PlanMejora'
+import { semesters, years, status } from '@/utils/data_improvement_plans'
 
 type ImprovementPlanFormProps = {
 	standardId: string
-}
-
-export type DynamicInputGeneric = {
-	description: string
 }
 
 /*

@@ -2,17 +2,12 @@ import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
 import { ChangeEvent, useState } from 'react'
 import DynamicInputItem from './DynamicInputItem'
-import { DynamicInputGeneric } from './ImprovementPlanForm'
+import { DynamicInputGeneric, ItemValue } from '@/types/PlanMejora'
 
 type DynamicInputProps = {
 	identifier: string
 	label: string
 	onChange: (identifier: string, values: Array<DynamicInputGeneric>) => void
-}
-
-// TODO: Create global type
-export type ItemValue = {
-	description: string
 }
 
 export default function DynamicInput({ identifier, label, onChange }: DynamicInputProps) {
