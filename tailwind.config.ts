@@ -37,7 +37,7 @@ const config: Config = {
 							DEFAULT: '#0284c7',
 							foreground: '#000000'
 						},
-						focus: '#0284c7'
+						focus: '#0369a1'
 					}
 				},
 				light: {

@@ -12,17 +12,21 @@ import {
 	PopoverTrigger,
 	PopoverContent
 } from '@nextui-org/react'
-import LinkIcon from '../Icons/LinkIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
+import UploadIcon from '../Icons/UploadIcon'
+import FolderPlusIcon from '../Icons/FolderPlusIcon'
+import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
+import EyeIcon from '../Icons/EyeIcon'
+import DownloadIcon from '../Icons/DownloadIcon'
 import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardUsers } from '@/types/Standard'
-import Link from 'next/link'
+import TrashIcon from '../Icons/TrashIcon'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'plenamente completado': 'success',
@@ -31,7 +35,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 }
 
 
-export default function StandardTable({ reload, onReload, onOpenModal } : {reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({ id, type, reload, onReload, onOpenModal } : {id: string, type: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -82,6 +86,17 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
+	const handleSelectOption = (key: string) => {
+		switch (key) {
+		case 'upload-evidence':
+			onOpenModal(id)
+			break
+		case 'create-folder':
+			alert('create folder')
+			break
+		}
+	}
+
 	const renderCell = React.useCallback((standard: StandardUsers, columnKey: React.Key) => {
 		const cellValue = standard[columnKey as keyof StandardUsers]
 
@@ -95,7 +110,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		case 'users':
 			if (Array.isArray(cellValue)) {
 				return (<div className='flex flex-col'>
-					{cellValue.length > 0
+					{cellValue.length === 0
 						? (
 							<Popover placement='right'>
 								<PopoverTrigger>
@@ -117,7 +132,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 							</Popover>
 						)
 						: (
-							<p>No se asignaron aun encargados</p>
+							<p>{id} - {type}</p>
 						)}
 				</div>)
 			}
@@ -136,20 +151,49 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
-					<Tooltip content='Editar Encargados'>
-						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
-							onOpenModal(standard.id.toString())
-						}>
-							<PencilIcon width={17} height={17} fill='fill-amber-300 hover:fill-amber-500' />
-						</span>
-					</Tooltip>
-					<Tooltip content='Ver Estandar'>
-						<Link
-							href={`/dashboard/standards/${standard.id}/narrative`}
-						>
-							<LinkIcon width={17} height={17} fill='fill-sky-300 hover:fill-sky-600'/>
-						</Link>
-					</Tooltip>
+					<CustomDropdown
+						triggerElement={
+							<Button isIconOnly>
+								<EllipsisVerticalIcon width={15} height={15} />
+							</Button>
+						}
+						items={[
+							{
+								uid: 'view-evidence',
+								label: 'Ver Evidencia',
+								color: 'primary',
+								startContent: <EyeIcon width={25} height={25} />
+							},
+							{
+								uid: 'rename-evidence',
+								label: 'Renombrar Evidencia',
+								color: 'primary',
+								startContent: <PencilIcon width={25} height={25} />
+							},
+							{
+								uid: 'download-evidence',
+								label: 'Descargar Evidencia',
+								color: 'primary',
+								startContent: <DownloadIcon width={25} height={25} />
+							},
+							{
+								uid: 'move-evidence',
+								label: 'Mover Evidencia',
+								color: 'primary',
+								startContent: <DownloadIcon width={25} height={25} />
+							},
+							{
+								uid: 'delete-evidence',
+								label: 'Eliminar Evidencia',
+								className: 'danger',
+								color: 'danger',
+								startContent: <TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white'/>
+							}
+						]}
+						placement='bottom-end'
+						mode='action'
+						onAction={(key: string) => handleSelectOption(key)}
+					/>
 				</div>
 			)
 		default:
@@ -178,7 +222,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por nombre, apellido o correo'
+						placeholder='Buscar evidencia por nombre'
 						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
@@ -189,7 +233,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 							mode='selector'
 							triggerElement={
 								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
-									Estado
+									Filtro por tipos
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
@@ -202,9 +246,30 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
-							Crear Estandares
-						</Button>
+						<CustomDropdown
+							triggerElement={
+								<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+									Crear
+								</Button>
+							}
+							items={[
+								{
+									uid: 'upload-evidence',
+									label: 'Subir Evidencias',
+									color: 'primary',
+									startContent: <UploadIcon width={25} height={25} />
+								},
+								{
+									uid: 'create-folder',
+									label: 'Crear Carpeta',
+									color: 'primary',
+									startContent: <FolderPlusIcon width={25} height={25} />
+								}
+							]}
+							placement='bottom-end'
+							mode='action'
+							onAction={(key: string) => handleSelectOption(key)}
+						/>
 					</div>
 				</div>
 			</div>

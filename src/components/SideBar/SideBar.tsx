@@ -21,8 +21,8 @@ export default function SideBar({
 }) {
 	return (
 		<nav
-			className={`overflow-y-auto bg-white no-scrollbar border-gray-100 border ${
-				isSidebarOpen ? 'w-[210px] max-w-[210px]' : 'w-[60px] max-w-[60px]'
+			className={`sticky top-0 bg-white border-gray-100 border ${
+				isSidebarOpen ? 'w-[210px] max-w-[210px] min-w-[210px]' : 'w-[60px] max-w-[60px] min-w-[60px]'
 			} text-lg min-h-screen p-4`}
 		>
 			<div
@@ -106,7 +106,7 @@ export default function SideBar({
 			{isSidebarOpen && (
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
-			<ul className='text-sm list-none my-3'>
+			<ul className='text-sm list-none my-3 max-h-[50vh] overflow-auto scrollbar-hide'>
 				{Array.isArray(standards) &&
 					standards.map((standard: PartialStandard, index: number) => (
 						<SideBarItem

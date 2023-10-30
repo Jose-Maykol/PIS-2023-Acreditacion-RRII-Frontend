@@ -12,7 +12,7 @@ import { AuthService } from '@/api/Auth/authService'
 import { AuthUser } from '@/types/User'
 
 export default function AuthPage() {
-	const years = [{ value: '2022' }]
+	const years = [{ value: '2022' }, { value: '2023' }]
 	const semesters = [{ value: 'A' }, { value: 'B' }]
 	const [yearValue, setYearValue] = useState<Selection>(new Set([]))
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
@@ -55,7 +55,6 @@ export default function AuthPage() {
 		const paramsGoogle = location.search
 		if (paramsGoogle) {
 			AuthService.login(paramsGoogle).then((res) => {
-				console.log(res)
 				if (res.status === 200) {
 					const token = res.data.access_token
 					const authUser: AuthUser = {
@@ -69,8 +68,10 @@ export default function AuthPage() {
 							email: res.data.user.email as string
 						}
 					}
+					// Se guardan los datos en el local storage
 					localStorage.setItem('access_token', token)
 					localStorage.setItem('auth_user', JSON.stringify(authUser))
+					// Se guardan los datos de year y semester en el store
 					window.location.href = '/dashboard'
 				}
 			})
@@ -136,10 +137,12 @@ export default function AuthPage() {
 					<strong className='mx-2 uppercase text-xs'>Accede con tu cuenta institucional</strong>
 				</Button>
 			</div>
-			<div className='flex-1 bg-white w-max h-[600px]'>
+			<div className='flex-1 bg-white w-max h-full flex justify-center items-center'>
 				<Image
 					alt='logo-unsa'
-					className='w-auto h-full p-8'
+					height={500}
+					width={400}
+					className='w-auto h-[500px] p-8'
 					src={login}/>
 			</div>
 		</div>

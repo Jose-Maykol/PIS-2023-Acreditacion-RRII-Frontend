@@ -1,72 +1,90 @@
 import { AssignedUsers, StandardValues } from '@/types/Standard'
+import { BaseService } from '../Base/BaseService'
 import api from '../axios'
 
 const url = {
-	listEstandar: '/2023/A/standards',
-	listEstandarValues: '/2023/A/standards/standard-values',
-	detailEstandard: '/2023/A/standards/',
-	updateEstandar: '/2023/A/standards/'
+	listStandarPartial: 'standards/partial',
+	standardsAssignments: 'standards/users',
+	standards: 'standards/:id',
+	standardValues: 'standards/standard-values',
+	users: 'standards/:id/users',
+	assignment: 'standards/:id/assignment',
+	header: 'standards/:id/header',
+	status: 'standards/:id/status/:statusId',
+	evidences: 'standards/:id/evidences'
 }
 
-export const StandardService = {
-	// Falta implementar
-	getAll: async () => {
+export class StandardService extends BaseService {
+	public static async getAll () {
 		const res = await api.get('/estandar')
 		return res
-	},
-	getPartial: async () => {
-		const res = await api.get('/2023/A/standards/partial')
-		return res.data
-	},
+	}
 
-	getStandardsAndAssignedUsers: async () => {
-		const res = await api.get('/2023/A/standards/users')
+	public static async getPartial () {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.listStandarPartial}`)
 		return res.data
-	},
-	getHeader: async(id:string) => {
-		const res = await api.get(`2023/A/standards/${id}/header`)
+	}
+
+	public static async getStandardsAndAssignedUsers () {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.standardsAssignments}`)
 		return res.data
-	},
-	assignUsersToStandard: async (IdStandard: string, params: AssignedUsers) => {
+	}
+
+	public static async getHeader (id:string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.header.replace(':id', id)}`)
+		return res.data
+	}
+
+	public static async assignUsersToStandard (id: string, params: AssignedUsers) {
 		try {
-			const res = await api.put(`/2023/A/standards/${IdStandard}/assignment`, params)
+			const { year, semester } = BaseService.getConfig()
+			const res = await api.put(`/${year}/${semester}/${url.assignment.replace(':id', id)}`, params)
 			return res.data
 		} catch (error: any) {
-			if (error.response.status === 422) {
+			if (error.response?.status === 422) {
 				return error.response.data
 			}
+			throw error
 		}
-	},
+	}
 
-	getListOfEnabledUsers: async (IdStandard: string) => {
-		const res = await api.get(`/2023/A/standards/${IdStandard}/users`)
+	public static async getListOfEnabledUsers (id: string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.users.replace(':id', id)}`)
 		return res.data
-	},
+	}
 
-	showEstandar: async (id: string) => {
-		return await api.get(`${url.detailEstandard}${id}`)
-	},
+	public static async showEstandar (id: string) {
+		const { year, semester } = BaseService.getConfig()
+		return await api.get(`/${year}/${semester}/${url.standards.replace(':id', id)}`)
+	}
 
-	updateHeader: async (id: string, params: StandardValues) => {
+	public static async updateHeader (id: string, { name, description, dimension, factor, standardRelated }: StandardValues) {
 		try {
-			const paramsServer = {
-				name: params.name,
-				description: params.description,
-				dimension: params.dimension,
-				factor: params.factor,
-				related_standards: params.standardRelated
-			}
-			const res = await api.put(`/2023/A/standards/${id}/header`, paramsServer)
+			const { year, semester } = BaseService.getConfig()
+			const params = { name, description, dimension, factor, related_standards: standardRelated }
+			const res = await api.put(`/${year}/${semester}/${url.header.replace(':id', id)}}`, params)
 			return res.data
 		} catch (error: any) {
-			if (error.response.status === 401) {
+			if (error.response?.status === 401) {
 				return error.response.data
 			}
+			throw error
 		}
-	},
+	}
 
-	updateStatusStandard: async (standarID: string, statusID: number) => {
-		const res = await api.put(`/2023/A/standards/${standarID}/status/${statusID}`)
+	public static async updateStatusStandard (id: string, statusID: number) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.put(`/${year}/${semester}/${url.status.replace(':id', id).replace(':statusId', statusID.toString())}`)
+		return res.data
+	}
+
+	public static async getEvidences (id: string) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id)}`)
 		return res.data
 	}
 }
