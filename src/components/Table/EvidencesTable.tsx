@@ -24,7 +24,7 @@ import DownloadIcon from '../Icons/DownloadIcon'
 import { valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { StandardService } from '@/api/Estandar/StandardService'
+import { StandardService } from '@/api/Estandar/standardService'
 import { StandardUsers } from '@/types/Standard'
 import TrashIcon from '../Icons/TrashIcon'
 
