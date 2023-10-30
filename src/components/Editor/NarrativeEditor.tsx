@@ -8,8 +8,8 @@ import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { toast } from 'react-toastify'
-import { StandardService } from '@/api/Estandar/StandardService'
 import { TINY_API_KEY } from '../../../config'
+import { StandardService } from '@/api/Estandar/standardService'
 
 interface NarrativeEditorProps {
   id: number
@@ -68,18 +68,16 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 
 	const insertEvidence = () => {
 		const evidenceId = (evidenceSelected as any).values().next().value
-		console.log(evidences)
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-		console.log(evidenceId, evidenceLabel)
 		const evidenceToInsert = `<a href="/evidences/${evidenceId}/view" style="color: blue; cursor: pointer">${evidenceLabel}</a>`
 		const editor = editorRef.current
 		if (editor) {
-			editor.setContent(editor.getContent() + evidenceToInsert)
+			editor.insertContent(evidenceToInsert)
+			console.log(editor.getContent())
 		}
 	}
 
 	const handleEvidenceSelected = (value: Selection): void => {
-		console.log('evidence', value)
 		setEvidenceSelected(value)
 	}
 
@@ -101,6 +99,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 					))}
 				</Select>
 				<Button
+					isDisabled={(evidenceSelected as any).size === 0}
 					color='primary'
 					className='ml-2'
 					onPress={insertEvidence}>
