@@ -6,10 +6,10 @@ import type { Metadata } from 'next'
 import { Providers } from './providers'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
-export const metadata: Metadata = {
-	title: 'Sistema de Gestión de Calidad',
-	description: 'Sistema de Gestión de Calidad'
-}
+// export const metadata: Metadata = {
+// 	title: 'Sistema de Gestión de Calidad',
+// 	description: 'Sistema de Gestión de Calidad'
+// }
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	const { setYear, setSemester } = useYearSemesterStore()

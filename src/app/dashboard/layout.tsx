@@ -10,10 +10,10 @@ import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
 
 
-export const metadata: Metadata = {
-	title: 'Sistema de Gestión de Calidad',
-	description: 'Sistema de Gestión de Calidad'
-}
+// export const metadata: Metadata = {
+// 	title: 'Sistema de Gestión de Calidad',
+// 	description: 'Sistema de Gestión de Calidad'
+// }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
