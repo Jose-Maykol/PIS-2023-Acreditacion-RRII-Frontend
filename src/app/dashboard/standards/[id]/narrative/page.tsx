@@ -8,6 +8,7 @@ import NarrativeEditor from '@/components/Editor/NarrativeEditor'
 import { useEffect, useMemo, useState } from 'react'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { toast } from 'react-toastify'
 
 type NarrativePageParams = {
 	params: {
@@ -22,8 +23,8 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	const id = Number(params.id)
 
 	const loadNarrative = useMemo(() => {
-		return (year: number, semester: 'A' | 'B', id: number) => {
-			NarrativeService.getNarrative(year, semester, id).then((res) => {
+		return (id: number) => {
+			NarrativeService.getNarrative(id).then((res) => {
 				setNarrative(res.data.narrative)
 			})
 		}
@@ -31,12 +32,43 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 
 	useEffect(() => {
 		if (year && semester) {
-			loadNarrative(year, semester, id)
+			loadNarrative(id)
 		}
 	}, [year, semester, loadNarrative])
 
 	const handleEditNarrative = () => {
 		setEditNarrative(!editNarrative)
+	}
+
+	const deleteNarrative = () => {
+		const notification = toast.loading('Procesando...')
+		NarrativeService.deleteNarrative(id).then((res) => {
+			if (res.status === 1) {
+				toast.update(notification, {
+					render: res.message,
+					type: 'success',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
+			} else {
+				toast.update(notification, {
+					render: res.message,
+					type: 'error',
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
+			}
+		})
 	}
 
 	const createMarkup = () => {
@@ -59,7 +91,9 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 								</Button>
 								<Button
 									color='danger'
-									startContent={<TrashIcon width={15} height={15} fill='fill-white'/>}>
+									isDisabled={narrative === ''}
+									startContent={<TrashIcon width={15} height={15} fill='fill-white'/>}
+									onPress={deleteNarrative}>
 								Eliminar
 								</Button>
 							</>

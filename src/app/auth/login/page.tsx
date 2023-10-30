@@ -21,13 +21,11 @@ export default function AuthPage() {
 	const [touchedYear, setTouchedYear] = useState(false)
 
 	const handleYearValue = (value: Selection): void => {
-		console.log('year', value)
 		setYearValue(value)
 		setIsValid({ year: (value as any).size > 0, semester: (semesterValue as any).size > 0 })
 	}
 
 	const handleSemesterValue = (value: Selection): void => {
-		console.log('semester', value)
 		setSemesterValue(value)
 		setIsValid({ year: (yearValue as any).size > 0, semester: (value as any).size > 0 })
 	}

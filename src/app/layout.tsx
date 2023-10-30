@@ -24,12 +24,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				if (yearNumber !== null && yearNumber !== undefined) {
 					if (yearNumber !== useYearSemesterStore.getState().year) {
 						setYear(yearNumber)
-						console.log('year', yearNumber)
 					}
 				}
 				if (semester !== useYearSemesterStore.getState().semester) {
 					setSemester(semester)
-					console.log('semester', semester)
 				}
 			}
 		}
