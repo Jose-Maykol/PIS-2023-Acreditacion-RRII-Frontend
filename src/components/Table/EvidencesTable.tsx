@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react'
 
 import {
-	Chip,
-	Tooltip,
-	ChipProps,
 	Pagination,
 	Selection,
 	Input,
-	Button,
-	Popover,
-	PopoverTrigger,
-	PopoverContent
+	Button
 } from '@nextui-org/react'
+import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
+import { useAsyncList } from '@react-stately/data'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
@@ -21,18 +17,14 @@ import FolderPlusIcon from '../Icons/FolderPlusIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
 import EyeIcon from '../Icons/EyeIcon'
 import DownloadIcon from '../Icons/DownloadIcon'
-import { valorationOptions } from '../../utils/StandardData'
+import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { StandardService } from '@/api/Estandar/StandardService'
-import { StandardUsers } from '@/types/Standard'
+import { EvidenceService } from '@/api/Evidence/EvidenceService'
+import { Evidence } from '@/types/Evidences'
+import { getFileIcon } from '@/utils/utils'
 import TrashIcon from '../Icons/TrashIcon'
-
-const statusColorMap: Record<string, ChipProps['color']> = {
-	'plenamente completado': 'success',
-	logrado: 'warning',
-	'no logrado': 'danger'
-}
+import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 
 
 export default function EvidencesTable({ id, type, reload, onReload, onOpenModal } : {id: string, type: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
@@ -41,41 +33,46 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
-	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
+	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
+	const [isLoading, setIsLoading] = useState<boolean>(true)
+	const [hastMore, setHasMore] = useState<boolean>(false)
+	const [params, setParams] = useState<{ parent_id: string | number }>({
+		parent_id: 2
+	})
+	const [blobURL, setBlobURL] = useState<string>('')
 	const columns = [
-		{ name: '#', uid: 'nro_standard', sortable: true },
-		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
-		{ name: 'ENCARGADOS', uid: 'users', sortable: true },
-		{ name: 'VALORACION ESTANDAR', uid: 'standard_status' },
+		{ name: 'NOMBRE', uid: 'name', sortable: true },
+		{ name: 'SUBIDO POR', uid: 'full_name', sortable: true },
+		{ name: 'ULTIMA MODIFICACION', uid: 'updated_at' },
 		{ name: 'ACCIONES', uid: 'actions' }
 	]
 
 	useEffect(() => {
-		StandardService.getStandardsAndAssignedUsers().then((res) => {
-			setStandardsManagement(res.data)
+		EvidenceService.getEvidencesByType('1', '1', params).then((res) => {
+			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
+				evidence.id = `${evidence.type}-${evidence.id}`
+				return evidence
+			})
+			console.log('useeffect', res.data)
+			setEvidencesManagement([...arr])
 		})
 		onReload()
-	}, [reload])
+	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
-		let filteredStandards = [...standardsManagement]
+		let filteredEvidences = [...evidencesManagement]
 
 		if (hasSearchFilter) {
-			filteredStandards = filteredStandards
-				.filter((standard) => standard.users.length > 0)
-				.filter((standard) => standard.users.some((user) =>
-					user.email.toLowerCase().includes(filterValue.toLowerCase()) ||
-					user.name.toLowerCase().includes(filterValue.toLowerCase()) ||
-					user.lastname.toLowerCase().includes(filterValue.toLowerCase())))
+			filteredEvidences = filteredEvidences.filter((evidence) => evidence.name.toLowerCase().includes(filterValue.toLowerCase()))
 		}
-		if (statusFilter !== 'all' && Array.from(statusFilter).length !== valorationOptions.length) {
-			filteredStandards = filteredStandards.filter((standard) =>
-				Array.from(statusFilter).includes(standard.standard_status)
+		if (statusFilter !== 'all' && Array.from(statusFilter).length !== typeFiles.length) {
+			filteredEvidences = filteredEvidences.filter((evidence) =>
+				Array.from(statusFilter).includes(evidence.extension ?? evidence.type)
 			)
 		}
 
-		return filteredStandards
-	}, [standardsManagement, filterValue, statusFilter])
+		return filteredEvidences
+	}, [evidencesManagement, filterValue, statusFilter])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -97,56 +94,30 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 		}
 	}
 
-	const renderCell = React.useCallback((standard: StandardUsers, columnKey: React.Key) => {
-		const cellValue = standard[columnKey as keyof StandardUsers]
+	const renderCell = React.useCallback((evidence: Evidence, columnKey: React.Key) => {
+		// const cellValue = evidence[columnKey as keyof Evidence]
 
 		switch (columnKey) {
 		case 'name':
 			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-md capitalize'>{standard.name}</p>
+				<div className='flex gap-2'>
+					{getFileIcon(undefined, evidence.extension ?? 'folder', 24)}
+					<p className='text-bold text-lg capitalize'>{evidence.name}</p>
 				</div>
 			)
-		case 'users':
-			if (Array.isArray(cellValue)) {
-				return (<div className='flex flex-col'>
-					{cellValue.length === 0
-						? (
-							<Popover placement='right'>
-								<PopoverTrigger>
-									<Button
-										color='primary'
-										variant='ghost'
-										size='sm'
-										className='capitalize w-[100px]'>
-                Ver encargados
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent>
-									{cellValue.map((user, index) => (
-										<div key={index}>
-											<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
-										</div>
-									))}
-								</PopoverContent>
-							</Popover>
-						)
-						: (
-							<p>{id} - {type}</p>
-						)}
-				</div>)
-			}
-			return ''
+		case 'full_name':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-md capitalize'>{evidence.full_name}</p>
+				</div>
+			)
 
-		case 'standard_status':
-			if (typeof cellValue === 'string') {
-				return (
-					<Chip className='capitalize' color={statusColorMap[standard.standard_status]} size='md' variant='flat'>
-						{cellValue}
-					</Chip>
-				)
-			}
-			return ''
+		case 'updated_at':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-md capitalize'>{new Date(evidence.updated_at).getDate().toString()}</p>
+				</div>
+			)
 
 		case 'actions':
 			return (
@@ -196,8 +167,6 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 					/>
 				</div>
 			)
-		default:
-			return <div>{cellValue.toString()}</div>
 		}
 	}, [])
 
@@ -213,6 +182,32 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 	const onClear = React.useCallback(() => {
 		setFilterValue('')
 		setPage(1)
+	}, [])
+
+	const onRowActionClick = React.useCallback((key: string) => {
+		console.log(evidencesManagement)
+		const evidence = evidencesManagement.find((e) => e.id === key)
+		const type = key.split('-')[0]
+		const id = key.split('-')[1]
+		console.log(evidence, type, id)
+		if (type === 'folder') {
+			onReload()
+			setParams({
+				parent_id: 6
+			})
+		} else {
+			EvidenceService.viewEvidence(id).then((res) => {
+				const base64Data = res.base64_content
+				const binaryString = atob(base64Data)
+				const byteArray = new Uint8Array(binaryString.length)
+				for (let i = 0; i < binaryString.length; i++) {
+					byteArray[i] = binaryString.charCodeAt(i)
+				}
+				const pdfBlob = new Blob([byteArray], { type: 'application/pdf' })
+				const pdfUrl = URL.createObjectURL(pdfBlob)
+				setBlobURL(pdfUrl)
+			})
+		}
 	}, [])
 
 	const topContent = React.useMemo(() => {
@@ -237,7 +232,7 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 								</Button>
 							}
 							triggerClassName='hidden sm:flex'
-							items={valorationOptions}
+							items={typeFiles}
 							itemsClassName='capitalize'
 							disallowEmptySelection
 							closeOnSelect={false}
@@ -278,29 +273,15 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 		filterValue,
 		statusFilter,
 		onSearchChange,
-		standardsManagement.length,
+		evidencesManagement.length,
 		hasSearchFilter
 	])
 
-	const bottomContent = React.useMemo(() => {
-		return (
-			<div className='py-2 px-2 flex justify-center'>
-				<Pagination
-					isCompact
-					showControls
-					showShadow
-					color='primary'
-					page={page}
-					total={pages}
-					onChange={setPage}
-				/>
-			</div>
-		)
-	}, [items.length, page, pages, hasSearchFilter])
-
 	const classNames = React.useMemo(
 		() => ({
-			wrapper: ['min-h-[590px]'],
+			base: 'max-h-[590px] overflow-auto',
+			// table: 'min-h-[580px]',
+			wrapper: ['min-h-[590px] overflow-auto'],
 			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
 			td: [
 				// changing the rows border radius
@@ -313,20 +294,26 @@ export default function EvidencesTable({ id, type, reload, onReload, onOpenModal
 				'group-data-[last=true]:first:before:rounded-none',
 				'group-data-[last=true]:last:before:rounded-none'
 			],
-			tr: ['hover:bg-default-300']
+			tr: ['hover:bg-default-300 focus:bg-red-200']
 		}),
 		[]
 	)
 
 	return (
-		<CustomTable
-			items={items}
-			columns={columns}
-			renderCell={renderCell}
-			topContent={topContent}
-			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
-			classNames={classNames}
-		/>
+		<>
+			<CustomTable
+				items={items}
+				columns={columns}
+				renderCell={renderCell}
+				topContent={topContent}
+				// bottomContent={bottomContent}
+				emptyContent={<div>No se encontro elementos</div>}
+				classNames={classNames}
+				onRowActionClick={onRowActionClick}
+			/>
+			{blobURL && (
+				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
+			)}
+		</>
 	)
 }
