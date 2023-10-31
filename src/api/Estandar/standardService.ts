@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AssignedUsers, StandardValues } from '@/types/Standard'
 import { BaseService } from '../Base/BaseService'
 import api from '../axios'

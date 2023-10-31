@@ -1,3 +1,4 @@
+import { BaseService } from '../Base/BaseService'
 import api from '../axios'
 
 const url = {
@@ -6,14 +7,22 @@ const url = {
 	deleteNarrative: 'narratives'
 }
 
-export const NarrativeService = {
-	getNarrative: async (year: number, semester: 'A' | 'B', id: number) => {
+export class NarrativeService extends BaseService {
+	public static async getNarrative (id: number) {
+		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/standards/${id}/${url.getNarrative}`)
 		return res.data
-	},
+	}
 
-	updateNarrative: async (year: number, semester: 'A' | 'B', id: number, params: any) => {
+	public static async updateNarrative (id: number, params: { narrative: string}) {
+		const { year, semester } = BaseService.getConfig()
 		const res = await api.put(`/${year}/${semester}/standards/${id}/${url.updateNarrative}`, params)
+		return res.data
+	}
+
+	public static async deleteNarrative (id: number) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.delete(`/${year}/${semester}/standards/${id}/${url.deleteNarrative}`)
 		return res.data
 	}
 }

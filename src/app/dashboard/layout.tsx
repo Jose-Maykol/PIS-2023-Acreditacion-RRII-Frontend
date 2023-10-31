@@ -3,11 +3,11 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
-import { StandardService } from '@/api/Estandar/StandardService'
 import { PartialStandard } from '@/types/Standard'
 import { Metadata } from 'next'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
+import { StandardService } from '@/api/Estandar/standardService'
 
 
 export const metadata: Metadata = {

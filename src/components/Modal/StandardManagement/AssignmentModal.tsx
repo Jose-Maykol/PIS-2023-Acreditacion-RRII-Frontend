@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Button, Select, SelectItem, Avatar, Chip, SelectedItems, Selection } from '@nextui-org/react'
 import CustomModal from '@/components/Modal/CustomModal'
 import { EnabledUsers, AssignedUsers } from '@/types/Standard'
-import { StandardService } from '@/api/Estandar/StandardService'
+import { StandardService } from '@/api/Estandar/standardService'
 import { toast } from 'react-toastify'
 
 const AssignmentModal = ({

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import { Textarea, Button } from '@nextui-org/react'
 import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
-import { StandardService } from '@/api/Estandar/StandardService'
+import { StandardService } from '@/api/Estandar/standardService'
 import { StandardHeader, StandardValues } from '@/types/Standard'
 import { toast } from 'react-toastify'
 
