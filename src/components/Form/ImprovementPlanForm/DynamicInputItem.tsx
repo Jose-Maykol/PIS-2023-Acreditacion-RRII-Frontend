@@ -1,3 +1,5 @@
+'use client'
+
 import { Button, Input } from '@nextui-org/react'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'

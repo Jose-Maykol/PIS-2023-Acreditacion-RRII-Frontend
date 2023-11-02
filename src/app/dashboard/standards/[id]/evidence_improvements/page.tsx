@@ -1,6 +1,6 @@
 'use client'
 
-import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
 import { ImprovementPlans } from '@/types/PlanMejora'
@@ -22,8 +22,6 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 			})
 			.catch(console.log)
 	}, [])
-
-	console.log('Rendering PMs', params.id)
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>

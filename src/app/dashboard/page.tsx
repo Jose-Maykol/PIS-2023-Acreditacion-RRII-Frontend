@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
-import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
 import { ImprovementPlans } from '@/types/PlanMejora'

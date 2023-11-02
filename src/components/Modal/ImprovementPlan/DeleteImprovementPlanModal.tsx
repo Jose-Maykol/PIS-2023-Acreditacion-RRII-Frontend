@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import TrashIcon from '@/components/Icons/TrashIcon'
 import { ImprovementPlans } from '@/types/PlanMejora'
 

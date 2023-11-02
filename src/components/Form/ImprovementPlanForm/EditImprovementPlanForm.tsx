@@ -1,5 +1,5 @@
 'use client'
-
+/* eslint-disable camelcase */
 import { Button, Checkbox, Input, Link, Select, SelectItem } from '@nextui-org/react'
 import { useFormik } from 'formik'
 import { useEffect, useState } from 'react'
@@ -7,22 +7,17 @@ import * as yup from 'yup'
 import SaveIcon from '../../Icons/SaveIcon'
 import CloseIcon from '../../Icons/CloseIcon'
 import DynamicInput from './DynamicInput'
+import { DynamicInputGeneric, ImprovementPlan } from '@/types/PlanMejora'
+import { semesters, years, status } from '@/utils/data_improvement_plans'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useRouter } from 'next/navigation'
-import { DynamicInputGeneric } from '@/types/PlanMejora'
-import { semesters, years, status } from '@/utils/data_improvement_plans'
 
-type ImprovementPlanFormProps = {
+type EditImprovementPlanFormProps = {
 	standardId: string
+	plan: ImprovementPlan
+	planId: string
 }
 
-/*
-	TODO
-	* Add all validations
-	* Filter by standard id
-	* Delete Dynamic Field
-	* Improve styles
-*/
 const validationSchema = yup.object({
 	name: yup.string().trim().required('Nombre de plan necesario'),
 	code: yup
@@ -33,32 +28,56 @@ const validationSchema = yup.object({
 	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria')
 })
 
-export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormProps) {
+export default function EditImprovementPlanForm({
+	standardId,
+	plan,
+	planId
+}: EditImprovementPlanFormProps) {
 	const router = useRouter()
-
+	// const [isSelected, setIsSelected] = useState(plan.efficacy_evaluation)
+	const {
+		code,
+		name,
+		opportunity_for_improvement,
+		semester_execution,
+		advance,
+		duration,
+		efficacy_evaluation,
+		standard_id,
+		plan_status_id,
+		sources,
+		problems_opportunities,
+		root_causes,
+		improvement_actions,
+		resources,
+		goals,
+		responsibles,
+		observations
+	} = plan
 	const [isSelected, setIsSelected] = useState(false)
 
 	const formik = useFormik({
+		enableReinitialize: true,
 		initialValues: {
-			code: '',
-			name: '',
-			opportunity_for_improvement: '',
-			semester_execution: '',
-			advance: 0,
-			duration: 1,
-			efficacy_evaluation: false,
-			standard_id: Number(standardId),
-			plan_status_id: 0,
-			sources: [],
-			problems_opportunities: [],
-			root_causes: [],
-			improvement_actions: [],
-			resources: [],
-			goals: [],
-			responsibles: [],
-			observations: [],
-			year: '',
-			semester: ''
+			code,
+			name,
+			opportunity_for_improvement,
+			semester_execution,
+			advance,
+			duration,
+			efficacy_evaluation,
+			standard_id,
+			plan_status_id,
+			sources,
+			problems_opportunities,
+			root_causes,
+			improvement_actions,
+			resources,
+			goals,
+			responsibles,
+			observations,
+			year: semester_execution.split('-')[0],
+			semester: semester_execution.split('-')[1]
 		},
 		validationSchema,
 		onSubmit: (values) => {
@@ -82,15 +101,16 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 				observations: values.observations
 			}
 
-			PlanMejoraService.create(data)
+			// Update PM with endpoint
+			console.log(data)
+
+			PlanMejoraService.update(planId, data)
 				.then((res) => {
-					if (res.statusText === 'Created') {
+					if (res.statusText === 'OK') {
 						router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
 					}
 				})
-				.catch((error) => {
-					console.log(error)
-				})
+				.catch(console.log)
 		}
 	})
 
@@ -98,7 +118,6 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 		formik.setFieldValue(identifier, values)
 	}
 
-	// Updating 'semester_execution' parameter
 	useEffect(() => {
 		const updatedSemesterExecution = `${formik.values.year}-${formik.values.semester}`
 		formik.setFieldValue('semester_execution', updatedSemesterExecution)
@@ -144,9 +163,15 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					identifier='problems_opportunities'
 					label='Problemas/Oportunidades'
 					onChange={handleChangeGeneric}
+					defaultValues={formik.values.problems_opportunities}
 				/>
 
-				<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleChangeGeneric} />
+				<DynamicInput
+					identifier='root_causes'
+					label='Causa/Raíz'
+					onChange={handleChangeGeneric}
+					defaultValues={formik.values.root_causes}
+				/>
 
 				<Input
 					isRequired
@@ -172,6 +197,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					identifier='improvement_actions'
 					label='Acciones de mejora'
 					onChange={handleChangeGeneric}
+					defaultValues={formik.values.improvement_actions}
 				/>
 
 				<div className='mb-3 flex gap-5'>
@@ -182,7 +208,8 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 						label='Año'
 						size='sm'
 						variant='underlined'
-						value={formik.values.year}
+						// value={formik.values.year}
+						defaultSelectedKeys={[formik.values.year]}
 						onChange={formik.handleChange}
 					>
 						{years.map((year) => (
@@ -199,6 +226,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 						size='sm'
 						variant='underlined'
 						value={formik.values.semester}
+						defaultSelectedKeys={[formik.values.semester]}
 						onChange={formik.handleChange}
 					>
 						{semesters.map((semester) => (
@@ -226,19 +254,31 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					errorMessage={formik.touched.duration && formik.errors.duration}
 				/>
 
-				<DynamicInput identifier='resources' label='Recursos' onChange={handleChangeGeneric} />
+				<DynamicInput
+					identifier='resources'
+					label='Recursos'
+					onChange={handleChangeGeneric}
+					defaultValues={formik.values.resources}
+				/>
 
-				<DynamicInput identifier='goals' label='Metas' onChange={handleChangeGeneric} />
+				<DynamicInput
+					identifier='goals'
+					label='Metas'
+					onChange={handleChangeGeneric}
+					defaultValues={formik.values.goals}
+				/>
 
 				<DynamicInput
 					identifier='responsibles'
 					label='Responsables'
 					onChange={handleChangeGeneric}
+					defaultValues={formik.values.responsibles}
 				/>
 				<DynamicInput
 					identifier='observations'
 					label='Observaciones'
 					onChange={handleChangeGeneric}
+					defaultValues={formik.values.observations}
 				/>
 
 				<Select
@@ -249,6 +289,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					size='sm'
 					variant='underlined'
 					value={formik.values.plan_status_id}
+					defaultSelectedKeys={[formik.values.plan_status_id]}
 					onChange={formik.handleChange}
 				>
 					{status.map((stat) => (
@@ -258,7 +299,12 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					))}
 				</Select>
 
-				<DynamicInput identifier='sources' label='Fuentes' onChange={handleChangeGeneric} />
+				<DynamicInput
+					identifier='sources'
+					label='Fuentes'
+					onChange={handleChangeGeneric}
+					defaultValues={formik.values.sources}
+				/>
 
 				<Input
 					isRequired
@@ -291,7 +337,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					<Button
 						color='danger'
 						className='mb-5'
-						startContent={<CloseIcon width={16} height={16} fill='fill-white'/>}
+						startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
 					>
 						<Link
 							className='text-white'
@@ -303,7 +349,7 @@ export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormP
 					<Button
 						color='success'
 						className='text-white mb-5'
-						startContent={<SaveIcon width={16} height={16} fill='fill-white'/>}
+						startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 						type='submit'
 					>
 						Guardar

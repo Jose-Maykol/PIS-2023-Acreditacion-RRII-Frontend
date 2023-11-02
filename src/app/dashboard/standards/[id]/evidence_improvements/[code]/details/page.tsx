@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
 import { ImprovementPlan, planItem } from '@/types/PlanMejora'
@@ -138,7 +138,7 @@ function PlanItemList({ itemList, label }: PlanItemListProps) {
 	return (
 		<div className='mb-3'>
 			<h1 className='uppercase text-sm font-bold'>{label}</h1>
-			{itemList.length > 0 ? (itemList.map((item: planItem) => <li className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
+			{itemList.length > 0 ? (itemList.map((item: planItem) => <li key={item.id} className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
 		</div>
 	)
 };

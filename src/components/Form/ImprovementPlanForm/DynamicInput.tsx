@@ -1,6 +1,8 @@
+'use client'
+
 import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import DynamicInputItem from './DynamicInputItem'
 import { DynamicInputGeneric, ItemValue } from '@/types/PlanMejora'
 
@@ -8,12 +10,25 @@ type DynamicInputProps = {
 	identifier: string
 	label: string
 	onChange: (identifier: string, values: Array<DynamicInputGeneric>) => void
+	defaultValues?: ItemValue[]
 }
 
-export default function DynamicInput({ identifier, label, onChange }: DynamicInputProps) {
+export default function DynamicInput({
+	identifier,
+	label,
+	onChange,
+	defaultValues
+}: DynamicInputProps) {
 	const [error, setError] = useState(false)
 	const [singleInputValue, setSingleInputValue] = useState('')
-	const [inputValues, setInputValues] = useState(Array<ItemValue>)
+	const [inputValues, setInputValues] = useState<ItemValue[]>([])
+
+	useEffect(() => {
+		if (defaultValues) {
+			setInputValues(defaultValues)
+		}
+		// setInputValues(defaultValues)
+	}, [])
 
 	const handleAdd = () => {
 		if (singleInputValue.trim() === '') {
@@ -75,7 +90,7 @@ export default function DynamicInput({ identifier, label, onChange }: DynamicInp
 					onChange={handleChange}
 				/>
 				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
-					<PlusIcon width={15} height={15} fill='fill-white'/>
+					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
 			<div>
