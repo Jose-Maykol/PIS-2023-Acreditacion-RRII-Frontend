@@ -1,4 +1,3 @@
-import * as yup from 'yup'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -6,21 +5,15 @@ import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Link from 'next/link'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import DynamicInput from './DynamicInput'
-
-// eslint-disable-next-line no-undef
-const validationSchema = yup.object({
-	name: yup.string().trim().required('Nombre de plan necesario'),
-	code: yup
-		.string()
-		.required('Código del plan necesario')
-		.trim()
-		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ'),
-	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria')
-})
+import { FormDataKeys } from '@/types/PlanMejora'
 
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const [isSelected, setIsSelected] = useState(false)
-	const [errors, setErrors] = useState({})
+	const [errors, setErrors] = useState<FormDataKeys>({
+		name: '',
+		code: '',
+		opportunity_for_improvement: ''
+	})
 	const [formData, setFormData] = useState({
 		name: '',
 		code: '',
@@ -58,6 +51,22 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 		console.log(newPlan)
 	}
 
+	// TODO: Completar validaciones
+	const handleBlur = (fieldName: keyof FormDataKeys) => {
+		const value = formData[fieldName].trim()
+		if (value === '') {
+			setErrors((prevErrors) => ({
+				...prevErrors,
+				[fieldName]: 'Este campo no puede estar vacío'
+			}))
+		} else {
+			setErrors((prevErrors) => ({
+				...prevErrors,
+				[fieldName]: ''
+			}))
+		}
+	}
+
 	return (
 		<form onSubmit={handleSubmit}>
 			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
@@ -68,6 +77,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				name='name'
 				value={formData.name}
 				onChange={handleChange}
+				onBlur={() => handleBlur('name')}
+				isInvalid={errors.name !== ''}
+				errorMessage={errors.name}
 				className='mb-3'
 				label='Nombre del Plan de Mejora'
 				size='sm'
@@ -81,6 +93,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				name='code'
 				value={formData.code}
 				onChange={handleChange}
+				onBlur={() => handleBlur('code')}
+				isInvalid={errors.code !== ''}
+				errorMessage={errors.code}
 				className='mb-3'
 				label='Código'
 				placeholder='OMXX-YY-ZZZZ'
@@ -97,6 +112,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				name='opportunity_for_improvement'
 				value={formData.opportunity_for_improvement}
 				onChange={handleChange}
+				onBlur={() => handleBlur('opportunity_for_improvement')}
+				isInvalid={errors.opportunity_for_improvement !== ''}
+				errorMessage={errors.opportunity_for_improvement}
 				className='mb-3'
 				label='Oportunidad de mejora'
 				size='sm'
