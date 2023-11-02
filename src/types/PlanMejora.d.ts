@@ -65,10 +65,6 @@ export type ImprovementPlan = {
 	sources: planItem[]
 }
 
-export type ItemValue = {
-	description: string
-}
-
 export type DynamicInputGeneric = {
 	description: string
 }

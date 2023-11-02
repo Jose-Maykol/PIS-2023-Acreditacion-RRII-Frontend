@@ -1,3 +1,4 @@
+import * as yup from 'yup'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -6,8 +7,20 @@ import Link from 'next/link'
 import { ChangeEvent, FormEvent, useState } from 'react'
 import DynamicInput from './DynamicInput'
 
+// eslint-disable-next-line no-undef
+const validationSchema = yup.object({
+	name: yup.string().trim().required('Nombre de plan necesario'),
+	code: yup
+		.string()
+		.required('Código del plan necesario')
+		.trim()
+		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ'),
+	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria')
+})
+
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const [isSelected, setIsSelected] = useState(false)
+	const [errors, setErrors] = useState({})
 	const [formData, setFormData] = useState({
 		name: '',
 		code: '',

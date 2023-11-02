@@ -13,6 +13,11 @@ export default function DynamicInput({ identifier, label }: { identifier: string
 	}
 
 	const handleAdd = () => {
+		if (singleInputValue.trim() === '') {
+			console.log('Agrega texto')
+			return
+		}
+
 		const newInputValue = { id: Date.now(), description: singleInputValue }
 		setInputValues([...inputValues, newInputValue])
 		setSingleInputValue('')

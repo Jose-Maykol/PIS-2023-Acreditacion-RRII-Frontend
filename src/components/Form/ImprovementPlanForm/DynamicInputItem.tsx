@@ -23,6 +23,11 @@ export default function DynamicInputItem({
 	}
 
 	const handleSaveUpdate = () => {
+		if (singleInputValue.trim() === '') {
+			console.log('Agrega texto x2')
+			return
+		}
+
 		setIsEditing(!isEditing)
 
 		if (isEditing) {
