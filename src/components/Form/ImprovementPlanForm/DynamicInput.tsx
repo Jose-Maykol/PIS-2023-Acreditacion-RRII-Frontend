@@ -1,82 +1,14 @@
-'use client'
-
 import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input } from '@nextui-org/react'
-import { ChangeEvent, useEffect, useState } from 'react'
 import DynamicInputItem from './DynamicInputItem'
-import { DynamicInputGeneric, ItemValue } from '@/types/PlanMejora'
 
-type DynamicInputProps = {
-	identifier: string
-	label: string
-	onChange: (identifier: string, values: Array<DynamicInputGeneric>) => void
-	defaultValues?: ItemValue[]
-}
-
-export default function DynamicInput({
-	identifier,
-	label,
-	onChange,
-	defaultValues
-}: DynamicInputProps) {
-	const [error, setError] = useState(false)
-	const [singleInputValue, setSingleInputValue] = useState('')
-	const [inputValues, setInputValues] = useState<ItemValue[]>([])
-
-	useEffect(() => {
-		if (defaultValues) {
-			setInputValues(defaultValues)
-		}
-		// setInputValues(defaultValues)
-	}, [])
-
-	const handleAdd = () => {
-		if (singleInputValue.trim() === '') {
-			setError(true)
-		} else {
-			const newValues = [...inputValues, { description: singleInputValue }]
-			setError(false)
-			setInputValues(newValues)
-			setSingleInputValue('')
-			onChange(identifier, newValues)
-		}
-	}
-
-	// TODO: Check Delete handler
-	const handleDelete = (index: number) => {
-		const newValues = inputValues.filter((item, i) => index !== i)
-		setInputValues(newValues)
-		onChange(identifier, newValues)
-	}
-
-	// Filter updated item
-	const handleUpdate = (value: ItemValue, index: number) => {
-		const newValues = inputValues.map((item, i) => {
-			if (index === i) {
-				return value
-			} else {
-				return item
-			}
-		})
-		setInputValues(newValues)
-		onChange(identifier, newValues)
-	}
-
-	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
-		const { value } = ev.target
-
-		if (value.trim().length > 0) {
-			setError(false)
-		}
-
-		setSingleInputValue(value)
-	}
-
+export default function DynamicInput({ identifier, label }: { identifier: string; label: string }) {
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
 				<Input
-					// isRequired
+					isRequired
+					id={identifier}
 					name={identifier}
 					className='mb-3'
 					label={label}
@@ -84,24 +16,14 @@ export default function DynamicInput({
 					size='sm'
 					type='text'
 					variant='underlined'
-					isInvalid={error}
-					errorMessage={error && 'El campo no puede estar vacío'}
-					value={singleInputValue}
-					onChange={handleChange}
 				/>
-				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
+				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={() => {}}>
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
 			<div>
-				{inputValues?.map((item: ItemValue, index: number) => (
-					<DynamicInputItem
-						key={`${identifier}-${index}`}
-						item={item}
-						onDelete={handleDelete}
-						indexOnList={index}
-						onUpdate={handleUpdate}
-					/>
+				{[1].map((item, i) => (
+					<DynamicInputItem key={i} />
 				))}
 			</div>
 		</div>

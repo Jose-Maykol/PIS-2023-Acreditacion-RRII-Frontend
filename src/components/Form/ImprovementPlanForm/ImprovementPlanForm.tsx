@@ -1,315 +1,208 @@
-'use client'
-
-import { Button, Checkbox, Input, Link, Select, SelectItem } from '@nextui-org/react'
-import { useFormik } from 'formik'
-import { useEffect, useState } from 'react'
-import * as yup from 'yup'
-import SaveIcon from '../../Icons/SaveIcon'
-import CloseIcon from '../../Icons/CloseIcon'
-import DynamicInput from './DynamicInput'
-import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
-import { useRouter } from 'next/navigation'
-import { DynamicInputGeneric } from '@/types/PlanMejora'
+import CloseIcon from '@/components/Icons/CloseIcon'
+import SaveIcon from '@/components/Icons/SaveIcon'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
+import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import Link from 'next/link'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import DynamicInput from './DynamicInput'
 
-type ImprovementPlanFormProps = {
-	standardId: string
-}
-
-/*
-	TODO
-	* Add all validations
-	* Filter by standard id
-	* Delete Dynamic Field
-	* Improve styles
-*/
-const validationSchema = yup.object({
-	name: yup.string().trim().required('Nombre de plan necesario'),
-	code: yup
-		.string()
-		.required('Código del plan necesario')
-		.trim()
-		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ'),
-	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria')
-})
-
-export default function ImprovementPlanForm({ standardId }: ImprovementPlanFormProps) {
-	const router = useRouter()
-
+export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const [isSelected, setIsSelected] = useState(false)
-
-	const formik = useFormik({
-		initialValues: {
-			code: '',
-			name: '',
-			opportunity_for_improvement: '',
-			semester_execution: '',
-			advance: 0,
-			duration: 1,
-			efficacy_evaluation: false,
-			standard_id: Number(standardId),
-			plan_status_id: 0,
-			sources: [],
-			problems_opportunities: [],
-			root_causes: [],
-			improvement_actions: [],
-			resources: [],
-			goals: [],
-			responsibles: [],
-			observations: [],
-			year: '',
-			semester: ''
-		},
-		validationSchema,
-		onSubmit: (values) => {
-			const data = {
-				code: values.code,
-				name: values.name,
-				opportunity_for_improvement: values.opportunity_for_improvement,
-				semester_execution: values.semester_execution,
-				advance: Number(values.advance),
-				duration: Number(values.duration),
-				efficacy_evaluation: Boolean(values.efficacy_evaluation),
-				standard_id: Number(values.standard_id),
-				plan_status_id: Number(values.plan_status_id),
-				sources: values.sources,
-				problems_opportunities: values.problems_opportunities,
-				root_causes: values.root_causes,
-				improvement_actions: values.improvement_actions,
-				resources: values.resources,
-				goals: values.goals,
-				responsibles: values.responsibles,
-				observations: values.observations
-			}
-
-			PlanMejoraService.create(data)
-				.then((res) => {
-					if (res.statusText === 'Created') {
-						router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
-					}
-				})
-				.catch((error) => {
-					console.log(error)
-				})
-		}
+	const [formData, setFormData] = useState({
+		name: '',
+		code: '',
+		opportunity_for_improvement: '',
+		year: '',
+		semester: '',
+		duration: 0,
+		status: '',
+		plan_status_id: 0,
+		advance: 0,
+		efficacy_evaluation: false
 	})
 
-	const handleChangeGeneric = (identifier: string, values: Array<DynamicInputGeneric>) => {
-		formik.setFieldValue(identifier, values)
+	const handleChange = (ev: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+		const { name, value } = ev.target
+
+		setFormData({ ...formData, [name]: value })
 	}
 
-	// Updating 'semester_execution' parameter
-	useEffect(() => {
-		const updatedSemesterExecution = `${formik.values.year}-${formik.values.semester}`
-		formik.setFieldValue('semester_execution', updatedSemesterExecution)
-	}, [formik.values.year, formik.values.semester])
+	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
+		ev.preventDefault()
+
+		const newPlan = {
+			name: formData.name,
+			code: formData.code,
+			opportunity_for_improvement: formData.opportunity_for_improvement,
+			advance: Number(formData.advance),
+			duration: Number(formData.duration),
+			efficacy_evaluation: isSelected,
+			status: Number(formData.status),
+			plan_status_id: Number(formData.plan_status_id),
+			semester_execution: `${formData.year}-${formData.semester}`
+		}
+
+		console.log(newPlan)
+	}
 
 	return (
-		<div>
-			<form onSubmit={formik.handleSubmit}>
-				<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
+		<form onSubmit={handleSubmit}>
+			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
-				<Input
-					isRequired
-					name='name'
-					className='mb-3'
-					label='Nombre del Plan de Mejora'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.name}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
-					errorMessage={formik.touched.name && formik.errors.name}
-				/>
+			<Input
+				isRequired
+				id='name'
+				name='name'
+				value={formData.name}
+				onChange={handleChange}
+				className='mb-3'
+				label='Nombre del Plan de Mejora'
+				size='sm'
+				type='text'
+				variant='underlined'
+			/>
 
-				<Input
-					isRequired
-					className='mb-3'
-					name='code'
-					label='Código'
-					placeholder='OMXX-YY-ZZZZ'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.code}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
-					errorMessage={formik.touched.code && formik.errors.code}
-				/>
+			<Input
+				isRequired
+				id='code'
+				name='code'
+				value={formData.code}
+				onChange={handleChange}
+				className='mb-3'
+				label='Código'
+				placeholder='OMXX-YY-ZZZZ'
+				size='sm'
+				type='text'
+				variant='underlined'
+			/>
 
-				<DynamicInput
-					identifier='problems_opportunities'
-					label='Problemas/Oportunidades'
-					onChange={handleChangeGeneric}
-				/>
+			<DynamicInput identifier='problems_opportunities' label='Problemas/Oportunidades' />
 
-				<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleChangeGeneric} />
+			<Input
+				isRequired
+				id='opportunity_for_improvement'
+				name='opportunity_for_improvement'
+				value={formData.opportunity_for_improvement}
+				onChange={handleChange}
+				className='mb-3'
+				label='Oportunidad de mejora'
+				size='sm'
+				type='text'
+				variant='underlined'
+			/>
 
-				<Input
-					isRequired
-					name='opportunity_for_improvement'
-					className='mb-3'
-					label='Oportunidad de mejora'
-					size='sm'
-					type='text'
-					variant='underlined'
-					value={formik.values.opportunity_for_improvement}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					isInvalid={
-						formik.touched.opportunity_for_improvement &&
-						Boolean(formik.errors.opportunity_for_improvement)
-					}
-					errorMessage={
-						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
-					}
-				/>
-
-				<DynamicInput
-					identifier='improvement_actions'
-					label='Acciones de mejora'
-					onChange={handleChangeGeneric}
-				/>
-
-				<div className='mb-3 flex gap-5'>
-					<Select
-						isRequired
-						name='year'
-						className='max-w-xs'
-						label='Año'
-						size='sm'
-						variant='underlined'
-						value={formik.values.year}
-						onChange={formik.handleChange}
-					>
-						{years.map((year) => (
-							<SelectItem key={year.value} value={year.value}>
-								{year.label}
-							</SelectItem>
-						))}
-					</Select>
-					<Select
-						isRequired
-						name='semester'
-						className='max-w-xs'
-						label='Semestre'
-						size='sm'
-						variant='underlined'
-						value={formik.values.semester}
-						onChange={formik.handleChange}
-					>
-						{semesters.map((semester) => (
-							<SelectItem key={semester.value} value={semester.value}>
-								{semester.label}
-							</SelectItem>
-						))}
-					</Select>
-				</div>
-
-				<Input
-					isRequired
-					name='duration'
-					className='max-w-xs mb-3'
-					label='Duración (meses)'
-					type='number'
-					min={1}
-					max={12}
-					size='sm'
-					variant='underlined'
-					value={formik.values.duration.toString()}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
-					errorMessage={formik.touched.duration && formik.errors.duration}
-				/>
-
-				<DynamicInput identifier='resources' label='Recursos' onChange={handleChangeGeneric} />
-
-				<DynamicInput identifier='goals' label='Metas' onChange={handleChangeGeneric} />
-
-				<DynamicInput
-					identifier='responsibles'
-					label='Responsables'
-					onChange={handleChangeGeneric}
-				/>
-				<DynamicInput
-					identifier='observations'
-					label='Observaciones'
-					onChange={handleChangeGeneric}
-				/>
-
+			<div className='mb-3 flex gap-5'>
 				<Select
 					isRequired
-					name='plan_status_id'
-					className='max-w-xs mb-3'
-					label='Estado'
+					id='year'
+					name='year'
+					value={formData.year}
+					onChange={handleChange}
+					className='max-w-xs'
+					label='Año'
 					size='sm'
 					variant='underlined'
-					value={formik.values.plan_status_id}
-					onChange={formik.handleChange}
 				>
-					{status.map((stat) => (
-						<SelectItem key={stat.value} value={stat.value}>
-							{stat.label}
+					{years.map((year) => (
+						<SelectItem key={year.value} value={year.value}>
+							{year.label}
 						</SelectItem>
 					))}
 				</Select>
-
-				<DynamicInput identifier='sources' label='Fuentes' onChange={handleChangeGeneric} />
-
-				<Input
+				<Select
 					isRequired
-					name='advance'
-					type='number'
-					label='Avance'
-					className='max-w-xs mb-3'
-					value={formik.values.advance.toString()}
-					onChange={formik.handleChange}
-					min={0}
-					max={100}
+					id='semester'
+					name='semester'
+					value={formData.semester}
+					onChange={handleChange}
+					className='max-w-xs'
+					label='Semestre'
+					size='sm'
 					variant='underlined'
-				/>
+				>
+					{semesters.map((semester) => (
+						<SelectItem key={semester.value} value={semester.value}>
+							{semester.label}
+						</SelectItem>
+					))}
+				</Select>
+			</div>
+			<Input
+				isRequired
+				id='duration'
+				name='duration'
+				value={formData.duration.toString()}
+				onChange={handleChange}
+				className='max-w-xs mb-3'
+				label='Duración (meses)'
+				min={1}
+				max={12}
+				size='sm'
+				type='number'
+				variant='underlined'
+			/>
 
-				<div className='flex gap-2 mb-3 pt-2'>
-					<label className='text-default-900 text-sm'>
-						Eficacia<span className='text-red-600'>*</span>
-					</label>
-					<Checkbox
-						name='efficacy_evaluation'
-						isSelected={isSelected}
-						onValueChange={setIsSelected}
-						onChange={formik.handleChange}
-					>
-						{isSelected ? 'Sí' : 'No'}
-					</Checkbox>
-				</div>
+			<Select
+				isRequired
+				id='plan_status_id'
+				name='plan_status_id'
+				value={formData.plan_status_id}
+				onChange={handleChange}
+				className='max-w-xs mb-3'
+				label='Estado'
+				size='sm'
+				variant='underlined'
+			>
+				{status.map((stat) => (
+					<SelectItem key={stat.value} value={stat.value}>
+						{stat.label}
+					</SelectItem>
+				))}
+			</Select>
 
-				<div className='flex gap-4 justify-end p-3'>
-					<Button
-						color='danger'
-						className='mb-5'
-						startContent={<CloseIcon width={16} height={16} fill='fill-white'/>}
+			<Input
+				isRequired
+				id='advance'
+				name='advance'
+				value={formData.advance.toString()}
+				onChange={handleChange}
+				type='number'
+				label='Avance'
+				className='max-w-xs mb-3'
+				min={0}
+				max={100}
+				variant='underlined'
+			/>
+
+			<div className='flex gap-2 mb-3 pt-2'>
+				<label className='text-default-900 text-sm'>Eficacia</label>
+				<Checkbox name='efficacy_evaluation' isSelected={isSelected} onValueChange={setIsSelected}>
+					<span className='text-sm'>{isSelected ? 'Sí' : 'No'}</span>
+				</Checkbox>
+			</div>
+
+			<div className='flex gap-4 justify-end p-3'>
+				<Button
+					color='danger'
+					className='mb-5'
+					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
+				>
+					<Link
+						className='text-white'
+						href={`/dashboard/standards/${standardId}/evidence_improvements`}
 					>
-						<Link
-							className='text-white'
-							href={`/dashboard/standards/${standardId}/evidence_improvements`}
-						>
-							Cancelar
-						</Link>
-					</Button>
-					<Button
-						color='success'
-						className='text-white mb-5'
-						startContent={<SaveIcon width={16} height={16} fill='fill-white'/>}
-						type='submit'
-					>
-						Guardar
-					</Button>
-				</div>
-			</form>
-		</div>
+						Cancelar
+					</Link>
+				</Button>
+				<Button
+					color='success'
+					className='text-white mb-5'
+					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
+					type='submit'
+				>
+					Guardar
+				</Button>
+			</div>
+		</form>
 	)
 }

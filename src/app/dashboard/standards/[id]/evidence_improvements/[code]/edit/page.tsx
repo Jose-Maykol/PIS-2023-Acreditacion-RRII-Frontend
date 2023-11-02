@@ -2,7 +2,6 @@
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import EditImprovementPlanForm from '@/components/Form/ImprovementPlanForm/EditImprovementPlanForm'
 import { ImprovementPlan } from '@/types/PlanMejora'
 import { useEffect, useState } from 'react'
 
@@ -42,7 +41,7 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
-			<EditImprovementPlanForm standardId={params.id} plan={plan} planId={params.code} />
+			<h1>Hello</h1>
 		</ContentWrapper>
 	)
 }
