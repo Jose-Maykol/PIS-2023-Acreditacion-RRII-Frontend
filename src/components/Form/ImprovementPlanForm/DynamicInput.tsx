@@ -4,7 +4,15 @@ import DynamicInputItem from './DynamicInputItem'
 import { ChangeEvent, useState } from 'react'
 import { planItem } from '@/types/PlanMejora'
 
-export default function DynamicInput({ identifier, label }: { identifier: string; label: string }) {
+export default function DynamicInput({
+	identifier,
+	label,
+	onChange
+}: {
+	identifier: string
+	label: string
+	onChange: (formDataField: string, value: planItem[]) => void
+}) {
 	const [singleInputValue, setSingleInputValue] = useState('')
 	const [inputValues, setInputValues] = useState<planItem[]>([])
 
@@ -18,27 +26,28 @@ export default function DynamicInput({ identifier, label }: { identifier: string
 			return
 		}
 
-		const newInputValue = { id: Date.now(), description: singleInputValue }
-		setInputValues([...inputValues, newInputValue])
+		const newInputValues = [...inputValues, { id: Date.now(), description: singleInputValue }]
+		setInputValues(newInputValues)
+		onChange(identifier, newInputValues)
 		setSingleInputValue('')
 	}
 
 	const handleDelete = (id: number) => {
 		const updatedInputValues = inputValues.filter((item) => item.id !== id)
 		setInputValues(updatedInputValues)
+		onChange(identifier, updatedInputValues)
 	}
 
 	const handleUpdate = (id: number, description: string) => {
-		setInputValues((prevItems) =>
-			prevItems.map((item) => (item.id === id ? { ...item, description } : item))
-		)
+		const updatedInputValues = inputValues.map((item) => (item.id === id ? { ...item, description } : item))
+		setInputValues(updatedInputValues)
+		onChange(identifier, updatedInputValues)
 	}
 
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
 				<Input
-					isRequired
 					id={identifier}
 					name={identifier}
 					value={singleInputValue}

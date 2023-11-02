@@ -1,13 +1,17 @@
+import { useRouter } from 'next/navigation'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import Link from 'next/link'
+import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
-import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
-import Link from 'next/link'
-import { ChangeEvent, FormEvent, useState } from 'react'
 import DynamicInput from './DynamicInput'
-import { FormDataKeys } from '@/types/PlanMejora'
+import { FormDataKeys, planItem } from '@/types/PlanMejora'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
+	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [errors, setErrors] = useState<FormDataKeys>({
 		name: '',
@@ -15,22 +19,34 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 		opportunity_for_improvement: ''
 	})
 	const [formData, setFormData] = useState({
-		name: '',
 		code: '',
+		name: '',
 		opportunity_for_improvement: '',
-		year: '',
-		semester: '',
-		duration: 0,
-		status: '',
-		plan_status_id: 0,
+		semester_execution: '',
 		advance: 0,
-		efficacy_evaluation: false
+		duration: 1,
+		efficacy_evaluation: false,
+		standard_id: Number(standardId),
+		plan_status_id: 0,
+		sources: [],
+		problems_opportunities: [],
+		root_causes: [],
+		improvement_actions: [],
+		resources: [],
+		goals: [],
+		responsibles: [],
+		observations: [],
+		year: '',
+		semester: ''
 	})
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = ev.target
-
 		setFormData({ ...formData, [name]: value })
+	}
+
+	const handleInputValues = (formDataField: string, value: planItem[]) => {
+		setFormData({ ...formData, [formDataField]: value })
 	}
 
 	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
@@ -40,15 +56,31 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			name: formData.name,
 			code: formData.code,
 			opportunity_for_improvement: formData.opportunity_for_improvement,
+			semester_execution: `${formData.year}-${formData.semester}`,
 			advance: Number(formData.advance),
 			duration: Number(formData.duration),
 			efficacy_evaluation: isSelected,
-			status: Number(formData.status),
+			standard_id: Number(standardId),
 			plan_status_id: Number(formData.plan_status_id),
-			semester_execution: `${formData.year}-${formData.semester}`
+			sources: formData.sources,
+			problems_opportunities: formData.problems_opportunities,
+			root_causes: formData.root_causes,
+			improvement_actions: formData.improvement_actions,
+			resources: formData.resources,
+			goals: formData.goals,
+			responsibles: formData.responsibles,
+			observations: formData.observations
 		}
 
-		console.log(newPlan)
+		PlanMejoraService.create(newPlan)
+			.then((res) => {
+				if (res.statusText === 'Created') {
+					router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	// TODO: Completar validaciones
@@ -104,7 +136,13 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				variant='underlined'
 			/>
 
-			<DynamicInput identifier='problems_opportunities' label='Problemas/Oportunidades' />
+			<DynamicInput
+				identifier='problems_opportunities'
+				label='Problemas/Oportunidades'
+				onChange={handleInputValues}
+			/>
+
+			<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleInputValues} />
 
 			<Input
 				isRequired
@@ -120,6 +158,12 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				size='sm'
 				type='text'
 				variant='underlined'
+			/>
+
+			<DynamicInput
+				identifier='improvement_actions'
+				label='Acciones de mejora'
+				onChange={handleInputValues}
 			/>
 
 			<div className='mb-3 flex gap-5'>
@@ -158,6 +202,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					))}
 				</Select>
 			</div>
+
 			<Input
 				isRequired
 				id='duration'
@@ -172,6 +217,11 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				type='number'
 				variant='underlined'
 			/>
+
+			<DynamicInput identifier='resources' label='Recursos' onChange={handleInputValues} />
+			<DynamicInput identifier='goals' label='Metas' onChange={handleInputValues} />
+			<DynamicInput identifier='responsibles' label='Responsables' onChange={handleInputValues} />
+			<DynamicInput identifier='observations' label='Observaciones' onChange={handleInputValues} />
 
 			<Select
 				isRequired
@@ -190,6 +240,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					</SelectItem>
 				))}
 			</Select>
+
+			<DynamicInput identifier='sources' label='Fuentes' onChange={handleInputValues} />
 
 			<Input
 				isRequired
