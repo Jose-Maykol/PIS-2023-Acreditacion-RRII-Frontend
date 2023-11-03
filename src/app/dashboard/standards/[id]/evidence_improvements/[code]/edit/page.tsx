@@ -62,12 +62,8 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 		})
 	}, [])
 
-	// const getPlanItemsToSend = (data: planItem[]) =>
-	// data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
-	const getPlanItemsToSend = (data: planItem[]) => {
-		console.log(data)
-		return data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
-	}
+	const getPlanItemsToSend = (data: planItem[]) =>
+		data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
 
 	// ===
 	const handleChange = (ev: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {

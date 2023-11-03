@@ -119,11 +119,11 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 
 			<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
 			<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
+			<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
 			<PlanItemList itemList={plan.resources} label='Recursos' />
 			<PlanItemList itemList={plan.goals} label='Metas' />
 			<PlanItemList itemList={plan.responsibles} label='Responsables' />
 			<PlanItemList itemList={plan.observations} label='Observaciones' />
-			<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
 			<PlanItemList itemList={plan.sources} label='Fuentes' />
 		</ContentWrapper>
 	)
