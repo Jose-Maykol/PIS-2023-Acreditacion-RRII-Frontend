@@ -26,7 +26,7 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 
-	const [plan, setPlan] = useState<ImprovementPlan>({
+	const [plan, setPlan] = useState({
 		id: 0,
 		code: '',
 		name: '',
@@ -49,12 +49,16 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 		semester: ''
 	})
 
-
 	useEffect(() => {
 		PlanMejoraService.readByPlan(params.code).then((res) => {
-			console.log(res.data.data)
-			setPlan(res.data.data)
-			setIsSelected(res.data.data.efficacy_evaluation)
+			const { data } = res.data
+			console.log(data)
+			setPlan({
+				...data,
+				year: data.semester_execution.split('-')[0],
+				semester: data.semester_execution.split('-')[1]
+			})
+			setIsSelected(data.efficacy_evaluation)
 		})
 	}, [])
 
@@ -67,12 +71,14 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
 		ev.preventDefault()
 
+		// TODO: Quitar year and semester
+		// TODO: Mandar new items sin ID
 		const newPlan = {
 			...plan,
 			name: plan.name,
 			code: plan.code,
 			opportunity_for_improvement: plan.opportunity_for_improvement,
-			// semester_execution: `${plan.year}-${plan.semester}`,
+			semester_execution: `${plan.year}-${plan.semester}`,
 			advance: Number(plan.advance),
 			duration: Number(plan.duration),
 			efficacy_evaluation: isSelected,
@@ -90,16 +96,16 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 
 		console.log(newPlan)
 		// TODO
-		PlanMejoraService.update(plan.id, newPlan)
-			.then((res) => {
-				console.log(res)
-				if (res.statusText === 'OK') {
-					router.push(`/dashboard/standards/${plan.standard_id}/evidence_improvements`)
-				}
-			})
-			.catch((error) => {
-				console.log(error)
-			})
+		// PlanMejoraService.update(plan.id, newPlan)
+		// 	.then((res) => {
+		// 		console.log(res)
+		// 		if (res.statusText === 'OK') {
+		// 			router.push(`/dashboard/standards/${plan.standard_id}/evidence_improvements`)
+		// 		}
+		// 	})
+		// 	.catch((error) => {
+		// 		console.log(error)
+		// 	})
 	}
 
 	const handleInputValues = (planField: string, value: planItem[]) => {
@@ -177,10 +183,8 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 						isRequired
 						id='year'
 						name='year'
-						// TODO
-						selectedKeys={[plan.semester_execution.split('-')[0]]}
+						selectedKeys={[plan.year]}
 						onChange={handleChange}
-						value={plan.year}
 						className='max-w-xs'
 						label='Año'
 						size='sm'
@@ -196,10 +200,8 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 						isRequired
 						id='semester'
 						name='semester'
-						// TODO
-						selectedKeys={[plan.semester_execution.split('-')[1]]}
+						selectedKeys={[plan.semester]}
 						onChange={handleChange}
-						value={plan.semester}
 						className='max-w-xs'
 						label='Semestre'
 						size='sm'
