@@ -21,7 +21,6 @@ export default function DynamicInput({
 
 	useEffect(() => {
 		setInputValues(defaultValues)
-		console.log('Render')
 	}, [defaultValues])
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {

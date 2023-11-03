@@ -1,5 +1,5 @@
 import { useRouter } from 'next/navigation'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
@@ -11,13 +11,16 @@ import { planItem } from '@/types/PlanMejora'
 import DynamicInput from './DynamicInput'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
+import { validationSchema } from '../FormValidation'
+import { useFormik } from 'formik'
 
 export default function ImprovementPlanEditForm({
-	params, plan
+	params,
+	plan
 }: {
-	params: { id: string; code: string }
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	plan: any
+	params: { id: string; code: string }
 }) {
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
@@ -53,67 +56,68 @@ export default function ImprovementPlanEditForm({
 	const getPlanItemsToSend = (data: planItem[]) =>
 		data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
 
-	// ===
-	const handleChange = (ev: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-		const { name, value } = ev.target
-		setFormData({ ...formData, [name]: value })
-	}
+	const formik = useFormik({
+		initialValues: formData,
+		validationSchema,
+		enableReinitialize: true,
+		onSubmit: (values) => {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { year, semester, ...remainingPlan } = formData
 
-	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
-		ev.preventDefault()
+			const newPlan = {
+				...remainingPlan,
+				name: values.name,
+				code: values.code,
+				opportunity_for_improvement: values.opportunity_for_improvement,
+				semester_execution: `${values.year}-${values.semester}`,
+				advance: Number(values.advance),
+				duration: Number(values.duration),
+				efficacy_evaluation: isSelected,
+				standard_id: values.standard_id,
+				plan_status_id: Number(values.plan_status_id),
+				problems_opportunities: getPlanItemsToSend(values.problems_opportunities),
+				root_causes: getPlanItemsToSend(values.root_causes),
+				improvement_actions: getPlanItemsToSend(values.improvement_actions),
+				resources: getPlanItemsToSend(values.resources),
+				goals: getPlanItemsToSend(values.goals),
+				responsibles: getPlanItemsToSend(values.responsibles),
+				observations: getPlanItemsToSend(values.observations),
+				sources: getPlanItemsToSend(values.sources)
+			}
 
-		const { year, semester, ...remainingPlan } = formData
+			// console.log(newPlan)
+			// TODO: Check backend (problems_opportunities - improvement_actions)
 
-		const newPlan = {
-			...remainingPlan,
-			name: formData.name,
-			code: formData.code,
-			opportunity_for_improvement: formData.opportunity_for_improvement,
-			semester_execution: `${year}-${semester}`,
-			advance: Number(formData.advance),
-			duration: Number(formData.duration),
-			efficacy_evaluation: isSelected,
-			standard_id: formData.standard_id,
-			plan_status_id: Number(formData.plan_status_id),
-			problems_opportunities: getPlanItemsToSend(formData.problems_opportunities),
-			root_causes: getPlanItemsToSend(formData.root_causes),
-			improvement_actions: getPlanItemsToSend(formData.improvement_actions),
-			resources: getPlanItemsToSend(formData.resources),
-			goals: getPlanItemsToSend(formData.goals),
-			responsibles: getPlanItemsToSend(formData.responsibles),
-			observations: getPlanItemsToSend(formData.observations),
-			sources: getPlanItemsToSend(formData.sources)
+			PlanMejoraService.update(formData.id, newPlan)
+				.then((res) => {
+					console.log(res)
+					if (res.statusText === 'OK') {
+						router.push(`/dashboard/standards/${formData.standard_id}/evidence_improvements`)
+					}
+				})
+				.catch((error) => {
+					console.log(error)
+				})
 		}
+	})
 
-		// TODO: Check backend (problems_opportunities - improvement_actions)
-		// console.log(newPlan)
-
-		PlanMejoraService.update(formData.id, newPlan)
-			.then((res) => {
-				console.log(res)
-				if (res.statusText === 'OK') {
-					router.push(`/dashboard/standards/${formData.standard_id}/evidence_improvements`)
-				}
-			})
-			.catch((error) => {
-				console.log(error)
-			})
-	}
-
-	const handleInputValues = (planField: string, value: planItem[]) => {
-		setFormData({ ...formData, [planField]: value })
+	const handleInputValues = (identifier: string, values: planItem[]) => {
+		formik.setFieldValue(identifier, values)
 	}
 
 	return (
-		<form onSubmit={handleSubmit}>
+		<form onSubmit={formik.handleSubmit}>
 			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
 			<Input
 				isRequired
 				id='name'
 				name='name'
-				value={formData.name}
-				onChange={handleChange}
+				value={formik.values.name}
+				onChange={formik.handleChange}
+				onBlur={formik.handleBlur}
+				isInvalid={formik.touched.name && Boolean(formik.errors.name)}
+				errorMessage={formik.touched.name && formik.errors.name}
 				className='mb-3'
 				label='Nombre del Plan de Mejora'
 				size='sm'
@@ -125,8 +129,11 @@ export default function ImprovementPlanEditForm({
 				isRequired
 				id='code'
 				name='code'
-				value={formData.code}
-				onChange={handleChange}
+				value={formik.values.code}
+				onChange={formik.handleChange}
+				onBlur={formik.handleBlur}
+				isInvalid={formik.touched.code && Boolean(formik.errors.code)}
+				errorMessage={formik.touched.code && formik.errors.code}
 				className='mb-3'
 				label='Código'
 				placeholder='OMXX-YY-ZZZZ'
@@ -153,8 +160,16 @@ export default function ImprovementPlanEditForm({
 				isRequired
 				id='opportunity_for_improvement'
 				name='opportunity_for_improvement'
-				value={formData.opportunity_for_improvement}
-				onChange={handleChange}
+				value={formik.values.opportunity_for_improvement}
+				onChange={formik.handleChange}
+				onBlur={formik.handleBlur}
+				isInvalid={
+					formik.touched.opportunity_for_improvement &&
+					Boolean(formik.errors.opportunity_for_improvement)
+				}
+				errorMessage={
+					formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
+				}
 				className='mb-3'
 				label='Oportunidad de mejora'
 				size='sm'
@@ -174,8 +189,8 @@ export default function ImprovementPlanEditForm({
 					isRequired
 					id='year'
 					name='year'
-					selectedKeys={[formData.year]}
-					onChange={handleChange}
+					selectedKeys={[formik.values.year]}
+					onChange={formik.handleChange}
 					className='max-w-xs'
 					label='Año'
 					size='sm'
@@ -191,8 +206,8 @@ export default function ImprovementPlanEditForm({
 					isRequired
 					id='semester'
 					name='semester'
-					selectedKeys={[formData.semester]}
-					onChange={handleChange}
+					selectedKeys={[formik.values.semester]}
+					onChange={formik.handleChange}
 					className='max-w-xs'
 					label='Semestre'
 					size='sm'
@@ -210,8 +225,11 @@ export default function ImprovementPlanEditForm({
 				isRequired
 				id='duration'
 				name='duration'
-				value={formData.duration.toString()}
-				onChange={handleChange}
+				value={formik.values.duration.toString()}
+				onChange={formik.handleChange}
+				onBlur={formik.handleBlur}
+				isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
+				errorMessage={formik.touched.duration && formik.errors.duration}
 				className='max-w-xs mb-3'
 				label='Duración (meses)'
 				min={1}
@@ -250,8 +268,8 @@ export default function ImprovementPlanEditForm({
 				isRequired
 				id='plan_status_id'
 				name='plan_status_id'
-				selectedKeys={[`${formData.plan_status_id}`]}
-				onChange={handleChange}
+				selectedKeys={[`${formik.values.plan_status_id}`]}
+				onChange={formik.handleChange}
 				className='max-w-xs mb-3'
 				label='Estado'
 				size='sm'
@@ -275,8 +293,8 @@ export default function ImprovementPlanEditForm({
 				isRequired
 				id='advance'
 				name='advance'
-				value={formData.advance.toString()}
-				onChange={handleChange}
+				value={formik.values.advance.toString()}
+				onChange={formik.handleChange}
 				type='number'
 				label='Avance'
 				className='max-w-xs mb-3'
@@ -287,7 +305,12 @@ export default function ImprovementPlanEditForm({
 
 			<div className='flex gap-2 mb-3 pt-2'>
 				<label className='text-default-900 text-sm'>Eficacia</label>
-				<Checkbox name='efficacy_evaluation' isSelected={isSelected} onValueChange={setIsSelected}>
+				<Checkbox
+					name='efficacy_evaluation'
+					isSelected={isSelected}
+					onValueChange={setIsSelected}
+					onChange={formik.handleChange}
+				>
 					<span className='text-sm'>{isSelected ? 'Sí' : 'No'}</span>
 				</Checkbox>
 			</div>
