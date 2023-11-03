@@ -10,7 +10,7 @@ import DynamicInput from './DynamicInput'
 import { planItem } from '@/types/PlanMejora'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useFormik } from 'formik'
-import { validationSchema } from './FormValidation'
+import { validationSchema } from '../FormValidation'
 
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const router = useRouter()

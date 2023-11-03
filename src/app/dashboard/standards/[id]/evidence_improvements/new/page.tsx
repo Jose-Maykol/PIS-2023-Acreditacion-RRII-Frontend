@@ -1,7 +1,7 @@
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import ImprovementPlanForm from '@/components/Form/ImprovementPlanForm/ImprovementPlanForm'
+import ImprovementPlanForm from '@/components/Form/ImprovementPlanForm/New/ImprovementPlanForm'
 
 type NewImprovementPlanPageProps = {
 	params: {
