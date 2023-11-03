@@ -71,14 +71,15 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
 		ev.preventDefault()
 
-		// TODO: Quitar year and semester
 		// TODO: Mandar new items sin ID
-		const newPlan = {
-			...plan,
+		let { year, semester, ...newPlan } = plan
+
+		newPlan = {
+			...newPlan,
 			name: plan.name,
 			code: plan.code,
 			opportunity_for_improvement: plan.opportunity_for_improvement,
-			semester_execution: `${plan.year}-${plan.semester}`,
+			semester_execution: `${year}-${semester}`,
 			advance: Number(plan.advance),
 			duration: Number(plan.duration),
 			efficacy_evaluation: isSelected,
@@ -94,18 +95,16 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 			observations: plan.observations
 		}
 
-		console.log(newPlan)
-		// TODO
-		// PlanMejoraService.update(plan.id, newPlan)
-		// 	.then((res) => {
-		// 		console.log(res)
-		// 		if (res.statusText === 'OK') {
-		// 			router.push(`/dashboard/standards/${plan.standard_id}/evidence_improvements`)
-		// 		}
-		// 	})
-		// 	.catch((error) => {
-		// 		console.log(error)
-		// 	})
+		PlanMejoraService.update(plan.id, newPlan)
+			.then((res) => {
+				console.log(res)
+				if (res.statusText === 'OK') {
+					router.push(`/dashboard/standards/${plan.standard_id}/evidence_improvements`)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
 	}
 
 	const handleInputValues = (planField: string, value: planItem[]) => {
