@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
-import { ImprovementPlan, planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/PlanMejora'
 
 const statusOptions = new Map([
 	[1, 'planificado'],
@@ -30,7 +30,7 @@ interface ImprovementPlanDetailsPageProps {
 }
 
 export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDetailsPageProps) {
-	const [plan, setPlan] = useState<ImprovementPlan>({
+	const [plan, setPlan] = useState({
 		advance: 0,
 		code: '',
 		duration: 0,

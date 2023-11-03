@@ -9,11 +9,11 @@ import PencilIcon from '@/components/Icons/PencilIcon'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { ImprovementPlan, planItem } from '@/types/PlanMejora'
+import { planItem, planItemNew } from '@/types/PlanMejora'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
 import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Link from 'next/link'
-import { ChangeEvent, FormEvent, use, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 interface ImprovementPlanEditPageProps {
 	params: {
@@ -62,6 +62,13 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 		})
 	}, [])
 
+	// const getPlanItemsToSend = (data: planItem[]) =>
+	// data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
+	const getPlanItemsToSend = (data: planItem[]) => {
+		console.log(data)
+		return data.map((item) => (item.id > 1384914000000 ? { description: item.description } : item))
+	}
+
 	// ===
 	const handleChange = (ev: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 		const { name, value } = ev.target
@@ -71,11 +78,10 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
 		ev.preventDefault()
 
-		// TODO: Mandar new items sin ID
-		let { year, semester, ...newPlan } = plan
+		const { year, semester, ...remainingPlan } = plan
 
-		newPlan = {
-			...newPlan,
+		const newPlan = {
+			...remainingPlan,
 			name: plan.name,
 			code: plan.code,
 			opportunity_for_improvement: plan.opportunity_for_improvement,
@@ -85,15 +91,17 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 			efficacy_evaluation: isSelected,
 			standard_id: plan.standard_id,
 			plan_status_id: Number(plan.plan_status_id),
-			sources: plan.sources,
-			problems_opportunities: plan.problems_opportunities,
-			root_causes: plan.root_causes,
-			improvement_actions: plan.improvement_actions,
-			resources: plan.resources,
-			goals: plan.goals,
-			responsibles: plan.responsibles,
-			observations: plan.observations
+			sources: getPlanItemsToSend(plan.sources),
+			problems_opportunities: getPlanItemsToSend(plan.problems_opportunities),
+			root_causes: getPlanItemsToSend(plan.root_causes),
+			improvement_actions: getPlanItemsToSend(plan.improvement_actions),
+			resources: getPlanItemsToSend(plan.resources),
+			goals: getPlanItemsToSend(plan.goals),
+			responsibles: getPlanItemsToSend(plan.responsibles),
+			observations: getPlanItemsToSend(plan.observations)
 		}
+
+		console.log(newPlan)
 
 		PlanMejoraService.update(plan.id, newPlan)
 			.then((res) => {

@@ -45,6 +45,10 @@ export type planItem = {
 	description: string
 }
 
+export type planItemNew = {
+	description: string
+}
+
 export type ImprovementPlan = {
 	id: number,
 	advance: number
@@ -66,10 +70,6 @@ export type ImprovementPlan = {
 	sources: planItem[]
 	year: string
 	semester: string
-}
-
-export type DynamicInputGeneric = {
-	description: string
 }
 
 export type FormDataKeys = {
