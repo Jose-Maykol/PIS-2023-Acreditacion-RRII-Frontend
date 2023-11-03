@@ -87,17 +87,18 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 			efficacy_evaluation: isSelected,
 			standard_id: plan.standard_id,
 			plan_status_id: Number(plan.plan_status_id),
-			sources: getPlanItemsToSend(plan.sources),
 			problems_opportunities: getPlanItemsToSend(plan.problems_opportunities),
 			root_causes: getPlanItemsToSend(plan.root_causes),
 			improvement_actions: getPlanItemsToSend(plan.improvement_actions),
 			resources: getPlanItemsToSend(plan.resources),
 			goals: getPlanItemsToSend(plan.goals),
 			responsibles: getPlanItemsToSend(plan.responsibles),
-			observations: getPlanItemsToSend(plan.observations)
+			observations: getPlanItemsToSend(plan.observations),
+			sources: getPlanItemsToSend(plan.sources)
 		}
 
-		console.log(newPlan)
+		// TODO: Check backend (problems_opportunities - improvement_actions)
+		// console.log(newPlan)
 
 		PlanMejoraService.update(plan.id, newPlan)
 			.then((res) => {
