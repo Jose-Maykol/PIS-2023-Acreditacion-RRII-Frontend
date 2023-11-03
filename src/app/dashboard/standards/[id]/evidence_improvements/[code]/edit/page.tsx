@@ -1,14 +1,19 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import CloseIcon from '@/components/Icons/CloseIcon'
+import PencilIcon from '@/components/Icons/PencilIcon'
+import PlusIcon from '@/components/Icons/PlusIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
-import { ImprovementPlan } from '@/types/PlanMejora'
+import TrashIcon from '@/components/Icons/TrashIcon'
+import { ImprovementPlan, planItem } from '@/types/PlanMejora'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
 import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Link from 'next/link'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+import { ChangeEvent, FormEvent, use, useEffect, useState } from 'react'
 
 interface ImprovementPlanEditPageProps {
 	params: {
@@ -18,9 +23,11 @@ interface ImprovementPlanEditPageProps {
 }
 
 export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditPageProps) {
+	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 
 	const [plan, setPlan] = useState<ImprovementPlan>({
+		id: 0,
 		code: '',
 		name: '',
 		opportunity_for_improvement: '',
@@ -37,11 +44,15 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 		resources: [],
 		goals: [],
 		responsibles: [],
-		observations: []
+		observations: [],
+		year: '',
+		semester: ''
 	})
+
 
 	useEffect(() => {
 		PlanMejoraService.readByPlan(params.code).then((res) => {
+			console.log(res.data.data)
 			setPlan(res.data.data)
 			setIsSelected(res.data.data.efficacy_evaluation)
 		})
@@ -55,7 +66,44 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 
 	const handleSubmit = (ev: FormEvent<HTMLFormElement>) => {
 		ev.preventDefault()
-		console.log('Submitting')
+
+		const newPlan = {
+			...plan,
+			name: plan.name,
+			code: plan.code,
+			opportunity_for_improvement: plan.opportunity_for_improvement,
+			// semester_execution: `${plan.year}-${plan.semester}`,
+			advance: Number(plan.advance),
+			duration: Number(plan.duration),
+			efficacy_evaluation: isSelected,
+			standard_id: plan.standard_id,
+			plan_status_id: Number(plan.plan_status_id),
+			sources: plan.sources,
+			problems_opportunities: plan.problems_opportunities,
+			root_causes: plan.root_causes,
+			improvement_actions: plan.improvement_actions,
+			resources: plan.resources,
+			goals: plan.goals,
+			responsibles: plan.responsibles,
+			observations: plan.observations
+		}
+
+		console.log(newPlan)
+		// TODO
+		PlanMejoraService.update(plan.id, newPlan)
+			.then((res) => {
+				console.log(res)
+				if (res.statusText === 'OK') {
+					router.push(`/dashboard/standards/${plan.standard_id}/evidence_improvements`)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}
+
+	const handleInputValues = (planField: string, value: planItem[]) => {
+		setPlan({ ...plan, [planField]: value })
 	}
 
 	return (
@@ -90,6 +138,20 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 					variant='underlined'
 				/>
 
+				<DynamicInput
+					identifier='problems_opportunities'
+					label='Problemas/Oportunidades'
+					onChange={handleInputValues}
+					defaultValues={plan.problems_opportunities}
+				/>
+
+				<DynamicInput
+					identifier='root_causes'
+					label='Causa/Raíz'
+					onChange={handleInputValues}
+					defaultValues={plan.root_causes}
+				/>
+
 				<Input
 					isRequired
 					id='opportunity_for_improvement'
@@ -103,13 +165,22 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 					variant='underlined'
 				/>
 
+				<DynamicInput
+					identifier='improvement_actions'
+					label='Acciones de mejora'
+					onChange={handleInputValues}
+					defaultValues={plan.improvement_actions}
+				/>
+
 				<div className='mb-3 flex gap-5'>
 					<Select
 						isRequired
 						id='year'
 						name='year'
+						// TODO
 						selectedKeys={[plan.semester_execution.split('-')[0]]}
 						onChange={handleChange}
+						value={plan.year}
 						className='max-w-xs'
 						label='Año'
 						size='sm'
@@ -125,8 +196,10 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 						isRequired
 						id='semester'
 						name='semester'
+						// TODO
 						selectedKeys={[plan.semester_execution.split('-')[1]]}
 						onChange={handleChange}
+						value={plan.semester}
 						className='max-w-xs'
 						label='Semestre'
 						size='sm'
@@ -155,6 +228,31 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 					variant='underlined'
 				/>
 
+				<DynamicInput
+					identifier='resources'
+					label='Recursos'
+					onChange={handleInputValues}
+					defaultValues={plan.resources}
+				/>
+				<DynamicInput
+					identifier='goals'
+					label='Metas'
+					onChange={handleInputValues}
+					defaultValues={plan.goals}
+				/>
+				<DynamicInput
+					identifier='responsibles'
+					label='Responsables'
+					onChange={handleInputValues}
+					defaultValues={plan.responsibles}
+				/>
+				<DynamicInput
+					identifier='observations'
+					label='Observaciones'
+					onChange={handleInputValues}
+					defaultValues={plan.observations}
+				/>
+
 				<Select
 					isRequired
 					id='plan_status_id'
@@ -172,6 +270,13 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 						</SelectItem>
 					))}
 				</Select>
+
+				<DynamicInput
+					identifier='sources'
+					label='Fuentes'
+					onChange={handleInputValues}
+					defaultValues={plan.sources}
+				/>
 
 				<Input
 					isRequired
@@ -222,5 +327,148 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 				</div>
 			</form>
 		</ContentWrapper>
+	)
+}
+
+function DynamicInput({
+	identifier,
+	label,
+	onChange,
+	defaultValues
+}: {
+	identifier: string
+	label: string
+	onChange: (formDataField: string, value: planItem[]) => void
+	defaultValues: planItem[]
+}) {
+	const [singleInputValue, setSingleInputValue] = useState('')
+	const [inputValues, setInputValues] = useState<planItem[]>(defaultValues)
+
+	useEffect(() => {
+		setInputValues(defaultValues)
+		console.log('Render')
+	}, [defaultValues])
+
+	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
+		setSingleInputValue(ev.target.value)
+	}
+
+	const handleAdd = () => {
+		if (singleInputValue.trim() === '') {
+			console.log('Agrega texto')
+			return
+		}
+
+		const newInputValues = [...inputValues, { id: Date.now(), description: singleInputValue }]
+		setInputValues(newInputValues)
+		onChange(identifier, newInputValues)
+		setSingleInputValue('')
+	}
+
+	const handleDelete = (id: number) => {
+		const updatedInputValues = inputValues.filter((item) => item.id !== id)
+		setInputValues(updatedInputValues)
+		onChange(identifier, updatedInputValues)
+	}
+
+	const handleUpdate = (id: number, description: string) => {
+		const updatedInputValues = inputValues.map((item) =>
+			item.id === id ? { ...item, description } : item
+		)
+		setInputValues(updatedInputValues)
+		onChange(identifier, updatedInputValues)
+	}
+
+	return (
+		<div>
+			<div className='flex items-center gap-3'>
+				<Input
+					id={identifier}
+					name={identifier}
+					value={singleInputValue}
+					onChange={handleChange}
+					className='mb-3'
+					label={label}
+					placeholder='Agrega uno o varios elementos'
+					size='sm'
+					type='text'
+					variant='underlined'
+				/>
+				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
+					<PlusIcon width={15} height={15} fill='fill-white' />
+				</Button>
+			</div>
+			<div>
+				{inputValues.map((item) => (
+					<DynamicInputItem
+						key={item.id}
+						inputItem={item}
+						onDelete={handleDelete}
+						onUpdate={handleUpdate}
+					/>
+				))}
+			</div>
+		</div>
+	)
+}
+
+function DynamicInputItem({
+	inputItem,
+	onDelete,
+	onUpdate
+}: {
+	inputItem: planItem
+	onDelete: (id: number) => void
+	onUpdate: (id: number, description: string) => void
+}) {
+	const { id, description } = inputItem
+	const [isEditing, setIsEditing] = useState(false)
+	const [singleInputValue, setSingleInputValue] = useState(description)
+
+	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
+		setSingleInputValue(ev.target.value)
+	}
+
+	const handleSaveUpdate = () => {
+		if (singleInputValue.trim() === '') {
+			console.log('Agrega texto x2')
+			return
+		}
+
+		setIsEditing(!isEditing)
+
+		if (isEditing) {
+			onUpdate(id, singleInputValue)
+		}
+	}
+
+	return (
+		<div className='flex gap-2 mb-2'>
+			<Input
+				size='sm'
+				type='text'
+				value={singleInputValue}
+				onChange={handleChange}
+				disabled={!isEditing}
+			/>
+			<Button
+				isIconOnly
+				color='success'
+				aria-label='Edit'
+				variant='flat'
+				onClick={handleSaveUpdate}
+			>
+				{isEditing ? <SaveIcon width={16} height={16} /> : <PencilIcon width={16} height={16} />}
+			</Button>
+			<Button
+				isIconOnly
+				color='danger'
+				aria-label='Delete'
+				variant='flat'
+				onClick={() => onDelete(id)}
+			>
+				<TrashIcon width={16} height={16} />
+			</Button>
+		</div>
 	)
 }

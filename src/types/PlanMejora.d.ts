@@ -46,6 +46,7 @@ export type planItem = {
 }
 
 export type ImprovementPlan = {
+	id: number,
 	advance: number
 	code: string
 	duration: number
@@ -63,6 +64,8 @@ export type ImprovementPlan = {
 	resources: planItem[]
 	responsibles: planItem[]
 	sources: planItem[]
+	year: string
+	semester: string
 }
 
 export type DynamicInputGeneric = {

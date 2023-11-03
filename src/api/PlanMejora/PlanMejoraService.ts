@@ -38,7 +38,7 @@ export class PlanMejoraService extends BaseService {
 	}
 
 	// TODO: Modify UPDATE endpoint
-	public static async update(id: string, params: any) {
+	public static async update(id: number, params: any) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.put(`/${year}/${semester}/${url.update}${id}`, params)
 		return res
