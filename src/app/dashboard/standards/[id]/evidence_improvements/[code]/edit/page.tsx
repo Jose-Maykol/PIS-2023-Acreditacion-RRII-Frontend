@@ -1,19 +1,18 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import CloseIcon from '@/components/Icons/CloseIcon'
-import PencilIcon from '@/components/Icons/PencilIcon'
-import PlusIcon from '@/components/Icons/PlusIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
-import TrashIcon from '@/components/Icons/TrashIcon'
-import { planItem, planItemNew } from '@/types/PlanMejora'
+import { planItem } from '@/types/PlanMejora'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
 import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
 import Link from 'next/link'
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react'
+
+import DynamicInput from './DynamicInput'
 
 interface ImprovementPlanEditPageProps {
 	params: {
@@ -333,148 +332,5 @@ export default function ImprovementPlanEditPage({ params }: ImprovementPlanEditP
 				</div>
 			</form>
 		</ContentWrapper>
-	)
-}
-
-function DynamicInput({
-	identifier,
-	label,
-	onChange,
-	defaultValues
-}: {
-	identifier: string
-	label: string
-	onChange: (formDataField: string, value: planItem[]) => void
-	defaultValues: planItem[]
-}) {
-	const [singleInputValue, setSingleInputValue] = useState('')
-	const [inputValues, setInputValues] = useState<planItem[]>(defaultValues)
-
-	useEffect(() => {
-		setInputValues(defaultValues)
-		console.log('Render')
-	}, [defaultValues])
-
-	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
-		setSingleInputValue(ev.target.value)
-	}
-
-	const handleAdd = () => {
-		if (singleInputValue.trim() === '') {
-			console.log('Agrega texto')
-			return
-		}
-
-		const newInputValues = [...inputValues, { id: Date.now(), description: singleInputValue }]
-		setInputValues(newInputValues)
-		onChange(identifier, newInputValues)
-		setSingleInputValue('')
-	}
-
-	const handleDelete = (id: number) => {
-		const updatedInputValues = inputValues.filter((item) => item.id !== id)
-		setInputValues(updatedInputValues)
-		onChange(identifier, updatedInputValues)
-	}
-
-	const handleUpdate = (id: number, description: string) => {
-		const updatedInputValues = inputValues.map((item) =>
-			item.id === id ? { ...item, description } : item
-		)
-		setInputValues(updatedInputValues)
-		onChange(identifier, updatedInputValues)
-	}
-
-	return (
-		<div>
-			<div className='flex items-center gap-3'>
-				<Input
-					id={identifier}
-					name={identifier}
-					value={singleInputValue}
-					onChange={handleChange}
-					className='mb-3'
-					label={label}
-					placeholder='Agrega uno o varios elementos'
-					size='sm'
-					type='text'
-					variant='underlined'
-				/>
-				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
-					<PlusIcon width={15} height={15} fill='fill-white' />
-				</Button>
-			</div>
-			<div>
-				{inputValues.map((item) => (
-					<DynamicInputItem
-						key={item.id}
-						inputItem={item}
-						onDelete={handleDelete}
-						onUpdate={handleUpdate}
-					/>
-				))}
-			</div>
-		</div>
-	)
-}
-
-function DynamicInputItem({
-	inputItem,
-	onDelete,
-	onUpdate
-}: {
-	inputItem: planItem
-	onDelete: (id: number) => void
-	onUpdate: (id: number, description: string) => void
-}) {
-	const { id, description } = inputItem
-	const [isEditing, setIsEditing] = useState(false)
-	const [singleInputValue, setSingleInputValue] = useState(description)
-
-	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
-		setSingleInputValue(ev.target.value)
-	}
-
-	const handleSaveUpdate = () => {
-		if (singleInputValue.trim() === '') {
-			console.log('Agrega texto x2')
-			return
-		}
-
-		setIsEditing(!isEditing)
-
-		if (isEditing) {
-			onUpdate(id, singleInputValue)
-		}
-	}
-
-	return (
-		<div className='flex gap-2 mb-2'>
-			<Input
-				size='sm'
-				type='text'
-				value={singleInputValue}
-				onChange={handleChange}
-				disabled={!isEditing}
-			/>
-			<Button
-				isIconOnly
-				color='success'
-				aria-label='Edit'
-				variant='flat'
-				onClick={handleSaveUpdate}
-			>
-				{isEditing ? <SaveIcon width={16} height={16} /> : <PencilIcon width={16} height={16} />}
-			</Button>
-			<Button
-				isIconOnly
-				color='danger'
-				aria-label='Delete'
-				variant='flat'
-				onClick={() => onDelete(id)}
-			>
-				<TrashIcon width={16} height={16} />
-			</Button>
-		</div>
 	)
 }
