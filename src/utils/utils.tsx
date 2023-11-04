@@ -11,6 +11,7 @@ import PlusIcon from '@/components/Icons/PlusIcon'
 import SearchIcon from '@/components/Icons/SearchIcon'
 import LinkIcon from '@/components/Icons/LinkIcon'
 import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
+import PencilIcon from '@/components/Icons/PencilIcon'
 
 
 export const getFileIcon = (fileName?: string, type?: string, size: number = 24): React.JSX.Element | null => {
@@ -45,7 +46,8 @@ export const getCommonIcon = (name: string, size: number = 24, fillColor?: strin
 		plus: <PlusIcon width={size} height={size} fill={fillColor} />,
 		search: <SearchIcon width={size} height={size} fill={fillColor} />,
 		link: <LinkIcon width={size} height={size} fill={fillColor} />,
-		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />
+		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />,
+		pencil: <PencilIcon width={size} height={size} fill={fillColor} />
 	}
 
 	return name in icons ? icons[name] : <></>
