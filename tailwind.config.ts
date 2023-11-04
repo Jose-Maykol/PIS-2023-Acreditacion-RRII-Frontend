@@ -57,7 +57,7 @@ const config: Config = {
 				light: {
 					colors: {
 						primary: {
-							DEFAULT: '#39c270',
+							DEFAULT: '#3982c2',
 							50: '#ebf3f9',
 							75: '#aecce6',
 							100: '#8cb7dc',

@@ -37,10 +37,10 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const columns = [
 		{ name: '#', uid: 'nro_standard', sortable: true },
-		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
-		{ name: 'ENCARGADOS', uid: 'users', sortable: true },
-		{ name: 'VALORACION ESTANDAR', uid: 'standard_status' },
-		{ name: 'ACCIONES', uid: 'actions' }
+		{ name: 'Estándar', uid: 'name', sortable: true },
+		{ name: 'Encargados', uid: 'users', sortable: true },
+		{ name: 'Valoración de estandar', uid: 'standard_status' },
+		{ name: 'Acciones', uid: 'actions' }
 	]
 
 	useEffect(() => {
@@ -93,7 +93,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 						cellValue.length > 1
 							? cellValue.map((user, index) => (
 								<div key={index}>
-									<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
+									<p className='font-medium text-base'>{`${user.name} ${user.lastname}`} - {user.email}</p>
 								</div>
 							))
 							: (<p>No se asignaron aun encargados</p>)
@@ -215,7 +215,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 	const classNames = React.useMemo(
 		() => ({
 			wrapper: ['min-h-[590px]'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
+			th: ['bg-default-200',	 'border-b', 'border-divider', 'px-4', 'py-3', 'text-base', 'font-bold'],
 			td: [
 				// changing the rows border radius
 				// first

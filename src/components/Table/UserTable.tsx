@@ -205,7 +205,7 @@ export default function UserTable() {
 	const classNames = React.useMemo(
 		() => ({
 			wrapper: ['min-h-[590px]'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
+			th: ['bg-default-200', 'border-b', 'border-divider', 'px-4', 'text-base', 'font-bold'],
 			td: [
 				// changing the rows border radius
 				// first

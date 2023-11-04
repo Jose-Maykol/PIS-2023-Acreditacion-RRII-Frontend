@@ -17,7 +17,7 @@ const page = () => {
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
-			<div className='flex w-full mb-5'>
+			<div className='flex w-full mb-5 text-base font-bold'>
 				<h2>Encargados de estándares del sistema</h2>
 			</div>
 			<StandardTable reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
