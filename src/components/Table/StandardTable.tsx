@@ -22,7 +22,7 @@ import Link from 'next/link'
 import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	'plenamente completado': 'success',
+	'logrado satisfactoriamente': 'success',
 	logrado: 'warning',
 	'no logrado': 'danger'
 }
@@ -88,7 +88,7 @@ export default function StandardTable () {
 				return (<div className='flex flex-col'>
 					{cellValue.length > 0
 						? (
-							<Popover placement='right'>
+							<Popover placement='bottom'>
 								<PopoverTrigger>
 									<Button
 										color='primary'
@@ -100,8 +100,9 @@ export default function StandardTable () {
 								</PopoverTrigger>
 								<PopoverContent>
 									{cellValue.map((user, index) => (
-										<div key={index}>
-											<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
+										<div key={index} className='my-1 border-b-1 flex flex-col w-full m-auto'>
+											<p className='text-bold text-md items-start'>{`${user.name} ${user.lastname}`}</p>
+											<p className='text-bold text-tiny items-start'>{user.email}</p>
 										</div>
 									))}
 								</PopoverContent>
