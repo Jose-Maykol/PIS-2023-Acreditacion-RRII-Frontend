@@ -7,6 +7,12 @@ import PowerPointIcon from '@/components/Icons/PowerPointIcon'
 import ZipperIcon from '@/components/Icons/ZipperIcon'
 import FolderPlusIcon from '@/components/Icons/FolderPlusIcon'
 
+import PlusIcon from '@/components/Icons/PlusIcon'
+import SearchIcon from '@/components/Icons/SearchIcon'
+import LinkIcon from '@/components/Icons/LinkIcon'
+import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
+
+
 export const getFileIcon = (fileName?: string, type?: string, size: number = 24): React.JSX.Element | null => {
 	let fileExtension
 
@@ -32,6 +38,17 @@ export const getFileIcon = (fileName?: string, type?: string, size: number = 24)
 	default:
 		return null
 	}
+}
+
+export const getCommonIcon = (name: string, size: number = 24, fillColor?: string) : React.JSX.Element => {
+	const icons: Record<string, React.JSX.Element> = {
+		plus: <PlusIcon width={size} height={size} fill={fillColor} />,
+		search: <SearchIcon width={size} height={size} fill={fillColor} />,
+		link: <LinkIcon width={size} height={size} fill={fillColor} />,
+		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />
+	}
+
+	return name in icons ? icons[name] : <></>
 }
 
 export function capitalize(str: string): string {
