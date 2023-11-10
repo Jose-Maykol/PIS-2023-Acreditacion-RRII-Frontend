@@ -2,8 +2,8 @@
 'use client'
 
 import Image from 'next/image'
-import login from '../../../../public/img/login.webp'
-import logoUnsa from '../../../../public/img/logo-unsa.webp'
+import login from '@img/login.webp'
+import logoUnsa from '@img/logo-unsa.webp'
 import { Select, SelectItem } from '@nextui-org/select'
 import { Selection, Button } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'

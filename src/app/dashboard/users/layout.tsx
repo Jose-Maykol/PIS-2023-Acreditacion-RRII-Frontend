@@ -15,7 +15,7 @@ const UserLayout: FC<RootLayoutProps> = ({ children }) => {
 	return (
 		<div className='h-full'>
 			<ContentWrapper className='flex flex-col bg-lightBlue-600 p-5 h-[290px]'>
-				<div className='grow items-center gap-1 pl-8'>
+				<div className=' w-11/12 grow items-center gap-1 pl-8'>
 					<div className='uppercase text-white'>
 						<h1 className='my-5 font-BebasNeue text-h1 '>administración de usuarios</h1>
 						<p className='my-2.5 mb-2 font-BebasNeue text-h3'>Sección de usuarios del sistema</p>
