@@ -1,9 +1,9 @@
 'use client'
 import React, { ReactNode } from 'react'
-import error from '@img/error.svg'
+/* import error from '@img/error.svg'
 import check from '@img/check.svg'
 import info from '@img/info.svg'
-import warning from '@img/warning.svg'
+import warning from '@img/warning.svg' */
 
 type AlertProps = {
     variant? : 'success' | 'warning' | 'danger';
@@ -22,13 +22,13 @@ export default function Alert({ variant = 'success', children } : AlertProps) {
 	return (
 		<div className = {classVariants[variant] + ' flex gap-2 items-center mx-auto'}>
 			<span className='text-2xl'>
-				{ variant === 'success'
+{/* 				{ variant === 'success'
 					? (<img src={check} alt ='check'></img>)
 					: variant === 'warning'
 						? (<img src={warning} alt ='warning'></img>)
 						: variant === 'danger'
 							? (<img src={error} alt ='error'></img>)
-							: (<img src={info} alt ='info'></img>)}
+							: (<img src={info} alt ='info'></img>)} */}
 			</span>
 			{children}
 		</div>
