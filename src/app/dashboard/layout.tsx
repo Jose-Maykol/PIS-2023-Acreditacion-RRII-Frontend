@@ -19,8 +19,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
-	console.log('year', year)
-	console.log('semester', semester)
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen)
 	}

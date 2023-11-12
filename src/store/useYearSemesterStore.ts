@@ -3,8 +3,8 @@ import { create } from 'zustand'
 type YearSemesterStore = {
   year: number | null
   semester: 'A' | 'B' | null
-  setYear (year: number): void
-  setSemester (semester: 'A' | 'B'): void
+  setYear (year: number | null): void
+  setSemester (semester: 'A' | 'B' | null): void
 }
 
 export const useYearSemesterStore = create<YearSemesterStore>((set) => ({
