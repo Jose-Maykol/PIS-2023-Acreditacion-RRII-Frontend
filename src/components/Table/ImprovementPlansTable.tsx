@@ -1,11 +1,10 @@
 'use client'
 
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import {
 	Chip,
 	Tooltip,
-	ChipProps,
 	Pagination,
 	Selection,
 	Input,
@@ -14,44 +13,27 @@ import {
 } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import TrashIcon from '../Icons/TrashIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
-import { columns, statusOptions } from '../../utils/data_improvement_plans'
+import { columns, statusColorMap, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
-
-const statusColorMap: Record<string, ChipProps['color']> = {
-	planificado: 'secondary',
-	'en desarrollo': 'primary',
-	completado: 'success',
-	postergado: 'warning',
-	anulado: 'danger'
-}
-
-// Create a type with properties of improvementPlans
-// type ImprovementPlans = typeof improvementPlans[0];
-
-type ImprovementPlans = {
-	advance: number
-	code: string
-	id: number
-	isCreator: boolean
-	name: string
-	nro_standard: number
-	plan_status: string
-	standard_name: string
-	user_name: string
-}
+import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
+import { ImprovementPlans } from '@/types/PlanMejora'
 
 type TableProps = {
 	id?: string
 	improvementPlans: Array<ImprovementPlans>
+	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
 }
 
-export default function ImprovementPlansTable({ id, improvementPlans }: TableProps) {
+export default function ImprovementPlansTable({
+	id,
+	improvementPlans,
+	setImprovementPlans
+}: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -134,23 +116,27 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 					</Chip>
 				)
 			case 'actions':
+				// TODO: Handle ID when they're from My Plans (by User)
 				return (
 					<div className='relative flex gap-4'>
 						<Tooltip content='Detalle'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900'/>
-							</span>
+							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/details`}>
+								<span className='text-default-400 cursor-pointer active:opacity-50'>
+									<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900'/>
+								</span>
+							</Link>
 						</Tooltip>
-						<Tooltip content='Editar Usuario'>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<PencilIcon width={15} height={15} fill='fill-amber-300 hover:fill-amber-500' />
-							</span>
+						<Tooltip content='Editar Plan de Mejora'>
+							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}>
+								<span className='text-default-400 cursor-pointer active:opacity-50'>
+									<PencilIcon width={15} height={15} fill='fill-warning' />
+								</span>
+							</Link>
 						</Tooltip>
-						<Tooltip color='danger' content='Eliminar usuario'>
-							<span className='text-danger cursor-pointer active:opacity-50'>
-								<TrashIcon width={15} height={15} fill='fill-red-400 hover:fill-red-600' />
-							</span>
-						</Tooltip>
+						<DeleteImprovementPlanModal
+							planId={improvementPlan.id}
+							setImprovementPlans={setImprovementPlans}
+						/>
 					</div>
 				)
 			default:
@@ -204,11 +190,14 @@ export default function ImprovementPlansTable({ id, improvementPlans }: TablePro
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
 						/>
-						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white' />}>
-							<Link href={'/dashboard/standards/[id]/evidence_improvements/new'} as={`/dashboard/standards/${id}/evidence_improvements/new`}>
+						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
+							<Button
+								color='primary'
+								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+							>
 								Crear PM
-							</Link>
-						</Button>
+							</Button>
+						</Link>
 					</div>
 				</div>
 			</div>

@@ -3,12 +3,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
-import { PlanMejoraService } from '@/api/PlanMejora/planMejoraService'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
+import { ImprovementPlans } from '@/types/PlanMejora'
+
 
 export default function DashboardPage() {
-	const [myImprovementPlans, setMyImprovementPlans] = useState([])
+	const [myImprovementPlans, setMyImprovementPlans] = useState<ImprovementPlans[]>([])
 	const { year, semester } = useYearSemesterStore()
 
 	const loadMyImprovementPlans = useMemo(() => {
@@ -39,7 +41,7 @@ export default function DashboardPage() {
 				<div className='flex w-full mb-5'>
 					<h2 className='text-2xl font-semibold'>Lista de Planes de Mejora Creados</h2>
 				</div>
-				<ImprovementPlansTable improvementPlans={myImprovementPlans}/>
+				<ImprovementPlansTable improvementPlans={myImprovementPlans} setImprovementPlans={setMyImprovementPlans}/>
 			</ContentWrapper>
 		</div>
 	)
