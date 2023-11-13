@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Alert from './alert'
 
 type Toast = {
-    variant :'success' | 'warning' | 'danger';
+    variant :'Success' | 'Warning' | 'Danger' | 'Info' | 'Neutral';
     text : string;
 }
 export default function useAlert() {
@@ -15,7 +15,7 @@ export default function useAlert() {
 		}, 5000)
 	}
 	const alerts = (
-		<div className='fi  xed w-full bottom-0 '>
+		<div className='fixed w-full mx-auto bottom-0 '>
 			{list.map((t) => (
 				<Alert variant={t.variant}> {t.text} </Alert>
 			))}
