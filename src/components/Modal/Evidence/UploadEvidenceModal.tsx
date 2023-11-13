@@ -6,7 +6,7 @@ import CustomModal from '@/components/Modal/CustomModal'
 import { toast } from 'react-toastify'
 import UploadIcon from '@/components/Icons/UploadIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { EvidenceService } from '@/api/Evidence/EvidenceService'
+import { EvidenceService } from '@/api/Evidence/evidenceService'
 import { getFileIcon } from '@/utils/utils'
 
 const UploadEvidenceModal = ({

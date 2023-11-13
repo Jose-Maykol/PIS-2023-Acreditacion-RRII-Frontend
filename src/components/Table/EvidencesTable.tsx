@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react'
 
 import {
-	Pagination,
 	Selection,
 	Input,
 	Button
 } from '@nextui-org/react'
-import { useInfiniteScroll } from '@nextui-org/use-infinite-scroll'
-import { useAsyncList } from '@react-stately/data'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
@@ -20,22 +17,20 @@ import DownloadIcon from '../Icons/DownloadIcon'
 import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { EvidenceService } from '@/api/Evidence/EvidenceService'
+import { EvidenceService } from '@/api/Evidence/evidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon } from '@/utils/utils'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 
 
-export default function EvidencesTable({ id, type, reload, onReload, onOpenModal } : {id: string, type: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {id: string, type: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
-	const [isLoading, setIsLoading] = useState<boolean>(true)
-	const [hastMore, setHasMore] = useState<boolean>(false)
 	const [params, setParams] = useState<{ parent_id: string | number }>({
 		parent_id: 2
 	})

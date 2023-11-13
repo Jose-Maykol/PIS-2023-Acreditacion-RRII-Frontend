@@ -11,11 +11,11 @@ interface EvidenceData {
 }
 
 export default function EvidencesLayout({ params }: { params: { id: number }}) {
-	const id = params.id
+	const id = params.id.toString()
 	const [evidenceData, setEvidenceData] = useState<EvidenceData | null >(null)
 
 	useEffect(() => {
-		EvidenceService.view(id).then((res) => {
+		EvidenceService.viewEvidence(id).then((res) => {
 			setEvidenceData(res.data)
 			console.log(res.data)
 		})
