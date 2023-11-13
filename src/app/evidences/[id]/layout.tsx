@@ -1,6 +1,6 @@
 'use client'
 
-import { EvidenceService } from '@/api/Evidence/evidenceService'
+import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { useEffect, useState } from 'react'
 
 interface EvidenceData {
