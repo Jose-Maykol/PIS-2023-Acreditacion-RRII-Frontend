@@ -15,7 +15,7 @@ import {
 import { columns, valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardUsers } from '@/types/Standard'
 import { getCommonIcon } from '@/utils/utils'
 import Link from 'next/link'

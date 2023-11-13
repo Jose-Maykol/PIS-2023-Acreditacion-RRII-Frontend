@@ -7,7 +7,7 @@ import { PartialStandard } from '@/types/Standard'
 import { Metadata } from 'next'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 
 
 // export const metadata: Metadata = {

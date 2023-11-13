@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Progress } from '@nextui-org/react'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { toast } from 'react-toastify'
 
 const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string, isManager: boolean, statusID: number }) => {

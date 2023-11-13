@@ -4,7 +4,7 @@ import { useState, useEffect, ReactNode } from 'react'
 import { Button, Select, SelectItem, Avatar, Chip, SelectedItems, Selection, Tooltip } from '@nextui-org/react'
 import CustomModal from '@/components/Modal/CustomModal'
 import { EnabledUsers, AssignedUsers } from '@/types/Standard'
-import { StandardService } from '@/api/Estandar/standardService'
+import { StandardService } from '@/api/Estandar/StandardService'
 import { toast } from 'react-toastify'
 import { getCommonIcon } from '@/utils/utils'
 
