@@ -6,19 +6,20 @@ import CustomModal from '@/components/Modal/CustomModal'
 import { toast } from 'react-toastify'
 import UploadIcon from '@/components/Icons/UploadIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import PdfIcon from '@/components/Icons/PdfIcon'
-import DocIcon from '@/components/Icons/DocIcon'
-import ExcelIcon from '@/components/Icons/ExcelIcon'
-import PowerPointIcon from '@/components/Icons/PowerPointIcon'
-import ZipperIcon from '@/components/Icons/ZipperIcon'
+import { EvidenceService } from '@/api/Evidence/EvidenceService'
+import { getFileIcon } from '@/utils/utils'
 
 const UploadEvidenceModal = ({
-	idStandard,
+	id,
+	typeEvidence,
+	path,
 	openModal,
 	onCloseModal,
 	onReload
 }: {
-	idStandard: string
+	id: string
+	typeEvidence: string
+	path: string
 	openModal: boolean
 	onCloseModal: () => void
 	onReload: () => void
@@ -44,15 +45,24 @@ const UploadEvidenceModal = ({
 
 	const addFiles = (newFiles: File[]) => {
 		let newTotalSize = totalSize
+		let fileExtension
 		for (const file of newFiles) {
 			newTotalSize += file.size
+			if (newTotalSize > 20 * 1024 * 1024) {
+				toast.error('El tamaño total de las evidencias debe ser menor a 10MB')
+				return
+			}
+			fileExtension = file.name.split('.').pop()?.toLowerCase()
+			if (
+				!fileExtension ||
+				!['pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip'].includes(fileExtension)
+			) {
+				toast.error('Solo se permiten archivos PDF, DOC, XLS, XLSX, PPT, PPTX, ZIP')
+				return
+			}
 		}
-		if (newTotalSize <= 20 * 1024 * 1024) {
-			setFiles([...files, ...newFiles])
-			setTotalSize(newTotalSize)
-		} else {
-			toast.error('El tamanio total de las evidencias debe ser menor a 10MB')
-		}
+		setFiles([...files, ...newFiles])
+		setTotalSize(newTotalSize)
 	}
 
 	const removeFile = (index: number) => {
@@ -62,67 +72,51 @@ const UploadEvidenceModal = ({
 		setTotalSize(totalSize - removedFile.size)
 	}
 
-	const getFileIcon = (fileName: string): React.JSX.Element => {
-		const fileExtension = fileName.split('.').pop()?.toLowerCase()
-		console.log(fileExtension)
-		if (fileExtension === 'pdf') {
-			return <PdfIcon width={24} height={24} />
-		} else if (fileExtension === 'doc' || fileExtension === 'docx') {
-			return <DocIcon width={24} height={24} />
-		} else if (fileExtension === 'xls' || fileExtension === 'xlsx') {
-			return <ExcelIcon width={24} height={24} />
-		} else if (fileExtension === 'ppt' || fileExtension === 'pptx') {
-			return <PowerPointIcon width={24} height={24} />
-		} else {
-			return <ZipperIcon width={24} height={24} />
-		}
-	}
-
 	const handleCloseModal = () => {
 		onCloseModal()
 	}
 
-	const handleSaveChanges = async () => {
-		// const notification = toast.loading('Procesando...')
-		// const users = [...values].map((item) => item.toString())
-		// await StandardService.assignUsersToStandard(
-		// 	idStandard,
-		// 	{ users } as AssignedUsers
-		// ).then((res) => {
-		// 	if (res.status === 1) {
-		// 		onReload()
-		// 		toast.update(notification, {
-		// 			render: res.message,
-		// 			type: 'success',
-		// 			autoClose: 5000,
-		// 			hideProgressBar: false,
-		// 			closeOnClick: true,
-		// 			pauseOnHover: true,
-		// 			draggable: true,
-		// 			isLoading: false,
-		// 			theme: 'colored'
-		// 		})
-		// 	} else {
-		// 		toast.update(notification, {
-		// 			render: res.message,
-		// 			type: 'error',
-		// 			autoClose: 5000,
-		// 			hideProgressBar: false,
-		// 			closeOnClick: true,
-		// 			pauseOnHover: true,
-		// 			draggable: true,
-		// 			isLoading: false,
-		// 			theme: 'colored'
-		// 		})
-		// 	}
-		// })
+	const handleUploadEvidences = async () => {
+		const formData = new FormData()
+		formData.append('standard_id', id)
+		formData.append('type_evidence_id', typeEvidence)
+		files.forEach((file, index) => {
+			formData.append(`files[${index}]`, file)
+		})
+		formData.append('path', path)
+
+		const resPromise = EvidenceService.uploadEvidences(formData).then((res) => {
+			if (res.status === 1) return Promise.resolve({ message: res.message })
+			else return Promise.reject(new Error(res.message))
+		})
+
+		toast.promise(
+			resPromise,
+			{
+				pending: 'Subiendo Archivos...',
+				success: {
+					render({ data }) {
+						onReload()
+						return `${data?.message}`
+					}
+				},
+				error: {
+					render({ data }) {
+						return `${data}`
+					}
+				}
+			},
+			{
+				theme: 'colored'
+			}
+		)
 		handleCloseModal()
 	}
 
 	const header: React.ReactNode = (
 		<>
 			<h2 className='text-2xl font-bold text-center'>
-				Formulario de Subida de evidencias para el estandar {idStandard}
+				Formulario de Subida de evidencias para el estandar {id}
 			</h2>
 		</>
 	)
@@ -162,7 +156,7 @@ const UploadEvidenceModal = ({
 			</div>
 			<div className='flex-1 rounded-lg overflow-y-auto max-h-[310px] py-2 px-4 scrollbar-hide'>
 				<p className='text-center text-md font-semibold'>Archivos subidos</p>
-				{files.map((file, index) => (
+				{files.reverse().map((file, index) => (
 					<div key={index} className='flex items-center justify-between mt-2 bg-slate-200 h-14 rounded-lg'>
 						<div className='flex items-center ml-2'>
 							{getFileIcon(file.name)}
@@ -193,7 +187,7 @@ const UploadEvidenceModal = ({
 					<Button color='danger' variant='solid' size='lg' onPress={handleCloseModal}>
 						Cancelar
 					</Button>
-					<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' onPress={handleSaveChanges} >
+					<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' isDisabled={!files.length} onPress={handleUploadEvidences} >
 						Guardar
 					</Button>
 				</>
