@@ -1,20 +1,20 @@
 export interface PlanMejora {
-  id: number,
-  nombre: string,
-  codigo: string,
-  avance: number,
-  estado: string,
-  estandar_name: string,
-  user_name: string,
-  esCreador: boolean,
+	id: number
+	nombre: string
+	codigo: string
+	avance: number
+	estado: string
+	estandar_name: string
+	user_name: string
+	esCreador: boolean
 }
 
 export type EstadoPlanMejora =
-  | 'Planificado'
-  | 'Programado'
-  | 'Reprogramado'
-  | 'En proceso'
-  | 'Concluido';
+	| 'Planificado'
+	| 'Programado'
+	| 'Reprogramado'
+	| 'En proceso'
+	| 'Concluido'
 
 export function estadoPlanMejoraToColor(estado: EstadoPlanMejora): [string, string] {
 	const colores: Record<EstadoPlanMejora, [string, string]> = {
@@ -26,4 +26,55 @@ export function estadoPlanMejoraToColor(estado: EstadoPlanMejora): [string, stri
 	}
 
 	return colores[estado] || ['red', 'blue']
+}
+
+export type ImprovementPlans = {
+	advance: number
+	code: string
+	id: number
+	isCreator: boolean
+	name: string
+	nro_standard: number
+	plan_status: string
+	standard_name: string
+	user_name: string
+}
+
+export type planItem = {
+	id: number
+	description: string
+}
+
+export type planItemNew = {
+	description: string
+}
+
+export type ImprovementPlan = {
+	id: number,
+	advance: number
+	code: string
+	duration: number
+	name: string
+	plan_status_id: number
+	standard_id: number
+	semester_execution: string
+	efficacy_evaluation: boolean
+	opportunity_for_improvement: string
+	problems_opportunities: planItem[]
+	root_causes: planItem[]
+	goals: planItem[]
+	improvement_actions: planItem[]
+	observations: planItem[]
+	resources: planItem[]
+	responsibles: planItem[]
+	sources: planItem[]
+	year: string
+	semester: string
+}
+
+export type FormDataKeys = {
+	name: string
+	code: string
+	opportunity_for_improvement: string
+	// TODO: Completar keys
 }

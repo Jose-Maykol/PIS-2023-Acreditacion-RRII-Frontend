@@ -1,11 +1,31 @@
 'use client'
 
-import React from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
-import UserTable from '@/components/Table/UserTable'
+import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
+import { ImprovementPlans } from '@/types/PlanMejora'
+
 
 export default function DashboardPage() {
+	const [myImprovementPlans, setMyImprovementPlans] = useState<ImprovementPlans[]>([])
+	const { year, semester } = useYearSemesterStore()
+
+	const loadMyImprovementPlans = useMemo(() => {
+		return (year: number, semester: 'A' | 'B') => {
+			PlanMejoraService.readUser(year, semester).then((res) => {
+				setMyImprovementPlans(res.data)
+			}).catch(console.log)
+		}
+	}, [])
+	useEffect(() => {
+		if (year && semester) {
+			loadMyImprovementPlans(year, semester)
+		}
+	}, [year, semester, loadMyImprovementPlans])
+
 	return (
 		<div className='h-full'>
 			<ContentWrapper className='bg-lightBlue-600 p-5 h-[300px]'>
@@ -21,10 +41,10 @@ export default function DashboardPage() {
 				</div>
 			</ContentWrapper>
 			<ContentWrapper className='bg-white h-[670px] -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
-				<div className='text-base font-bold flex w-full mb	-5'>
-					<h2>Lista de Planes de Mejora Creados</h2>
+				<div className='flex w-full mb-5'>
+					<h2 className='text-2xl font-semibold'>Lista de Planes de Mejora Creados</h2>
 				</div>
-				<UserTable />
+				<ImprovementPlansTable improvementPlans={myImprovementPlans} setImprovementPlans={setMyImprovementPlans}/>
 			</ContentWrapper>
 		</div>
 	)
