@@ -4,17 +4,26 @@ import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
 import UbuntuIcon from '@/components/Icons/UbuntuIcon'
 import CustomDropdown from '../Dropdown/CustomDropdown'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { BaseService } from '@/api/Base/BaseService'
 
 const Header = () => {
-	const [yearSemester, setYearSemester] = useState('')
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
+	const { year, semester } = useYearSemesterStore()
+
+	const logout = () => {
+		localStorage.removeItem('auth_user')
+		localStorage.removeItem('access_token')
+		localStorage.removeItem('year')
+		localStorage.removeItem('semester')
+		useYearSemesterStore.getState().setYear(null)
+		useYearSemesterStore.getState().setSemester(null)
+		BaseService.deleteConfig()
+		window.location.href = '/'
+	}
 
 	useEffect(() => {
-		const year = localStorage.getItem('year')
-		const semester = localStorage.getItem('semester')
-		const yearSemesterValue = `${year} - ${semester}`
-		setYearSemester(yearSemesterValue)
 		const authUserJSON = localStorage.getItem('auth_user')
 		if (authUserJSON) {
 			const { picture, user } = JSON.parse(authUserJSON)
@@ -31,13 +40,13 @@ const Header = () => {
 		>
 			<NavbarBrand className='hidden md:flex gap-3'>
 				<UbuntuIcon width={25} height={25} fill='fill-white' />
-				<p className='text-sm font-bold text-white uppercase'>
-					sistema de gestion de acreditacion
+				<p className='text-base font-bold text-white uppercase'>
+					sistema de gestión de acreditación
 				</p>
 			</NavbarBrand>
 
 			<NavbarContent className='hidden md:flex' justify='center'>
-				<p className='text-base font-bold text-white border rounded-md p-2'>{yearSemester}</p>
+				<p className='text-base font-bold text-white border rounded-md p-2'>{`${year} - ${semester}`}</p>
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>
@@ -47,10 +56,11 @@ const Header = () => {
 						<Avatar
 							as='button'
 							className='transition-transform'
-							color='secondary'
-							name='Jason Hughes'
+							color='primary'
+							name={`${user.name} ${user.lastname}`}
 							size='md'
 							src={picture}
+							imgProps={{ referrerPolicy: 'no-referrer' }}
 						/>
 					}
 					items={[
@@ -70,7 +80,9 @@ const Header = () => {
 					]}
 					placement='bottom-end'
 					mode='action'
-					onAction={(key: string) => console.log(key)}
+					onAction={(key: string) => {
+						if (key === 'logout') logout()
+					}}
 				/>
 			</NavbarContent>
 		</Navbar>

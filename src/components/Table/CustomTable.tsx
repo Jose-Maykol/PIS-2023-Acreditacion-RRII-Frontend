@@ -17,6 +17,7 @@ type TableProps = {
 	bottomContent?: React.ReactNode
 	emptyContent: React.ReactNode
 	classNames?: any
+	onRowActionClick?: (key: any) => void
 }
 
 const CustomTable = ({
@@ -26,13 +27,13 @@ const CustomTable = ({
 	topContent,
 	bottomContent,
 	emptyContent,
-	classNames
+	classNames,
+	onRowActionClick
 }: TableProps) => {
 	return (
 		<Table
 			aria-label='Example table with custom cells'
-			selectionMode='single'
-			onRowAction={(key) => console.log(`Opening item ${key} ...`)}
+			onRowAction={onRowActionClick}
 			topContent={topContent}
 			topContentPlacement='outside'
 			bottomContent={bottomContent}
