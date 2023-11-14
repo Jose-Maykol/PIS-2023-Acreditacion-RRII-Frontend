@@ -185,7 +185,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 						height: 600,
 						menubar: true,
 						language: 'es',
-						plugins: 'anchor link image lists table powerpaste',
+						plugins: 'anchor link image lists table',
 						toolbar: 'undo redo | fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent removeformat',
 						content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
 					}}

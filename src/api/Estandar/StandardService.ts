@@ -59,7 +59,7 @@ export class StandardService extends BaseService {
 	public static async updateHeader (id: string, { name, description, dimension, factor, standardRelated }: StandardValues) {
 		const { year, semester } = BaseService.getConfig()
 		const params = { name, description, dimension, factor, related_standards: standardRelated }
-		const res = await api.put(`/${year}/${semester}/${url.header.replace(':id', id)}}`, params)
+		const res = await api.put(`/${year}/${semester}/${url.header.replace(':id', id)}`, params)
 		return res.data
 	}
 
