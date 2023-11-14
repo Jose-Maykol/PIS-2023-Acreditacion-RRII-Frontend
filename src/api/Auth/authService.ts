@@ -1,7 +1,8 @@
 import api from '../axios'
 
 const url = {
-	login: '/auth/login/google/callback'
+	login: '/auth/login/google/callback',
+	logout: '/logout'
 }
 
 export const AuthService = {
@@ -9,9 +10,9 @@ export const AuthService = {
 		const res = await api.get(`${url.login}${params}`)
 		return res
 	},
-	// falta implementar
+
 	logout: async () => {
-		const response = await api.post('/auth/logout')
+		const response = await api.post(`${url.logout}`)
 		return response.data
 	}
 }
