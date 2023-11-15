@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
-import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Checkbox, Input, Select, SelectItem, Slider } from '@nextui-org/react'
 
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
@@ -15,6 +15,7 @@ import { validationSchema } from '../FormValidation'
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
+	const [advanceValue, setAdvanceValue] = useState(0)
 
 	const formik = useFormik({
 		initialValues: {
@@ -45,7 +46,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				code: values.code,
 				opportunity_for_improvement: values.opportunity_for_improvement,
 				semester_execution: `${values.year}-${values.semester}`,
-				advance: Number(values.advance),
+				advance: advanceValue * 100,
 				duration: Number(values.duration),
 				efficacy_evaluation: isSelected,
 				standard_id: Number(standardId),
@@ -59,6 +60,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				responsibles: values.responsibles,
 				observations: values.observations
 			}
+
+			console.log(newPlan)
 
 			PlanMejoraService.create(newPlan)
 				.then((res) => {
@@ -228,7 +231,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput identifier='sources' label='Fuentes' onChange={handleInputValues} />
 
-			<Input
+			{/* <Input
 				isRequired
 				id='advance'
 				name='advance'
@@ -240,6 +243,21 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				min={0}
 				max={100}
 				variant='underlined'
+			/> */}
+
+			<Slider
+				label='Avance'
+				id='advance'
+				name='advance'
+				value={advanceValue}
+				onChange={setAdvanceValue}
+				showTooltip={true}
+				step={0.01}
+				formatOptions={{ style: 'percent' }}
+				maxValue={1}
+				minValue={0}
+				defaultValue={advanceValue}
+				className='max-w-md'
 			/>
 
 			<div className='flex gap-2 mb-3 pt-2'>
