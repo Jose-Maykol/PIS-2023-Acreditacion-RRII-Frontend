@@ -1,5 +1,6 @@
+/* eslint-disable multiline-ternary */
 import { planItem } from '@/types/PlanMejora'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input, ScrollShadow } from '@nextui-org/react'
 import { ChangeEvent, useEffect, useState } from 'react'
 
 import DynamicInputItem from './DynamicInputItem'
@@ -53,6 +54,17 @@ export default function DynamicInput({
 		onChange(identifier, updatedInputValues)
 	}
 
+	const renderInputItems = () => {
+		return inputValues.map((item) => (
+			<DynamicInputItem
+				key={item.id}
+				inputItem={item}
+				onDelete={handleDelete}
+				onUpdate={handleUpdate}
+			/>
+		))
+	}
+
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
@@ -72,16 +84,13 @@ export default function DynamicInput({
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
-			<div>
-				{inputValues.map((item) => (
-					<DynamicInputItem
-						key={item.id}
-						inputItem={item}
-						onDelete={handleDelete}
-						onUpdate={handleUpdate}
-					/>
-				))}
-			</div>
+			{inputValues.length <= 2 ? (
+				<div> {renderInputItems()} </div>
+			) : (
+				<ScrollShadow hideScrollBar size={10} className='h-[120px]'>
+					{renderInputItems()}
+				</ScrollShadow>
+			)}
 		</div>
 	)
 }

@@ -1,5 +1,6 @@
+/* eslint-disable multiline-ternary */
 import PlusIcon from '@/components/Icons/PlusIcon'
-import { Button, Input } from '@nextui-org/react'
+import { Button, Input, ScrollShadow } from '@nextui-org/react'
 import DynamicInputItem from './DynamicInputItem'
 import { ChangeEvent, useState } from 'react'
 import { planItem } from '@/types/PlanMejora'
@@ -39,9 +40,22 @@ export default function DynamicInput({
 	}
 
 	const handleUpdate = (id: number, description: string) => {
-		const updatedInputValues = inputValues.map((item) => (item.id === id ? { ...item, description } : item))
+		const updatedInputValues = inputValues.map((item) =>
+			item.id === id ? { ...item, description } : item
+		)
 		setInputValues(updatedInputValues)
 		onChange(identifier, updatedInputValues)
+	}
+
+	const renderInputItems = () => {
+		return inputValues.map((item) => (
+			<DynamicInputItem
+				key={item.id}
+				inputItem={item}
+				onDelete={handleDelete}
+				onUpdate={handleUpdate}
+			/>
+		))
 	}
 
 	return (
@@ -63,16 +77,13 @@ export default function DynamicInput({
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
-			<div>
-				{inputValues.map((item) => (
-					<DynamicInputItem
-						key={item.id}
-						inputItem={item}
-						onDelete={handleDelete}
-						onUpdate={handleUpdate}
-					/>
-				))}
-			</div>
+			{inputValues.length <= 2 ? (
+				<div> {renderInputItems()} </div>
+			) : (
+				<ScrollShadow hideScrollBar size={10} className='h-[120px]'>
+					{renderInputItems()}
+				</ScrollShadow>
+			)}
 		</div>
 	)
 }
