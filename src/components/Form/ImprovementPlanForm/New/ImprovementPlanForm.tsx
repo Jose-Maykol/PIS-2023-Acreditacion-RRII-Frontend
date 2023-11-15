@@ -231,20 +231,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput identifier='sources' label='Fuentes' onChange={handleInputValues} />
 
-			{/* <Input
-				isRequired
-				id='advance'
-				name='advance'
-				value={formik.values.advance.toString()}
-				onChange={formik.handleChange}
-				type='number'
-				label='Avance'
-				className='max-w-xs mb-3'
-				min={0}
-				max={100}
-				variant='underlined'
-			/> */}
-
 			<Slider
 				label='Avance'
 				id='advance'

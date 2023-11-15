@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import { Button, Checkbox, Input, Select, SelectItem } from '@nextui-org/react'
+import { Button, Checkbox, Input, Select, SelectItem, Slider } from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -24,6 +24,7 @@ export default function ImprovementPlanEditForm({
 }) {
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
+	const [advanceValue, setAdvanceValue] = useState(0)
 
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -51,6 +52,7 @@ export default function ImprovementPlanEditForm({
 	useEffect(() => {
 		setFormData(plan)
 		setIsSelected(plan.efficacy_evaluation)
+		setAdvanceValue(plan.advance / 100)
 	}, [plan])
 
 	const getPlanItemsToSend = (data: planItem[]) =>
@@ -70,7 +72,7 @@ export default function ImprovementPlanEditForm({
 				code: values.code,
 				opportunity_for_improvement: values.opportunity_for_improvement,
 				semester_execution: `${values.year}-${values.semester}`,
-				advance: Number(values.advance),
+				advance: advanceValue * 100,
 				duration: Number(values.duration),
 				efficacy_evaluation: isSelected,
 				standard_id: values.standard_id,
@@ -289,18 +291,19 @@ export default function ImprovementPlanEditForm({
 				defaultValues={formData.sources}
 			/>
 
-			<Input
-				isRequired
+			<Slider
+				label='Avance'
 				id='advance'
 				name='advance'
-				value={formik.values.advance.toString()}
-				onChange={formik.handleChange}
-				type='number'
-				label='Avance'
-				className='max-w-xs mb-3'
-				min={0}
-				max={100}
-				variant='underlined'
+				value={advanceValue}
+				onChange={setAdvanceValue}
+				showTooltip={true}
+				step={0.01}
+				formatOptions={{ style: 'percent' }}
+				maxValue={1}
+				minValue={0}
+				defaultValue={advanceValue}
+				className='max-w-md'
 			/>
 
 			<div className='flex gap-2 mb-3 pt-2'>
