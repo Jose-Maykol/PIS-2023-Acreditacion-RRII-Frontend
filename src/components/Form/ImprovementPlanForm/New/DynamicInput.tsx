@@ -7,12 +7,12 @@ import { planItem } from '@/types/PlanMejora'
 
 export default function DynamicInput({
 	identifier,
-	placeholder,
+	label,
 	tooltip,
 	onChange
 }: {
 	identifier: string
-	placeholder: string
+	label: string
 	tooltip: string
 	onChange: (formDataField: string, value: planItem[]) => void
 }) {
@@ -63,14 +63,14 @@ export default function DynamicInput({
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
-				<Tooltip color='foreground' placement='top-start' content={tooltip} >
+				<Tooltip color='foreground' placement='top-start' offset={15} content={tooltip} closeDelay={100}>
 					<Input
 						id={identifier}
 						name={identifier}
 						value={singleInputValue}
 						onChange={handleChange}
-						className='mb-3'
-						placeholder={placeholder}
+						className='mb-4'
+						label={label}
 						size='sm'
 						type='text'
 						variant='underlined'

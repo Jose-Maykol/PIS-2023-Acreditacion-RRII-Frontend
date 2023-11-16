@@ -87,6 +87,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				color='foreground'
 				placement='top-start'
 				content='Registrar el nombre del plan de mejora'
+				closeDelay={100}
 			>
 				<Input
 					isRequired
@@ -109,6 +110,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				color='foreground'
 				placement='top-start'
 				content='Registrar el código con el formato OMXX-YY-ZZZZ'
+				closeDelay={100}
 			>
 				<Input
 					isRequired
@@ -129,14 +131,14 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput
 				identifier='problems_opportunities'
-				placeholder='Problemas/Oportunidades:'
+				label='Problemas/Oportunidades:'
 				tooltip='Registre el problema / oportunidad que genera la mejora'
 				onChange={handleInputValues}
 			/>
 
 			<DynamicInput
 				identifier='root_causes'
-				placeholder='Causa/Raíz:'
+				label='Causa/Raíz:'
 				tooltip='Registre la causa raíz, producto de un análisis'
 				onChange={handleInputValues}
 			/>
@@ -145,6 +147,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				color='foreground'
 				placement='top-start'
 				content='Registre la denominación de la oportunidad de mejora'
+				closeDelay={100}
 			>
 				<Input
 					isRequired
@@ -170,7 +173,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput
 				identifier='improvement_actions'
-				placeholder='Acciones de mejora:'
+				label='Acciones de mejora:'
 				tooltip='Registre las acciones necesarias para ejecutar'
 				onChange={handleInputValues}
 			/>
@@ -180,6 +183,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				placement='top-start'
 				offset={-5}
 				content='Registre el año y semestre en la que las actividades se realizarán'
+				closeDelay={100}
 			>
 				<div className='mb-3 flex gap-5'>
 					<Select
@@ -224,6 +228,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				placement='top-start'
 				offset={20}
 				content='Registrar la duración en meses'
+				closeDelay={100}
 			>
 				<Input
 					isRequired
@@ -246,25 +251,25 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput
 				identifier='resources'
-				placeholder='Recursos:'
+				label='Recursos:'
 				tooltip='Registrar los recursos necesarios'
 				onChange={handleInputValues}
 			/>
 			<DynamicInput
 				identifier='goals'
-				placeholder='Metas:'
+				label='Metas:'
 				tooltip='Registrar la meta que se espera lograr al término del plan de mejora'
 				onChange={handleInputValues}
 			/>
 			<DynamicInput
 				identifier='responsibles'
-				placeholder='Responsables:'
+				label='Responsables:'
 				tooltip='Registrar los responsables de la ejecución de las actividades registradas'
 				onChange={handleInputValues}
 			/>
 			<DynamicInput
 				identifier='observations'
-				placeholder='Observaciones:'
+				label='Observaciones:'
 				tooltip='Registrar en esta sección las acciones vinculadas a las mejoras y en qué circunstancias se están realizando o realizaran'
 				onChange={handleInputValues}
 			/>
@@ -274,6 +279,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				placement='top-start'
 				offset={-5}
 				content='Registrar el estado del plan de mejora'
+				closeDelay={100}
 			>
 				<div>
 					<Select
@@ -298,7 +304,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput
 				identifier='sources'
-				placeholder='Fuentes:'
+				label='Fuentes:'
 				tooltip='Registrar de dónde proviene la fuente de la Mejora'
 				onChange={handleInputValues}
 			/>
@@ -306,8 +312,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			<Tooltip
 				color='foreground'
 				placement='top-start'
-				// offset={-5}
-				content='Planificado de 0% a 10%; Reprogramado de 0% a 5%; En Desarrollo de 11% a 99%, Concluido 100%.'
+				content='Planificado de 0% a 10%; Reprogramado de 0% a 5%; En Desarrollo de 11% a 99%, Concluido 100%'
+				closeDelay={100}
 			>
 				<div className='mt-3'>
 					<Slider
@@ -335,6 +341,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					color='foreground'
 					placement='top-start'
 					content='Registrar el calificativo de la evaluación categóricamente: Sí o No'
+					closeDelay={100}
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
 				</Tooltip>

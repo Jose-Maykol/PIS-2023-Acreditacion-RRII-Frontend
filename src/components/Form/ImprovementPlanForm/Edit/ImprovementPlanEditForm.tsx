@@ -2,7 +2,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
-import { Button, Checkbox, Input, Select, SelectItem, Slider } from '@nextui-org/react'
+import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -111,42 +111,59 @@ export default function ImprovementPlanEditForm({
 		<form onSubmit={formik.handleSubmit}>
 			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
-			<Input
-				isRequired
-				id='name'
-				name='name'
-				value={formik.values.name}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				isInvalid={formik.touched.name && Boolean(formik.errors.name)}
-				errorMessage={formik.touched.name && formik.errors.name}
-				className='mb-3'
-				label='Nombre del Plan de Mejora:'
-				size='sm'
-				type='text'
-				variant='underlined'
-			/>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={15}
+				content='Registrar el nombre del plan de mejora'
+				closeDelay={100}
+			>
+				<Input
+					isRequired
+					id='name'
+					name='name'
+					value={formik.values.name}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
+					errorMessage={formik.touched.name && formik.errors.name}
+					className='mb-4'
+					label='Nombre del Plan de Mejora:'
+					size='sm'
+					type='text'
+					variant='underlined'
+				/>
+			</Tooltip>
 
-			<Input
-				isRequired
-				id='code'
-				name='code'
-				value={formik.values.code}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				isInvalid={formik.touched.code && Boolean(formik.errors.code)}
-				errorMessage={formik.touched.code && formik.errors.code}
-				className='mb-3'
-				label='Código:'
-				placeholder='OMXX-YY-ZZZZ'
-				size='sm'
-				type='text'
-				variant='underlined'
-			/>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={15}
+				content='Registrar el código con el formato OMXX-YY-ZZZZ'
+				closeDelay={100}
+			>
+				<Input
+					isRequired
+					id='code'
+					name='code'
+					value={formik.values.code}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
+					errorMessage={formik.touched.code && formik.errors.code}
+					className='mb-4'
+					label='Código:'
+					placeholder='OMXX-YY-ZZZZ'
+					size='sm'
+					type='text'
+					variant='underlined'
+				/>
+			</Tooltip>
 
 			<DynamicInput
 				identifier='problems_opportunities'
 				label='Problemas/Oportunidades:'
+				tooltip='Registre el problema / oportunidad que genera la mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.problems_opportunities}
 			/>
@@ -154,161 +171,218 @@ export default function ImprovementPlanEditForm({
 			<DynamicInput
 				identifier='root_causes'
 				label='Causa/Raíz:'
+				tooltip='Registre la causa raíz, producto de un análisis'
 				onChange={handleInputValues}
 				defaultValues={formData.root_causes}
 			/>
 
-			<Input
-				isRequired
-				id='opportunity_for_improvement'
-				name='opportunity_for_improvement'
-				value={formik.values.opportunity_for_improvement}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				isInvalid={
-					formik.touched.opportunity_for_improvement &&
-					Boolean(formik.errors.opportunity_for_improvement)
-				}
-				errorMessage={
-					formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
-				}
-				className='mb-3'
-				label='Oportunidad de mejora:'
-				size='sm'
-				type='text'
-				variant='underlined'
-			/>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={15}
+				content='Registre la denominación de la oportunidad de mejora'
+				closeDelay={100}
+			>
+				<Input
+					isRequired
+					id='opportunity_for_improvement'
+					name='opportunity_for_improvement'
+					value={formik.values.opportunity_for_improvement}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					isInvalid={
+						formik.touched.opportunity_for_improvement &&
+						Boolean(formik.errors.opportunity_for_improvement)
+					}
+					errorMessage={
+						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
+					}
+					className='mb-3'
+					label='Oportunidad de mejora:'
+					size='sm'
+					type='text'
+					variant='underlined'
+				/>
+			</Tooltip>
 
 			<DynamicInput
 				identifier='improvement_actions'
 				label='Acciones de mejora:'
+				tooltip='Registre las acciones necesarias para ejecutar'
 				onChange={handleInputValues}
 				defaultValues={formData.improvement_actions}
 			/>
 
-			<div className='mb-3 flex gap-5'>
-				<Select
-					isRequired
-					id='year'
-					name='year'
-					selectedKeys={[formik.values.year]}
-					onChange={formik.handleChange}
-					className='max-w-xs'
-					label='Año:'
-					size='sm'
-					variant='underlined'
-				>
-					{years.map((year) => (
-						<SelectItem key={year.value} value={year.value}>
-							{year.label}
-						</SelectItem>
-					))}
-				</Select>
-				<Select
-					isRequired
-					id='semester'
-					name='semester'
-					selectedKeys={[formik.values.semester]}
-					onChange={formik.handleChange}
-					className='max-w-xs'
-					label='Semestre:'
-					size='sm'
-					variant='underlined'
-				>
-					{semesters.map((semester) => (
-						<SelectItem key={semester.value} value={semester.value}>
-							{semester.label}
-						</SelectItem>
-					))}
-				</Select>
-			</div>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={-5}
+				content='Registre el año y semestre en la que las actividades se realizarán'
+				closeDelay={100}
+			>
+				<div className='mb-3 flex gap-5 mt-3'>
+					<Select
+						isRequired
+						id='year'
+						name='year'
+						selectedKeys={[formik.values.year]}
+						onChange={formik.handleChange}
+						className='max-w-xs'
+						label='Año:'
+						size='sm'
+						variant='underlined'
+					>
+						{years.map((year) => (
+							<SelectItem key={year.value} value={year.value}>
+								{year.label}
+							</SelectItem>
+						))}
+					</Select>
+					<Select
+						isRequired
+						id='semester'
+						name='semester'
+						selectedKeys={[formik.values.semester]}
+						onChange={formik.handleChange}
+						className='max-w-xs'
+						label='Semestre:'
+						size='sm'
+						variant='underlined'
+					>
+						{semesters.map((semester) => (
+							<SelectItem key={semester.value} value={semester.value}>
+								{semester.label}
+							</SelectItem>
+						))}
+					</Select>
+				</div>
+			</Tooltip>
 
-			<Input
-				isRequired
-				id='duration'
-				name='duration'
-				value={formik.values.duration.toString()}
-				onChange={formik.handleChange}
-				onBlur={formik.handleBlur}
-				isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
-				errorMessage={formik.touched.duration && formik.errors.duration}
-				className='max-w-xs mb-3'
-				label='Duración (meses):'
-				min={1}
-				max={24}
-				size='sm'
-				type='number'
-				variant='underlined'
-			/>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={20}
+				content='Registrar la duración en meses'
+				closeDelay={100}
+			>
+				<Input
+					isRequired
+					id='duration'
+					name='duration'
+					value={formik.values.duration.toString()}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
+					errorMessage={formik.touched.duration && formik.errors.duration}
+					className='max-w-xs mb-3'
+					label='Duración (meses):'
+					min={1}
+					max={24}
+					size='sm'
+					type='number'
+					variant='underlined'
+				/>
+			</Tooltip>
 
 			<DynamicInput
 				identifier='resources'
 				label='Recursos:'
+				tooltip='Registrar los recursos necesarios'
 				onChange={handleInputValues}
 				defaultValues={formData.resources}
 			/>
 			<DynamicInput
 				identifier='goals'
 				label='Metas:'
+				tooltip='Registrar la meta que se espera lograr al término del plan de mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.goals}
 			/>
 			<DynamicInput
 				identifier='responsibles'
 				label='Responsables:'
+				tooltip='Registrar los responsables de la ejecución de las actividades registradas'
 				onChange={handleInputValues}
 				defaultValues={formData.responsibles}
 			/>
 			<DynamicInput
 				identifier='observations'
 				label='Observaciones:'
+				tooltip='Registrar en esta sección las acciones vinculadas a las mejoras y en qué circunstancias se están realizando o realizaran'
 				onChange={handleInputValues}
 				defaultValues={formData.observations}
 			/>
 
-			<Select
-				isRequired
-				id='plan_status_id'
-				name='plan_status_id'
-				selectedKeys={[`${formik.values.plan_status_id}`]}
-				onChange={formik.handleChange}
-				className='max-w-xs mb-3'
-				label='Estado:'
-				size='sm'
-				variant='underlined'
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				offset={-5}
+				content='Registrar el estado del plan de mejora'
+				closeDelay={100}
 			>
-				{status.map((stat) => (
-					<SelectItem key={stat.value} value={stat.value}>
-						{stat.label}
-					</SelectItem>
-				))}
-			</Select>
+				<div>
+					<Select
+						isRequired
+						id='plan_status_id'
+						name='plan_status_id'
+						selectedKeys={[`${formik.values.plan_status_id}`]}
+						onChange={formik.handleChange}
+						className='max-w-xs mb-3'
+						label='Estado:'
+						size='sm'
+						variant='underlined'
+					>
+						{status.map((stat) => (
+							<SelectItem key={stat.value} value={stat.value}>
+								{stat.label}
+							</SelectItem>
+						))}
+					</Select>
+				</div>
+			</Tooltip>
 
 			<DynamicInput
 				identifier='sources'
 				label='Fuentes:'
+				tooltip='Registrar de dónde proviene la fuente de la Mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.sources}
 			/>
 
-			<Slider
-				label='Avance:'
-				id='advance'
-				name='advance'
-				value={advanceValue}
-				onChange={setAdvanceValue}
-				showTooltip={true}
-				step={0.01}
-				formatOptions={{ style: 'percent' }}
-				maxValue={1}
-				minValue={0}
-				defaultValue={advanceValue}
-				className='max-w-md'
-				classNames={{ label: 'text-default-600' }}
-			/>
+			<Tooltip
+				color='foreground'
+				placement='top-start'
+				content='Planificado de 0% a 10%; Reprogramado de 0% a 5%; En Desarrollo de 11% a 99%, Concluido 100%'
+				closeDelay={100}
+			>
+				<div className='mt-3'>
+					<Slider
+						label='Avance:'
+						id='advance'
+						name='advance'
+						value={advanceValue}
+						onChange={setAdvanceValue}
+						showTooltip={true}
+						step={0.01}
+						formatOptions={{ style: 'percent' }}
+						maxValue={1}
+						minValue={0}
+						defaultValue={advanceValue}
+						className='max-w-md'
+						classNames={{ label: 'text-default-600' }}
+					/>
+				</div>
+			</Tooltip>
 
 			<div className='flex gap-2 mb-3 pt-2 items-center'>
-				<label className='text-default-600 text-sm'>Eficacia:</label>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el calificativo de la evaluación categóricamente: Sí o No'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Eficacia:</label>
+				</Tooltip>
 				<Checkbox
 					name='efficacy_evaluation'
 					isSelected={isSelected}
