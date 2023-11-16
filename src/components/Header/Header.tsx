@@ -5,11 +5,27 @@ import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
 import UbuntuIcon from '@/components/Icons/UbuntuIcon'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { BaseService } from '@/api/Base/BaseService'
+import { AuthService } from '@/api/Auth/authService'
+import LogoutIcon from '../Icons/LogoutIcon'
+import UserIcon from '../Icons/UserIcon'
 
 const Header = () => {
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
 	const { year, semester } = useYearSemesterStore()
+
+	const logout = () => {
+		localStorage.removeItem('auth_user')
+		localStorage.removeItem('access_token')
+		localStorage.removeItem('year')
+		localStorage.removeItem('semester')
+		useYearSemesterStore.getState().setYear(null)
+		useYearSemesterStore.getState().setSemester(null)
+		BaseService.deleteConfig()
+		AuthService.logout()
+		window.location.href = '/'
+	}
 
 	useEffect(() => {
 		const authUserJSON = localStorage.getItem('auth_user')
@@ -56,19 +72,21 @@ const Header = () => {
 							uid: 'my-perfil',
 							label: 'Mi perfil',
 							color: 'primary',
-							startContent: <UbuntuIcon width={25} height={25} />
+							startContent: <UserIcon width={25} height={25} />
 						},
 						{
 							uid: 'logout',
 							label: 'Cerrar sesión',
 							className: 'text-danger',
 							color: 'danger',
-							startContent: <UbuntuIcon width={25} height={25} fill='fill-danger' />
+							startContent: <LogoutIcon width={25} height={25} fill='fill-danger' />
 						}
 					]}
 					placement='bottom-end'
 					mode='action'
-					onAction={(key: string) => console.log(key)}
+					onAction={(key: string) => {
+						if (key === 'logout') logout()
+					}}
 				/>
 			</NavbarContent>
 		</Navbar>

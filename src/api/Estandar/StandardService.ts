@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { AssignedUsers, StandardValues } from '@/types/Standard'
 import { BaseService } from '../Base/BaseService'
 import api from '../axios'
@@ -39,16 +40,9 @@ export class StandardService extends BaseService {
 	}
 
 	public static async assignUsersToStandard (id: string, params: AssignedUsers) {
-		try {
-			const { year, semester } = BaseService.getConfig()
-			const res = await api.put(`/${year}/${semester}/${url.assignment.replace(':id', id)}`, params)
-			return res.data
-		} catch (error: any) {
-			if (error.response?.status === 422) {
-				return error.response.data
-			}
-			throw error
-		}
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.put(`/${year}/${semester}/${url.assignment.replace(':id', id)}`, params)
+		return res.data
 	}
 
 	public static async getListOfEnabledUsers (id: string) {
@@ -63,17 +57,10 @@ export class StandardService extends BaseService {
 	}
 
 	public static async updateHeader (id: string, { name, description, dimension, factor, standardRelated }: StandardValues) {
-		try {
-			const { year, semester } = BaseService.getConfig()
-			const params = { name, description, dimension, factor, related_standards: standardRelated }
-			const res = await api.put(`/${year}/${semester}/${url.header.replace(':id', id)}}`, params)
-			return res.data
-		} catch (error: any) {
-			if (error.response?.status === 401) {
-				return error.response.data
-			}
-			throw error
-		}
+		const { year, semester } = BaseService.getConfig()
+		const params = { name, description, dimension, factor, related_standards: standardRelated }
+		const res = await api.put(`/${year}/${semester}/${url.header.replace(':id', id)}`, params)
+		return res.data
 	}
 
 	public static async updateStatusStandard (id: string, statusID: number) {

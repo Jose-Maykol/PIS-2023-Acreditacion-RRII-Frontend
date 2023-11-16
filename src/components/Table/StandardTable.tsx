@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback, useMemo, Key } from 'react'
 
 import {
 	Chip,
@@ -12,48 +12,39 @@ import {
 	PopoverTrigger,
 	PopoverContent
 } from '@nextui-org/react'
-import LinkIcon from '../Icons/LinkIcon'
-import PencilIcon from '../Icons/PencilIcon'
-import PlusIcon from '../Icons/PlusIcon'
-import SearchIcon from '../Icons/SearchIcon'
-import ChevronDownIcon from '../Icons/ChevronDownIcon'
-import { valorationOptions } from '../../utils/StandardData'
+import { columns, valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardUsers } from '@/types/Standard'
+import { getCommonIcon } from '@/utils/utils'
 import Link from 'next/link'
+import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
-	'plenamente completado': 'success',
+	'logrado satisfactoriamente': 'success',
 	logrado: 'warning',
 	'no logrado': 'danger'
 }
 
 
-export default function StandardTable({ reload, onReload, onOpenModal } : {reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
-	const [filterValue, setFilterValue] = useState('')
-	const [page, setPage] = React.useState(1)
+export default function StandardTable () {
+	const [filterValue, setFilterValue] = useState<string>('')
+	const [page, setPage] = useState<number>(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
-	const columns = [
-		{ name: '#', uid: 'nro_standard', sortable: true },
-		{ name: 'ESTÁNDAR', uid: 'name', sortable: true },
-		{ name: 'ENCARGADOS', uid: 'users', sortable: true },
-		{ name: 'VALORACION ESTANDAR', uid: 'standard_status' },
-		{ name: 'ACCIONES', uid: 'actions' }
-	]
+	const [reload, setReload] = useState<boolean>(false)
 
 	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
 			setStandardsManagement(res.data)
 		})
-		onReload()
+		setReload(false)
 	}, [reload])
 
-	const filteredItems = React.useMemo(() => {
+	const filteredItems = useMemo(() => {
 		let filteredStandards = [...standardsManagement]
 
 		if (hasSearchFilter) {
@@ -75,14 +66,14 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
-	const items = React.useMemo(() => {
+	const items = useMemo(() => {
 		const start = (page - 1) * rowsPerPage
 		const end = start + rowsPerPage
 
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((standard: StandardUsers, columnKey: React.Key) => {
+	const renderCell = useCallback((standard: StandardUsers, columnKey: Key) => {
 		const cellValue = standard[columnKey as keyof StandardUsers]
 
 		switch (columnKey) {
@@ -97,7 +88,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 				return (<div className='flex flex-col'>
 					{cellValue.length > 0
 						? (
-							<Popover placement='right'>
+							<Popover placement='bottom'>
 								<PopoverTrigger>
 									<Button
 										color='primary'
@@ -109,8 +100,9 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 								</PopoverTrigger>
 								<PopoverContent>
 									{cellValue.map((user, index) => (
-										<div key={index}>
-											<p className='text-bold text-sm'>{`${user.name} ${user.lastname}`} - {user.email}</p>
+										<div key={index} className='my-1 border-b-1 flex flex-col w-full m-auto'>
+											<p className='text-bold text-md items-start'>{`${user.name} ${user.lastname}`}</p>
+											<p className='text-bold text-tiny items-start'>{user.email}</p>
 										</div>
 									))}
 								</PopoverContent>
@@ -136,18 +128,12 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
-					<Tooltip content='Editar Encargados'>
-						<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
-							onOpenModal(standard.id.toString())
-						}>
-							<PencilIcon width={17} height={17} fill='fill-amber-300 hover:fill-amber-500' />
-						</span>
-					</Tooltip>
+					<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />
 					<Tooltip content='Ver Estandar'>
 						<Link
 							href={`/dashboard/standards/${standard.id}/narrative`}
 						>
-							<LinkIcon width={17} height={17} fill='fill-sky-300 hover:fill-sky-600'/>
+							{getCommonIcon('link', 17, 'fill-sky-300 hover:fill-sky-600')}
 						</Link>
 					</Tooltip>
 				</div>
@@ -157,7 +143,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		}
 	}, [])
 
-	const onSearchChange = React.useCallback((value?: string) => {
+	const onSearchChange = useCallback((value?: string) => {
 		if (value) {
 			setFilterValue(value)
 			setPage(1)
@@ -166,12 +152,12 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		}
 	}, [])
 
-	const onClear = React.useCallback(() => {
+	const onClear = useCallback(() => {
 		setFilterValue('')
 		setPage(1)
 	}, [])
 
-	const topContent = React.useMemo(() => {
+	const topContent = useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
 				<div className='flex justify-between gap-3 items-end'>
@@ -179,7 +165,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar por nombre, apellido o correo'
-						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
+						startContent={getCommonIcon('search', 15, 'fill-gray-500')}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -188,7 +174,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
+								<Button endContent={getCommonIcon('chevron', 10)} variant='faded'>
 									Estado
 								</Button>
 							}
@@ -202,7 +188,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+						<Button color='primary' endContent={getCommonIcon('plus', 15, 'fill-white')}>
 							Crear Estandares
 						</Button>
 					</div>
@@ -217,7 +203,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		hasSearchFilter
 	])
 
-	const bottomContent = React.useMemo(() => {
+	const bottomContent = useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
 				<Pagination
@@ -233,7 +219,7 @@ export default function StandardTable({ reload, onReload, onOpenModal } : {reloa
 		)
 	}, [items.length, page, pages, hasSearchFilter])
 
-	const classNames = React.useMemo(
+	const classNames = useMemo(
 		() => ({
 			wrapper: ['min-h-[590px]'],
 			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],

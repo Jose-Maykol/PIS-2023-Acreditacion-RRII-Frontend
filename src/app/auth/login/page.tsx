@@ -21,22 +21,17 @@ export default function AuthPage() {
 	const [touchedYear, setTouchedYear] = useState(false)
 
 	const handleYearValue = (value: Selection): void => {
-		console.log('year', value)
 		setYearValue(value)
 		setIsValid({ year: (value as any).size > 0, semester: (semesterValue as any).size > 0 })
 	}
 
 	const handleSemesterValue = (value: Selection): void => {
-		console.log('semester', value)
 		setSemesterValue(value)
 		setIsValid({ year: (yearValue as any).size > 0, semester: (value as any).size > 0 })
 	}
 
 	const handleLoginWithGoogle = (): void => {
-		const yearIsValid = (yearValue as any).size > 0
-		const semesterIsValid = (semesterValue as any).size > 0
-		setIsValid({ year: yearIsValid, semester: semesterIsValid })
-		if ((isValid.year && isValid.semester) === true) {
+		if (isValid.year && isValid.semester === true) {
 			if (typeof window !== 'undefined' && window.localStorage) {
 				localStorage.setItem('year', (yearValue as any).values().next().value)
 				localStorage.setItem('semester', (semesterValue as any).values().next().value)
@@ -71,12 +66,11 @@ export default function AuthPage() {
 					// Se guardan los datos en el local storage
 					localStorage.setItem('access_token', token)
 					localStorage.setItem('auth_user', JSON.stringify(authUser))
-					// Se guardan los datos de year y semester en el store
 					window.location.href = '/dashboard'
 				}
 			})
 		}
-	})
+	}, [])
 
 	return (
 		<div className='flex flex-row items-center w-[800px] h-[600px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl overflow-hidden'>
@@ -128,7 +122,7 @@ export default function AuthPage() {
 				<Button
 					color='default'
 					radius='sm'
-					onPress={() => handleLoginWithGoogle()}
+					onClick={() => handleLoginWithGoogle()}
 					isDisabled={!isValid.year || !isValid.semester || !touchedYear || !touchedSemester}
 					startContent={<Image
 						alt='logo-unsa'

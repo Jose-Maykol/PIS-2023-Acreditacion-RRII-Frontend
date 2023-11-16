@@ -23,30 +23,26 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
 	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: false })
 	const [touched, setTouched] = useState(false)
-	const validateEmail = (value:string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i)
+
+	const validateEmail = (value:string) => {
+		return /.+@unsa\.edu\.pe$/.test(value)
+	}
 
 	const roles = useMemo(
 		() => [
 			{ label: 'Administrador', value: 'administrador' },
 			{ label: 'Docente', value: 'docente' }
-		],
-		[]
-	)
+		], [])
 
 	const handleEmailValue = (value: string): void => {
 		setEmailValue(value)
-		setIsValid({ ...isValid, email: !isInvalid })
+		setIsValid({ ...isValid, email: validateEmail(value) })
 	}
 
 	const handleRoleValue = (value: Selection): void => {
 		setRoleValue(value)
 		setIsValid({ ...isValid, role: (value as any).size > 0 })
 	}
-
-	const isInvalid = useMemo(() => {
-		if (emailValue === '') return true
-		return !validateEmail(emailValue)
-	}, [emailValue])
 
 	const handleSubmit = async () => {
 		const notification = toast.loading('Procesando...')

@@ -3,11 +3,13 @@
 
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { Button } from '@nextui-org/react'
-import NarrativeEditor from '@/components/Editor/NarrativeEditor'
+import { Button, useDisclosure } from '@nextui-org/react'
 import { useEffect, useMemo, useState } from 'react'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { toast } from 'react-toastify'
+import { useRouter } from 'next/navigation'
+import DeleteNarrativeModal from '@/components/Modal/Narrative/DeleteNarrativeModal'
 
 type NarrativePageParams = {
 	params: {
@@ -16,14 +18,15 @@ type NarrativePageParams = {
 }
 
 export default function NarrativePage({ params }: NarrativePageParams) {
-	const [editNarrative, setEditNarrative] = useState(false)
+	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { year, semester } = useYearSemesterStore()
 	const [narrative, setNarrative] = useState<string>('')
 	const id = Number(params.id)
+	const router = useRouter()
 
 	const loadNarrative = useMemo(() => {
-		return (year: number, semester: 'A' | 'B', id: number) => {
-			NarrativeService.getNarrative(year, semester, id).then((res) => {
+		return (id: number) => {
+			NarrativeService.getNarrative(id).then((res) => {
 				setNarrative(res.data.narrative)
 			})
 		}
@@ -31,12 +34,12 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 
 	useEffect(() => {
 		if (year && semester) {
-			loadNarrative(year, semester, id)
+			loadNarrative(id)
 		}
 	}, [year, semester, loadNarrative])
 
 	const handleEditNarrative = () => {
-		setEditNarrative(!editNarrative)
+		router.push(`/dashboard/standards/${id}/narrative/edit`)
 	}
 
 	const createMarkup = () => {
@@ -49,38 +52,32 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 				<div className='my-4 flex flex-row w-full justify-between items-center'>
 					<h3 className='text-2xl text-sky-600 font-semibold'>Narrativa</h3>
 					<div className='flex flex-row gap-2 items-center'>
-						{ !editNarrative && (
-							<>
-								<Button
-									color='primary'
-									startContent={<PencilIcon width={15} height={15} fill='fill-white'/>}
-									onPress={handleEditNarrative}>
+						<>
+							<Button
+								color='primary'
+								startContent={<PencilIcon width={15} height={15} fill='fill-white'/>}
+								onPress={handleEditNarrative}
+							>
 								Editar
-								</Button>
-								<Button
-									color='danger'
-									startContent={<TrashIcon width={15} height={15} fill='fill-white'/>}>
-								Eliminar
-								</Button>
-							</>
-						)}
+							</Button>
+							<Button
+								color='danger'
+								isDisabled={narrative === ''}
+								startContent={<TrashIcon width={15} height={15} fill='fill-white'/>}
+								onPress={onOpen}>
+									Eliminar
+							</Button>
+							<DeleteNarrativeModal id={id} isOpen={isOpen} onOpenChange={onOpenChange} onDelete={() => loadNarrative(id)} />
+						</>
 					</div>
 				</div>
-				{editNarrative
+				{narrative
 					? (
-						<NarrativeEditor id={id} content={narrative as string} handleEditNarrative={handleEditNarrative}/>
+						<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1' dangerouslySetInnerHTML={createMarkup()} />
 					)
 					: (
-						<div>
-							{narrative
-								? (
-									<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1' dangerouslySetInnerHTML={createMarkup()} />
-								)
-								: (
-									<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>
-										Aun no hay narrativa
-									</div>
-								)}
+						<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>
+							Aun no hay narrativa
 						</div>
 					)}
 			</div>

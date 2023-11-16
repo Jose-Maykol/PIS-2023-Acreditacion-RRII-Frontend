@@ -2,26 +2,54 @@
 /* eslint-disable eqeqeq */
 import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
 import { Editor } from '@tinymce/tinymce-react'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { toast } from 'react-toastify'
-import { StandardService } from '@/api/Estandar/StandardService'
 import { TINY_API_KEY } from '../../../config'
+import { StandardService } from '@/api/Estandar/StandardService'
+import PdfIcon from '../Icons/PdfIcon'
+import PowerPointIcon from '../Icons/PowerPointIcon'
+import FileIcon from '../Icons/FileIcon'
+import { useRouter } from 'next/navigation'
 
-interface NarrativeEditorProps {
-  id: number
-  content: string
-  handleEditNarrative: () => void
+interface Evidence {
+  value: string
+  label: string
+  type: string
 }
 
-export default function NarrativeEditor({ id, content, handleEditNarrative }: NarrativeEditorProps) {
+interface NarrativeEditorProps {
+	id: number
+}
+
+export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const editorRef = useRef<any>(null)
-	const [evidences, setEvidences] = useState<{ value: string, label: string, type: string }[]>([])
+	const router = useRouter()
+	const [content, setContent] = useState<string>('')
+	const [evidences, setEvidences] = useState<Evidence[]>([])
 	const [evidenceSelected, setEvidenceSelected] = useState<Selection>(new Set([]))
 	const { year, semester } = useYearSemesterStore()
+
+	const loadNarrative = useMemo(() => {
+		return (id: number) => {
+			NarrativeService.getNarrative(id).then((res) => {
+				setContent(res.data.narrative)
+			})
+		}
+	}, [])
+
+	useEffect(() => {
+		if (year && semester) {
+			loadNarrative(id)
+		}
+	}, [year, semester, loadNarrative])
+
+	const handleNotSaveNarrative = () => {
+		router.push(`/dashboard/standards/${id}/narrative`)
+	}
 
 	const handleSaveNarrative = () => {
 		const notification = toast.loading('Procesando...')
@@ -29,7 +57,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 			narrative: editorRef.current?.getContent() as string
 		}
 		if (year && semester) {
-			NarrativeService.updateNarrative(year, semester, id, contentNarrative).then((res) => {
+			NarrativeService.updateNarrative(id, contentNarrative).then((res) => {
 				if (res.status === 1) {
 					toast.update(notification, {
 						render: res.message,
@@ -56,8 +84,8 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 					})
 				}
 			})
+			router.push(`/dashboard/standards/${id}/narrative`)
 		}
-		handleEditNarrative()
 	}
 
 	useEffect(() => {
@@ -68,18 +96,16 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 
 	const insertEvidence = () => {
 		const evidenceId = (evidenceSelected as any).values().next().value
-		console.log(evidences)
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-		console.log(evidenceId, evidenceLabel)
-		const evidenceToInsert = `<a href="/evidences/${evidenceId}/view" style="color: blue; cursor: pointer">${evidenceLabel}</a>`
+		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank" download="${evidenceLabel}">${evidenceLabel}</a>`
 		const editor = editorRef.current
 		if (editor) {
-			editor.setContent(editor.getContent() + evidenceToInsert)
+			editor.insertContent(evidenceToInsert)
+			editor.focus()
 		}
 	}
 
 	const handleEvidenceSelected = (value: Selection): void => {
-		console.log('evidence', value)
 		setEvidenceSelected(value)
 	}
 
@@ -87,20 +113,63 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 		<div className='min-h-[600px]'>
 			<div className='flex flex-row py-4 w-full items-end'>
 				<Select
+					items={evidences}
 					placeholder='Selecciona una evidencia'
 					label='Insertar evidencia'
 					labelPlacement='outside'
 					variant='bordered'
 					className='w-full'
 					onSelectionChange={handleEvidenceSelected}
+					listboxProps={{
+						itemClasses: {
+							base: [
+								'rounded-md',
+								'text-default-500',
+								'transition-opacity',
+								'data-[hover=true]:text-foreground',
+								'data-[hover=true]:bg-default-100',
+								'dark:data-[hover=true]:bg-default-50',
+								'data-[selectable=true]:focus:bg-default-50',
+								'data-[pressed=true]:opacity-70',
+								'data-[focus-visible=true]:ring-default-500'
+							]
+						}
+					}}
+					popoverProps={{
+						classNames: {
+							base: 'p-0 border-small border-divider bg-background',
+							arrow: 'bg-default-200'
+						}
+					}}
+					renderValue={(items) => {
+						return items.map((item) => (
+							<div key={item.key} className='flex gap-2 items-center'>
+								{item.data?.type === 'pdf' && (<PdfIcon width={20} height={20} fill='fill-red-600'/>)}
+								{item.data?.type === 'pptx' && (<PowerPointIcon width={20} height={20} fill='fill-orange-600'/>)}
+								<div className='flex flex-col'>
+									{item.data?.label}
+								</div>
+							</div>
+						))
+					}}
 				>
-					{evidences?.map((evidence) => (
+					{(evidence) => (
 						<SelectItem key={evidence.value} value={evidence.value}>
-							{evidence.label}
+							<div className='flex gap-2 items-center'>
+								<div className='w-[20px]'>
+									{evidence.type === 'pdf' && (<PdfIcon width={20} height={20} fill='fill-red-600'/>)}
+									{evidence.type === 'pptx' && (<PowerPointIcon width={15} height={20} fill='fill-orange-600'/>)}
+									{!['pdf', 'pptx'].includes(evidence.type) && (<FileIcon width={20} height={20} fill='fill-neutral-700'/>)}
+								</div>
+								<div className='flex flex-col'>
+									{evidence.label}
+								</div>
+							</div>
 						</SelectItem>
-					))}
+					)}
 				</Select>
 				<Button
+					isDisabled={(evidenceSelected as any).size === 0}
 					color='primary'
 					className='ml-2'
 					onPress={insertEvidence}>
@@ -116,7 +185,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 						height: 600,
 						menubar: true,
 						language: 'es',
-						plugins: 'anchor link image lists table powerpaste',
+						plugins: 'anchor link image lists table',
 						toolbar: 'undo redo | fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent removeformat',
 						content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
 					}}
@@ -127,7 +196,7 @@ export default function NarrativeEditor({ id, content, handleEditNarrative }: Na
 					color='danger'
 					startContent={<CloseIcon width={15} height={15} fill='fill-white'/>}
 					className='text-white'
-					onPress={handleEditNarrative}>
+					onPress={handleNotSaveNarrative}>
 						Cancelar
 				</Button>
 				<Button

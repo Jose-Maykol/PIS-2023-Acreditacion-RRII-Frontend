@@ -7,6 +7,11 @@ export class BaseService {
 		this._semester = semester
 	}
 
+	public static deleteConfig(): void {
+		this._year = null
+		this._semester = null
+	}
+
 	protected static getConfig(): { year: number, semester: 'A' | 'B' } {
 		let year = this._year
 		let semester = this._semester
