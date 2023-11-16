@@ -2,6 +2,7 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
+import { toast } from 'react-toastify'
 
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
@@ -76,14 +77,51 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				PlanMejoraService.create(newPlan)
 					.then((res) => {
 						if (res.statusText === 'Created') {
+							toast.success('Plan de mejora creado con éxito', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
 							router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
 						}
 					})
 					.catch((error) => {
-						console.log(error)
+						if (error.response.data.message === 'Código de plan de mejora ya existe') {
+							toast.error('Código de Plan ya registrado', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
+						} else {
+							toast.error('Ocurrió un problema, intentar nuevamente', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
+						}
 					})
 			} else {
-				console.log('Advance and Status BAD')
+				toast.info('Estado y Avance (%) deben estar en rangos definidos', {
+					autoClose: 2000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
 			}
 		}
 	})
@@ -103,7 +141,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='name'
 					name='name'
 					value={formik.values.name}
@@ -126,7 +163,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='code'
 					name='code'
 					value={formik.values.code}
@@ -163,7 +199,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
 					value={formik.values.opportunity_for_improvement}
@@ -200,7 +235,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			>
 				<div className='mb-3 flex gap-5'>
 					<Select
-						isRequired
 						id='year'
 						name='year'
 						value={formik.values.year}
@@ -217,7 +251,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						))}
 					</Select>
 					<Select
-						isRequired
 						id='semester'
 						name='semester'
 						value={formik.values.semester}
@@ -244,7 +277,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='duration'
 					name='duration'
 					value={formik.values.duration.toString()}
@@ -296,7 +328,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			>
 				<div>
 					<Select
-						isRequired
 						id='plan_status_id'
 						name='plan_status_id'
 						value={formik.values.plan_status_id}

@@ -53,7 +53,6 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 	useEffect(() => {
 		PlanMejoraService.readByPlan(params.code)
 			.then((res) => {
-				console.log(res.data.data)
 				setPlan(res.data.data)
 			})
 			.catch(console.log)
