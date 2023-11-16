@@ -61,17 +61,30 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				observations: values.observations
 			}
 
-			console.log(newPlan)
+			// console.log(newPlan)
 
-			PlanMejoraService.create(newPlan)
-				.then((res) => {
-					if (res.statusText === 'Created') {
-						router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
-					}
-				})
-				.catch((error) => {
-					console.log(error)
-				})
+			// Planificado, desarrollo, completado, postergado, anulado
+			// Anulado: 0% | Postergado: 1% a 5% | Planificado: 6% a 10% | En Desarrollo: 11% a 99% | Completado 100%
+			const { plan_status_id: plantStatusId, advance } = newPlan
+			if (
+				(plantStatusId === 5 && advance === 0) ||
+				(plantStatusId === 4 && advance >= 1 && advance <= 5) ||
+				(plantStatusId === 1 && advance >= 6 && advance <= 10) ||
+				(plantStatusId === 2 && advance >= 11 && advance <= 99) ||
+				(plantStatusId === 3 && advance === 100)
+			) {
+				PlanMejoraService.create(newPlan)
+					.then((res) => {
+						if (res.statusText === 'Created') {
+							router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
+						}
+					})
+					.catch((error) => {
+						console.log(error)
+					})
+			} else {
+				console.log('Advance and Status BAD')
+			}
 		}
 	})
 
@@ -312,7 +325,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			<Tooltip
 				color='foreground'
 				placement='top-start'
-				content='Planificado de 0% a 10%; Reprogramado de 0% a 5%; En Desarrollo de 11% a 99%, Concluido 100%'
+				content='Anulado: 0% | Postergado: 1% a 5% | Planificado: 6% a 10% | En Desarrollo: 11% a 99% | Completado 100%'
 				closeDelay={100}
 			>
 				<div className='mt-3'>
