@@ -87,7 +87,7 @@ export default function DynamicInput({
 			{inputValues.length <= 2 ? (
 				<div> {renderInputItems()} </div>
 			) : (
-				<ScrollShadow hideScrollBar size={10} className='h-[120px]'>
+				<ScrollShadow hideScrollBar size={7} className='h-[140px]'>
 					{renderInputItems()}
 				</ScrollShadow>
 			)}
