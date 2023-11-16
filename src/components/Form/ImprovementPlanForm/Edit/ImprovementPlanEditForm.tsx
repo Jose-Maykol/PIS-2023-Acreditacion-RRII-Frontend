@@ -13,6 +13,7 @@ import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { validationSchema } from '../FormValidation'
 import { useFormik } from 'formik'
+import { toast } from 'react-toastify'
 
 export default function ImprovementPlanEditForm({
 	params,
@@ -104,14 +105,51 @@ export default function ImprovementPlanEditForm({
 					.then((res) => {
 						console.log(res)
 						if (res.statusText === 'OK') {
+							toast.success('Plan de mejora creado con éxito', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
 							router.push(`/dashboard/standards/${formData.standard_id}/evidence_improvements`)
 						}
 					})
 					.catch((error) => {
-						console.log(error)
+						if (error.response.data.message === 'Código de plan de mejora ya existe') {
+							toast.error('Código de Plan ya registrado', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
+						} else {
+							toast.error('Ocurrió un problema, intentar nuevamente', {
+								autoClose: 2000,
+								hideProgressBar: false,
+								closeOnClick: true,
+								pauseOnHover: true,
+								draggable: true,
+								isLoading: false,
+								theme: 'light'
+							})
+						}
 					})
 			} else {
-				console.log('Advance and Status BAD')
+				toast.info('Estado y Avance (%) deben estar en rangos definidos', {
+					autoClose: 2000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: true,
+					draggable: true,
+					isLoading: false,
+					theme: 'light'
+				})
 			}
 		}
 	})
