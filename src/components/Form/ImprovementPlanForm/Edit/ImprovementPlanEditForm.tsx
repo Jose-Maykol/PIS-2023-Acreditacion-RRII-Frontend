@@ -121,7 +121,7 @@ export default function ImprovementPlanEditForm({
 				isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 				errorMessage={formik.touched.name && formik.errors.name}
 				className='mb-3'
-				label='Nombre del Plan de Mejora'
+				label='Nombre del Plan de Mejora:'
 				size='sm'
 				type='text'
 				variant='underlined'
@@ -137,7 +137,7 @@ export default function ImprovementPlanEditForm({
 				isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 				errorMessage={formik.touched.code && formik.errors.code}
 				className='mb-3'
-				label='Código'
+				label='Código:'
 				placeholder='OMXX-YY-ZZZZ'
 				size='sm'
 				type='text'
@@ -146,14 +146,14 @@ export default function ImprovementPlanEditForm({
 
 			<DynamicInput
 				identifier='problems_opportunities'
-				label='Problemas/Oportunidades'
+				label='Problemas/Oportunidades:'
 				onChange={handleInputValues}
 				defaultValues={formData.problems_opportunities}
 			/>
 
 			<DynamicInput
 				identifier='root_causes'
-				label='Causa/Raíz'
+				label='Causa/Raíz:'
 				onChange={handleInputValues}
 				defaultValues={formData.root_causes}
 			/>
@@ -173,7 +173,7 @@ export default function ImprovementPlanEditForm({
 					formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 				}
 				className='mb-3'
-				label='Oportunidad de mejora'
+				label='Oportunidad de mejora:'
 				size='sm'
 				type='text'
 				variant='underlined'
@@ -181,7 +181,7 @@ export default function ImprovementPlanEditForm({
 
 			<DynamicInput
 				identifier='improvement_actions'
-				label='Acciones de mejora'
+				label='Acciones de mejora:'
 				onChange={handleInputValues}
 				defaultValues={formData.improvement_actions}
 			/>
@@ -194,7 +194,7 @@ export default function ImprovementPlanEditForm({
 					selectedKeys={[formik.values.year]}
 					onChange={formik.handleChange}
 					className='max-w-xs'
-					label='Año'
+					label='Año:'
 					size='sm'
 					variant='underlined'
 				>
@@ -211,7 +211,7 @@ export default function ImprovementPlanEditForm({
 					selectedKeys={[formik.values.semester]}
 					onChange={formik.handleChange}
 					className='max-w-xs'
-					label='Semestre'
+					label='Semestre:'
 					size='sm'
 					variant='underlined'
 				>
@@ -233,7 +233,7 @@ export default function ImprovementPlanEditForm({
 				isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
 				errorMessage={formik.touched.duration && formik.errors.duration}
 				className='max-w-xs mb-3'
-				label='Duración (meses)'
+				label='Duración (meses):'
 				min={1}
 				max={12}
 				size='sm'
@@ -243,25 +243,25 @@ export default function ImprovementPlanEditForm({
 
 			<DynamicInput
 				identifier='resources'
-				label='Recursos'
+				label='Recursos:'
 				onChange={handleInputValues}
 				defaultValues={formData.resources}
 			/>
 			<DynamicInput
 				identifier='goals'
-				label='Metas'
+				label='Metas:'
 				onChange={handleInputValues}
 				defaultValues={formData.goals}
 			/>
 			<DynamicInput
 				identifier='responsibles'
-				label='Responsables'
+				label='Responsables:'
 				onChange={handleInputValues}
 				defaultValues={formData.responsibles}
 			/>
 			<DynamicInput
 				identifier='observations'
-				label='Observaciones'
+				label='Observaciones:'
 				onChange={handleInputValues}
 				defaultValues={formData.observations}
 			/>
@@ -273,7 +273,7 @@ export default function ImprovementPlanEditForm({
 				selectedKeys={[`${formik.values.plan_status_id}`]}
 				onChange={formik.handleChange}
 				className='max-w-xs mb-3'
-				label='Estado'
+				label='Estado:'
 				size='sm'
 				variant='underlined'
 			>
@@ -286,13 +286,13 @@ export default function ImprovementPlanEditForm({
 
 			<DynamicInput
 				identifier='sources'
-				label='Fuentes'
+				label='Fuentes:'
 				onChange={handleInputValues}
 				defaultValues={formData.sources}
 			/>
 
 			<Slider
-				label='Avance'
+				label='Avance:'
 				id='advance'
 				name='advance'
 				value={advanceValue}
@@ -304,10 +304,11 @@ export default function ImprovementPlanEditForm({
 				minValue={0}
 				defaultValue={advanceValue}
 				className='max-w-md'
+				classNames={{ label: 'text-default-600' }}
 			/>
 
-			<div className='flex gap-2 mb-3 pt-2'>
-				<label className='text-default-900 text-sm'>Eficacia</label>
+			<div className='flex gap-2 mb-3 pt-2 items-center'>
+				<label className='text-default-600 text-sm'>Eficacia:</label>
 				<Checkbox
 					name='efficacy_evaluation'
 					isSelected={isSelected}

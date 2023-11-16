@@ -93,7 +93,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 				errorMessage={formik.touched.name && formik.errors.name}
 				className='mb-3'
-				label='Nombre del Plan de Mejora'
+				label='Nombre del Plan de Mejora:'
 				size='sm'
 				type='text'
 				variant='underlined'
@@ -109,7 +109,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 				errorMessage={formik.touched.code && formik.errors.code}
 				className='mb-3'
-				label='Código'
+				label='Código:'
 				placeholder='OMXX-YY-ZZZZ'
 				size='sm'
 				type='text'
@@ -122,7 +122,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				onChange={handleInputValues}
 			/>
 
-			<DynamicInput identifier='root_causes' label='Causa/Raíz' onChange={handleInputValues} />
+			<DynamicInput identifier='root_causes' label='Causa/Raíz:' onChange={handleInputValues} />
 
 			<Input
 				isRequired
@@ -139,7 +139,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 				}
 				className='mb-3'
-				label='Oportunidad de mejora'
+				label='Oportunidad de mejora:'
 				size='sm'
 				type='text'
 				variant='underlined'
@@ -147,7 +147,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<DynamicInput
 				identifier='improvement_actions'
-				label='Acciones de mejora'
+				label='Acciones de mejora:'
 				onChange={handleInputValues}
 			/>
 
@@ -159,7 +159,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					value={formik.values.year}
 					onChange={formik.handleChange}
 					className='max-w-xs'
-					label='Año'
+					label='Año:'
 					size='sm'
 					variant='underlined'
 				>
@@ -176,7 +176,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					value={formik.values.semester}
 					onChange={formik.handleChange}
 					className='max-w-xs'
-					label='Semestre'
+					label='Semestre:'
 					size='sm'
 					variant='underlined'
 				>
@@ -198,7 +198,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
 				errorMessage={formik.touched.duration && formik.errors.duration}
 				className='max-w-xs mb-3'
-				label='Duración (meses)'
+				label='Duración (meses):'
 				min={1}
 				max={12}
 				size='sm'
@@ -206,10 +206,10 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				variant='underlined'
 			/>
 
-			<DynamicInput identifier='resources' label='Recursos' onChange={handleInputValues} />
-			<DynamicInput identifier='goals' label='Metas' onChange={handleInputValues} />
-			<DynamicInput identifier='responsibles' label='Responsables' onChange={handleInputValues} />
-			<DynamicInput identifier='observations' label='Observaciones' onChange={handleInputValues} />
+			<DynamicInput identifier='resources' label='Recursos:' onChange={handleInputValues} />
+			<DynamicInput identifier='goals' label='Metas:' onChange={handleInputValues} />
+			<DynamicInput identifier='responsibles' label='Responsables:' onChange={handleInputValues} />
+			<DynamicInput identifier='observations' label='Observaciones:' onChange={handleInputValues} />
 
 			<Select
 				isRequired
@@ -218,7 +218,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				value={formik.values.plan_status_id}
 				onChange={formik.handleChange}
 				className='max-w-xs mb-3'
-				label='Estado'
+				label='Estado:'
 				size='sm'
 				variant='underlined'
 			>
@@ -229,10 +229,10 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				))}
 			</Select>
 
-			<DynamicInput identifier='sources' label='Fuentes' onChange={handleInputValues} />
+			<DynamicInput identifier='sources' label='Fuentes:' onChange={handleInputValues} />
 
 			<Slider
-				label='Avance'
+				label='Avance:'
 				id='advance'
 				name='advance'
 				value={advanceValue}
@@ -244,10 +244,13 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				minValue={0}
 				defaultValue={advanceValue}
 				className='max-w-md'
+				classNames={{
+					label: 'text-default-600'
+				}}
 			/>
 
-			<div className='flex gap-2 mb-3 pt-2'>
-				<label className='text-default-900 text-sm'>Eficacia</label>
+			<div className='flex gap-2 mb-3 pt-2 items-center'>
+				<label className='text-default-600 text-sm'>Eficacia:</label>
 				<Checkbox
 					name='efficacy_evaluation'
 					isSelected={isSelected}
