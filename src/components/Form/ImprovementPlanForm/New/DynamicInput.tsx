@@ -1,17 +1,19 @@
 /* eslint-disable multiline-ternary */
 import PlusIcon from '@/components/Icons/PlusIcon'
-import { Button, Input, ScrollShadow } from '@nextui-org/react'
+import { Button, Input, ScrollShadow, Tooltip } from '@nextui-org/react'
 import DynamicInputItem from './DynamicInputItem'
 import { ChangeEvent, useState } from 'react'
 import { planItem } from '@/types/PlanMejora'
 
 export default function DynamicInput({
 	identifier,
-	label,
+	placeholder,
+	tooltip,
 	onChange
 }: {
 	identifier: string
-	label: string
+	placeholder: string
+	tooltip: string
 	onChange: (formDataField: string, value: planItem[]) => void
 }) {
 	const [singleInputValue, setSingleInputValue] = useState('')
@@ -61,18 +63,19 @@ export default function DynamicInput({
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
-				<Input
-					id={identifier}
-					name={identifier}
-					value={singleInputValue}
-					onChange={handleChange}
-					className='mb-3'
-					label={label}
-					placeholder='Agrega uno o varios elementos'
-					size='sm'
-					type='text'
-					variant='underlined'
-				/>
+				<Tooltip color='foreground' placement='top-start' content={tooltip} >
+					<Input
+						id={identifier}
+						name={identifier}
+						value={singleInputValue}
+						onChange={handleChange}
+						className='mb-3'
+						placeholder={placeholder}
+						size='sm'
+						type='text'
+						variant='underlined'
+					/>
+				</Tooltip>
 				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>

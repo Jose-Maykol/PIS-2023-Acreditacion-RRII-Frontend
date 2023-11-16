@@ -235,7 +235,7 @@ export default function ImprovementPlanEditForm({
 				className='max-w-xs mb-3'
 				label='Duración (meses):'
 				min={1}
-				max={12}
+				max={24}
 				size='sm'
 				type='number'
 				variant='underlined'
