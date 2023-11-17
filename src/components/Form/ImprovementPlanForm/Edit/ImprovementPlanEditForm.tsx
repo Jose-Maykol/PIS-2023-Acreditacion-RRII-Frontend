@@ -13,7 +13,7 @@ import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { validationSchema } from '../FormValidation'
 import { useFormik } from 'formik'
-import { toast } from 'react-toastify'
+import showToast from '../toastHelper'
 
 export default function ImprovementPlanEditForm({
 	params,
@@ -89,10 +89,6 @@ export default function ImprovementPlanEditForm({
 			}
 
 			// console.log(newPlan)
-			// TODO: Check backend (problems_opportunities - improvement_actions)
-
-			// Planificado, desarrollo, completado, postergado, anulado
-			// Anulado: 0% | Postergado: 1% a 5% | Planificado: 6% a 10% | En Desarrollo: 11% a 99% | Completado 100%
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
 				(plantStatusId === 5 && advance === 0) ||
@@ -105,51 +101,19 @@ export default function ImprovementPlanEditForm({
 					.then((res) => {
 						console.log(res)
 						if (res.statusText === 'OK') {
-							toast.success('Plan de mejora creado con éxito', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('success', 'Plan de mejora creado con éxito')
 							router.push(`/dashboard/standards/${formData.standard_id}/evidence_improvements`)
 						}
 					})
 					.catch((error) => {
 						if (error.response.data.message === 'Código de plan de mejora ya existe') {
-							toast.error('Código de Plan ya registrado', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('error', 'Código de Plan ya registrado')
 						} else {
-							toast.error('Ocurrió un problema, intentar nuevamente', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('error', 'Ocurrió un problema, intentar nuevamente')
 						}
 					})
 			} else {
-				toast.info('Estado y Avance (%) deben estar en rangos definidos', {
-					autoClose: 2000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				showToast('info', 'Estado y Avance (%) deben estar en rangos definidos')
 			}
 		}
 	})
@@ -412,7 +376,8 @@ export default function ImprovementPlanEditForm({
 						id='advance'
 						name='advance'
 						value={advanceValue}
-						onChange={setAdvanceValue}
+						// onChange={setAdvanceValue}
+						onChange={(newValue) => setAdvanceValue(newValue as number)}
 						showTooltip={true}
 						step={0.01}
 						formatOptions={{ style: 'percent' }}

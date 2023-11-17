@@ -2,7 +2,6 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import Link from 'next/link'
 import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
-import { toast } from 'react-toastify'
 
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
@@ -12,6 +11,7 @@ import { planItem } from '@/types/PlanMejora'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useFormik } from 'formik'
 import { validationSchema } from '../FormValidation'
+import showToast from '../toastHelper'
 
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const router = useRouter()
@@ -63,9 +63,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			}
 
 			// console.log(newPlan)
-
-			// Planificado, desarrollo, completado, postergado, anulado
-			// Anulado: 0% | Postergado: 1% a 5% | Planificado: 6% a 10% | En Desarrollo: 11% a 99% | Completado 100%
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
 				(plantStatusId === 5 && advance === 0) ||
@@ -77,51 +74,19 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				PlanMejoraService.create(newPlan)
 					.then((res) => {
 						if (res.statusText === 'Created') {
-							toast.success('Plan de mejora creado con éxito', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('success', 'Plan de mejora creado con éxito')
 							router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
 						}
 					})
 					.catch((error) => {
 						if (error.response.data.message === 'Código de plan de mejora ya existe') {
-							toast.error('Código de Plan ya registrado', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('error', 'Código de Plan ya registrado')
 						} else {
-							toast.error('Ocurrió un problema, intentar nuevamente', {
-								autoClose: 2000,
-								hideProgressBar: false,
-								closeOnClick: true,
-								pauseOnHover: true,
-								draggable: true,
-								isLoading: false,
-								theme: 'light'
-							})
+							showToast('error', 'Ocurrió un problema, intentar nuevamente')
 						}
 					})
 			} else {
-				toast.info('Estado y Avance (%) deben estar en rangos definidos', {
-					autoClose: 2000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				showToast('info', 'Estado y Avance (%) deben estar en rangos definidos')
 			}
 		}
 	})
@@ -365,7 +330,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						id='advance'
 						name='advance'
 						value={advanceValue}
-						onChange={setAdvanceValue}
+						// onChange={setAdvanceValue}
+						onChange={(newValue) => setAdvanceValue(newValue as number)}
 						showTooltip={true}
 						step={0.01}
 						formatOptions={{ style: 'percent' }}
