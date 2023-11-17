@@ -1,6 +1,5 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
 
 import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
 
@@ -101,8 +100,8 @@ export default function ImprovementPlanEditForm({
 					.then((res) => {
 						console.log(res)
 						if (res.statusText === 'OK') {
-							showToast('success', 'Plan de mejora creado con éxito')
-							router.push(`/dashboard/standards/${formData.standard_id}/evidence_improvements`)
+							showToast('success', 'Plan de mejora actualizado con éxito')
+							router.back()
 						}
 					})
 					.catch((error) => {
@@ -414,13 +413,9 @@ export default function ImprovementPlanEditForm({
 					color='danger'
 					className='mb-5'
 					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
+					onClick={() => router.back()}
 				>
-					<Link
-						className='text-white'
-						href={`/dashboard/standards/${params.id}/evidence_improvements`}
-					>
-						Cancelar
-					</Link>
+					Cancelar
 				</Button>
 				<Button
 					color='success'
