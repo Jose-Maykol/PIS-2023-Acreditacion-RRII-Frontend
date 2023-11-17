@@ -15,6 +15,7 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
 import { ImprovementPlans } from '@/types/PlanMejora'
+import { useRouter } from 'next/navigation'
 
 type TableProps = {
 	id?: string
@@ -27,6 +28,7 @@ export default function ImprovementPlansTable({
 	improvementPlans,
 	setImprovementPlans
 }: TableProps) {
+	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
@@ -188,14 +190,13 @@ export default function ImprovementPlansTable({
 						/>
 
 						{id ? (
-							<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
-								<Button
-									color='primary'
-									endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
-								>
-									Crear PM
-								</Button>
-							</Link>
+							<Button
+								color='primary'
+								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+								onClick={() => router.push(`/dashboard/standards/${id}/evidence_improvements/new`)}
+							>
+								Crear PM
+							</Button>
 						) : null}
 					</div>
 				</div>

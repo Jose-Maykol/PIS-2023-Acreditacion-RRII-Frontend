@@ -1,6 +1,5 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import Link from 'next/link'
 import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
 
 import CloseIcon from '@/components/Icons/CloseIcon'
@@ -75,7 +74,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					.then((res) => {
 						if (res.statusText === 'Created') {
 							showToast('success', 'Plan de mejora creado con éxito')
-							router.push(`/dashboard/standards/${standardId}/evidence_improvements`)
+							router.back()
 						}
 					})
 					.catch((error) => {
@@ -370,13 +369,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					color='danger'
 					className='mb-5'
 					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
+					onClick={() => router.back()}
 				>
-					<Link
-						className='text-white'
-						href={`/dashboard/standards/${standardId}/evidence_improvements`}
-					>
-						Cancelar
-					</Link>
+					Cancelar
 				</Button>
 				<Button
 					color='success'
