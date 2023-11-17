@@ -113,7 +113,7 @@ export default function ImprovementPlanEditForm({
 						}
 					})
 			} else {
-				showToast('info', 'Estado y Avance (%) deben estar en rangos definidos')
+				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
 		}
 	})

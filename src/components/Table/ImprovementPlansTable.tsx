@@ -1,16 +1,9 @@
+/* eslint-disable multiline-ternary */
 'use client'
 
 import React, { Dispatch, SetStateAction } from 'react'
 
-import {
-	Chip,
-	Tooltip,
-	Pagination,
-	Selection,
-	Input,
-	Button,
-	Progress
-} from '@nextui-org/react'
+import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
@@ -116,18 +109,21 @@ export default function ImprovementPlansTable({
 					</Chip>
 				)
 			case 'actions':
-				// TODO: Handle ID when they're from My Plans (by User)
 				return (
 					<div className='relative flex gap-4'>
 						<Tooltip content='Detalle'>
-							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/details`}>
+							<Link
+								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/details`}
+							>
 								<span className='text-default-400 cursor-pointer active:opacity-50'>
-									<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900'/>
+									<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900' />
 								</span>
 							</Link>
 						</Tooltip>
 						<Tooltip content='Editar Plan de Mejora'>
-							<Link href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}>
+							<Link
+								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/edit`}
+							>
 								<span className='text-default-400 cursor-pointer active:opacity-50'>
 									<PencilIcon width={15} height={15} fill='fill-warning' />
 								</span>
@@ -190,14 +186,17 @@ export default function ImprovementPlansTable({
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
 						/>
-						<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
-							<Button
-								color='primary'
-								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
-							>
-								Crear PM
-							</Button>
-						</Link>
+
+						{id ? (
+							<Link href={`/dashboard/standards/${id}/evidence_improvements/new`}>
+								<Button
+									color='primary'
+									endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+								>
+									Crear PM
+								</Button>
+							</Link>
+						) : null}
 					</div>
 				</div>
 			</div>
