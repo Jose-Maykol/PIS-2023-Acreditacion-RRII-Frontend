@@ -12,11 +12,11 @@ import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
 import { UsersService } from '@/api/Users/usersService'
 import ActivateUserModal from '../Modal/User/ActivateUserModal'
 import RoleUserModel from '../Modal/User/RoleUserModel'
+import dynamic from 'next/dynamic'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
@@ -28,7 +28,7 @@ export default function UserTable() {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-	const rowsPerPage = 10
+	const rowsPerPage = 9
 	const hasSearchFilter = Boolean(filterValue)
 	const [users, setUsers] = useState<User[]>([])
 	const columns = [
@@ -45,6 +45,10 @@ export default function UserTable() {
 		{ label: 'Inactivo', uid: 'inactivo' },
 		{ label: 'Pendiente de autenticación', uid: 'pendiente de autenticación' }
 	]
+
+	const AddUserModal = dynamic(() => import('../Modal/User/AddUserModal'), {
+		ssr: false
+	})
 
 	useEffect(() => {
 		UsersService.listUsers().then((res) => {
@@ -71,7 +75,6 @@ export default function UserTable() {
 				Array.from(statusFilter).includes(user.status)
 			)
 		}
-
 		return filteredUsers
 	}, [users, filterValue, statusFilter])
 
@@ -229,7 +232,7 @@ export default function UserTable() {
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[360px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)
