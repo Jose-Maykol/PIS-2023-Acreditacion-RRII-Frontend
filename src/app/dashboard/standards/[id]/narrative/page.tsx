@@ -7,9 +7,8 @@ import { Button, useDisclosure } from '@nextui-org/react'
 import { useEffect, useMemo, useState } from 'react'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import { toast } from 'react-toastify'
 import { useRouter } from 'next/navigation'
-import DeleteNarrativeModal from '@/components/Modal/Narrative/DeleteNarrativeModal'
+import dynamic from 'next/dynamic'
 
 type NarrativePageParams = {
 	params: {
@@ -23,6 +22,10 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	const [narrative, setNarrative] = useState<string>('')
 	const id = Number(params.id)
 	const router = useRouter()
+
+	const DeleteNarrativeModal = dynamic(() => import('@/components/Modal/Narrative/DeleteNarrativeModal'), {
+		ssr: false
+	})
 
 	const loadNarrative = useMemo(() => {
 		return (id: number) => {

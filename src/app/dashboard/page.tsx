@@ -5,13 +5,15 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
 import { ImprovementPlans } from '@/types/PlanMejora'
-
+import dynamic from 'next/dynamic'
 
 export default function DashboardPage() {
 	const [myImprovementPlans, setMyImprovementPlans] = useState<ImprovementPlans[]>([])
 	const { year, semester } = useYearSemesterStore()
+	const ImprovementPlansTable = dynamic(() => import('@/components/Table/ImprovementPlansTable'), {
+		ssr: false
+	})
 
 	const loadMyImprovementPlans = useMemo(() => {
 		return (year: number, semester: 'A' | 'B') => {
@@ -20,6 +22,7 @@ export default function DashboardPage() {
 			}).catch(console.log)
 		}
 	}, [])
+
 	useEffect(() => {
 		if (year && semester) {
 			loadMyImprovementPlans(year, semester)
