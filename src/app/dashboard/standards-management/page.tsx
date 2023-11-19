@@ -1,9 +1,5 @@
-'use client'
-
-import { useState } from 'react'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import StandardTable from '@/components/Table/StandardTable'
-import AssignmentModal from '@/components/Modal/StandardManagement/AssignmentModal'
 
 const page = () => {
 	return (

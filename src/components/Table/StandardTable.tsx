@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState, useCallback, useMemo, Key } from 'react'
 
 import {
