@@ -133,7 +133,6 @@ export default function ImprovementPlanEditForm({
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='name'
 					name='name'
 					value={formik.values.name}
@@ -157,7 +156,6 @@ export default function ImprovementPlanEditForm({
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='code'
 					name='code'
 					value={formik.values.code}
@@ -180,14 +178,15 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registre el problema / oportunidad que genera la mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.problems_opportunities}
+				formik={formik}
 			/>
-
 			<DynamicInput
 				identifier='root_causes'
 				label='Causa/Raíz:'
 				tooltip='Registre la causa raíz, producto de un análisis'
 				onChange={handleInputValues}
 				defaultValues={formData.root_causes}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -198,7 +197,6 @@ export default function ImprovementPlanEditForm({
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
 					value={formik.values.opportunity_for_improvement}
@@ -225,6 +223,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registre las acciones necesarias para ejecutar'
 				onChange={handleInputValues}
 				defaultValues={formData.improvement_actions}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -236,7 +235,6 @@ export default function ImprovementPlanEditForm({
 			>
 				<div className='mb-3 flex gap-5 mt-3'>
 					<Select
-						isRequired
 						id='year'
 						name='year'
 						selectedKeys={[formik.values.year]}
@@ -253,7 +251,6 @@ export default function ImprovementPlanEditForm({
 						))}
 					</Select>
 					<Select
-						isRequired
 						id='semester'
 						name='semester'
 						selectedKeys={[formik.values.semester]}
@@ -280,7 +277,6 @@ export default function ImprovementPlanEditForm({
 				closeDelay={100}
 			>
 				<Input
-					isRequired
 					id='duration'
 					name='duration'
 					value={formik.values.duration.toString()}
@@ -304,6 +300,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registrar los recursos necesarios'
 				onChange={handleInputValues}
 				defaultValues={formData.resources}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='goals'
@@ -311,6 +308,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registrar la meta que se espera lograr al término del plan de mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.goals}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='responsibles'
@@ -318,6 +316,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registrar los responsables de la ejecución de las actividades registradas'
 				onChange={handleInputValues}
 				defaultValues={formData.responsibles}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='observations'
@@ -325,6 +324,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registrar en esta sección las acciones vinculadas a las mejoras y en qué circunstancias se están realizando o realizaran'
 				onChange={handleInputValues}
 				defaultValues={formData.observations}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -336,7 +336,6 @@ export default function ImprovementPlanEditForm({
 			>
 				<div>
 					<Select
-						isRequired
 						id='plan_status_id'
 						name='plan_status_id'
 						selectedKeys={[`${formik.values.plan_status_id}`]}
@@ -361,6 +360,7 @@ export default function ImprovementPlanEditForm({
 				tooltip='Registrar de dónde proviene la fuente de la Mejora'
 				onChange={handleInputValues}
 				defaultValues={formData.sources}
+				formik={formik}
 			/>
 
 			<Tooltip
