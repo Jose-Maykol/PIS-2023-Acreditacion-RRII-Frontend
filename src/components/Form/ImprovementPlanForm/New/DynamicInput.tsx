@@ -18,17 +18,23 @@ export default function DynamicInput({
 }) {
 	const [singleInputValue, setSingleInputValue] = useState('')
 	const [inputValues, setInputValues] = useState<planItem[]>([])
+	const [isEmptyValue, setIsEmptyValue] = useState(false)
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
 		setSingleInputValue(ev.target.value)
+
+		if (ev.target.value.trim() !== '') {
+			setIsEmptyValue(false)
+		}
 	}
 
 	const handleAdd = () => {
 		if (singleInputValue.trim() === '') {
-			console.log('Agrega texto')
+			setIsEmptyValue(true)
 			return
 		}
 
+		setIsEmptyValue(false)
 		const newInputValues = [...inputValues, { id: Date.now(), description: singleInputValue }]
 		setInputValues(newInputValues)
 		onChange(identifier, newInputValues)
@@ -63,12 +69,20 @@ export default function DynamicInput({
 	return (
 		<div>
 			<div className='flex items-center gap-3'>
-				<Tooltip color='foreground' placement='top-start' offset={15} content={tooltip} closeDelay={100}>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					offset={15}
+					content={tooltip}
+					closeDelay={100}
+				>
 					<Input
 						id={identifier}
 						name={identifier}
 						value={singleInputValue}
 						onChange={handleChange}
+						isInvalid={isEmptyValue}
+						errorMessage={isEmptyValue && 'El campo no puede estar vacío'}
 						className='mb-4'
 						label={label}
 						size='sm'
