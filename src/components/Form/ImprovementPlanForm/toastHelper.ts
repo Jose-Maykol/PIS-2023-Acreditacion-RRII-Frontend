@@ -59,6 +59,8 @@ const showToast = (type: toastType, message: string) => {
 			theme: 'light'
 		})
 	}
+
+	return null
 }
 
 export default showToast

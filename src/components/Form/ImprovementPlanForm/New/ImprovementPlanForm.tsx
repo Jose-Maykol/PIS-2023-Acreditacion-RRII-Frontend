@@ -61,9 +61,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				observations: values.observations
 			}
 
-			console.log('ASCA')
-			console.log(formik.isValid)
-
 			// console.log(newPlan)
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
@@ -99,6 +96,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
+			{/* {!formik.isValid && showToast('error', 'Faltan datos')} */}
 			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
 
 			<Tooltip
@@ -208,6 +206,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						name='year'
 						value={formik.values.year}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
+						errorMessage={formik.errors.year && 'Campo requerido'}
 						className='max-w-xs'
 						label='Año:'
 						size='sm'
@@ -224,6 +224,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						name='semester'
 						value={formik.values.semester}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.semester && Boolean(formik.errors.semester)}
+						errorMessage={formik.errors.semester && 'Campo requerido'}
 						className='max-w-xs'
 						label='Semestre:'
 						size='sm'
@@ -305,6 +307,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						name='plan_status_id'
 						value={formik.values.plan_status_id}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
+						errorMessage={formik.errors.plan_status_id && 'Campo requerido'}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'

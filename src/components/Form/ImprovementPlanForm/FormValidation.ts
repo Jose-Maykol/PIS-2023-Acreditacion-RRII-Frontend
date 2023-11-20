@@ -8,11 +8,12 @@ export const validationSchema = yup.object().shape({
 		.trim()
 		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ'),
 	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria'),
-	semester_execution: yup.string().required('Semester Execution'), // TODO
-	advance: yup.number().required('Advance'),
+	year: yup.string().required('Campo requerido'),
+	semester: yup.string().required('Campo requerido'),
+	advance: yup.number().required('Campo requerido'),
 	duration: yup.number().required('Campo requerido'),
-	efficacy_evaluation: yup.boolean().required('Efficacy'),
-	plan_status_id: yup.number().required('Status ID'), // TODO
+	efficacy_evaluation: yup.boolean().required('Campo requerido'),
+	plan_status_id: yup.number().positive('Diferente de 0').required('Campo requerido'),
 	standard_id: yup.number().required('Campo requerido'),
 	sources: yup.array().min(1, 'Campo requerido'),
 	problems_opportunities: yup.array().min(1, 'Campo requerido por favor'),
