@@ -239,6 +239,8 @@ export default function ImprovementPlanEditForm({
 						name='year'
 						selectedKeys={[formik.values.year]}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
+						errorMessage={formik.errors.year && 'Campo requerido'}
 						className='max-w-xs'
 						label='Año:'
 						size='sm'
@@ -255,6 +257,8 @@ export default function ImprovementPlanEditForm({
 						name='semester'
 						selectedKeys={[formik.values.semester]}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.semester && Boolean(formik.errors.semester)}
+						errorMessage={formik.errors.semester && 'Campo requerido'}
 						className='max-w-xs'
 						label='Semestre:'
 						size='sm'
@@ -340,6 +344,8 @@ export default function ImprovementPlanEditForm({
 						name='plan_status_id'
 						selectedKeys={[`${formik.values.plan_status_id}`]}
 						onChange={formik.handleChange}
+						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
+						errorMessage={formik.errors.plan_status_id && 'Campo requerido'}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
