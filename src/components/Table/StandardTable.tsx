@@ -190,9 +190,6 @@ export default function StandardTable () {
 							onSelectionChange={setStatusFilter}
 
 						/>
-						<Button color='primary' endContent={getCommonIcon('plus', 15, 'fill-white')}>
-							Crear Estandares
-						</Button>
 					</div>
 				</div>
 			</div>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import { useState, useEffect, ReactNode } from 'react'
@@ -43,6 +44,7 @@ const AssignmentModal = ({
 			const iniciales = res.data.filter((user: EnabledUsers) => user.isManager).map((user: EnabledUsers) => user.id.toString())
 			setInitialValues(new Set([...iniciales]))
 			setValues(new Set([...iniciales]))
+			setIsValid({ isEmpty: (values as any).size, isChangeValues: false })
 		})
 	}
 
@@ -57,14 +59,13 @@ const AssignmentModal = ({
 	}
 
 	const handleValidation = () => {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		setTouched(true)
 		if ((values as any).size === 0) {
 			setIsValid({ isEmpty: true, isChangeValues: isValid.isChangeValues })
-			setTouched(true)
 		} else {
-			setIsValid({ isEmpty: isValid.isEmpty, isChangeValues: hasValuesChanged() })
-			setTouched(false)
+			setIsValid({ isEmpty: false, isChangeValues: hasValuesChanged() })
 		}
+		setTouched(false)
 	}
 	const handleSaveChanges = async () => {
 		const notification = toast.loading('Procesando...')
@@ -116,6 +117,7 @@ const AssignmentModal = ({
 			<Select
 				items={users}
 				label='Asignar Encargados'
+				description={`Se seleccionaron ${(values as any).size} encargados`}
 				variant='bordered'
 				isMultiline={true}
 				selectionMode='multiple'
@@ -131,8 +133,8 @@ const AssignmentModal = ({
 				scrollShadowProps={{
 					isEnabled: false
 				}}
-				isInvalid={!isValid.isEmpty || touched }
-				errorMessage={!isValid.isEmpty || touched ? 'Debe seleccionar almenos un encargado' : ''}
+				isInvalid={isValid.isEmpty || touched }
+				errorMessage={isValid.isEmpty || touched ? 'Debe seleccionar almenos un encargado' : ''}
 				onClose={handleValidation}
 				selectedKeys={values}
 				onSelectionChange={setValues}
@@ -140,7 +142,7 @@ const AssignmentModal = ({
 					return (
 						<div className='flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[100px]'>
 							{items.map((item) => (
-								<Chip key={item.key}>
+								<Chip key={item.key} className='bg-default-200'>
 									{item.data?.name} {item.data?.lastname}
 								</Chip>
 							))}
@@ -191,7 +193,7 @@ const AssignmentModal = ({
 						<Button color='danger' variant='solid' size='lg' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' isDisabled={isValid.isEmpty && !isValid.isChangeValues} onPress={handleSaveChanges} >
+						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' isDisabled={isValid.isEmpty || !isValid.isChangeValues} onPress={handleSaveChanges} >
 							Guardar
 						</Button>
 					</>
