@@ -61,6 +61,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				observations: values.observations
 			}
 
+			console.log('ASCA')
+			console.log(formik.isValid)
+
 			// console.log(newPlan)
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
@@ -147,13 +150,14 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				label='Problemas/Oportunidades:'
 				tooltip='Registre el problema / oportunidad que genera la mejora'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
-
 			<DynamicInput
 				identifier='root_causes'
 				label='Causa/Raíz:'
 				tooltip='Registre la causa raíz, producto de un análisis'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -188,6 +192,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				label='Acciones de mejora:'
 				tooltip='Registre las acciones necesarias para ejecutar'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -263,24 +268,28 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				label='Recursos:'
 				tooltip='Registrar los recursos necesarios'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='goals'
 				label='Metas:'
 				tooltip='Registrar la meta que se espera lograr al término del plan de mejora'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='responsibles'
 				label='Responsables:'
 				tooltip='Registrar los responsables de la ejecución de las actividades registradas'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 			<DynamicInput
 				identifier='observations'
 				label='Observaciones:'
 				tooltip='Registrar en esta sección las acciones vinculadas a las mejoras y en qué circunstancias se están realizando o realizaran'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 
 			<Tooltip
@@ -315,6 +324,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				label='Fuentes:'
 				tooltip='Registrar de dónde proviene la fuente de la Mejora'
 				onChange={handleInputValues}
+				formik={formik}
 			/>
 
 			<Tooltip

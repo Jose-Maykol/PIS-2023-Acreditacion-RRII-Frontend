@@ -9,12 +9,15 @@ export default function DynamicInput({
 	identifier,
 	label,
 	tooltip,
-	onChange
+	onChange,
+	formik
 }: {
 	identifier: string
 	label: string
 	tooltip: string
 	onChange: (formDataField: string, value: planItem[]) => void
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	formik: any
 }) {
 	const [singleInputValue, setSingleInputValue] = useState('')
 	const [inputValues, setInputValues] = useState<planItem[]>([])
@@ -94,6 +97,11 @@ export default function DynamicInput({
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
+			{(formik.errors[identifier]) ? (
+				<p style={{ color: '#F31260', fontSize: 12, marginTop: '-.75rem', marginLeft: '.25rem' }}>
+					Campo requerido
+				</p>
+			) : null}
 			{inputValues.length <= 2 ? (
 				<div> {renderInputItems()} </div>
 			) : (
