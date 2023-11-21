@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Progress } from '@nextui-org/react'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { toast } from 'react-toastify'
 
 const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string, isManager: boolean, statusID: number }) => {
 	const ratings = ['No Logrado', 'Logrado', 'Logrado Plenamente']
-	const [rating, setRating] = useState<number>(statusID)
+	const [rating, setRating] = useState<number>(0)
+
+	useEffect(() => {
+		if (statusID > 0) setRating(statusID - 1)
+	}, [statusID])
 
 	const handleSwitchClick = async (newRating: number) => {
 		const notification = toast.loading('Procesando...')
@@ -23,7 +27,7 @@ const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string
 			})
 			return
 		}
-		await StandardService.updateStatusStandard(standardID, newRating).then((res) => {
+		await StandardService.updateStatusStandard(standardID, newRating + 1).then((res) => {
 			console.log(res)
 			if (res.status === 1) {
 				toast.update(notification, {
@@ -60,7 +64,6 @@ const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string
 			1: { value: 50, color: 'bg-yellow-600' },
 			2: { value: 100, color: 'bg-green-600' }
 		}
-
 		return index <= rating ? props[rating] : { value: 0, color: 'bg-gray-300' }
 	}
 
@@ -75,7 +78,7 @@ const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string
 			</div>
 			<div className='flex flex-wrap justify-between w-full relative pl-7 pr-10'>
 				<Progress
-					className='absolute top-[33%] left-[13%] w-[70%]'
+					className='absolute top-[33%] max-w-[275px]'
 					size='sm'
 					aria-label='Loading...'
 					value={getPropsRating(rating).value}
