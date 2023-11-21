@@ -2,7 +2,7 @@ import api from '../axios'
 
 const url = {
 	login: '/auth/login/google/callback',
-	logout: '/logout'
+	logout: '/auth/logout'
 }
 
 export const AuthService = {

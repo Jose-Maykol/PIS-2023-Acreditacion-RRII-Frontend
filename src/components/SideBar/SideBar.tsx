@@ -13,12 +13,16 @@ import StandardIcon from '../Icons/StandardIcon'
 export default function SideBar({
 	isSidebarOpen,
 	toggleSidebar,
-	standards
+	standards,
+	role
 }: {
 	isSidebarOpen: boolean
 	toggleSidebar: () => void
 	standards: PartialStandard[]
+	role: string
 }) {
+	const isAdmin = role === 'administrador'
+
 	return (
 		<nav
 			className={`sticky top-0 bg-white border-gray-100 border ${
@@ -79,34 +83,38 @@ export default function SideBar({
 				/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
+			{isAdmin && (
+				<>
+					{isSidebarOpen && (
+						<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
+					)}
+					<ul className='text-sm list-none my-3'>
+						<SideBarItem
+							isOpen={isSidebarOpen}
+							icon={<UsersIcon width={18} height={18} />}
+							text='usuarios'
+							link='/dashboard/users'
+						/>
+					</ul>
+					<hr className='my-4 w-full'></hr>
+					{isSidebarOpen && (
+						<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>
+					)}
+					<ul className='text-sm list-none my-3'>
+						<SideBarItem
+							isOpen={isSidebarOpen}
+							icon={<UsersIcon width={18} height={18} />}
+							text='estándares'
+							link='/dashboard/standards-management'
+						/>
+					</ul>
+					<hr className='my-4 w-full'></hr>
+				</>
 			)}
-			<ul className='text-sm list-none my-3'>
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='usuarios'
-					link='/dashboard/users'
-				/>
-			</ul>
-			<hr className='my-4 w-full'></hr>
-			{isSidebarOpen && (
-				<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>
-			)}
-			<ul className='text-sm list-none my-3'>
-				<SideBarItem
-					isOpen={isSidebarOpen}
-					icon={<UsersIcon width={18} height={18} />}
-					text='estándares'
-					link='/dashboard/standards-management'
-				/>
-			</ul>
-			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
-			<ul className='text-sm list-none my-3 max-h-[50vh] overflow-auto scrollbar-hide'>
+			<ul className={`text-sm list-none my-3 ${isAdmin ? 'max-h-[50vh]' : 'h-full max-h-[70%]'} overflow-auto scrollbar-hide`}>
 				{Array.isArray(standards) &&
 					standards.map((standard: PartialStandard, index: number) => (
 						<SideBarItem

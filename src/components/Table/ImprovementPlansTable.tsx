@@ -255,7 +255,7 @@ export default function ImprovementPlansTable({
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)

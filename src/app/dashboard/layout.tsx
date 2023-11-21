@@ -8,6 +8,7 @@ import { Metadata } from 'next'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
 import { StandardService } from '@/api/Estandar/StandardService'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 
 
 // export const metadata: Metadata = {
@@ -17,6 +18,7 @@ import { StandardService } from '@/api/Estandar/StandardService'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+	const { role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
 	const toggleSidebar = () => {
@@ -38,9 +40,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		}
 	}, [year, semester, loadStandards])
 
+	console.log('role', role)
+
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
-			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards = {standards}/>
+			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards={standards} role={role}/>
 			<div className={'flex-grow h-screen max-h-screen flex flex-col'}>
 				<Header />
 				<main className='h-screen overflow-y-auto no-scrollbar'>

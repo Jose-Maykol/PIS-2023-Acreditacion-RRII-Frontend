@@ -14,13 +14,13 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	const { setYear, setSemester } = useYearSemesterStore()
-	const { setPermissions } = usePermissionsStore()
+	const { setPermissions, setRole } = usePermissionsStore()
 
 	useEffect(() => {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			const yearString = localStorage.getItem('year')
 			const semesterString = localStorage.getItem('semester')
-			const permissions = localStorage.getItem('permissions')
+			const authUser = localStorage.getItem('auth_user')
 			if (yearString && semesterString) {
 				const yearNumber = parseInt(yearString)
 				const semester = semesterString as 'A' | 'B'
@@ -33,8 +33,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 					setSemester(semester)
 				}
 			}
-			if (permissions) {
-				setPermissions(JSON.parse(permissions))
+			if (authUser) {
+				const jsonAuthUser = JSON.parse(authUser)
+				setPermissions(jsonAuthUser.permissions)
+				setRole(jsonAuthUser.role)
 			}
 		}
 	}, [])
