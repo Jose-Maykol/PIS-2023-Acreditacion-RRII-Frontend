@@ -114,7 +114,7 @@ export default function SideBar({
 			{isSidebarOpen && (
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
-			<ul className={`text-sm list-none my-3 ${isAdmin ? 'h-full max-h-[50vh]' : 'h-full max-h-[70%]'} overflow-auto scrollbar-hide`}>
+			<ul className={`text-sm list-none my-3 h-full ${isAdmin ? 'max-h-[50vh]' : 'max-h-[70%]'} overflow-auto scrollbar-hide`}>
 				{Array.isArray(standards) &&
 					standards.map((standard: PartialStandard, index: number) => (
 						<SideBarItem

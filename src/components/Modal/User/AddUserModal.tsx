@@ -97,7 +97,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600'>
+							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
 								Agregar usuario
 							</ModalHeader>
 							<ModalBody>

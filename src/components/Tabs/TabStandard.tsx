@@ -41,7 +41,7 @@ export default function TabStandard({ id, children }: { id: string; children: Re
 				variant='light'
 				classNames={{
 					tab: 'rounded-t-xl rounded-b-none h-11',
-					tabContent: 'group-data-[selected=true]:text-blue-600 text-white text-md uppercase',
+					tabContent: 'group-data-[selected=true]:text-blue-600 text-white text-md uppercase font-bold',
 					cursor: 'bg-gray-100 rounded-t-xl rounded-b-none',
 					panel: 'absolute top-[42px] bg-gray-100 flex p-10 w-[101%]'
 				}}
