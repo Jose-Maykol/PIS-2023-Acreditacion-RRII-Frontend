@@ -192,15 +192,17 @@ export default function UserTable() {
 	const bottomContent = React.useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				<Pagination
-					isCompact
-					showControls
-					showShadow
-					color='primary'
-					page={page}
-					total={pages}
-					onChange={setPage}
-				/>
+				{ pages !== 1 && (
+					<Pagination
+						isCompact
+						showControls
+						showShadow
+						color='primary'
+						page={page}
+						total={pages}
+						onChange={setPage}
+					/>
+				)}
 			</div>
 		)
 	}, [items.length, page, pages, hasSearchFilter])
