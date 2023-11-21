@@ -5,6 +5,7 @@ import { ReactNode, useEffect } from 'react'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -13,11 +14,13 @@ import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	const { setYear, setSemester } = useYearSemesterStore()
+	const { setPermissions } = usePermissionsStore()
 
 	useEffect(() => {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			const yearString = localStorage.getItem('year')
 			const semesterString = localStorage.getItem('semester')
+			const permissions = localStorage.getItem('permissions')
 			if (yearString && semesterString) {
 				const yearNumber = parseInt(yearString)
 				const semester = semesterString as 'A' | 'B'
@@ -29,6 +32,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				if (semester !== useYearSemesterStore.getState().semester) {
 					setSemester(semester)
 				}
+			}
+			if (permissions) {
+				setPermissions(JSON.parse(permissions))
 			}
 		}
 	}, [])

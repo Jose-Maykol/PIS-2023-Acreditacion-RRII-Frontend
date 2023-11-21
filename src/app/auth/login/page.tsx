@@ -56,6 +56,7 @@ export default function AuthPage() {
 						token,
 						picture: res.data.image,
 						role: res.data.role,
+						permissions: res.data.permissions,
 						user: {
 							id: res.data.user.id as number,
 							name: res.data.user.name as string,

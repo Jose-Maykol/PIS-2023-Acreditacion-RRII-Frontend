@@ -28,7 +28,7 @@ export default function UserTable() {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-	const rowsPerPage = 9
+	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
 	const [users, setUsers] = useState<User[]>([])
 	const columns = [
@@ -232,7 +232,7 @@ export default function UserTable() {
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div className='flex justify-center items-center min-h-[360px] w-full'>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)

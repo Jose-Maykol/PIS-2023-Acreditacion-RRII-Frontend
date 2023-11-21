@@ -10,6 +10,7 @@ export interface AuthUser {
 	token: string
 	picture: string
 	role: string
+	permissions: string[]
 	user: {
 		id: number
 		name: string

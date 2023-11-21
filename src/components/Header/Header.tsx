@@ -16,6 +16,7 @@ const Header = () => {
 	const { year, semester } = useYearSemesterStore()
 
 	const logout = () => {
+		AuthService.logout()
 		localStorage.removeItem('auth_user')
 		localStorage.removeItem('access_token')
 		localStorage.removeItem('year')
@@ -23,7 +24,6 @@ const Header = () => {
 		useYearSemesterStore.getState().setYear(null)
 		useYearSemesterStore.getState().setSemester(null)
 		BaseService.deleteConfig()
-		AuthService.logout()
 		window.location.href = '/'
 	}
 
