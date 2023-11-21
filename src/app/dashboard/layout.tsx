@@ -40,8 +40,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		}
 	}, [year, semester, loadStandards])
 
-	console.log('role', role)
-
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
 			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards={standards} role={role}/>
