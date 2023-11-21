@@ -21,7 +21,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
-	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: false })
+	const [isValid, setIsValid] = useState<{email: boolean | null, role: boolean}>({ email: null, role: false })
 	const [touched, setTouched] = useState(false)
 
 	const validateEmail = (value:string) => {
@@ -107,7 +107,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 									placeholder='Ingresa el email del usuario'
 									variant='bordered'
 									color={isValid.email ? 'default' : 'danger'}
-									isInvalid={!isValid.email}
+									isInvalid={!isValid.email && isValid.email !== null}
 									errorMessage={isValid.email ? '' : 'Email inválido'}
 									onValueChange={handleEmailValue}
 								/>
