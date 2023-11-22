@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
   },
   "dependencies": {
-    "@nextui-org/react": "2.1.13",
+    "@nextui-org/react": "2.2.0",
     "@nextui-org/use-infinite-scroll": "2.1.1",
     "@react-stately/data": "3.10.3",
     "@tinymce/tinymce-react": "4.3.0",
