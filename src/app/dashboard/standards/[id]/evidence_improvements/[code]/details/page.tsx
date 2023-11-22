@@ -53,14 +53,13 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 	useEffect(() => {
 		PlanMejoraService.readByPlan(params.code)
 			.then((res) => {
-				console.log(res.data.data)
 				setPlan(res.data.data)
 			})
 			.catch(console.log)
 	}, [])
 
 	return (
-		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
+		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md py-5 px-10'>
 			<div className='flex justify-between items-center mb-3'>
 				<h1 className='uppercase text-lg font-bold'>Detalles de plan de mejora</h1>
 				<Button color='primary' variant='ghost'>
