@@ -7,13 +7,13 @@ import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
-import { toast } from 'react-toastify'
 import { TINY_API_KEY } from '../../../config'
 import { StandardService } from '@/api/Estandar/StandardService'
 import PdfIcon from '../Icons/PdfIcon'
 import PowerPointIcon from '../Icons/PowerPointIcon'
 import FileIcon from '../Icons/FileIcon'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/toastProvider'
 
 interface Evidence {
   value: string
@@ -32,6 +32,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const [evidences, setEvidences] = useState<Evidence[]>([])
 	const [evidenceSelected, setEvidenceSelected] = useState<Selection>(new Set([]))
 	const { year, semester } = useYearSemesterStore()
+	const { showToast, updateToast } = useToast()
 
 	const loadNarrative = useMemo(() => {
 		return (id: number) => {
@@ -52,36 +53,16 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	}
 
 	const handleSaveNarrative = () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		const contentNarrative = {
 			narrative: editorRef.current?.getContent() as string
 		}
 		if (year && semester) {
 			NarrativeService.updateNarrative(id, contentNarrative).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 			router.push(`/dashboard/standards/${id}/narrative`)
