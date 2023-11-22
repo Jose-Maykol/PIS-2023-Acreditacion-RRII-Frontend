@@ -38,7 +38,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description = 'valor defecto', dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
+			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
 			setStandardHeader({
 				name,
 				description,
