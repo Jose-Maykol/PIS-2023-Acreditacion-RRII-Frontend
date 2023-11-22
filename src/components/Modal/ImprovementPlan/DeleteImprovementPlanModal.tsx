@@ -60,33 +60,28 @@ export default function DeleteImprovementPlanModal({
 									onPress={() => {
 										PlanMejoraService.delete(planId)
 											.then((res) => {
-												const notification = toast.loading('Procesando...')
 												if (res.data.status === 1) {
-													toast.update(notification, {
-														render: 'Plan de mejora eliminado satisfactoriamente',
-														type: 'success',
-														autoClose: 3000,
+													toast.success('Plan de mejora eliminado satisfactoriamente', {
+														autoClose: 2000,
 														hideProgressBar: false,
 														closeOnClick: true,
 														pauseOnHover: true,
 														draggable: true,
 														isLoading: false,
-														theme: 'colored'
+														theme: 'light'
 													})
 													setImprovementPlans((previous: Array<ImprovementPlans>) =>
 														previous.filter((plan) => plan.id !== planId)
 													)
 												} else {
-													toast.update(notification, {
-														render: 'Ocurrió un error al elimnar plan de mejora',
-														type: 'error',
-														autoClose: 3000,
+													toast.error('Ocurrió un error al elimnar plan de mejora', {
+														autoClose: 2000,
 														hideProgressBar: false,
 														closeOnClick: true,
 														pauseOnHover: true,
 														draggable: true,
 														isLoading: false,
-														theme: 'colored'
+														theme: 'light'
 													})
 												}
 											})
