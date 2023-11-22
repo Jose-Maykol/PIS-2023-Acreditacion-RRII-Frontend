@@ -27,7 +27,7 @@ export default function EvidenceResultsPage({ params }: EvidenceResultsPageParam
 			<div className='flex w-full mb-5'>
 				<h2>Evidencia de Planes</h2>
 			</div>
-			<EvidencesTable id={idStandard} type='2' reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
+			<EvidencesTable id={idStandard} typeEvidence='2' reload={reload} onReload={() => setReload(false)} onOpenModal={(id) => handleOpenModal(id)}/>
 			{showModal ? <UploadEvidenceModal id={idStandard} typeEvidence='2' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
 
 		</ContentWrapper>
