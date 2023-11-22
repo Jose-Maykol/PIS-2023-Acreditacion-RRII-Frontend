@@ -105,11 +105,9 @@ const AssignmentModal = ({
 	}
 
 	const header: ReactNode = (
-		<>
-			<h2 className='text-2xl font-bold text-center'>
-				Formulario de Asignacion de Encargados del Estandar {id}
-			</h2>
-		</>
+		<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
+			Asignar encargados a estándar {id}
+		</h2>
 	)
 
 	const body: ReactNode = (
@@ -122,14 +120,13 @@ const AssignmentModal = ({
 				isMultiline={true}
 				selectionMode='multiple'
 				placeholder='Selecciona los usuarios'
-				labelPlacement='outside'
+				// labelPlacement='outside'
 				classNames={{
 					base: 'h-full py-1',
-					label: 'text-xl text-bold py-4',
-					trigger: 'flex flex-col py-5'
+					trigger: 'flex flex-col'
 				}}
-				size='lg'
-				className='w-[80%] m-auto'
+				// size='lg'
+				// className='w-[80%] m-auto'
 				scrollShadowProps={{
 					isEnabled: false
 				}}
@@ -140,7 +137,7 @@ const AssignmentModal = ({
 				onSelectionChange={setValues}
 				renderValue={(items: SelectedItems<EnabledUsers>) => {
 					return (
-						<div className='flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[100px]'>
+						<div className='flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[75px]'>
 							{items.map((item) => (
 								<Chip key={item.key} className='bg-default-200'>
 									{item.data?.name} {item.data?.lastname}
@@ -180,7 +177,7 @@ const AssignmentModal = ({
 				isOpen={showModal}
 				classNames={{
 					// base: 'h-[60%]',
-					header: 'p-2 border-b-[2px] border-gray-200'
+					// header: 'p-2 border-b-[2px] border-gray-200'
 					// body: 'h-[55%] py-2',
 					// footer: 'h-[22%]'
 				}}
@@ -190,7 +187,7 @@ const AssignmentModal = ({
 				body={body}
 				footer={
 					<>
-						<Button color='danger' variant='solid' size='lg' onPress={handleCloseModal}>
+						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
 						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' isDisabled={isValid.isEmpty || !isValid.isChangeValues} onPress={handleSaveChanges} >

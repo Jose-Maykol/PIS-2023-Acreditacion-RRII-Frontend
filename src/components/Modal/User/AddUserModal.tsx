@@ -21,32 +21,28 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [emailValue, setEmailValue] = useState('')
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
-	const [isValid, setIsValid] = useState<{email: boolean, role: boolean}>({ email: true, role: false })
+	const [isValid, setIsValid] = useState<{email: boolean | null, role: boolean}>({ email: null, role: false })
 	const [touched, setTouched] = useState(false)
-	const validateEmail = (value:string) => value.match(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,4}$/i)
+
+	const validateEmail = (value:string) => {
+		return /.+@unsa\.edu\.pe$/.test(value)
+	}
 
 	const roles = useMemo(
 		() => [
 			{ label: 'Administrador', value: 'administrador' },
 			{ label: 'Docente', value: 'docente' }
-		],
-		[]
-	)
+		], [])
 
 	const handleEmailValue = (value: string): void => {
 		setEmailValue(value)
-		setIsValid({ ...isValid, email: !isInvalid })
+		setIsValid({ ...isValid, email: validateEmail(value) })
 	}
 
 	const handleRoleValue = (value: Selection): void => {
 		setRoleValue(value)
 		setIsValid({ ...isValid, role: (value as any).size > 0 })
 	}
-
-	const isInvalid = useMemo(() => {
-		if (emailValue === '') return true
-		return !validateEmail(emailValue)
-	}, [emailValue])
 
 	const handleSubmit = async () => {
 		const notification = toast.loading('Procesando...')
@@ -101,7 +97,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600'>
+							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
 								Agregar usuario
 							</ModalHeader>
 							<ModalBody>
@@ -111,7 +107,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 									placeholder='Ingresa el email del usuario'
 									variant='bordered'
 									color={isValid.email ? 'default' : 'danger'}
-									isInvalid={!isValid.email}
+									isInvalid={!isValid.email && isValid.email !== null}
 									errorMessage={isValid.email ? '' : 'Email inválido'}
 									onValueChange={handleEmailValue}
 								/>

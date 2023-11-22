@@ -38,7 +38,7 @@ export default function ImprovementPlansTable({
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
 
-	const rowsPerPage = 7
+	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
 
 	const filteredItems = React.useMemo(() => {
@@ -207,15 +207,17 @@ export default function ImprovementPlansTable({
 	const bottomContent = React.useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				<Pagination
-					isCompact
-					showControls
-					showShadow
-					color='primary'
-					page={page}
-					total={pages}
-					onChange={setPage}
-				/>
+				{ pages !== 1 && (
+					<Pagination
+						isCompact
+						showControls
+						showShadow
+						color='primary'
+						page={page}
+						total={pages}
+						onChange={setPage}
+					/>
+				)}
 			</div>
 		)
 	}, [items.length, page, pages, hasSearchFilter])
@@ -255,7 +257,7 @@ export default function ImprovementPlansTable({
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)

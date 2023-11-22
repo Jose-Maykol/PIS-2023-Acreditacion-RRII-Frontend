@@ -98,7 +98,7 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className='flex flex-col gap-1'>
+							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
                 Cambiar estado de usuario
 							</ModalHeader>
 							<ModalBody>

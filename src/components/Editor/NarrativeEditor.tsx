@@ -97,7 +97,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const insertEvidence = () => {
 		const evidenceId = (evidenceSelected as any).values().next().value
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank" download="${evidenceLabel}">${evidenceLabel}</a>`
+		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank">${evidenceLabel}</a>`
 		const editor = editorRef.current
 		if (editor) {
 			editor.insertContent(evidenceToInsert)

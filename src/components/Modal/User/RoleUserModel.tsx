@@ -98,7 +98,7 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 				<ModalContent>
 					{(onClose) => (
 						<>
-							<ModalHeader className='flex flex-col gap-1'>
+							<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
                 Cambiar rol del usuario
 							</ModalHeader>
 							<ModalBody>

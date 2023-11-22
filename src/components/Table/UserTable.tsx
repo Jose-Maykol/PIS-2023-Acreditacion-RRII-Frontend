@@ -12,11 +12,11 @@ import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
-import AddUserModal from '../Modal/User/AddUserModal'
 import { User } from '@/types/User'
 import { UsersService } from '@/api/Users/usersService'
 import ActivateUserModal from '../Modal/User/ActivateUserModal'
 import RoleUserModel from '../Modal/User/RoleUserModel'
+import dynamic from 'next/dynamic'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	activo: 'success',
@@ -46,6 +46,10 @@ export default function UserTable() {
 		{ label: 'Pendiente de autenticación', uid: 'pendiente de autenticación' }
 	]
 
+	const AddUserModal = dynamic(() => import('../Modal/User/AddUserModal'), {
+		ssr: false
+	})
+
 	useEffect(() => {
 		UsersService.listUsers().then((res) => {
 			setUsers(res.data)
@@ -71,7 +75,6 @@ export default function UserTable() {
 				Array.from(statusFilter).includes(user.status)
 			)
 		}
-
 		return filteredUsers
 	}, [users, filterValue, statusFilter])
 
@@ -189,15 +192,17 @@ export default function UserTable() {
 	const bottomContent = React.useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				<Pagination
-					isCompact
-					showControls
-					showShadow
-					color='primary'
-					page={page}
-					total={pages}
-					onChange={setPage}
-				/>
+				{ pages !== 1 && (
+					<Pagination
+						isCompact
+						showControls
+						showShadow
+						color='primary'
+						page={page}
+						total={pages}
+						onChange={setPage}
+					/>
+				)}
 			</div>
 		)
 	}, [items.length, page, pages, hasSearchFilter])
@@ -229,7 +234,7 @@ export default function UserTable() {
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)

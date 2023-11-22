@@ -34,7 +34,7 @@ export default function StandardTable () {
 	const [filterValue, setFilterValue] = useState<string>('')
 	const [page, setPage] = useState<number>(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
-	const rowsPerPage = 8
+	const rowsPerPage = 9
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const [reload, setReload] = useState<boolean>(false)
@@ -205,15 +205,17 @@ export default function StandardTable () {
 	const bottomContent = useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				<Pagination
-					isCompact
-					showControls
-					showShadow
-					color='primary'
-					page={page}
-					total={pages}
-					onChange={setPage}
-				/>
+				{ pages !== 1 && (
+					<Pagination
+						isCompact
+						showControls
+						showShadow
+						color='primary'
+						page={page}
+						total={pages}
+						onChange={setPage}
+					/>
+				)}
 			</div>
 		)
 	}, [items.length, page, pages, hasSearchFilter])
@@ -245,7 +247,7 @@ export default function StandardTable () {
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div>No se encontro elementos</div>}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
 			classNames={classNames}
 		/>
 	)

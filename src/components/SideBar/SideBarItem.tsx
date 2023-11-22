@@ -1,5 +1,6 @@
 'use client'
 
+import { Tooltip } from '@nextui-org/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
@@ -23,20 +24,51 @@ export default function SideBarItem({ isOpen, icon, text, link }: SideBarItemPro
 	})
 
 	return (
-		<li
-			className={`${
-				isOpen ? 'p-3' : 'p-1'
-			} w-full h-8 my-1 hover:bg-gray-300 rounded-md ${backgroundColor}`}
-		>
-			<Link
-				href={link}
-				className={`text-base-regular flex flex-row items-center h-full w-full ${
-					isOpen ? '' : 'justify-center'
-				}`}
-			>
-				{iconFill}
-				{isOpen && <span className='pl-2 font-bold uppercase'>{text}</span>}
-			</Link>
-		</li>
+		<>
+			{!isOpen
+				? (
+					<Tooltip
+						placement='right'
+						content={
+							<div className='text-sm font-semibold uppercase'>
+								{text}
+							</div>
+						}
+					>
+						<li
+							className={`${
+								isOpen ? 'p-3' : 'p-1'
+							} w-full h-8 my-1 hover:bg-gray-300 rounded-md ${backgroundColor}`}
+						>
+							<Link
+								href={link}
+								className={`text-base-regular flex flex-row items-center h-full w-full ${
+									isOpen ? '' : 'justify-center'
+								}`}
+							>
+								{iconFill}
+								{isOpen && <span className='pl-2 font-bold uppercase'>{text}</span>}
+							</Link>
+						</li>
+					</Tooltip>
+				)
+				: (
+					<li
+						className={`${
+							isOpen ? 'p-3' : 'p-1'
+						} w-full h-8 my-1 hover:bg-gray-300 rounded-md ${backgroundColor}`}
+					>
+						<Link
+							href={link}
+							className={`text-base-regular flex flex-row items-center h-full w-full ${
+								isOpen ? '' : 'justify-center'
+							}`}
+						>
+							{iconFill}
+							{isOpen && <span className='pl-2 font-bold uppercase'>{text}</span>}
+						</Link>
+					</li>
+				)}
+		</>
 	)
 }
