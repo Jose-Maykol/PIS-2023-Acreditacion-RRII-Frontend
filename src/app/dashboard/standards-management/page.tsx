@@ -1,5 +1,3 @@
-'use client'
-
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import StandardTable from '@/components/Table/StandardTable'
 

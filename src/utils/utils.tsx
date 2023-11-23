@@ -6,6 +6,7 @@ import ExcelIcon from '@/components/Icons/ExcelIcon'
 import PowerPointIcon from '@/components/Icons/PowerPointIcon'
 import ZipperIcon from '@/components/Icons/ZipperIcon'
 import FolderPlusIcon from '@/components/Icons/FolderPlusIcon'
+import FolderIcon from '@/components/Icons/FolderIcon'
 
 import PlusIcon from '@/components/Icons/PlusIcon'
 import SearchIcon from '@/components/Icons/SearchIcon'
@@ -35,6 +36,8 @@ export const getFileIcon = (fileName?: string, type?: string, size: number = 24)
 	case 'zip':
 		return <ZipperIcon width={size} height={size} />
 	case 'folder':
+		return <FolderIcon width={size} height={size} />
+	case 'folderPlus':
 		return <FolderPlusIcon width={size} height={size} />
 	default:
 		return null
@@ -55,4 +58,18 @@ export const getCommonIcon = (name: string, size: number = 24, fillColor?: strin
 
 export function capitalize(str: string): string {
 	return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
+export function formatIsoDateToCustom(isoDateString: string): string {
+	const date = new Date(isoDateString)
+
+	const months = [
+		'ene', 'feb', 'mar', 'abr', 'may', 'jun',
+		'jul', 'ago', 'sep', 'oct', 'nov', 'dic'
+	]
+
+	const day = date.getDate() < 10 ? `0${date.getDate()}` : date.getDate()
+
+	const formattedDate = `${day} ${months[date.getMonth()]} ${date.getFullYear()}`
+	return formattedDate
 }

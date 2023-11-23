@@ -1,5 +1,6 @@
 export interface Evidence {
     id: string;
+    code: string;
     name: string;
     path: string;
     file?: string; //

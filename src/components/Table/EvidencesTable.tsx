@@ -11,6 +11,7 @@ import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
+import FolderIcon from '../Icons/FolderIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
 import EyeIcon from '../Icons/EyeIcon'
 import DownloadIcon from '../Icons/DownloadIcon'
@@ -19,12 +20,12 @@ import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
-import { getFileIcon } from '@/utils/utils'
+import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 
 
-export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {id: string, type: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({ id, typeEvidence, reload, onReload, onOpenModal } : {id: string, typeEvidence: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -32,7 +33,7 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
 	const [params, setParams] = useState<{ parent_id: string | number }>({
-		parent_id: 2
+		parent_id: 'null'
 	})
 	const [blobURL, setBlobURL] = useState<string>('')
 	const columns = [
@@ -43,9 +44,9 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 	]
 
 	useEffect(() => {
-		EvidenceService.getEvidencesByType('1', '1', params).then((res) => {
+		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
 			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
-				evidence.id = `${evidence.type}-${evidence.id}`
+				evidence.id = `${evidence.code}`
 				return evidence
 			})
 			console.log('useeffect', res.data)
@@ -78,13 +79,16 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const handleSelectOption = (key: string) => {
+	const handleSelectOption = (key: string, fileID?: string) => {
 		switch (key) {
 		case 'upload-evidence':
 			onOpenModal(id)
 			break
 		case 'create-folder':
 			alert('create folder')
+			break
+		case 'download-evidence':
+			handleDownload(fileID)
 			break
 		}
 	}
@@ -96,8 +100,8 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 		case 'name':
 			return (
 				<div className='flex gap-2'>
-					{getFileIcon(undefined, evidence.extension ?? 'folder', 24)}
-					<p className='text-bold text-lg capitalize'>{evidence.name}</p>
+					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
+					<p className='text-bold text-lg capitalize'>{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -110,7 +114,7 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 		case 'updated_at':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-md capitalize'>{new Date(evidence.updated_at).getDate().toString()}</p>
+					<p className='text-bold text-md capitalize'>{formatIsoDateToCustom(evidence.updated_at)}</p>
 				</div>
 			)
 
@@ -158,7 +162,7 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 						]}
 						placement='bottom-end'
 						mode='action'
-						onAction={(key: string) => handleSelectOption(key)}
+						onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
 					/>
 				</div>
 			)
@@ -179,20 +183,44 @@ export default function EvidencesTable({ id, reload, onReload, onOpenModal } : {
 		setPage(1)
 	}, [])
 
+	const handleDownload = React.useCallback((fileID: string | undefined) => {
+		if (fileID) {
+			EvidenceService.downloadFile(fileID).then((res) => {
+				console.log(res.data)
+				// Obtener el header de Content-Disposition para extraer el nombre del archivo
+				const contentDisposition = res.headers['content-disposition']
+				let filename = 'descarga'
+				if (contentDisposition) {
+					const filenameMatch = contentDisposition.match(/filename="?(.+)"?/)
+					if (filenameMatch) {
+						filename = filenameMatch[1]
+					}
+				}
+
+				// Crear URL a partir del Blob
+				const url = URL.createObjectURL(res.data)
+				const link = document.createElement('a')
+				link.href = url
+				link.download = filename
+				document.body.appendChild(link)
+				link.click()
+				document.body.removeChild(link)
+				URL.revokeObjectURL(url)
+			})
+		}
+	}, [])
+
 	const onRowActionClick = React.useCallback((key: string) => {
-		console.log(evidencesManagement)
-		const evidence = evidencesManagement.find((e) => e.id === key)
 		const type = key.split('-')[0]
 		const id = key.split('-')[1]
-		console.log(evidence, type, id)
-		if (type === 'folder') {
-			onReload()
+		if (type === 'F') {
 			setParams({
-				parent_id: 6
+				parent_id: Number(id)
 			})
 		} else {
 			EvidenceService.viewEvidence(id).then((res) => {
-				const base64Data = res.base64_content
+				console.log(res.status)
+				const base64Data = res.data.content
 				const binaryString = atob(base64Data)
 				const byteArray = new Uint8Array(binaryString.length)
 				for (let i = 0; i < binaryString.length; i++) {
