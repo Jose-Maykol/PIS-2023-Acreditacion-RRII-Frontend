@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable eqeqeq */
-import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
 import { Editor } from '@tinymce/tinymce-react'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { Key, useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { TINY_API_KEY } from '../../../config'
 import { StandardService } from '@/api/Estandar/StandardService'
-import PdfIcon from '../Icons/PdfIcon'
-import PowerPointIcon from '../Icons/PowerPointIcon'
-import FileIcon from '../Icons/FileIcon'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
+import { getFileIcon } from '@/utils/utils'
 
 interface Evidence {
   value: string
@@ -30,7 +28,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const router = useRouter()
 	const [content, setContent] = useState<string>('')
 	const [evidences, setEvidences] = useState<Evidence[]>([])
-	const [evidenceSelected, setEvidenceSelected] = useState<Selection>(new Set([]))
+	const [evidenceSelected, setEvidenceSelected] = useState<Key | null>(null)
 	const { year, semester } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
 
@@ -76,7 +74,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	}, [])
 
 	const insertEvidence = () => {
-		const evidenceId = (evidenceSelected as any).values().next().value
+		const evidenceId = evidenceSelected
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
 		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank">${evidenceLabel}</a>`
 		const editor = editorRef.current
@@ -86,22 +84,22 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 		}
 	}
 
-	const handleEvidenceSelected = (value: Selection): void => {
-		setEvidenceSelected(value)
+	const handleEvidenceSelected = (key: Key): void => {
+		setEvidenceSelected(key)
 	}
 
 	return (
 		<div className='min-h-[600px]'>
 			<div className='flex flex-row py-4 w-full items-end'>
-				<Select
-					items={evidences}
+				<Autocomplete
+					defaultItems={evidences}
 					placeholder='Selecciona una evidencia'
 					label='Insertar evidencia'
 					labelPlacement='outside'
 					variant='bordered'
 					className='w-full'
 					onSelectionChange={handleEvidenceSelected}
-					listboxProps={{
+					/* listboxProps={{
 						itemClasses: {
 							base: [
 								'rounded-md',
@@ -121,36 +119,33 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 							base: 'p-0 border-small border-divider bg-background',
 							arrow: 'bg-default-200'
 						}
-					}}
-					renderValue={(items) => {
+					}} */
+					/* renderValue={(items) => {
 						return items.map((item) => (
 							<div key={item.key} className='flex gap-2 items-center'>
-								{item.data?.type === 'pdf' && (<PdfIcon width={20} height={20} fill='fill-red-600'/>)}
-								{item.data?.type === 'pptx' && (<PowerPointIcon width={20} height={20} fill='fill-orange-600'/>)}
+								{getFileIcon(item.data?.label, item.data?.type, 20)}
 								<div className='flex flex-col'>
 									{item.data?.label}
 								</div>
 							</div>
 						))
-					}}
+					}} */
 				>
 					{(evidence) => (
-						<SelectItem key={evidence.value} value={evidence.value}>
+						<AutocompleteItem key={evidence.value} textValue={evidence.label}>
 							<div className='flex gap-2 items-center'>
 								<div className='w-[20px]'>
-									{evidence.type === 'pdf' && (<PdfIcon width={20} height={20} fill='fill-red-600'/>)}
-									{evidence.type === 'pptx' && (<PowerPointIcon width={15} height={20} fill='fill-orange-600'/>)}
-									{!['pdf', 'pptx'].includes(evidence.type) && (<FileIcon width={20} height={20} fill='fill-neutral-700'/>)}
+									{getFileIcon(evidence.label, evidence.type, 20)}
 								</div>
 								<div className='flex flex-col'>
 									{evidence.label}
 								</div>
 							</div>
-						</SelectItem>
+						</AutocompleteItem>
 					)}
-				</Select>
+				</Autocomplete>
 				<Button
-					isDisabled={(evidenceSelected as any).size === 0}
+					isDisabled={(evidenceSelected === null)}
 					color='primary'
 					className='ml-2'
 					onPress={insertEvidence}>

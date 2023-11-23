@@ -1,17 +1,19 @@
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
+import EditorSkeleton from '@/components/Skeletons/EditorSkeleton'
 import dynamic from 'next/dynamic'
 
 interface EditNarrativePageParams {
   params: {
-		id: number
+		id: number,
 	}
 }
 
 export default function EditNarrativePage({ params }: EditNarrativePageParams) {
 	const NarrativeEditor = dynamic(() => import('@/components/Editor/NarrativeEditor'), {
-		ssr: false
+		ssr: false,
+		loading: () => <EditorSkeleton />
 	})
 
 	return (

@@ -13,6 +13,7 @@ import SearchIcon from '@/components/Icons/SearchIcon'
 import LinkIcon from '@/components/Icons/LinkIcon'
 import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
 import PencilIcon from '@/components/Icons/PencilIcon'
+import FileIcon from '@/components/Icons/FileIcon'
 
 
 export const getFileIcon = (fileName?: string, type?: string, size: number = 24): React.JSX.Element | null => {
@@ -32,7 +33,7 @@ export const getFileIcon = (fileName?: string, type?: string, size: number = 24)
 		return <ExcelIcon width={size} height={size} />
 	case 'ppt':
 	case 'pptx':
-		return <PowerPointIcon width={size} height={size} />
+		return <PowerPointIcon width={size * 0.75} height={size} />
 	case 'zip':
 		return <ZipperIcon width={size} height={size} />
 	case 'folder':
@@ -40,7 +41,7 @@ export const getFileIcon = (fileName?: string, type?: string, size: number = 24)
 	case 'folderPlus':
 		return <FolderPlusIcon width={size} height={size} />
 	default:
-		return null
+		return <FileIcon width={size} height={size} fill='fill-neutral-700'/>
 	}
 }
 
