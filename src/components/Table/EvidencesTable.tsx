@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 
 import {
@@ -23,9 +25,10 @@ import { Evidence } from '@/types/Evidences'
 import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
+import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 
 
-export default function EvidencesTable({ id, typeEvidence, reload, onReload, onOpenModal } : {id: string, typeEvidence: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({ id, typeEvidence } : {id: string, typeEvidence: string}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -36,6 +39,8 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 		parent_id: 'null'
 	})
 	const [blobURL, setBlobURL] = useState<string>('')
+	const [reload, setReload] = useState<boolean>(false)
+	const [showModal, setShowModal] = useState<boolean>(false)
 	const columns = [
 		{ name: 'NOMBRE', uid: 'name', sortable: true },
 		{ name: 'SUBIDO POR', uid: 'full_name', sortable: true },
@@ -52,7 +57,6 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
-		onReload()
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -82,7 +86,8 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 	const handleSelectOption = (key: string, fileID?: string) => {
 		switch (key) {
 		case 'upload-evidence':
-			onOpenModal(id)
+			// onOpenModal(id)
+			// {/* <UploadEvidenceModal id={idStandard} typeEvidence='1' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>} */}
 			break
 		case 'create-folder':
 			alert('create folder')
