@@ -45,7 +45,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards={standards} role={role}/>
 			<div className={'flex-grow h-screen max-h-screen flex flex-col'}>
 				<Header />
-				<main className='h-screen overflow-y-auto no-scrollbar bg-gray-100'>
+				<main className='flex-1 no-scrollbar bg-gray-100'>
 					{children}
 				</main>
 			</div>
