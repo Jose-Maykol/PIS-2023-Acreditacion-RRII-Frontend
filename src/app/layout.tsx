@@ -1,11 +1,12 @@
 'use client'
 
 import './globals.css'
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import type { Metadata } from 'next'
 import { Providers } from './providers'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { usePermissionsStore } from '@/store/usePermissionsStore'
+import { useRouter } from 'next/navigation'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -15,6 +16,8 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 export default function RootLayout({ children }: { children: ReactNode }) {
 	const { setYear, setSemester } = useYearSemesterStore()
 	const { setPermissions, setRole } = usePermissionsStore()
+	const [redirected, setRedirected] = useState(false)
+	const router = useRouter()
 
 	useEffect(() => {
 		if (typeof window !== 'undefined' && window.localStorage) {
@@ -37,6 +40,10 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 				const jsonAuthUser = JSON.parse(authUser)
 				setPermissions(jsonAuthUser.permissions)
 				setRole(jsonAuthUser.role)
+			}
+			if (!authUser && !redirected) {
+				setRedirected(true)
+				router.push('/auth/login')
 			}
 		}
 	}, [])

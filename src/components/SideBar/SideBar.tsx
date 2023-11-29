@@ -9,6 +9,7 @@ import logoUnsa from '../../../public/img/logo-unsa.webp'
 import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
+import UserAdminIcon from '../Icons/UserAdminIcon'
 
 export default function SideBar({
 	isSidebarOpen,
@@ -88,6 +89,14 @@ export default function SideBar({
 					{isSidebarOpen && (
 						<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
 					)}
+					<ul className='text-sm list-none my-3'>
+						<SideBarItem
+							isOpen={isSidebarOpen}
+							icon={<UserAdminIcon width={18} height={18} />}
+							text='panel'
+							link='/dashboard/panel'
+						/>
+					</ul>
 					<ul className='text-sm list-none my-3'>
 						<SideBarItem
 							isOpen={isSidebarOpen}

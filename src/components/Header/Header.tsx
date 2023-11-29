@@ -9,6 +9,7 @@ import { BaseService } from '@/api/Base/BaseService'
 import { AuthService } from '@/api/Auth/authService'
 import LogoutIcon from '../Icons/LogoutIcon'
 import UserIcon from '../Icons/UserIcon'
+import CountdownSemester from '../Countdown/CountdownSemester'
 
 const Header = () => {
 	const [picture, setPicture] = useState('')
@@ -88,6 +89,7 @@ const Header = () => {
 						if (key === 'logout') logout()
 					}}
 				/>
+				<CountdownSemester/>
 			</NavbarContent>
 		</Navbar>
 	)
