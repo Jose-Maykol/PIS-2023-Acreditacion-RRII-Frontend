@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable multiline-ternary */
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -15,8 +15,8 @@ import { validationSchema } from '../FormValidation'
 import { useFormik } from 'formik'
 import showToast from '../toastHelper'
 
-import PlusIcon from '@/components/Icons/PlusIcon'
-import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
+import ImprovementEvidencesModal from '@/components/Modal/Evidence/ImprovementEvidencesModal'
+import EyeIcon from '@/components/Icons/EyeIcon'
 
 export default function ImprovementPlanEditForm({
 	params,
@@ -31,8 +31,6 @@ export default function ImprovementPlanEditForm({
 	const [advanceValue, setAdvanceValue] = useState(0)
 
 	const [showModal, setShowModal] = useState<boolean>(false)
-	// eslint-disable-next-line no-unused-vars
-	const [reload, setReload] = useState<boolean>(false)
 
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -369,8 +367,6 @@ export default function ImprovementPlanEditForm({
 			</Tooltip>
 
 			{/* TODO: Check functionality */}
-			{/* TODO: Check typeEvidence */}
-			{/* TODO: List evidences */}
 			<div className='flex gap-5 items-center mt-3'>
 				{/* <Input
 					id='evidences'
@@ -381,15 +377,29 @@ export default function ImprovementPlanEditForm({
 					type='text'
 					variant='underlined'
 				/> */}
-				<label className='text-default-600 text-sm'>Evidencias:</label>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					offset={15}
+					content='Ver las evidencias del plan de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Evidencias:</label>
+				</Tooltip>
 				<Button
 					color='primary'
-					startContent={<PlusIcon width={16} height={16} fill='fill-white' />}
+					startContent={<EyeIcon width={16} height={16} fill='fill-white' />}
 					onClick={() => setShowModal(true)}
 				>
-					Subir evidencias
+					Ver Evidencias
 				</Button>
-				{showModal ? <UploadEvidenceModal id={params.id} typeEvidence='3' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)} planId={plan.id}/> : <></>}
+				{showModal ? (
+					<ImprovementEvidencesModal
+						openModal={showModal}
+						onCloseModal={() => setShowModal(false)}
+						id={params.id}
+					/>
+				) : null}
 			</div>
 
 			<DynamicInput
