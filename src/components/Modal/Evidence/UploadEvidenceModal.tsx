@@ -15,7 +15,8 @@ const UploadEvidenceModal = ({
 	path,
 	openModal,
 	onCloseModal,
-	onReload
+	onReload,
+	planId
 }: {
 	id: string
 	typeEvidence: string
@@ -23,6 +24,7 @@ const UploadEvidenceModal = ({
 	openModal: boolean
 	onCloseModal: () => void
 	onReload: () => void
+	planId?: string
 }) => {
 	const [files, setFiles] = useState<File[]>([])
 	const [totalSize, setTotalSize] = useState<number>(0)
@@ -84,6 +86,11 @@ const UploadEvidenceModal = ({
 			formData.append(`files[${index}]`, file)
 		})
 		formData.append('path', path)
+
+		// Add planId when the evidences were uploaded from PM form
+		if (planId) {
+			formData.append('plan_id', planId)
+		}
 
 		const resPromise = EvidenceService.uploadEvidences(formData).then((res) => {
 			if (res.status === 1) return Promise.resolve({ message: res.message })

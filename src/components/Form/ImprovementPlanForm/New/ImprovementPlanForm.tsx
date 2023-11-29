@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
@@ -12,17 +11,11 @@ import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useFormik } from 'formik'
 import { validationSchema } from '../FormValidation'
 import showToast from '../toastHelper'
-import PlusIcon from '@/components/Icons/PlusIcon'
-import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 
 export default function ImprovementPlanForm({ standardId }: { standardId: string }) {
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
-
-	const [showModal, setShowModal] = useState<boolean>(false)
-	// eslint-disable-next-line no-unused-vars
-	const [reload, setReload] = useState<boolean>(false)
 
 	const formik = useFormik({
 		initialValues: {
@@ -329,30 +322,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					</Select>
 				</div>
 			</Tooltip>
-
-			{/* TODO: Check functionality */}
-			{/* TODO: Check typeEvidence */}
-			{/* TODO: List evidences */}
-			<div className='flex gap-5 items-center mt-3'>
-				{/* <Input
-					id='evidences'
-					name='evidences'
-					className='mb-3 w-80'
-					placeholder='Denominación:'
-					size='sm'
-					type='text'
-					variant='underlined'
-				/> */}
-				<label className='text-default-600 text-sm'>Evidencias:</label>
-				<Button
-					color='primary'
-					startContent={<PlusIcon width={16} height={16} fill='fill-white' />}
-					onClick={() => setShowModal(true)}
-				>
-					Subir evidencias
-				</Button>
-				{showModal ? <UploadEvidenceModal id={standardId} typeEvidence='1' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>}
-			</div>
 
 			<DynamicInput
 				identifier='sources'
