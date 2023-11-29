@@ -34,8 +34,6 @@ export default function ImprovementPlanEditForm({
 	// eslint-disable-next-line no-unused-vars
 	const [reload, setReload] = useState<boolean>(false)
 
-	console.log(plan)
-
 	const [formData, setFormData] = useState({
 		id: 0,
 		code: '',
@@ -391,7 +389,7 @@ export default function ImprovementPlanEditForm({
 				>
 					Subir evidencias
 				</Button>
-				{showModal ? <UploadEvidenceModal id={params.id} typeEvidence='1' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)} planId={plan.id}/> : <></>}
+				{showModal ? <UploadEvidenceModal id={params.id} typeEvidence='3' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)} planId={plan.id}/> : <></>}
 			</div>
 
 			<DynamicInput
