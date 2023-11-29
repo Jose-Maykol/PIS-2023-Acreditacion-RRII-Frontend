@@ -91,7 +91,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 				onOpenChange={() => {
 					onOpenChange()
 					setTouched(false)
-					setIsValid({ email: true, role: true })
+					setIsValid({ email: null, role: true })
 				}}
 				placement='center'>
 				<ModalContent>
@@ -106,9 +106,9 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 									label='Email'
 									placeholder='Ingresa el email del usuario'
 									variant='bordered'
-									color={isValid.email ? 'default' : 'danger'}
+									color={!isValid.email && isValid.email !== null ? 'danger' : 'default'}
 									isInvalid={!isValid.email && isValid.email !== null}
-									errorMessage={isValid.email ? '' : 'Email inválido'}
+									errorMessage={!isValid.email && isValid.email !== null ? 'Email inválido' : ''}
 									onValueChange={handleEmailValue}
 								/>
 								<Select
@@ -131,7 +131,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 									onPress={() => {
 										onClose()
 										setTouched(false)
-										setIsValid({ email: true, role: true })
+										setIsValid({ email: null, role: true })
 									}}>
 									Cancelar
 								</Button>
