@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@types/node": "20.6.2",
+    "@types/react-datepicker": "^4.19.3",
     "@types/tinymce": "4.6.7",
     "@typescript-eslint/eslint-plugin": "6.7.0",
     "eslint-config-prettier": "9.0.0",
