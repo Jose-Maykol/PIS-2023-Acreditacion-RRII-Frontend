@@ -15,7 +15,6 @@ import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
 import FolderIcon from '../Icons/FolderIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
-import EyeIcon from '../Icons/EyeIcon'
 import DownloadIcon from '../Icons/DownloadIcon'
 import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
@@ -23,10 +22,12 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
+import { columns } from '@/utils/data_evidence'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
-
+import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
+import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 
 export default function EvidencesTable({ id, typeEvidence } : {id: string, typeEvidence: string}) {
 	const [filterValue, setFilterValue] = useState('')
@@ -35,20 +36,35 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
+	const [evidence, setEvidence] = useState<Evidence>({
+		id: '',
+		code: '',
+		name: '',
+		path: '',
+		user_id: 0,
+		evidence_type_id: 0,
+		standard_id: 0,
+		date_id: 0,
+		created_at: '',
+		updated_at: '',
+		full_name: '',
+		type: ''
+	})
 	const [params, setParams] = useState<{ parent_id: string | number }>({
 		parent_id: 'null'
 	})
 	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
-	const [showModal, setShowModal] = useState<boolean>(false)
-	const columns = [
-		{ name: 'NOMBRE', uid: 'name', sortable: true },
-		{ name: 'SUBIDO POR', uid: 'full_name', sortable: true },
-		{ name: 'ULTIMA MODIFICACION', uid: 'updated_at' },
-		{ name: 'ACCIONES', uid: 'actions' }
-	]
+	const [modalManager, setModalManager] = useState({
+		showModalUpload: false,
+		showModalRename: false,
+		showModalDelete: false,
+		shoModalCreateFolder: false
+	})
+
 
 	useEffect(() => {
+		console.log('valor inicial de parmas', params)
 		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
 			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
 				evidence.id = `${evidence.code}`
@@ -57,6 +73,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
+		// setReload(false)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -86,8 +103,10 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const handleSelectOption = (key: string, fileID?: string) => {
 		switch (key) {
 		case 'upload-evidence':
-			// onOpenModal(id)
-			// {/* <UploadEvidenceModal id={idStandard} typeEvidence='1' path='/' openModal={showModal} onCloseModal={() => setShowModal(false)} onReload={() => setReload(true)}/> : <></>} */}
+			setModalManager({
+				...modalManager,
+				showModalUpload: true
+			})
 			break
 		case 'create-folder':
 			alert('create folder')
@@ -95,12 +114,22 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		case 'download-evidence':
 			handleDownload(fileID)
 			break
+		case 'rename-evidence':
+			setModalManager({
+				...modalManager,
+				showModalRename: true
+			})
+			break
+		case 'delete-evidence':
+			setModalManager({
+				...modalManager,
+				showModalDelete: true
+			})
+			break
 		}
 	}
 
 	const renderCell = React.useCallback((evidence: Evidence, columnKey: React.Key) => {
-		// const cellValue = evidence[columnKey as keyof Evidence]
-
 		switch (columnKey) {
 		case 'name':
 			return (
@@ -134,12 +163,6 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						}
 						items={[
 							{
-								uid: 'view-evidence',
-								label: 'Ver Evidencia',
-								color: 'primary',
-								startContent: <EyeIcon width={25} height={25} />
-							},
-							{
 								uid: 'rename-evidence',
 								label: 'Renombrar Evidencia',
 								color: 'primary',
@@ -167,7 +190,11 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						]}
 						placement='bottom-end'
 						mode='action'
-						onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
+						onAction={(key: string) => {
+							setEvidence(evidence)
+							handleSelectOption(key, evidence.id.split('-')[1])
+						}
+						}
 					/>
 				</div>
 			)
@@ -224,7 +251,6 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			})
 		} else {
 			EvidenceService.viewEvidence(id).then((res) => {
-				console.log(res.status)
 				const base64Data = res.data.content
 				const binaryString = atob(base64Data)
 				const byteArray = new Uint8Array(binaryString.length)
@@ -342,6 +368,9 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			{blobURL && (
 				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
 			)}
+			<UploadEvidenceModal id={id} typeEvidence='1' path='/' openModal={modalManager.showModalUpload} onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })} onReload={() => setReload(true)}/>
+			<RenameEvidenceModal evidence={evidence} openModal={modalManager.showModalRename} onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })} onReload={() => setReload(true)}/>
+			<DeleteEvidenceModal id={evidence?.id.split('-')[1] ?? ''} type={evidence?.type ?? ''} openModal={modalManager.showModalDelete} onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })} onReload={() => setReload(true)}/>
 		</>
 	)
 }
