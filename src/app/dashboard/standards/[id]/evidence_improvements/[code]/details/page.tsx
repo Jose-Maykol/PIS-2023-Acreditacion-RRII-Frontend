@@ -124,20 +124,21 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 
 			<Divider className='my-2' />
 
-			<div className='mb-3'>
+			<div className='mb-3 px-2'>
 				<h1 className='uppercase text-sm font-bold'>Oportunidades de Mejora</h1>
-				<h2 className='text-sm'>{plan.opportunity_for_improvement}</h2>
+				<h2 className='text-sm border border-neutral-300 rounded-md p-2 my-2'>{plan.opportunity_for_improvement}</h2>
 			</div>
 
-
-			<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
-			<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
-			<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
-			<PlanItemList itemList={plan.resources} label='Recursos' />
-			<PlanItemList itemList={plan.goals} label='Metas' />
-			<PlanItemList itemList={plan.responsibles} label='Responsables' />
-			<PlanItemList itemList={plan.observations} label='Observaciones' />
-			<PlanItemList itemList={plan.sources} label='Fuentes' />
+			<div className='mx-2'>
+				<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
+				<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
+				<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
+				<PlanItemList itemList={plan.resources} label='Recursos' />
+				<PlanItemList itemList={plan.goals} label='Metas' />
+				<PlanItemList itemList={plan.responsibles} label='Responsables' />
+				<PlanItemList itemList={plan.observations} label='Observaciones' />
+				<PlanItemList itemList={plan.sources} label='Fuentes' />
+			</div>
 		</ContentWrapper>
 	)
 }
@@ -151,7 +152,9 @@ function PlanItemList({ itemList, label }: PlanItemListProps) {
 	return (
 		<div className='mb-3'>
 			<h1 className='uppercase text-sm font-bold'>{label}</h1>
-			{itemList.length > 0 ? (itemList.map((item: planItem) => <li key={item.id} className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
+			<div className='border border-neutral-300 rounded-md p-2 my-2'>
+				{itemList.length > 0 ? (itemList.map((item: planItem) => <li key={item.id} className='ml-3 text-sm'>{item.description}</li>)) : <p className='italic'>Campo por completar</p>}
+			</div>
 		</div>
 	)
 };
