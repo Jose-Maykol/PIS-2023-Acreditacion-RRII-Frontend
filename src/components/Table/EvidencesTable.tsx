@@ -174,28 +174,28 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						items={[
 							{
 								uid: 'rename-evidence',
-								label: 'Renombrar Evidencia',
+								label: 'Renombrar evidencia',
 								color: 'primary',
-								startContent: <PencilIcon width={25} height={25} />
+								startContent: <PencilIcon width={15} height={15} />
 							},
 							{
 								uid: 'download-evidence',
-								label: 'Descargar Evidencia',
+								label: 'Descargar evidencia',
 								color: 'primary',
 								startContent: <DownloadIcon width={25} height={25} />
 							},
 							{
 								uid: 'move-evidence',
-								label: 'Mover Evidencia',
+								label: 'Mover evidencia',
 								color: 'primary',
-								startContent: <DownloadIcon width={25} height={25} />
+								startContent: <DownloadIcon width={25} height={25} fill={'fill-black'} />
 							},
 							{
 								uid: 'delete-evidence',
-								label: 'Eliminar Evidencia',
+								label: 'Eliminar evidencia',
 								className: 'danger',
 								color: 'danger',
-								startContent: <TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white'/>
+								startContent: <TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white'/>
 							}
 						]}
 						placement='bottom-end'
