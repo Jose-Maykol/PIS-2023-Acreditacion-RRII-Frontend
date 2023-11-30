@@ -89,7 +89,7 @@ export default function EvidencesLayout({ params }: { params: { id: number }}) {
 						startContent={<DownloadIcon width={20} height={20} fill='fill-white' />}
 						onPress={handleDownload}
 						className='font-bold'
-					>	
+					>
 					Descargar evidencia
 					</Button>
 				</div>
