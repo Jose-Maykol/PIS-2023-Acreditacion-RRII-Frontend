@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
+import { Button, Checkbox, Divider, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -129,7 +129,9 @@ export default function ImprovementPlanEditForm({
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
+			<h1 className='uppercase text-lg font-bold mb-2'>Editar plan de mejora</h1>
+
+			<Divider className='mb-5'/>
 
 			<Tooltip
 				color='foreground'
@@ -239,7 +241,7 @@ export default function ImprovementPlanEditForm({
 				content='Registre el año y semestre en la que las actividades se realizarán'
 				closeDelay={100}
 			>
-				<div className='mb-3 flex gap-5 mt-3'>
+				<div className='mb-4 flex gap-5 mt-3'>
 					<Select
 						id='year'
 						name='year'
@@ -368,15 +370,6 @@ export default function ImprovementPlanEditForm({
 
 			{/* TODO: Check functionality */}
 			<div className='flex gap-5 items-center mt-3'>
-				{/* <Input
-					id='evidences'
-					name='evidences'
-					className='mb-3 w-80'
-					placeholder='Denominación:'
-					size='sm'
-					type='text'
-					variant='underlined'
-				/> */}
 				<Tooltip
 					color='foreground'
 					placement='top-start'
@@ -459,7 +452,6 @@ export default function ImprovementPlanEditForm({
 			<div className='flex gap-4 justify-end p-3'>
 				<Button
 					color='danger'
-					className='mb-5'
 					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
 					onClick={() => router.back()}
 				>
@@ -467,7 +459,7 @@ export default function ImprovementPlanEditForm({
 				</Button>
 				<Button
 					color='success'
-					className='text-white mb-5'
+					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
 				>

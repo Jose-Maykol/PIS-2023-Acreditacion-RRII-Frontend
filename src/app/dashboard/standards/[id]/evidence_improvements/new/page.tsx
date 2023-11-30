@@ -11,8 +11,10 @@ type NewImprovementPlanPageProps = {
 
 export default function NewImprovementPlanPage({ params }: NewImprovementPlanPageProps) {
 	return (
-		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md py-5 px-10'>
-			<ImprovementPlanForm standardId={params.id} />
+		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md'>
+			<div className='px-5 py-8'>
+				<ImprovementPlanForm standardId={params.id} />
+			</div>
 		</ContentWrapper>
 	)
 }

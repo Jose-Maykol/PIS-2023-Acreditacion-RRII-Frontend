@@ -1,6 +1,15 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
+import {
+	Button,
+	Checkbox,
+	Divider,
+	Input,
+	Select,
+	SelectItem,
+	Slider,
+	Tooltip
+} from '@nextui-org/react'
 
 import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
@@ -97,7 +106,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 	return (
 		<form onSubmit={formik.handleSubmit}>
 			{/* {!formik.isValid && showToast('error', 'Faltan datos')} */}
-			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
+			<h1 className='uppercase text-lg font-bold mb-2'>Crear plan de mejora</h1>
+
+			<Divider className='mb-5' />
 
 			<Tooltip
 				color='foreground'
@@ -200,7 +211,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				content='Registre el año y semestre en la que las actividades se realizarán'
 				closeDelay={100}
 			>
-				<div className='mb-3 flex gap-5'>
+				<div className='mb-4 flex gap-5'>
 					<Select
 						id='year'
 						name='year'
