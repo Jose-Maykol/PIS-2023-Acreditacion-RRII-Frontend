@@ -8,6 +8,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
 import { planItem } from '@/types/PlanMejora'
 import EyeIcon from '@/components/Icons/EyeIcon'
+import ImprovementEvidencesModal from '@/components/Modal/Evidence/ImprovementEvidencesModal'
 
 const statusOptions = new Map([
 	[1, 'planificado'],
@@ -32,6 +33,8 @@ interface ImprovementPlanDetailsPageProps {
 }
 
 export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDetailsPageProps) {
+	const [showModal, setShowModal] = useState<boolean>(false)
+
 	const [plan, setPlan] = useState({
 		advance: 0,
 		code: '',
@@ -69,13 +72,20 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 						<Button
 							color='primary'
 							startContent={<EyeIcon width={16} height={16} fill='fill-white' />}
-							// onClick={() => setShowModal(true)}
+							onClick={() => setShowModal(true)}
 						>
 							Ver Evidencias
 						</Button>
 						<Button color='primary' variant='ghost' className='ml-3'>
 							Descargar
 						</Button>
+						{showModal ? (
+							<ImprovementEvidencesModal
+								openModal={showModal}
+								onCloseModal={() => setShowModal(false)}
+								id={plan.standard_id.toString()}
+							/>
+						) : null}
 					</div>
 				</div>
 
