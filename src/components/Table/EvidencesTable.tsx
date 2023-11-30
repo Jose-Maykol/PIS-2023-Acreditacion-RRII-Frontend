@@ -35,7 +35,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
-	const rowsPerPage = 8
+	const rowsPerPage = 100
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
 	const [evidence, setEvidence] = useState<Evidence>({
@@ -141,7 +141,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			return (
 				<div className='flex gap-2'>
 					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-lg capitalize'>{evidence.name}</p>
+					<p className='text-bold text-md capitalize'>{evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -256,15 +256,19 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			})
 		} else {
 			EvidenceService.viewEvidence(id).then((res) => {
-				const base64Data = res.data.content
-				const binaryString = atob(base64Data)
-				const byteArray = new Uint8Array(binaryString.length)
-				for (let i = 0; i < binaryString.length; i++) {
-					byteArray[i] = binaryString.charCodeAt(i)
-				}
-				const pdfBlob = new Blob([byteArray], { type: 'application/pdf' })
-				const pdfUrl = URL.createObjectURL(pdfBlob)
-				setBlobURL(pdfUrl)
+				if (res.data.extension === 'pdf') {
+					const base64Data = res.data.content
+					const binaryString = atob(base64Data)
+					const byteArray = new Uint8Array(binaryString.length)
+					for (let i = 0; i < binaryString.length; i++) {
+						byteArray[i] = binaryString.charCodeAt(i)
+					}
+					const pdfBlob = new Blob([byteArray], { type: 'application/pdf' })
+					const pdfUrl = URL.createObjectURL(pdfBlob)
+					setBlobURL(pdfUrl)
+				} /* else {
+					handleDownload(id)
+				} */
 			})
 		}
 	}, [])
@@ -359,7 +363,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 				'group-data-[last=true]:first:before:rounded-none',
 				'group-data-[last=true]:last:before:rounded-none'
 			],
-			tr: ['hover:bg-default-300 focus:bg-red-200']
+			tr: ['hover:bg-default-300 focus:bg-neutral-200']
 		}),
 		[]
 	)

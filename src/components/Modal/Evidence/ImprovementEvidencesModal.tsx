@@ -36,9 +36,9 @@ const ImprovementEvidencesModal = ({
 					<EvidencesTable
 						id={id}
 						typeEvidence='3'
-						reload={reload}
+						/* reload={reload}
 						onReload={() => setReload(false)}
-						onOpenModal={handleOpenModal}
+						onOpenModal={handleOpenModal} */
 					/>
 					{showModal && (
 						<UploadEvidenceModal
