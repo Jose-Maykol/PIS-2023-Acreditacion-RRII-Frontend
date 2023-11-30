@@ -1,9 +1,13 @@
+'use client'
+
 import React, { useEffect, useState } from 'react'
 
 import {
 	Selection,
 	Input,
-	Button
+	Button,
+	Breadcrumbs,
+	BreadcrumbItem
 } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
@@ -13,7 +17,6 @@ import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
 import FolderIcon from '../Icons/FolderIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
-import EyeIcon from '../Icons/EyeIcon'
 import DownloadIcon from '../Icons/DownloadIcon'
 import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
@@ -21,38 +24,62 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
+import { columns } from '@/utils/data_evidence'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
+import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
+import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
+import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 
-
-export default function EvidencesTable({ id, typeEvidence, reload, onReload, onOpenModal } : {id: string, typeEvidence: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({ id, typeEvidence } : {id: string, typeEvidence: string}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
-	const [params, setParams] = useState<{ parent_id: string | number }>({
-		parent_id: 'null'
+	const [evidence, setEvidence] = useState<Evidence>({
+		id: '',
+		uid: 0,
+		code: '',
+		name: '',
+		path: '',
+		user_id: 0,
+		evidence_type_id: 0,
+		standard_id: 0,
+		date_id: 0,
+		created_at: '',
+		updated_at: '',
+		full_name: '',
+		type: ''
 	})
+	const [params, setParams] = useState<{ parent_id: number | null }>({
+		parent_id: null
+	})
+	const [path, setPath] = useState<string[]>(['mis evidencias'])
+	const [pathKeys, setPathKeys] = useState<string[]>([])
 	const [blobURL, setBlobURL] = useState<string>('')
-	const columns = [
-		{ name: 'NOMBRE', uid: 'name', sortable: true },
-		{ name: 'SUBIDO POR', uid: 'full_name', sortable: true },
-		{ name: 'ULTIMA MODIFICACION', uid: 'updated_at' },
-		{ name: 'ACCIONES', uid: 'actions' }
-	]
+	const [reload, setReload] = useState<boolean>(false)
+	const [modalManager, setModalManager] = useState({
+		showModalUpload: false,
+		showModalRename: false,
+		showModalDelete: false,
+		shoModalCreateFolder: false
+	})
+
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
 			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
+				evidence.uid = Number(evidence.code.split('-')[1])
 				evidence.id = `${evidence.code}`
+				evidence.name = evidence.name ?? evidence.path.split('/').pop()
 				return evidence
 			})
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
-		onReload()
+		setReload(false)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -79,29 +106,42 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const handleSelectOption = (key: string, fileID?: string) => {
+	const handleSelectOption = (key: string, fileId?: string) => {
 		switch (key) {
 		case 'upload-evidence':
-			onOpenModal(id)
+			setModalManager({
+				...modalManager,
+				showModalUpload: true
+			})
 			break
 		case 'create-folder':
 			alert('create folder')
 			break
 		case 'download-evidence':
-			handleDownload(fileID)
+			handleDownload(fileId)
+			break
+		case 'rename-evidence':
+			setModalManager({
+				...modalManager,
+				showModalRename: true
+			})
+			break
+		case 'delete-evidence':
+			setModalManager({
+				...modalManager,
+				showModalDelete: true
+			})
 			break
 		}
 	}
 
 	const renderCell = React.useCallback((evidence: Evidence, columnKey: React.Key) => {
-		// const cellValue = evidence[columnKey as keyof Evidence]
-
 		switch (columnKey) {
 		case 'name':
 			return (
 				<div className='flex gap-2'>
 					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-lg capitalize'>{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}</p>
+					<p className='text-bold text-lg capitalize'>{evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -128,12 +168,6 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 							</Button>
 						}
 						items={[
-							{
-								uid: 'view-evidence',
-								label: 'Ver Evidencia',
-								color: 'primary',
-								startContent: <EyeIcon width={25} height={25} />
-							},
 							{
 								uid: 'rename-evidence',
 								label: 'Renombrar Evidencia',
@@ -162,7 +196,11 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 						]}
 						placement='bottom-end'
 						mode='action'
-						onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
+						onAction={(key: string) => {
+							setEvidence(evidence)
+							handleSelectOption(key, String(evidence.uid))
+						}
+						}
 					/>
 				</div>
 			)
@@ -183,10 +221,9 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 		setPage(1)
 	}, [])
 
-	const handleDownload = React.useCallback((fileID: string | undefined) => {
-		if (fileID) {
-			EvidenceService.downloadFile(fileID).then((res) => {
-				console.log(res.data)
+	const handleDownload = React.useCallback((fileId?: string) => {
+		if (fileId) {
+			EvidenceService.downloadFile(fileId).then((res) => {
 				// Obtener el header de Content-Disposition para extraer el nombre del archivo
 				const contentDisposition = res.headers['content-disposition']
 				let filename = 'descarga'
@@ -219,7 +256,6 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 			})
 		} else {
 			EvidenceService.viewEvidence(id).then((res) => {
-				console.log(res.status)
 				const base64Data = res.data.content
 				const binaryString = atob(base64Data)
 				const byteArray = new Uint8Array(binaryString.length)
@@ -236,6 +272,12 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
+				<Breadcrumbs >
+					<BreadcrumbItem >Mis Evidencias</BreadcrumbItem>
+					{evidence.path.split('/').map((path) => (
+						<BreadcrumbItem >{path}</BreadcrumbItem>
+					))}
+				</Breadcrumbs>
 				<div className='flex justify-between gap-3 items-end'>
 					<Input
 						isClearable
@@ -337,6 +379,24 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 			{blobURL && (
 				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
 			)}
+			{modalManager.showModalUpload && <UploadEvidenceModal
+				id={id}
+				typeEvidence='1'
+				path='/'
+				openModal={modalManager.showModalUpload}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
+				onReload={() => setReload(true)}/>}
+			{modalManager.showModalRename && <RenameEvidenceModal
+				evidence={evidence}
+				openModal={modalManager.showModalRename}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
+				onReload={() => setReload(true)}/>}
+			{modalManager.showModalDelete && <DeleteEvidenceModal
+				id={String(evidence.uid)}
+				type={evidence.type}
+				openModal={modalManager.showModalDelete}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
+				onReload={() => setReload(true)}/>}
 		</>
 	)
 }

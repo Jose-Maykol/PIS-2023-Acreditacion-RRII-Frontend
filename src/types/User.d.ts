@@ -5,6 +5,7 @@ export interface User {
 	email: string
 	status: string
 	role: string
+	index: number
 }
 export interface AuthUser {
 	token: string
