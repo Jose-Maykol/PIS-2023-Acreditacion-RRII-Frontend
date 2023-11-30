@@ -32,7 +32,7 @@ export default function UserTable() {
 	const hasSearchFilter = Boolean(filterValue)
 	const [users, setUsers] = useState<User[]>([])
 	const columns = [
-		{ name: 'N°', uid: 'id', sortable: true },
+		{ name: 'N°', uid: 'index', sortable: true },
 		{ name: 'NOMBRES', uid: 'name', sortable: true },
 		{ name: 'ROL', uid: 'role', sortable: true },
 		{ name: 'EMAIL', uid: 'email' },
