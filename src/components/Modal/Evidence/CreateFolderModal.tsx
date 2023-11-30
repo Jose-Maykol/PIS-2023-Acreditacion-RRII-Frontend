@@ -9,17 +9,17 @@ import { useState, ReactNode } from 'react'
 import { toast } from 'react-toastify'
 import CustomModal from '../CustomModal'
 
-export default function RenameEvidenceModal({ evidence, openModal, onCloseModal, onReload } : {evidence: Evidence, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
+export default function CreateFolderModal({ evidence, openModal, onCloseModal, onReload } : {evidence: Evidence, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
 	const [renameValue, setRenameValue] = useState<string>(evidence.name)
+
 	const handleCloseModal = () => {
-		setRenameValue('')
 		onCloseModal()
 		onReload()
 	}
 
 	const handleSubmitChanges = async () => {
 		const notification = toast.loading('Procesando...')
-		if (evidence?.type === 'evidence') {
+		if (evidence.type === 'evidence') {
 			await EvidenceService.renameEvidence(evidence.id.split('-')[1], {
 				new_filename: renameValue
 			}).then((res) => {
@@ -93,8 +93,8 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 		<div className='h-full max-h-[96%]'>
 			<Input
 				autoFocus
+				placeholder='nuevo nombre'
 				variant='bordered'
-				value={renameValue}
 				onValueChange={setRenameValue}
 			/>
 		</div>

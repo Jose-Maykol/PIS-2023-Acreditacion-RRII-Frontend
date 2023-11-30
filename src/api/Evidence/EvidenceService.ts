@@ -8,9 +8,10 @@ const url = {
 	view: 'evidences/:id/view',
 	download: 'evidences/:id/download',
 	renameEvidence: 'evidences/:id/rename',
-	renameFolder: 'folder/:id/rename',
+	renameFolder: 'evidences/folder/:id/rename',
 	deleteEvidence: 'evidences/:id',
-	deleteFolder: 'evidences/folder/:id'
+	deleteFolder: 'evidences/folder/:id',
+	createFolder: 'evidences/folder'
 }
 
 export class EvidenceService extends BaseService {
@@ -26,9 +27,12 @@ export class EvidenceService extends BaseService {
 		return res.data
 	}
 
-	public static async getEvidencesByType (id: string, idType: string, params: any) {
+	public static async getEvidencesByType (id: string, idType: string, params: { parent_id: number | null }) {
+		const config: AxiosRequestConfig = {
+			params
+		}
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`, params)
+		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`, config)
 		return res.data
 	}
 
@@ -77,6 +81,12 @@ export class EvidenceService extends BaseService {
 	public static async deleteFolder (id: string) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.delete(`/${year}/${semester}/${url.deleteFolder.replace(':id', id)}`)
+		return res.data
+	}
+
+	public static async createFolder (params: {name: string, standard_id: number, evidence_type_id: number, path: string}) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.createFolder}`, params)
 		return res.data
 	}
 }

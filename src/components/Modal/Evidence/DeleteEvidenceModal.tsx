@@ -1,10 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import {
-	Button,
-	Input
+	Button
 } from '@nextui-org/react'
-import { useState, ReactNode } from 'react'
+import { ReactNode } from 'react'
 import { toast } from 'react-toastify'
 import CustomModal from '../CustomModal'
 
@@ -16,7 +15,6 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 
 	const handleSubmitChanges = async () => {
 		const notification = toast.loading('Procesando...')
-		if (!id || !type) return
 
 		if (type === 'evidence') {
 			await EvidenceService.deleteEvidence(id).then((res) => {
@@ -48,6 +46,7 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 			})
 		} else {
 			await EvidenceService.deleteFolder(id).then((res) => {
+				console.log(res)
 				if (res.status === 1) {
 					toast.update(notification, {
 						render: res.message,
@@ -86,7 +85,7 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 
 	const body: ReactNode = (
 		<div className='h-full max-h-[96%]'>
-			<p>Esta seguro de Eliminar este {type === 'evidence' ? 'Archivo' : 'Carpeta'}?</p>
+			<p>Esta seguro de Eliminar {type === 'evidence' ? 'este Archivo!!!' : 'esta Carpeta!!!'}?</p>
 		</div>
 	)
 

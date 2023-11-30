@@ -73,6 +73,8 @@ const UploadEvidenceModal = ({
 	}
 
 	const handleCloseModal = () => {
+		setFiles([])
+		setTotalSize(0)
 		onCloseModal()
 	}
 

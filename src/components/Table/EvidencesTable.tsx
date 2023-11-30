@@ -5,7 +5,9 @@ import React, { useEffect, useState } from 'react'
 import {
 	Selection,
 	Input,
-	Button
+	Button,
+	Breadcrumbs,
+	BreadcrumbItem
 } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
@@ -38,6 +40,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
 	const [evidence, setEvidence] = useState<Evidence>({
 		id: '',
+		uid: 0,
 		code: '',
 		name: '',
 		path: '',
@@ -50,9 +53,11 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		full_name: '',
 		type: ''
 	})
-	const [params, setParams] = useState<{ parent_id: string | number }>({
-		parent_id: 'null'
+	const [params, setParams] = useState<{ parent_id: number | null }>({
+		parent_id: null
 	})
+	const [path, setPath] = useState<string[]>(['mis evidencias'])
+	const [pathKeys, setPathKeys] = useState<string[]>([])
 	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
@@ -64,16 +69,17 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 
 
 	useEffect(() => {
-		console.log('valor inicial de parmas', params)
 		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
 			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
+				evidence.uid = Number(evidence.code.split('-')[1])
 				evidence.id = `${evidence.code}`
+				evidence.name = evidence.name ?? evidence.path.split('/').pop()
 				return evidence
 			})
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
-		// setReload(false)
+		setReload(false)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -100,7 +106,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const handleSelectOption = (key: string, fileID?: string) => {
+	const handleSelectOption = (key: string, fileId?: string) => {
 		switch (key) {
 		case 'upload-evidence':
 			setModalManager({
@@ -112,7 +118,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			alert('create folder')
 			break
 		case 'download-evidence':
-			handleDownload(fileID)
+			handleDownload(fileId)
 			break
 		case 'rename-evidence':
 			setModalManager({
@@ -135,7 +141,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			return (
 				<div className='flex gap-2'>
 					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-lg capitalize'>{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}</p>
+					<p className='text-bold text-lg capitalize'>{evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -192,7 +198,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						mode='action'
 						onAction={(key: string) => {
 							setEvidence(evidence)
-							handleSelectOption(key, evidence.id.split('-')[1])
+							handleSelectOption(key, String(evidence.uid))
 						}
 						}
 					/>
@@ -215,10 +221,9 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		setPage(1)
 	}, [])
 
-	const handleDownload = React.useCallback((fileID: string | undefined) => {
-		if (fileID) {
-			EvidenceService.downloadFile(fileID).then((res) => {
-				console.log(res.data)
+	const handleDownload = React.useCallback((fileId?: string) => {
+		if (fileId) {
+			EvidenceService.downloadFile(fileId).then((res) => {
 				// Obtener el header de Content-Disposition para extraer el nombre del archivo
 				const contentDisposition = res.headers['content-disposition']
 				let filename = 'descarga'
@@ -267,6 +272,12 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
+				<Breadcrumbs >
+					<BreadcrumbItem >Mis Evidencias</BreadcrumbItem>
+					{evidence.path.split('/').map((path) => (
+						<BreadcrumbItem >{path}</BreadcrumbItem>
+					))}
+				</Breadcrumbs>
 				<div className='flex justify-between gap-3 items-end'>
 					<Input
 						isClearable
@@ -368,9 +379,24 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			{blobURL && (
 				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
 			)}
-			<UploadEvidenceModal id={id} typeEvidence='1' path='/' openModal={modalManager.showModalUpload} onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })} onReload={() => setReload(true)}/>
-			<RenameEvidenceModal evidence={evidence} openModal={modalManager.showModalRename} onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })} onReload={() => setReload(true)}/>
-			<DeleteEvidenceModal id={evidence?.id.split('-')[1] ?? ''} type={evidence?.type ?? ''} openModal={modalManager.showModalDelete} onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })} onReload={() => setReload(true)}/>
+			{modalManager.showModalUpload && <UploadEvidenceModal
+				id={id}
+				typeEvidence='1'
+				path='/'
+				openModal={modalManager.showModalUpload}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
+				onReload={() => setReload(true)}/>}
+			{modalManager.showModalRename && <RenameEvidenceModal
+				evidence={evidence}
+				openModal={modalManager.showModalRename}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
+				onReload={() => setReload(true)}/>}
+			{modalManager.showModalDelete && <DeleteEvidenceModal
+				id={String(evidence.uid)}
+				type={evidence.type}
+				openModal={modalManager.showModalDelete}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
+				onReload={() => setReload(true)}/>}
 		</>
 	)
 }
