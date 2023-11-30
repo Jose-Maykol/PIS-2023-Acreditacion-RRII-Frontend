@@ -30,6 +30,7 @@ import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
+import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 
 export default function EvidencesTable({ id, typeEvidence } : {id: string, typeEvidence: string}) {
 	const [filterValue, setFilterValue] = useState('')
@@ -64,7 +65,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		showModalUpload: false,
 		showModalRename: false,
 		showModalDelete: false,
-		shoModalCreateFolder: false
+		showModalCreateFolder: false
 	})
 
 
@@ -115,7 +116,10 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			})
 			break
 		case 'create-folder':
-			alert('create folder')
+			setModalManager({
+				...modalManager,
+				showModalCreateFolder: true
+			})
 			break
 		case 'download-evidence':
 			handleDownload(fileId)
@@ -199,8 +203,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						onAction={(key: string) => {
 							setEvidence(evidence)
 							handleSelectOption(key, String(evidence.uid))
-						}
-						}
+						}}
 					/>
 				</div>
 			)
@@ -401,6 +404,14 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 				openModal={modalManager.showModalDelete}
 				onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
 				onReload={() => setReload(true)}/>}
+			{modalManager.showModalCreateFolder && <CreateFolderModal
+				id={parseInt(id)}
+				typeEvidence={parseInt(typeEvidence)}
+				path='/'
+				openModal={modalManager.showModalCreateFolder}
+				onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
+				onReload={() => setReload(true)}/>
+			}
 		</>
 	)
 }

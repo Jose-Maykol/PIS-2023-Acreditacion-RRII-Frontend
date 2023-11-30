@@ -34,7 +34,7 @@ export default function StandardTable () {
 	const [filterValue, setFilterValue] = useState<string>('')
 	const [page, setPage] = useState<number>(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
-	const rowsPerPage = 9
+	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const [reload, setReload] = useState<boolean>(false)
