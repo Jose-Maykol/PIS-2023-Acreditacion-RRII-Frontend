@@ -1,4 +1,4 @@
-import { getFileIcon } from "./utils"
+import { getFileIcon } from './utils'
 
 const columns = [
 	{ name: '#', uid: 'nro_standard', sortable: true },
@@ -23,4 +23,3 @@ const typeFiles = [
 ]
 
 export { columns, valorationOptions, typeFiles }
-
