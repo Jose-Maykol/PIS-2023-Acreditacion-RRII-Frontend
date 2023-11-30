@@ -24,11 +24,11 @@ const ImprovementEvidencesModal = ({
 		<CustomModal
 			isOpen={openModal}
 			classNames={{
-				base: 'h-[80%]',
+				base: 'h-[90%]',
 				header: 'p-2 border-b-[2px] border-gray-200',
 				body: 'h-[55%] py-2'
 			}}
-			size='4xl'
+			size='5xl'
 			onClose={() => onCloseModal()}
 			header={<h2 className='text-2xl font-bold text-center'>Evidencias del Plan de Mejora</h2>}
 			body={
