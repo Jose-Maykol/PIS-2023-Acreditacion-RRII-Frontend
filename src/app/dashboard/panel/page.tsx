@@ -73,6 +73,7 @@ export default function PanelPage() {
 										startContent={<PencilIcon width={20} height={20} fill='fill-white'/>}
 										className='w-[200px] font-bold'
 										onPress={onOpen}
+										isDisabled
 									>
 										Editar semestre
 									</Button>
@@ -87,6 +88,7 @@ export default function PanelPage() {
 										color='danger'
 										startContent={<CloseIcon width={20} height={20} fill='fill-white'/>}
 										className='w-[200px] font-bold'
+										isDisabled
 									>
 										Cerrar semestre
 									</Button>
@@ -100,6 +102,7 @@ export default function PanelPage() {
 										color='success'
 										className='text-white w-[200px] font-bold'
 										startContent={<PlusIcon width={20} height={20} fill='fill-white'/>}
+										isDisabled
 									>
 										Crear semestre
 									</Button>
