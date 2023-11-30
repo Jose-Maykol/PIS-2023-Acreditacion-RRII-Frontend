@@ -7,7 +7,7 @@ import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
 import { planItem } from '@/types/PlanMejora'
-import SaveIcon from '@/components/Icons/SaveIcon'
+import EyeIcon from '@/components/Icons/EyeIcon'
 
 const statusOptions = new Map([
 	[1, 'planificado'],
@@ -65,9 +65,18 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 			<div className='px-5 py-8'>
 				<div className='flex justify-between items-center mb-3'>
 					<h1 className='uppercase text-lg font-bold'>Detalles de plan de mejora</h1>
-					<Button color='primary' variant='ghost'>
-						Descargar
-					</Button>
+					<div className='flex'>
+						<Button
+							color='primary'
+							startContent={<EyeIcon width={16} height={16} fill='fill-white' />}
+							// onClick={() => setShowModal(true)}
+						>
+							Ver Evidencias
+						</Button>
+						<Button color='primary' variant='ghost' className='ml-3'>
+							Descargar
+						</Button>
+					</div>
 				</div>
 
 				<Divider className='my-1' />

@@ -30,7 +30,7 @@ const ImprovementEvidencesModal = ({
 			}}
 			size='4xl'
 			onClose={() => onCloseModal()}
-			header={<h2 className='text-2xl font-bold text-center'>Evidencias de Mejora del Plan de Mejora</h2>}
+			header={<h2 className='text-2xl font-bold text-center'>Evidencias del Plan de Mejora</h2>}
 			body={
 				<>
 					<EvidencesTable

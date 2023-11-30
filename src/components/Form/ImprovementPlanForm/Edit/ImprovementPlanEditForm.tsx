@@ -437,7 +437,7 @@ export default function ImprovementPlanEditForm({
 				<Tooltip
 					color='foreground'
 					placement='top-start'
-					content='Registrar el calificativo de la evaluación categóricamente: Sí o No'
+					content='Marcar el calificativo de la evaluación categóricamente: Sí o No'
 					closeDelay={100}
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
