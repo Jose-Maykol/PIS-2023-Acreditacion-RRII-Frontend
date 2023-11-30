@@ -70,7 +70,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				observations: values.observations
 			}
 
-			// console.log(newPlan)
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
 				(plantStatusId === 5 && advance === 0) ||
@@ -105,7 +104,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			{/* {!formik.isValid && showToast('error', 'Faltan datos')} */}
 			<h1 className='uppercase text-lg font-bold mb-2'>Crear plan de mejora</h1>
 
 			<Divider className='mb-5' />
@@ -204,6 +202,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				formik={formik}
 			/>
 
+			{/* <p>{JSON.stringify(formik.errors)}</p> */}
+
 			<Tooltip
 				color='foreground'
 				placement='top-start'
@@ -216,9 +216,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						id='year'
 						name='year'
 						value={formik.values.year}
-						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
-						errorMessage={formik.errors.year && 'Campo requerido'}
+						errorMessage={formik.touched.year && formik.errors.year && 'Campo requerido'}
 						className='max-w-xs'
 						label='Año:'
 						size='sm'
@@ -235,8 +235,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						name='semester'
 						value={formik.values.semester}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.semester && Boolean(formik.errors.semester)}
-						errorMessage={formik.errors.semester && 'Campo requerido'}
+						errorMessage={formik.touched.semester && formik.errors.semester && 'Campo requerido'}
 						className='max-w-xs'
 						label='Semestre:'
 						size='sm'
@@ -318,8 +319,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						name='plan_status_id'
 						value={formik.values.plan_status_id}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
-						errorMessage={formik.errors.plan_status_id && 'Campo requerido'}
+						errorMessage={formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
@@ -354,7 +356,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						id='advance'
 						name='advance'
 						value={advanceValue}
-						// onChange={setAdvanceValue}
 						onChange={(newValue) => setAdvanceValue(newValue as number)}
 						showTooltip={true}
 						step={0.01}
@@ -392,7 +393,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			<div className='flex gap-4 justify-end p-3'>
 				<Button
 					color='danger'
-					className='mb-5'
 					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
 					onClick={() => router.back()}
 				>
@@ -400,7 +400,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				</Button>
 				<Button
 					color='success'
-					className='text-white mb-5'
+					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
 				>

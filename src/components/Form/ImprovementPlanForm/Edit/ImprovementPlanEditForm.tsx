@@ -247,8 +247,9 @@ export default function ImprovementPlanEditForm({
 						name='year'
 						selectedKeys={[formik.values.year]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
-						errorMessage={formik.errors.year && 'Campo requerido'}
+						errorMessage={formik.touched.year && formik.errors.year && 'Campo requerido'}
 						className='max-w-xs'
 						label='Año:'
 						size='sm'
@@ -265,8 +266,9 @@ export default function ImprovementPlanEditForm({
 						name='semester'
 						selectedKeys={[formik.values.semester]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.semester && Boolean(formik.errors.semester)}
-						errorMessage={formik.errors.semester && 'Campo requerido'}
+						errorMessage={formik.touched.semester && formik.errors.semester && 'Campo requerido'}
 						className='max-w-xs'
 						label='Semestre:'
 						size='sm'
@@ -352,8 +354,9 @@ export default function ImprovementPlanEditForm({
 						name='plan_status_id'
 						selectedKeys={[`${formik.values.plan_status_id}`]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
-						errorMessage={formik.errors.plan_status_id && 'Campo requerido'}
+						errorMessage={formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
@@ -416,7 +419,7 @@ export default function ImprovementPlanEditForm({
 						id='advance'
 						name='advance'
 						value={advanceValue}
-						// onChange={setAdvanceValue}
+						onBlur={formik.handleBlur}
 						onChange={(newValue) => setAdvanceValue(newValue as number)}
 						showTooltip={true}
 						step={0.01}
