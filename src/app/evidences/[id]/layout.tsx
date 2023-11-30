@@ -2,7 +2,7 @@
 
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { useEffect, useState } from 'react'
-import { Button, Link } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import UnsupportedFileIcon from '@/components/Icons/UnsupportedFIleIcon'
 import DownloadIcon from '@/components/Icons/DownloadIcon'
 
@@ -70,21 +70,39 @@ export default function EvidencesLayout({ params }: { params: { id: number }}) {
 					onPress={handleDownload}
 					className='font-bold'
 				>
-					Descargar documento
+					Descargar evidencia
 				</Button>
 			</div>
 		)
 	}
 
 	return (
-		<embed
-			title={evidenceData.name}
-			id={evidenceData.name}
-			style={{ position: 'absolute', left: 0, top: 0 }}
-			width='100%'
-			height='100%'
-			src={`data:${evidenceData.type};base64,${evidenceData.content}`}
-			type={evidenceData.type}
-		/>
+		<html>
+			<head>
+				<title>{evidenceData.name}</title>
+			</head>
+			<body>
+				<div className='flex flex-row justify-between items-center absolute top-0 left-0 w-full h-14 bg-neutral-800 z-10 px-4'>
+					<p className='text-white'>{`${evidenceData.name}.${evidenceData.extension}`}</p>
+					<Button
+						color='primary'
+						startContent={<DownloadIcon width={20} height={20} fill='fill-white' />}
+						onPress={handleDownload}
+						className='font-bold'
+					>	
+					Descargar evidencia
+					</Button>
+				</div>
+				<embed
+					title={evidenceData.name}
+					id={evidenceData.name}
+					style={{ position: 'absolute', left: 0, top: 0 }}
+					width='100%'
+					height='100%'
+					src={`data:${evidenceData.type};base64,${evidenceData.content}`}
+					type={evidenceData.type}
+				/>
+			</body>
+		</html>
 	)
 }
