@@ -381,7 +381,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 			)}
 			{modalManager.showModalUpload && <UploadEvidenceModal
 				id={id}
-				typeEvidence='1'
+				typeEvidence={typeEvidence}
 				path='/'
 				openModal={modalManager.showModalUpload}
 				onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}

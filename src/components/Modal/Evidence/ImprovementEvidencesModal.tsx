@@ -24,13 +24,13 @@ const ImprovementEvidencesModal = ({
 		<CustomModal
 			isOpen={openModal}
 			classNames={{
-				base: 'h-[80%]',
-				header: 'p-2 border-b-[2px] border-gray-200',
-				body: 'h-[55%] py-2'
+				base: 'h-[80%]'
+				// header: 'p-2 border-b-[2px] border-gray-200',
+				// body: 'h-[55%] py-2'
 			}}
 			size='4xl'
 			onClose={() => onCloseModal()}
-			header={<h2 className='text-2xl font-bold text-center'>Evidencias de Mejora del Plan de Mejora</h2>}
+			header={<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>Evidencias de Mejora del Plan de Mejora</h2>}
 			body={
 				<>
 					<EvidencesTable
@@ -40,7 +40,7 @@ const ImprovementEvidencesModal = ({
 						onReload={() => setReload(false)}
 						onOpenModal={handleOpenModal}
 					/>
-					{showModal ? (
+					{showModal && (
 						<UploadEvidenceModal
 							id={id}
 							typeEvidence='3'
@@ -49,8 +49,6 @@ const ImprovementEvidencesModal = ({
 							onCloseModal={() => setShowModal(false)}
 							onReload={() => setReload(true)}
 						/>
-					) : (
-						<></>
 					)}
 				</>
 			}
