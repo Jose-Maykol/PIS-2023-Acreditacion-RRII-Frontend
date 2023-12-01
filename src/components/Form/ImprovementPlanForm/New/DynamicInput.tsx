@@ -97,7 +97,7 @@ export default function DynamicInput({
 					<PlusIcon width={15} height={15} fill='fill-white' />
 				</Button>
 			</div>
-			{(formik.errors[identifier]) ? (
+			{(formik.touched[identifier] && formik.errors[identifier]) ? (
 				<p style={{ color: '#F31260', fontSize: 12, marginTop: '-.75rem', marginLeft: '.25rem' }}>
 					Campo requerido
 				</p>

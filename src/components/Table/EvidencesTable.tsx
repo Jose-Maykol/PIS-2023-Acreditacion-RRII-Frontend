@@ -2,13 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import {
-	Selection,
-	Input,
-	Button,
-	Breadcrumbs,
-	BreadcrumbItem
-} from '@nextui-org/react'
+import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
@@ -32,7 +26,16 @@ import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 
-export default function EvidencesTable({ id, typeEvidence } : {id: string, typeEvidence: string}) {
+export default function EvidencesTable({
+	id,
+	typeEvidence,
+	plandId
+}: {
+	id: string
+	typeEvidence: string
+	plandId?: string
+}) {
+	console.log({ id, typeEvidence, plandId })
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -68,15 +71,16 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		showModalCreateFolder: false
 	})
 
-
 	useEffect(() => {
-		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
-			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
-				evidence.uid = Number(evidence.code.split('-')[1])
-				evidence.id = `${evidence.code}`
-				evidence.name = evidence.name ?? evidence.path.split('/').pop()
-				return evidence
-			})
+		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
+			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
+				(evidence: Evidence) => {
+					evidence.uid = Number(evidence.code.split('-')[1])
+					evidence.id = `${evidence.code}`
+					evidence.name = evidence.name ?? evidence.path.split('/').pop()
+					return evidence
+				}
+			)
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
@@ -87,7 +91,9 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		let filteredEvidences = [...evidencesManagement]
 
 		if (hasSearchFilter) {
-			filteredEvidences = filteredEvidences.filter((evidence) => evidence.name.toLowerCase().includes(filterValue.toLowerCase()))
+			filteredEvidences = filteredEvidences.filter((evidence) =>
+				evidence.name.toLowerCase().includes(filterValue.toLowerCase())
+			)
 		}
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== typeFiles.length) {
 			filteredEvidences = filteredEvidences.filter((evidence) =>
@@ -158,7 +164,9 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 		case 'updated_at':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-md capitalize'>{formatIsoDateToCustom(evidence.updated_at)}</p>
+					<p className='text-bold text-md capitalize'>
+						{formatIsoDateToCustom(evidence.updated_at)}
+					</p>
 				</div>
 			)
 
@@ -195,7 +203,9 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 								label: 'Eliminar evidencia',
 								className: 'danger',
 								color: 'danger',
-								startContent: <TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white'/>
+								startContent: (
+									<TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white' />
+								)
 							}
 						]}
 						placement='bottom-end'
@@ -279,10 +289,10 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
-				<Breadcrumbs >
-					<BreadcrumbItem >Mis Evidencias</BreadcrumbItem>
+				<Breadcrumbs>
+					<BreadcrumbItem>Mis Evidencias</BreadcrumbItem>
 					{evidence.path.split('/').map((path) => (
-						<BreadcrumbItem >{path}</BreadcrumbItem>
+						<BreadcrumbItem>{path}</BreadcrumbItem>
 					))}
 				</Breadcrumbs>
 				<div className='flex justify-between gap-3 items-end'>
@@ -290,7 +300,7 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar evidencia por nombre'
-						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -311,11 +321,13 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
 						<CustomDropdown
 							triggerElement={
-								<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+								<Button
+									color='primary'
+									endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+								>
 									Crear
 								</Button>
 							}
@@ -341,20 +353,22 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 				</div>
 			</div>
 		)
-	}, [
-		filterValue,
-		statusFilter,
-		onSearchChange,
-		evidencesManagement.length,
-		hasSearchFilter
-	])
+	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter])
 
 	const classNames = React.useMemo(
 		() => ({
 			base: 'max-h-[590px] overflow-auto',
 			// table: 'min-h-[580px]',
 			wrapper: ['min-h-[590px] overflow-auto'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
+			th: [
+				'bg-default-200',
+				'text-default-600',
+				'border-b',
+				'border-divider',
+				'px-4',
+				'py-3',
+				'text-md'
+			],
 			td: [
 				// changing the rows border radius
 				// first
@@ -383,35 +397,45 @@ export default function EvidencesTable({ id, typeEvidence } : {id: string, typeE
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && (
-				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
+			{blobURL && <PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />}
+			{modalManager.showModalUpload && (
+				<UploadEvidenceModal
+					id={id}
+					typeEvidence={typeEvidence}
+					path='/'
+					openModal={modalManager.showModalUpload}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
+					onReload={() => setReload(true)}
+					planId={plandId}
+				/>
 			)}
-			{modalManager.showModalUpload && <UploadEvidenceModal
-				id={id}
-				typeEvidence={typeEvidence}
-				path='/'
-				openModal={modalManager.showModalUpload}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalRename && <RenameEvidenceModal
-				evidence={evidence}
-				openModal={modalManager.showModalRename}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalDelete && <DeleteEvidenceModal
-				id={String(evidence.uid)}
-				type={evidence.type}
-				openModal={modalManager.showModalDelete}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalCreateFolder && <CreateFolderModal
-				id={parseInt(id)}
-				typeEvidence={parseInt(typeEvidence)}
-				path='/'
-				openModal={modalManager.showModalCreateFolder}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
-				onReload={() => setReload(true)}/>
-			}
+			{modalManager.showModalRename && (
+				<RenameEvidenceModal
+					evidence={evidence}
+					openModal={modalManager.showModalRename}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalDelete && (
+				<DeleteEvidenceModal
+					id={String(evidence.uid)}
+					type={evidence.type}
+					openModal={modalManager.showModalDelete}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalCreateFolder && (
+				<CreateFolderModal
+					id={parseInt(id)}
+					typeEvidence={parseInt(typeEvidence)}
+					path='/'
+					openModal={modalManager.showModalCreateFolder}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
 		</>
 	)
 }

@@ -48,8 +48,10 @@ export default function ImprovementPlanEditPage({
 	}, [])
 
 	return (
-		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md py-5 px-10'>
-			<ImprovementPlanEditForm params={params} plan={plan} />
+		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md'>
+			<div className='px-5 py-8'>
+				<ImprovementPlanEditForm params={params} plan={plan} />
+			</div>
 		</ContentWrapper>
 	)
 }
