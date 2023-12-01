@@ -2,13 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import {
-	Selection,
-	Input,
-	Button,
-	Breadcrumbs,
-	BreadcrumbItem
-} from '@nextui-org/react'
+import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
@@ -41,6 +35,7 @@ export default function EvidencesTable({
 	typeEvidence: string
 	plandId?: string
 }) {
+	console.log({ id, typeEvidence, plandId })
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -76,15 +71,16 @@ export default function EvidencesTable({
 		showModalCreateFolder: false
 	})
 
-
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
-			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
-				evidence.uid = Number(evidence.code.split('-')[1])
-				evidence.id = `${evidence.code}`
-				evidence.name = evidence.name ?? evidence.path.split('/').pop()
-				return evidence
-			})
+			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
+				(evidence: Evidence) => {
+					evidence.uid = Number(evidence.code.split('-')[1])
+					evidence.id = `${evidence.code}`
+					evidence.name = evidence.name ?? evidence.path.split('/').pop()
+					return evidence
+				}
+			)
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
@@ -207,7 +203,9 @@ export default function EvidencesTable({
 								label: 'Eliminar evidencia',
 								className: 'danger',
 								color: 'danger',
-								startContent: <TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white'/>
+								startContent: (
+									<TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white' />
+								)
 							}
 						]}
 						placement='bottom-end'
@@ -291,10 +289,10 @@ export default function EvidencesTable({
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
-				<Breadcrumbs >
-					<BreadcrumbItem >Mis Evidencias</BreadcrumbItem>
+				<Breadcrumbs>
+					<BreadcrumbItem>Mis Evidencias</BreadcrumbItem>
 					{evidence.path.split('/').map((path) => (
-						<BreadcrumbItem >{path}</BreadcrumbItem>
+						<BreadcrumbItem>{path}</BreadcrumbItem>
 					))}
 				</Breadcrumbs>
 				<div className='flex justify-between gap-3 items-end'>
@@ -399,35 +397,45 @@ export default function EvidencesTable({
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && (
-				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
+			{blobURL && <PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />}
+			{modalManager.showModalUpload && (
+				<UploadEvidenceModal
+					id={id}
+					typeEvidence={typeEvidence}
+					path='/'
+					openModal={modalManager.showModalUpload}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
+					onReload={() => setReload(true)}
+					planId={plandId}
+				/>
 			)}
-			{modalManager.showModalUpload && <UploadEvidenceModal
-				id={id}
-				typeEvidence={typeEvidence}
-				path='/'
-				openModal={modalManager.showModalUpload}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalRename && <RenameEvidenceModal
-				evidence={evidence}
-				openModal={modalManager.showModalRename}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalDelete && <DeleteEvidenceModal
-				id={String(evidence.uid)}
-				type={evidence.type}
-				openModal={modalManager.showModalDelete}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
-				onReload={() => setReload(true)}/>}
-			{modalManager.showModalCreateFolder && <CreateFolderModal
-				id={parseInt(id)}
-				typeEvidence={parseInt(typeEvidence)}
-				path='/'
-				openModal={modalManager.showModalCreateFolder}
-				onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
-				onReload={() => setReload(true)}/>
-			}
+			{modalManager.showModalRename && (
+				<RenameEvidenceModal
+					evidence={evidence}
+					openModal={modalManager.showModalRename}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalRename: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalDelete && (
+				<DeleteEvidenceModal
+					id={String(evidence.uid)}
+					type={evidence.type}
+					openModal={modalManager.showModalDelete}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalCreateFolder && (
+				<CreateFolderModal
+					id={parseInt(id)}
+					typeEvidence={parseInt(typeEvidence)}
+					path='/'
+					openModal={modalManager.showModalCreateFolder}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
 		</>
 	)
 }

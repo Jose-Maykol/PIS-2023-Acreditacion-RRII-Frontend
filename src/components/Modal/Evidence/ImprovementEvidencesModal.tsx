@@ -1,8 +1,6 @@
 /* eslint-disable multiline-ternary */
 import EvidencesTable from '@/components/Table/EvidencesTable'
 import CustomModal from '../CustomModal'
-import { useState } from 'react'
-import UploadEvidenceModal from './UploadEvidenceModal'
 
 const ImprovementEvidencesModal = ({
 	openModal,
@@ -15,9 +13,6 @@ const ImprovementEvidencesModal = ({
 	id: string
 	planId: string
 }) => {
-	// const [showModal, setShowModal] = useState<boolean>(false)
-	// const [reload, setReload] = useState<boolean>(false)
-
 	return (
 		<CustomModal
 			isOpen={openModal}
@@ -36,17 +31,6 @@ const ImprovementEvidencesModal = ({
 						typeEvidence='3'
 						plandId={planId}
 					/>
-					{/* {showModal && (
-						<UploadEvidenceModal
-							id={id}
-							typeEvidence='3'
-							path='/'
-							openModal={showModal}
-							onCloseModal={() => setShowModal(false)}
-							onReload={() => setReload(true)}
-							planId={planId}
-						/>
-					)} */}
 				</>
 			}
 		/>
