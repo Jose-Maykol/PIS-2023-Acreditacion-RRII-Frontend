@@ -15,12 +15,8 @@ const ImprovementEvidencesModal = ({
 	id: string
 	planId: string
 }) => {
-	const [showModal, setShowModal] = useState<boolean>(false)
-	const [reload, setReload] = useState<boolean>(false)
-
-	const handleOpenModal = () => {
-		setShowModal(true)
-	}
+	// const [showModal, setShowModal] = useState<boolean>(false)
+	// const [reload, setReload] = useState<boolean>(false)
 
 	return (
 		<CustomModal
@@ -32,7 +28,7 @@ const ImprovementEvidencesModal = ({
 			}}
 			size='5xl'
 			onClose={() => onCloseModal()}
-			header={<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>Evidencias del Plan de Mejora</h2>}
+			header={<h2 className='flex flex-col gap-1 ml-4 text-lightBlue-600 uppercase'>Evidencias del Plan de Mejora</h2>}
 			body={
 				<>
 					<EvidencesTable
@@ -40,7 +36,7 @@ const ImprovementEvidencesModal = ({
 						typeEvidence='3'
 						plandId={planId}
 					/>
-					{showModal && (
+					{/* {showModal && (
 						<UploadEvidenceModal
 							id={id}
 							typeEvidence='3'
@@ -50,7 +46,7 @@ const ImprovementEvidencesModal = ({
 							onReload={() => setReload(true)}
 							planId={planId}
 						/>
-					)}
+					)} */}
 				</>
 			}
 		/>

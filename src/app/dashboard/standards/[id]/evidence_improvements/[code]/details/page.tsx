@@ -145,23 +145,25 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 					</div>
 				</div>
 
-				<Divider className='mt-2 mb-4' />
+				<Divider className='mt-2 mb-5' />
 
-				<div className='mb-4'>
+				<div className='mb-3 px-2'>
 					<h1 className='uppercase text-sm font-bold'>Oportunidades de Mejora</h1>
-					<h2 className='text-sm border rounded-lg py-2 pr-2 pl-4 mt-2'>
+					<h2 className='text-sm border border-neutral-300 rounded-md p-2 my-2'>
 						{plan.opportunity_for_improvement}
 					</h2>
 				</div>
 
-				<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
-				<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
-				<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
-				<PlanItemList itemList={plan.resources} label='Recursos' />
-				<PlanItemList itemList={plan.goals} label='Metas' />
-				<PlanItemList itemList={plan.responsibles} label='Responsables' />
-				<PlanItemList itemList={plan.observations} label='Observaciones' />
-				<PlanItemList itemList={plan.sources} label='Fuentes' />
+				<div className='mx-2'>
+					<PlanItemList itemList={plan.problems_opportunities} label='Problema/Oportunidad' />
+					<PlanItemList itemList={plan.root_causes} label='Causa Raíz' />
+					<PlanItemList itemList={plan.improvement_actions} label='Acciones de mejora' />
+					<PlanItemList itemList={plan.resources} label='Recursos' />
+					<PlanItemList itemList={plan.goals} label='Metas' />
+					<PlanItemList itemList={plan.responsibles} label='Responsables' />
+					<PlanItemList itemList={plan.observations} label='Observaciones' />
+					<PlanItemList itemList={plan.sources} label='Fuentes' />
+				</div>
 			</div>
 		</ContentWrapper>
 	)
