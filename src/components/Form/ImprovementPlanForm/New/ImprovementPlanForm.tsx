@@ -25,6 +25,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
+	const [submitting, setSubmitting] = useState(false)
 
 	const formik = useFormik({
 		initialValues: {
@@ -50,6 +51,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 		},
 		validationSchema,
 		onSubmit: (values) => {
+			setSubmitting(true)
+
 			const newPlan = {
 				name: values.name,
 				code: values.code,
@@ -95,6 +98,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
+			setSubmitting(false)
 		}
 	})
 
@@ -322,7 +326,9 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
-						errorMessage={formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'}
+						errorMessage={
+							formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'
+						}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
@@ -404,6 +410,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
+					isDisabled={submitting}
 				>
 					Guardar
 				</Button>

@@ -2,7 +2,16 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { Button, Checkbox, Divider, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
+import {
+	Button,
+	Checkbox,
+	Divider,
+	Input,
+	Select,
+	SelectItem,
+	Slider,
+	Tooltip
+} from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -29,6 +38,7 @@ export default function ImprovementPlanEditForm({
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
+	const [submitting, setSubmitting] = useState(false)
 
 	const [showModal, setShowModal] = useState<boolean>(false)
 
@@ -72,6 +82,8 @@ export default function ImprovementPlanEditForm({
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { year, semester, ...remainingPlan } = formData
 
+			setSubmitting(true)
+
 			const newPlan = {
 				...remainingPlan,
 				name: values.name,
@@ -93,7 +105,6 @@ export default function ImprovementPlanEditForm({
 				sources: getPlanItemsToSend(values.sources)
 			}
 
-			// console.log(newPlan)
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
 				(plantStatusId === 5 && advance === 0) ||
@@ -120,6 +131,8 @@ export default function ImprovementPlanEditForm({
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
+
+			setSubmitting(false)
 		}
 	})
 
@@ -131,7 +144,7 @@ export default function ImprovementPlanEditForm({
 		<form onSubmit={formik.handleSubmit}>
 			<h1 className='uppercase text-lg font-bold mb-2'>Editar plan de mejora</h1>
 
-			<Divider className='mb-5'/>
+			<Divider className='mb-5' />
 
 			<Tooltip
 				color='foreground'
@@ -356,7 +369,9 @@ export default function ImprovementPlanEditForm({
 						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
-						errorMessage={formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'}
+						errorMessage={
+							formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'
+						}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
@@ -466,6 +481,7 @@ export default function ImprovementPlanEditForm({
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
+					isDisabled={submitting}
 				>
 					Guardar
 				</Button>
