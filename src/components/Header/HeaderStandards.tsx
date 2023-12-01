@@ -34,7 +34,6 @@ const HeaderStandards = ({ id }: { id: string }) => {
 			[key]: value
 		}))
 	}
-	console.log(standardHeader.status)
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {

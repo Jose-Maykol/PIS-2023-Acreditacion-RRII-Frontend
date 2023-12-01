@@ -39,6 +39,7 @@ const CustomTable = ({
 			bottomContent={bottomContent}
 			bottomContentPlacement='outside'
 			classNames={classNames}
+			className='no-scrollbar'
 			removeWrapper
 		>
 			<TableHeader columns={columns}>

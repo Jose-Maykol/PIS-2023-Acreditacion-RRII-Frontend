@@ -32,18 +32,15 @@ const ImprovementEvidencesModal = ({
 			}}
 			size='5xl'
 			onClose={() => onCloseModal()}
-			header={<h2 className='text-2xl font-bold text-center'>Evidencias del Plan de Mejora</h2>}
+			header={<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>Evidencias del Plan de Mejora</h2>}
 			body={
 				<>
 					<EvidencesTable
 						id={id}
 						typeEvidence='3'
-						reload={reload}
-						onReload={() => setReload(false)}
-						onOpenModal={handleOpenModal}
 						plandId={planId}
 					/>
-					{showModal ? (
+					{showModal && (
 						<UploadEvidenceModal
 							id={id}
 							typeEvidence='3'
@@ -53,8 +50,6 @@ const ImprovementEvidencesModal = ({
 							onReload={() => setReload(true)}
 							planId={planId}
 						/>
-					) : (
-						<></>
 					)}
 				</>
 			}

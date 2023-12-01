@@ -7,6 +7,7 @@ import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
 import { planItem } from '@/types/PlanMejora'
+import { ReportService } from '@/api/Report/ReportService'
 import EyeIcon from '@/components/Icons/EyeIcon'
 import ImprovementEvidencesModal from '@/components/Modal/Evidence/ImprovementEvidencesModal'
 
@@ -62,6 +63,19 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 			})
 			.catch(console.log)
 	}, [])
+
+	const handleDownloadPlanReport = () => {
+		ReportService.generatePlanReport(params.code)
+			.then((res) => {
+				const url = window.URL.createObjectURL(new Blob([res.data]))
+				const link = document.createElement('a')
+				link.href = url
+				link.setAttribute('download', `${plan.name}.docx`)
+				document.body.appendChild(link)
+				link.click()
+			})
+			.catch(console.log)
+	}
 
 	return (
 		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md'>
