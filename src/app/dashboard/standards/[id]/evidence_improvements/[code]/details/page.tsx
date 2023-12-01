@@ -84,6 +84,7 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 								openModal={showModal}
 								onCloseModal={() => setShowModal(false)}
 								id={plan.standard_id.toString()}
+								planId={params.code}
 							/>
 						) : null}
 					</div>

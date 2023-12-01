@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 
-import {
-	Selection,
-	Input,
-	Button
-} from '@nextui-org/react'
+import { Selection, Input, Button } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
@@ -24,8 +20,21 @@ import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 
-
-export default function EvidencesTable({ id, typeEvidence, reload, onReload, onOpenModal } : {id: string, typeEvidence: string, reload:boolean, onReload: () => void, onOpenModal: (id: string) => void}) {
+export default function EvidencesTable({
+	id,
+	typeEvidence,
+	reload,
+	onReload,
+	onOpenModal,
+	plandId
+}: {
+	id: string
+	typeEvidence: string
+	reload: boolean
+	onReload: () => void
+	onOpenModal: (id: string) => void
+	plandId?: string
+}) {
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -44,11 +53,15 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 	]
 
 	useEffect(() => {
-		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
-			const arr : Evidence[] = [...res.data.folders, ...res.data.evidences].map((evidence: Evidence) => {
-				evidence.id = `${evidence.code}`
-				return evidence
-			})
+		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
+			// TODO: Check return {} or []
+			console.log('$$$', res.data.evidences)
+			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
+				(evidence: Evidence) => {
+					evidence.id = `${evidence.code}`
+					return evidence
+				}
+			)
 			console.log('useeffect', res.data)
 			setEvidencesManagement([...arr])
 		})
@@ -59,7 +72,9 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 		let filteredEvidences = [...evidencesManagement]
 
 		if (hasSearchFilter) {
-			filteredEvidences = filteredEvidences.filter((evidence) => evidence.name.toLowerCase().includes(filterValue.toLowerCase()))
+			filteredEvidences = filteredEvidences.filter((evidence) =>
+				evidence.name.toLowerCase().includes(filterValue.toLowerCase())
+			)
 		}
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== typeFiles.length) {
 			filteredEvidences = filteredEvidences.filter((evidence) =>
@@ -81,15 +96,15 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 
 	const handleSelectOption = (key: string, fileID?: string) => {
 		switch (key) {
-		case 'upload-evidence':
-			onOpenModal(id)
-			break
-		case 'create-folder':
-			alert('create folder')
-			break
-		case 'download-evidence':
-			handleDownload(fileID)
-			break
+			case 'upload-evidence':
+				onOpenModal(id)
+				break
+			case 'create-folder':
+				alert('create folder')
+				break
+			case 'download-evidence':
+				handleDownload(fileID)
+				break
 		}
 	}
 
@@ -97,75 +112,81 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 		// const cellValue = evidence[columnKey as keyof Evidence]
 
 		switch (columnKey) {
-		case 'name':
-			return (
-				<div className='flex gap-2'>
-					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-lg capitalize'>{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}</p>
-				</div>
-			)
-		case 'full_name':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-md capitalize'>{evidence.full_name}</p>
-				</div>
-			)
+			case 'name':
+				return (
+					<div className='flex gap-2'>
+						{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
+						<p className='text-bold text-lg capitalize'>
+							{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}
+						</p>
+					</div>
+				)
+			case 'full_name':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-md capitalize'>{evidence.full_name}</p>
+					</div>
+				)
 
-		case 'updated_at':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-md capitalize'>{formatIsoDateToCustom(evidence.updated_at)}</p>
-				</div>
-			)
+			case 'updated_at':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-md capitalize'>
+							{formatIsoDateToCustom(evidence.updated_at)}
+						</p>
+					</div>
+				)
 
-		case 'actions':
-			return (
-				<div className='relative flex items-center gap-2 justify-center'>
-					<CustomDropdown
-						triggerElement={
-							<Button isIconOnly>
-								<EllipsisVerticalIcon width={15} height={15} />
-							</Button>
-						}
-						items={[
-							{
-								uid: 'view-evidence',
-								label: 'Ver Evidencia',
-								color: 'primary',
-								startContent: <EyeIcon width={25} height={25} />
-							},
-							{
-								uid: 'rename-evidence',
-								label: 'Renombrar Evidencia',
-								color: 'primary',
-								startContent: <PencilIcon width={25} height={25} />
-							},
-							{
-								uid: 'download-evidence',
-								label: 'Descargar Evidencia',
-								color: 'primary',
-								startContent: <DownloadIcon width={25} height={25} />
-							},
-							{
-								uid: 'move-evidence',
-								label: 'Mover Evidencia',
-								color: 'primary',
-								startContent: <DownloadIcon width={25} height={25} />
-							},
-							{
-								uid: 'delete-evidence',
-								label: 'Eliminar Evidencia',
-								className: 'danger',
-								color: 'danger',
-								startContent: <TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white'/>
+			case 'actions':
+				return (
+					<div className='relative flex items-center gap-2 justify-center'>
+						<CustomDropdown
+							triggerElement={
+								<Button isIconOnly>
+									<EllipsisVerticalIcon width={15} height={15} />
+								</Button>
 							}
-						]}
-						placement='bottom-end'
-						mode='action'
-						onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
-					/>
-				</div>
-			)
+							items={[
+								{
+									uid: 'view-evidence',
+									label: 'Ver Evidencia',
+									color: 'primary',
+									startContent: <EyeIcon width={25} height={25} />
+								},
+								{
+									uid: 'rename-evidence',
+									label: 'Renombrar Evidencia',
+									color: 'primary',
+									startContent: <PencilIcon width={25} height={25} />
+								},
+								{
+									uid: 'download-evidence',
+									label: 'Descargar Evidencia',
+									color: 'primary',
+									startContent: <DownloadIcon width={25} height={25} />
+								},
+								{
+									uid: 'move-evidence',
+									label: 'Mover Evidencia',
+									color: 'primary',
+									startContent: <DownloadIcon width={25} height={25} />
+								},
+								{
+									uid: 'delete-evidence',
+									label: 'Eliminar Evidencia',
+									className: 'danger',
+									color: 'danger',
+									startContent: (
+										<TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white' />
+									)
+								}
+							]}
+							placement='bottom-end'
+							mode='action'
+							onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
+						/>
+					</div>
+				)
 		}
 	}, [])
 
@@ -241,7 +262,7 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar evidencia por nombre'
-						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600'/>}
+						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -262,11 +283,13 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
 						<CustomDropdown
 							triggerElement={
-								<Button color='primary' endContent={<PlusIcon width={15} height={15} fill='fill-white'/>}>
+								<Button
+									color='primary'
+									endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
+								>
 									Crear
 								</Button>
 							}
@@ -292,20 +315,22 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 				</div>
 			</div>
 		)
-	}, [
-		filterValue,
-		statusFilter,
-		onSearchChange,
-		evidencesManagement.length,
-		hasSearchFilter
-	])
+	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter])
 
 	const classNames = React.useMemo(
 		() => ({
 			base: 'max-h-[590px] overflow-auto',
 			// table: 'min-h-[580px]',
 			wrapper: ['min-h-[590px] overflow-auto'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-4', 'py-3', 'text-md'],
+			th: [
+				'bg-default-200',
+				'text-default-600',
+				'border-b',
+				'border-divider',
+				'px-4',
+				'py-3',
+				'text-md'
+			],
 			td: [
 				// changing the rows border radius
 				// first
@@ -334,9 +359,7 @@ export default function EvidencesTable({ id, typeEvidence, reload, onReload, onO
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && (
-				<PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />
-			)}
+			{blobURL && <PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />}
 		</>
 	)
 }

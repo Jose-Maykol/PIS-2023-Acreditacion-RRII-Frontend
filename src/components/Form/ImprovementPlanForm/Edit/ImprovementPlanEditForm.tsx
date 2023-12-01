@@ -394,6 +394,7 @@ export default function ImprovementPlanEditForm({
 						openModal={showModal}
 						onCloseModal={() => setShowModal(false)}
 						id={params.id}
+						planId={params.code}
 					/>
 				) : null}
 			</div>

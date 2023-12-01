@@ -7,11 +7,13 @@ import UploadEvidenceModal from './UploadEvidenceModal'
 const ImprovementEvidencesModal = ({
 	openModal,
 	onCloseModal,
-	id
+	id,
+	planId
 }: {
 	openModal: boolean
 	onCloseModal: () => void
 	id: string
+	planId: string
 }) => {
 	const [showModal, setShowModal] = useState<boolean>(false)
 	const [reload, setReload] = useState<boolean>(false)
@@ -39,6 +41,7 @@ const ImprovementEvidencesModal = ({
 						reload={reload}
 						onReload={() => setReload(false)}
 						onOpenModal={handleOpenModal}
+						plandId={planId}
 					/>
 					{showModal ? (
 						<UploadEvidenceModal
@@ -48,6 +51,7 @@ const ImprovementEvidencesModal = ({
 							openModal={showModal}
 							onCloseModal={() => setShowModal(false)}
 							onReload={() => setReload(true)}
+							planId={planId}
 						/>
 					) : (
 						<></>

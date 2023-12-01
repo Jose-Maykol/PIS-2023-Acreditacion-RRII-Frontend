@@ -4,13 +4,14 @@ import api from '../axios'
 
 const url = {
 	evidences: 'standards/:id/type-evidence/:idType',
+	evidencesByPlan: 'standards/:id/type-evidence/:idType?plan_id=:planId',
 	upload: 'evidences/various',
 	view: 'evidences/:id/view',
 	download: 'evidences/:id/download'
 }
 
 export class EvidenceService extends BaseService {
-	public static async uploadEvidences (params: any) {
+	public static async uploadEvidences(params: any) {
 		const { year, semester } = BaseService.getConfig()
 		const config = {
 			timeout: 60000,
@@ -22,14 +23,29 @@ export class EvidenceService extends BaseService {
 		return res.data
 	}
 
-	public static async getEvidencesByType (id: string, idType: string, params: any) {
+	public static async getEvidencesByType(id: string, idType: string, params: any, planId?: string) {
 		console.log(params)
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`, params)
+		let res
+		if (planId) {
+			res = await api.get(
+				`/${year}/${semester}/${url.evidencesByPlan
+					.replace(':id', id)
+					.replace(':idType', idType)
+					.replace(':planId', planId)}`,
+				params
+			)
+		} else {
+			res = await api.get(
+				`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`,
+				params
+			)
+		}
+
 		return res.data
 	}
 
-	public static async viewEvidence (id: string) {
+	public static async viewEvidence(id: string) {
 		const config = {
 			timeout: 60000,
 			headers: {
@@ -41,7 +57,7 @@ export class EvidenceService extends BaseService {
 		return res.data
 	}
 
-	public static downloadFile (id: string) {
+	public static downloadFile(id: string) {
 		const config: AxiosRequestConfig = {
 			timeout: 60000,
 			responseType: 'blob' as const
