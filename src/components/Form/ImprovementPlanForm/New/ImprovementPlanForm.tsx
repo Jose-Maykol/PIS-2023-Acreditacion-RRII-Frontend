@@ -216,6 +216,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						id='year'
 						name='year'
 						value={formik.values.year}
+						onChange={formik.handleChange}
 						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
 						errorMessage={formik.touched.year && formik.errors.year && 'Campo requerido'}
