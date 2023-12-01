@@ -96,15 +96,15 @@ export default function EvidencesTable({
 
 	const handleSelectOption = (key: string, fileID?: string) => {
 		switch (key) {
-			case 'upload-evidence':
-				onOpenModal(id)
-				break
-			case 'create-folder':
-				alert('create folder')
-				break
-			case 'download-evidence':
-				handleDownload(fileID)
-				break
+		case 'upload-evidence':
+			onOpenModal(id)
+			break
+		case 'create-folder':
+			alert('create folder')
+			break
+		case 'download-evidence':
+			handleDownload(fileID)
+			break
 		}
 	}
 
@@ -112,81 +112,81 @@ export default function EvidencesTable({
 		// const cellValue = evidence[columnKey as keyof Evidence]
 
 		switch (columnKey) {
-			case 'name':
-				return (
-					<div className='flex gap-2'>
-						{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-						<p className='text-bold text-lg capitalize'>
-							{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}
-						</p>
-					</div>
-				)
-			case 'full_name':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-md capitalize'>{evidence.full_name}</p>
-					</div>
-				)
+		case 'name':
+			return (
+				<div className='flex gap-2'>
+					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
+					<p className='text-bold text-lg capitalize'>
+						{evidence.type === 'folder' ? evidence.path.split('/').pop() : evidence.name}
+					</p>
+				</div>
+			)
+		case 'full_name':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-md capitalize'>{evidence.full_name}</p>
+				</div>
+			)
 
-			case 'updated_at':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-md capitalize'>
-							{formatIsoDateToCustom(evidence.updated_at)}
-						</p>
-					</div>
-				)
+		case 'updated_at':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-md capitalize'>
+						{formatIsoDateToCustom(evidence.updated_at)}
+					</p>
+				</div>
+			)
 
-			case 'actions':
-				return (
-					<div className='relative flex items-center gap-2 justify-center'>
-						<CustomDropdown
-							triggerElement={
-								<Button isIconOnly>
-									<EllipsisVerticalIcon width={15} height={15} />
-								</Button>
+		case 'actions':
+			return (
+				<div className='relative flex items-center gap-2 justify-center'>
+					<CustomDropdown
+						triggerElement={
+							<Button isIconOnly>
+								<EllipsisVerticalIcon width={15} height={15} />
+							</Button>
+						}
+						items={[
+							{
+								uid: 'view-evidence',
+								label: 'Ver Evidencia',
+								color: 'primary',
+								startContent: <EyeIcon width={25} height={25} />
+							},
+							{
+								uid: 'rename-evidence',
+								label: 'Renombrar Evidencia',
+								color: 'primary',
+								startContent: <PencilIcon width={25} height={25} />
+							},
+							{
+								uid: 'download-evidence',
+								label: 'Descargar Evidencia',
+								color: 'primary',
+								startContent: <DownloadIcon width={25} height={25} />
+							},
+							{
+								uid: 'move-evidence',
+								label: 'Mover Evidencia',
+								color: 'primary',
+								startContent: <DownloadIcon width={25} height={25} />
+							},
+							{
+								uid: 'delete-evidence',
+								label: 'Eliminar Evidencia',
+								className: 'danger',
+								color: 'danger',
+								startContent: (
+									<TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white' />
+								)
 							}
-							items={[
-								{
-									uid: 'view-evidence',
-									label: 'Ver Evidencia',
-									color: 'primary',
-									startContent: <EyeIcon width={25} height={25} />
-								},
-								{
-									uid: 'rename-evidence',
-									label: 'Renombrar Evidencia',
-									color: 'primary',
-									startContent: <PencilIcon width={25} height={25} />
-								},
-								{
-									uid: 'download-evidence',
-									label: 'Descargar Evidencia',
-									color: 'primary',
-									startContent: <DownloadIcon width={25} height={25} />
-								},
-								{
-									uid: 'move-evidence',
-									label: 'Mover Evidencia',
-									color: 'primary',
-									startContent: <DownloadIcon width={25} height={25} />
-								},
-								{
-									uid: 'delete-evidence',
-									label: 'Eliminar Evidencia',
-									className: 'danger',
-									color: 'danger',
-									startContent: (
-										<TrashIcon width={25} height={25} fill='fill-red-500 hover:fill-white' />
-									)
-								}
-							]}
-							placement='bottom-end'
-							mode='action'
-							onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
-						/>
-					</div>
-				)
+						]}
+						placement='bottom-end'
+						mode='action'
+						onAction={(key: string) => handleSelectOption(key, evidence.id.split('-')[1])}
+					/>
+				</div>
+			)
 		}
 	}, [])
 
