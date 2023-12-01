@@ -28,25 +28,30 @@ export class EvidenceService extends BaseService {
 		return res.data
 	}
 
-	public static async getEvidencesByType (id: string, idType: string, params: { parent_id: number | null }, planId?: string) {
+	public static async getEvidencesByType(
+		id: string,
+		idType: string,
+		params: { parent_id: number | null },
+		planId?: string
+	) {
 		const config: AxiosRequestConfig = {
 			params
 		}
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`, config)
 		let res
+
 		if (planId) {
 			res = await api.get(
 				`/${year}/${semester}/${url.evidencesByPlan
 					.replace(':id', id)
 					.replace(':idType', idType)
 					.replace(':planId', planId)}`,
-				params
+				config
 			)
 		} else {
 			res = await api.get(
 				`/${year}/${semester}/${url.evidences.replace(':id', id).replace(':idType', idType)}`,
-				params
+				config
 			)
 		}
 
@@ -75,33 +80,44 @@ export class EvidenceService extends BaseService {
 		return res
 	}
 
-	public static async renameEvidence (id: string, params: {new_filename: string}) {
+	public static async renameEvidence(id: string, params: { new_filename: string }) {
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.patch(`/${year}/${semester}/${url.renameEvidence.replace(':id', id)}`, params)
+		const res = await api.patch(
+			`/${year}/${semester}/${url.renameEvidence.replace(':id', id)}`,
+			params
+		)
 		console.log('file', res.data)
 		return res.data
 	}
 
-	public static async renameFolder (id: string, params: {new_name: string}) {
+	public static async renameFolder(id: string, params: { new_name: string }) {
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.patch(`/${year}/${semester}/${url.renameFolder.replace(':id', id)}`, params)
+		const res = await api.patch(
+			`/${year}/${semester}/${url.renameFolder.replace(':id', id)}`,
+			params
+		)
 		console.log('folder', res.data)
 		return res.data
 	}
 
-	public static async deleteEvidence (id: string) {
+	public static async deleteEvidence(id: string) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.delete(`/${year}/${semester}/${url.deleteEvidence.replace(':id', id)}`)
 		return res.data
 	}
 
-	public static async deleteFolder (id: string) {
+	public static async deleteFolder(id: string) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.delete(`/${year}/${semester}/${url.deleteFolder.replace(':id', id)}`)
 		return res.data
 	}
 
-	public static async createFolder (params: {name: string, standard_id: number, evidence_type_id: number, path: string}) {
+	public static async createFolder(params: {
+		name: string
+		standard_id: number
+		evidence_type_id: number
+		path: string
+	}) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.createFolder}`, params)
 		return res.data
