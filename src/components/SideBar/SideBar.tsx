@@ -10,6 +10,7 @@ import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 import UserAdminIcon from '../Icons/UserAdminIcon'
+import ReportIcon from '../Icons/ReportIcon'
 
 export default function SideBar({
 	isSidebarOpen,
@@ -95,6 +96,14 @@ export default function SideBar({
 							icon={<UserAdminIcon width={18} height={18} />}
 							text='panel'
 							link='/dashboard/panel'
+						/>
+					</ul>
+					<ul className='text-sm list-none my-3'>
+						<SideBarItem
+							isOpen={isSidebarOpen}
+							icon={<ReportIcon width={18} height={18} fill='fill-black'/>}
+							text='Reportes'
+							link='/dashboard/reports'
 						/>
 					</ul>
 					<ul className='text-sm list-none my-3'>
