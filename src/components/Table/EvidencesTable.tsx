@@ -5,11 +5,8 @@ import React, { useEffect, useState } from 'react'
 import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
-import SearchIcon from '../Icons/SearchIcon'
-import ChevronDownIcon from '../Icons/ChevronDownIcon'
 import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
-import FolderIcon from '../Icons/FolderIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
 import DownloadIcon from '../Icons/DownloadIcon'
 import { typeFiles } from '../../utils/StandardData'
@@ -17,7 +14,7 @@ import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
-import { getFileIcon, formatIsoDateToCustom } from '@/utils/utils'
+import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils'
 import { columns } from '@/utils/data_evidence'
 import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
@@ -35,7 +32,7 @@ export default function EvidencesTable({
 	typeEvidence: string
 	plandId?: string
 }) {
-	console.log({ id, typeEvidence, plandId })
+	// console.log({ id, typeEvidence, plandId })
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -60,8 +57,13 @@ export default function EvidencesTable({
 	const [params, setParams] = useState<{ parent_id: number | null }>({
 		parent_id: null
 	})
-	const [path, setPath] = useState<string[]>(['mis evidencias'])
-	const [pathKeys, setPathKeys] = useState<string[]>([])
+	const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; path: string; key: string }[]>([
+		{
+			name: 'Mis Evidencias',
+			path: 'null',
+			key: 'null'
+		}
+	])
 	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
@@ -182,29 +184,30 @@ export default function EvidencesTable({
 						items={[
 							{
 								uid: 'rename-evidence',
-								label: 'Renombrar evidencia',
+								label: evidence.type === 'folder' ? 'Renombrar carpeta' : 'Renombrar archivo',
 								color: 'primary',
-								startContent: <PencilIcon width={15} height={15} />
+								startContent: getCommonIcon('pencil', 20)
 							},
 							{
 								uid: 'download-evidence',
-								label: 'Descargar evidencia',
+								label: 'Descargar archivo',
+								className: evidence.type === 'folder' ? 'hidden' : undefined,
 								color: 'primary',
-								startContent: <DownloadIcon width={25} height={25} />
+								startContent: getCommonIcon('download', 20)
 							},
 							{
 								uid: 'move-evidence',
-								label: 'Mover evidencia',
+								label: evidence.type === 'folder' ? 'Mover carpeta' : 'Mover archivo',
 								color: 'primary',
-								startContent: <DownloadIcon width={25} height={25} fill={'fill-black'} />
+								startContent: getFileIcon('moveFolder', '', 20)
 							},
 							{
 								uid: 'delete-evidence',
-								label: 'Eliminar evidencia',
+								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
 								className: 'danger',
 								color: 'danger',
 								startContent: (
-									<TrashIcon width={20} height={20} fill='fill-red-500 hover:fill-white' />
+									getCommonIcon('trash', 20, 'fill-red-500 hover:fill-white')
 								)
 							}
 						]}
@@ -264,6 +267,16 @@ export default function EvidencesTable({
 		const type = key.split('-')[0]
 		const id = key.split('-')[1]
 		if (type === 'F') {
+			setEvidence(evidencesManagement.filter((e) => e.id === key)[0])
+			setBreadcrumbs([
+				...breadcrumbs,
+				{
+					name: evidence.name,
+					path: evidence.path.split('/').pop() ?? '',
+					key: String(evidence.uid)
+				}
+			])
+			console.log(breadcrumbs)
 			setParams({
 				parent_id: Number(id)
 			})
@@ -279,20 +292,20 @@ export default function EvidencesTable({
 					const pdfBlob = new Blob([byteArray], { type: 'application/pdf' })
 					const pdfUrl = URL.createObjectURL(pdfBlob)
 					setBlobURL(pdfUrl)
-				} /* else {
+				} else {
 					handleDownload(id)
-				} */
+				}
 			})
 		}
-	}, [])
+	}, [evidencesManagement])
 
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
-				<Breadcrumbs>
-					<BreadcrumbItem>Mis Evidencias</BreadcrumbItem>
-					{evidence.path.split('/').map((path) => (
-						<BreadcrumbItem>{path}</BreadcrumbItem>
+				<Breadcrumbs >
+					{/* <BreadcrumbItem>Mis Evidencias</BreadcrumbItem> */}
+					{breadcrumbs.map(({ name, path, key }) => (
+						<BreadcrumbItem key={key}>{name}</BreadcrumbItem>
 					))}
 				</Breadcrumbs>
 				<div className='flex justify-between gap-3 items-end'>
@@ -300,7 +313,7 @@ export default function EvidencesTable({
 						isClearable
 						className='w-full sm:max-w-[44%]'
 						placeholder='Buscar evidencia por nombre'
-						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
+						startContent={getCommonIcon('search', 15, 'fill-gray-500')}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
 						onValueChange={onSearchChange}
@@ -309,7 +322,7 @@ export default function EvidencesTable({
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
-								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
+								<Button endContent={getCommonIcon('chevron', 10)} variant='faded'>
 									Filtro por tipos
 								</Button>
 							}
@@ -353,7 +366,7 @@ export default function EvidencesTable({
 				</div>
 			</div>
 		)
-	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter])
+	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter, breadcrumbs])
 
 	const classNames = React.useMemo(
 		() => ({
