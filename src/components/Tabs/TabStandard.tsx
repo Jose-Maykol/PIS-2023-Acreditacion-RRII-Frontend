@@ -3,11 +3,13 @@
 import React, { useState } from 'react'
 
 import { Tabs, Tab } from '@nextui-org/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 
 export default function TabStandard({ id, children }: { id: string; children: React.ReactNode }) {
 	const { push } = useRouter()
-	const [selected, setSelected] = useState('narrative')
+	const pathname = usePathname()
+
+	const [selected, setSelected] = useState(pathname.split('/').pop() || 'narrative')
 
 	const tabs = [
 		{
