@@ -2,6 +2,7 @@ import { ChipProps } from '@nextui-org/react'
 
 const columns = [
 	{ name: 'CÓDIGO', uid: 'code', sortable: true },
+	{ name: 'NOMBRE', uid: 'name', sortable: true },
 	{ name: 'ESTÁNDAR', uid: 'standard_name', sortable: true },
 	{ name: 'ASIGNADO A', uid: 'user_name', sortable: true },
 	{ name: 'AVANCE (%)', uid: 'advance' },
@@ -38,13 +39,4 @@ const semesters = [
 	{ label: 'B', value: 'B' }
 ]
 
-const status = [
-	{ label: 'Planificado', value: 1 },
-	{ label: 'En desarrollo', value: 2 },
-	{ label: 'Completado', value: 3 },
-	{ label: 'Postergado', value: 4 },
-	{ label: 'Anulado', value: 5 }
-]
-
-
-export { columns, statusOptions, statusColorMap, years, semesters, status }
+export { columns, statusOptions, statusColorMap, years, semesters }

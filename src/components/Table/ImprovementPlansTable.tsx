@@ -28,6 +28,8 @@ export default function ImprovementPlansTable({
 	improvementPlans,
 	setImprovementPlans
 }: TableProps) {
+	console.log(improvementPlans)
+
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
@@ -68,6 +70,12 @@ export default function ImprovementPlansTable({
 
 			switch (columnKey) {
 			case 'code':
+				return (
+					<div className='flex flex-col'>
+						<p className='text-bold text-sm capitalize'>{cellValue}</p>
+					</div>
+				)
+			case 'name':
 				return (
 					<div className='flex flex-col'>
 						<p className='text-bold text-sm capitalize'>{cellValue}</p>
@@ -207,7 +215,7 @@ export default function ImprovementPlansTable({
 	const bottomContent = React.useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				{ pages !== 1 && (
+				{pages !== 1 && (
 					<Pagination
 						isCompact
 						showControls
@@ -257,7 +265,11 @@ export default function ImprovementPlansTable({
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
+			emptyContent={
+				<div className='flex justify-center items-center min-h-[400px] w-full'>
+					No se encontro elementos
+				</div>
+			}
 			classNames={classNames}
 		/>
 	)
