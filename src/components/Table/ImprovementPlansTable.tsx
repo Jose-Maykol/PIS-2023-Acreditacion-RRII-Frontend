@@ -9,7 +9,12 @@ import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
-import { columns, statusColorMap, statusOptions } from '../../utils/data_improvement_plans'
+import {
+	columns,
+	standardsOptions,
+	statusColorMap,
+	statusOptions
+} from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
@@ -28,12 +33,11 @@ export default function ImprovementPlansTable({
 	improvementPlans,
 	setImprovementPlans
 }: TableProps) {
-	console.log(improvementPlans)
-
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
+	const [standardFilter, setStandardFilter] = React.useState<Selection>('all')
 
 	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
@@ -46,14 +50,21 @@ export default function ImprovementPlansTable({
 				plan.code.toLowerCase().includes(filterValue.toLowerCase())
 			)
 		}
+
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
 			filteredPlans = filteredPlans.filter((plan) =>
 				Array.from(statusFilter).includes(plan.plan_status)
 			)
 		}
 
+		if (standardFilter !== 'all' && Array.from(standardFilter).length !== standardsOptions.length) {
+			filteredPlans = filteredPlans.filter((plan) =>
+				Array.from(standardFilter).includes(plan.nro_standard.toString())
+			)
+		}
+
 		return filteredPlans
-	}, [improvementPlans, filterValue, statusFilter])
+	}, [improvementPlans, filterValue, statusFilter, standardFilter])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -180,6 +191,25 @@ export default function ImprovementPlansTable({
 						onValueChange={onSearchChange}
 					/>
 					<div className='flex gap-3'>
+						{id === '8' ? (
+							<CustomDropdown
+								mode='selector'
+								triggerElement={
+									<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
+										Estándar
+									</Button>
+								}
+								triggerClassName='hidden sm:flex'
+								items={standardsOptions}
+								itemsClassName='capitalize'
+								disallowEmptySelection
+								closeOnSelect={false}
+								selectedKeys={standardFilter}
+								selectionMode='multiple'
+								onSelectionChange={setStandardFilter}
+							/>
+						) : null}
+
 						<CustomDropdown
 							mode='selector'
 							triggerElement={
@@ -210,7 +240,7 @@ export default function ImprovementPlansTable({
 				</div>
 			</div>
 		)
-	}, [filterValue, statusFilter, onSearchChange, improvementPlans.length, hasSearchFilter])
+	}, [filterValue, statusFilter, standardFilter, onSearchChange, improvementPlans.length, hasSearchFilter])
 
 	const bottomContent = React.useMemo(() => {
 		return (
