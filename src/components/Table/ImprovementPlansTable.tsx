@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 'use client'
 
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useEffect } from 'react'
 
 import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
@@ -9,33 +9,31 @@ import PencilIcon from '../Icons/PencilIcon'
 import PlusIcon from '../Icons/PlusIcon'
 import SearchIcon from '../Icons/SearchIcon'
 import ChevronDownIcon from '../Icons/ChevronDownIcon'
-import {
-	columns,
-	standardsOptions,
-	statusColorMap,
-	statusOptions
-} from '../../utils/data_improvement_plans'
+import { columns, statusColorMap, statusOptions } from '../../utils/data_improvement_plans'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
-import { ImprovementPlans } from '@/types/PlanMejora'
+import { ImprovementPlans, StandardOption } from '@/types/PlanMejora'
 import { useRouter } from 'next/navigation'
 
 type TableProps = {
 	id?: string
 	improvementPlans: Array<ImprovementPlans>
 	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
+	standardsOptions?: Array<StandardOption>
 }
 
 export default function ImprovementPlansTable({
 	id,
 	improvementPlans,
-	setImprovementPlans
+	setImprovementPlans,
+	standardsOptions
 }: TableProps) {
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
+
 	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
 	const [standardFilter, setStandardFilter] = React.useState<Selection>('all')
 
@@ -57,10 +55,12 @@ export default function ImprovementPlansTable({
 			)
 		}
 
-		if (standardFilter !== 'all' && Array.from(standardFilter).length !== standardsOptions.length) {
-			filteredPlans = filteredPlans.filter((plan) =>
-				Array.from(standardFilter).includes(plan.nro_standard.toString())
-			)
+		if (standardsOptions) {
+			if (standardFilter !== 'all' && Array.from(standardFilter).length !== standardsOptions.length) {
+				filteredPlans = filteredPlans.filter((plan) =>
+					Array.from(standardFilter).includes(plan.nro_standard.toString())
+				)
+			}
 		}
 
 		return filteredPlans
@@ -96,7 +96,7 @@ export default function ImprovementPlansTable({
 				return (
 					<div className='flex flex-col'>
 						<p className='text-bold text-sm text-default-600'>
-							{id === '8' ? `${improvementPlan.nro_standard}.` : null} {cellValue}
+							{id === '8' ? `${improvementPlan.nro_standard}` : null} {cellValue}
 						</p>
 					</div>
 				)
@@ -191,7 +191,7 @@ export default function ImprovementPlansTable({
 						onValueChange={onSearchChange}
 					/>
 					<div className='flex gap-3'>
-						{id === '8' ? (
+						{id === '8' && standardsOptions ? (
 							<CustomDropdown
 								mode='selector'
 								triggerElement={
@@ -240,7 +240,14 @@ export default function ImprovementPlansTable({
 				</div>
 			</div>
 		)
-	}, [filterValue, statusFilter, standardFilter, onSearchChange, improvementPlans.length, hasSearchFilter])
+	}, [
+		filterValue,
+		statusFilter,
+		standardFilter,
+		onSearchChange,
+		improvementPlans.length,
+		hasSearchFilter
+	])
 
 	const bottomContent = React.useMemo(() => {
 		return (

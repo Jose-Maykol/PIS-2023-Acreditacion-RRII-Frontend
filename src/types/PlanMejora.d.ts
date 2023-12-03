@@ -50,7 +50,7 @@ export type planItemNew = {
 }
 
 export type ImprovementPlan = {
-	id: number,
+	id: number
 	advance: number
 	code: string
 	duration: number
@@ -72,9 +72,7 @@ export type ImprovementPlan = {
 	semester: string
 }
 
-export type FormDataKeys = {
-	name: string
-	code: string
-	opportunity_for_improvement: string
-	// TODO: Completar keys
+export interface StandardOption {
+	label: string
+	uid: string
 }

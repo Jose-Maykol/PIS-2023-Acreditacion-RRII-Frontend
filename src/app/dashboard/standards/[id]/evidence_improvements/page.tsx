@@ -13,6 +13,23 @@ type EvidenceImprovementsPageProps = {
 }
 
 export default function EvidenceImprovementsPage({ params }: EvidenceImprovementsPageProps) {
+	const initializeStandardsOptions = (plans: Array<ImprovementPlans>) => {
+		const uniqueStandards = new Set()
+
+		return plans
+			.filter((plan) => {
+				if (!uniqueStandards.has(plan.nro_standard)) {
+					uniqueStandards.add(plan.nro_standard)
+					return true
+				}
+				return false
+			})
+			.map((plan) => ({
+				label: `Estándar ${plan.nro_standard}`,
+				uid: plan.nro_standard.toString()
+			}))
+	}
+
 	const [improvementPlans, setImpmrovementPlans] = useState<ImprovementPlans[]>([])
 
 	useEffect(() => {
@@ -23,12 +40,15 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 			.catch(console.log)
 	}, [])
 
+	const standardsOptions = initializeStandardsOptions(improvementPlans)
+
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
 			<ImprovementPlansTable
 				id={params.id}
 				improvementPlans={improvementPlans}
 				setImprovementPlans={setImpmrovementPlans}
+				standardsOptions={standardsOptions}
 			/>
 		</ContentWrapper>
 	)
