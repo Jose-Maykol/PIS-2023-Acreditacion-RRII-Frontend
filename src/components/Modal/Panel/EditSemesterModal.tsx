@@ -15,7 +15,7 @@ interface EditSemesterModalProps {
 	onOpenChange: (isOpen: boolean) => void
 }
 
-export default function EditSemeterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
+export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
 	const [dateValue, setDateValue] = useState('')
 	const [isValid, setIsValid] = useState<boolean | null >(null)
 
