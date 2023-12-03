@@ -2,7 +2,16 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
-import { Button, Checkbox, Input, Select, SelectItem, Slider, Tooltip } from '@nextui-org/react'
+import {
+	Button,
+	Checkbox,
+	Divider,
+	Input,
+	Select,
+	SelectItem,
+	Slider,
+	Tooltip
+} from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
@@ -29,6 +38,7 @@ export default function ImprovementPlanEditForm({
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
+	const [submitting, setSubmitting] = useState(false)
 
 	const [showModal, setShowModal] = useState<boolean>(false)
 
@@ -72,6 +82,8 @@ export default function ImprovementPlanEditForm({
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { year, semester, ...remainingPlan } = formData
 
+			setSubmitting(true)
+
 			const newPlan = {
 				...remainingPlan,
 				name: values.name,
@@ -93,7 +105,6 @@ export default function ImprovementPlanEditForm({
 				sources: getPlanItemsToSend(values.sources)
 			}
 
-			// console.log(newPlan)
 			const { plan_status_id: plantStatusId, advance } = newPlan
 			if (
 				(plantStatusId === 5 && advance === 0) ||
@@ -120,6 +131,8 @@ export default function ImprovementPlanEditForm({
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
+
+			setSubmitting(false)
 		}
 	})
 
@@ -129,7 +142,9 @@ export default function ImprovementPlanEditForm({
 
 	return (
 		<form onSubmit={formik.handleSubmit}>
-			<h1 className='uppercase text-lg font-bold mb-7'>Formulario de plan de mejora</h1>
+			<h1 className='uppercase text-lg font-bold mb-2'>Editar plan de mejora</h1>
+
+			<Divider className='mb-5' />
 
 			<Tooltip
 				color='foreground'
@@ -239,14 +254,15 @@ export default function ImprovementPlanEditForm({
 				content='Registre el año y semestre en la que las actividades se realizarán'
 				closeDelay={100}
 			>
-				<div className='mb-3 flex gap-5 mt-3'>
+				<div className='mb-4 flex gap-5 mt-3'>
 					<Select
 						id='year'
 						name='year'
 						selectedKeys={[formik.values.year]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.year && Boolean(formik.errors.year)}
-						errorMessage={formik.errors.year && 'Campo requerido'}
+						errorMessage={formik.touched.year && formik.errors.year && 'Campo requerido'}
 						className='max-w-xs'
 						label='Año:'
 						size='sm'
@@ -263,8 +279,9 @@ export default function ImprovementPlanEditForm({
 						name='semester'
 						selectedKeys={[formik.values.semester]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.semester && Boolean(formik.errors.semester)}
-						errorMessage={formik.errors.semester && 'Campo requerido'}
+						errorMessage={formik.touched.semester && formik.errors.semester && 'Campo requerido'}
 						className='max-w-xs'
 						label='Semestre:'
 						size='sm'
@@ -350,8 +367,11 @@ export default function ImprovementPlanEditForm({
 						name='plan_status_id'
 						selectedKeys={[`${formik.values.plan_status_id}`]}
 						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
 						isInvalid={formik.touched.plan_status_id && Boolean(formik.errors.plan_status_id)}
-						errorMessage={formik.errors.plan_status_id && 'Campo requerido'}
+						errorMessage={
+							formik.touched.plan_status_id && formik.errors.plan_status_id && 'Campo requerido'
+						}
 						className='max-w-xs mb-3'
 						label='Estado:'
 						size='sm'
@@ -368,15 +388,6 @@ export default function ImprovementPlanEditForm({
 
 			{/* TODO: Check functionality */}
 			<div className='flex gap-5 items-center mt-3'>
-				{/* <Input
-					id='evidences'
-					name='evidences'
-					className='mb-3 w-80'
-					placeholder='Denominación:'
-					size='sm'
-					type='text'
-					variant='underlined'
-				/> */}
 				<Tooltip
 					color='foreground'
 					placement='top-start'
@@ -398,6 +409,7 @@ export default function ImprovementPlanEditForm({
 						openModal={showModal}
 						onCloseModal={() => setShowModal(false)}
 						id={params.id}
+						planId={params.code}
 					/>
 				) : null}
 			</div>
@@ -423,7 +435,7 @@ export default function ImprovementPlanEditForm({
 						id='advance'
 						name='advance'
 						value={advanceValue}
-						// onChange={setAdvanceValue}
+						onBlur={formik.handleBlur}
 						onChange={(newValue) => setAdvanceValue(newValue as number)}
 						showTooltip={true}
 						step={0.01}
@@ -441,7 +453,7 @@ export default function ImprovementPlanEditForm({
 				<Tooltip
 					color='foreground'
 					placement='top-start'
-					content='Registrar el calificativo de la evaluación categóricamente: Sí o No'
+					content='Marcar el calificativo de la evaluación categóricamente: Sí o No'
 					closeDelay={100}
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
@@ -459,7 +471,6 @@ export default function ImprovementPlanEditForm({
 			<div className='flex gap-4 justify-end p-3'>
 				<Button
 					color='danger'
-					className='mb-5'
 					startContent={<CloseIcon width={16} height={16} fill='fill-white' />}
 					onClick={() => router.back()}
 				>
@@ -467,9 +478,10 @@ export default function ImprovementPlanEditForm({
 				</Button>
 				<Button
 					color='success'
-					className='text-white mb-5'
+					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
+					isDisabled={submitting}
 				>
 					Guardar
 				</Button>

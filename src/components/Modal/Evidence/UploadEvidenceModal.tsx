@@ -125,7 +125,9 @@ const UploadEvidenceModal = ({
 	const header: React.ReactNode = (
 		<>
 			<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-				Formulario de Subida de evidencias para el estandar {id.toString().padStart(2, '0')}
+				{!planId
+					? `Formulario de Subida de evidencias para el estandar ${id.toString().padStart(2, '0')}`
+					: 'Subir evidencias del Plan de Mejora'}
 			</h2>
 		</>
 	)
@@ -135,12 +137,19 @@ const UploadEvidenceModal = ({
 			<div className='flex-1 rounded-lg overflow-y-auto max-h-[310px] py-2 px-4 scrollbar-hide w-[400px] max-w-[400px]'>
 				<p className='text-center text-md font-semibold'>Archivos subidos</p>
 				{files.reverse().map((file, index) => (
-					<div key={index} className='flex items-center justify-between mt-2 bg-slate-200 h-14 rounded-lg'>
+					<div
+						key={index}
+						className='flex items-center justify-between mt-2 bg-slate-200 h-14 rounded-lg'
+					>
 						<div className='flex items-center ml-2'>
 							{getFileIcon(file.name)}
-							<p className='ml-2 font-medium'>{file.name} - {(file.size / 1024).toFixed(2)}KB</p>
+							<p className='ml-2 font-medium'>
+								{file.name} - {(file.size / 1024).toFixed(2)}KB
+							</p>
 						</div>
-						<Button color='danger' variant='light' size='sm' onPress={() => removeFile(index)}><TrashIcon width={20} height={20} fill='fill-danger'/></Button>
+						<Button color='danger' variant='light' size='sm' onPress={() => removeFile(index)}>
+							<TrashIcon width={20} height={20} fill='fill-danger' />
+						</Button>
 					</div>
 				))}
 			</div>
@@ -151,7 +160,7 @@ const UploadEvidenceModal = ({
 					onDragOver={handleDragOver}
 				>
 					<div className='mb-4 flex flex-col items-center'>
-						<UploadIcon width={60} height={60} fill='fill-blue-500'/>
+						<UploadIcon width={60} height={60} fill='fill-blue-500' />
 						<label className='cursor-pointer'>
 							<input
 								type='file'
@@ -170,7 +179,7 @@ const UploadEvidenceModal = ({
 						className='text-white rounded uppercase'
 						onPress={() => fileInputRef.current?.click()}
 					>
-					Seleccionar Archivos
+						Seleccionar Archivos
 					</Button>
 					<p className='mt-3 text-xs'>Maximo tamaño: 20MB</p>
 				</div>
@@ -196,7 +205,12 @@ const UploadEvidenceModal = ({
 					<Button color='danger' variant='solid' onPress={handleCloseModal}>
 						Cancelar
 					</Button>
-					<Button className='bg-lightBlue-600 text-white' variant='solid' isDisabled={!files.length} onPress={handleUploadEvidences} >
+					<Button
+						className='bg-lightBlue-600 text-white'
+						variant='solid'
+						isDisabled={!files.length}
+						onPress={handleUploadEvidences}
+					>
 						Guardar
 					</Button>
 				</>
