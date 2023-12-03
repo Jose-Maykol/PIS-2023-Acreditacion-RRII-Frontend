@@ -11,13 +11,11 @@ import { AuthService } from '@/api/Auth/authService'
 import LogoutIcon from '../Icons/LogoutIcon'
 import UserIcon from '../Icons/UserIcon'
 import CountdownSemester from '../Countdown/CountdownSemester'
-import DateSemesterService from '@/api/DateSemester/DateSemester'
 import dynamic from 'next/dynamic'
 
 const Header = () => {
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
-	const [listYearSemester, setListYearSemester] = useState([])
 	const PopoverSemester = dynamic(() => import('@/components/Popover/PopoverSemester'), {
 		ssr: false,
 		loading: () => <div className='w-[100px] h-[40px] animate-pulse bg-gray-200 rounded-md'/>
@@ -36,18 +34,6 @@ const Header = () => {
 	}
 
 	useEffect(() => {
-		DateSemesterService.getAll().then((res) => {
-			console.log('porque me renderizo')
-			const periods = res.data.map((item: any) => {
-				const { year, semester } = item
-				return semester.map((sem: any) => ({ year, semester: sem }))
-			})
-			setListYearSemester(periods.flat())
-		})
-	}, [])
-
-	useEffect(() => {
-		console.log('ja')
 		const authUserJSON = localStorage.getItem('auth_user')
 		if (authUserJSON) {
 			const { picture, user } = JSON.parse(authUserJSON)
@@ -70,9 +56,7 @@ const Header = () => {
 			</NavbarBrand>
 
 			<NavbarContent className='hidden md:flex' justify='center'>
-				{ listYearSemester.length === 0
-					? null
-					: <PopoverSemester listYearSemester={listYearSemester}/>}
+				<PopoverSemester />
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>

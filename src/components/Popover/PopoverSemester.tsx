@@ -1,19 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
+import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-interface PopoverSemesterProps {
-  listYearSemester: any[]
-}
-
-export default function PopoverSemester({ listYearSemester }: PopoverSemesterProps) {
+export default function PopoverSemester() {
 	const { year, semester } = useYearSemesterStore()
+	const [listYearSemester, setListYearSemester] = useState([])
 	const [isOpen, setIsOpen] = useState(false)
 	const { newToast } = useToast()
+
+	useEffect(() => {
+		DateSemesterService.getAll().then((res) => {
+			const periods = res.data.map((item: any) => {
+				const { year, semester } = item
+				return semester.map((sem: any) => ({ year, semester: sem }))
+			})
+			setListYearSemester(periods.flat())
+		})
+	}, [])
 
 	return (
 		<Popover placement='bottom' offset={10} isOpen={isOpen} defaultOpen={isOpen}>
