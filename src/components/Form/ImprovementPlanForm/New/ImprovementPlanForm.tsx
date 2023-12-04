@@ -120,12 +120,17 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<Divider className='mb-5' />
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registrar el nombre del plan de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el nombre del plan de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm' style={{ marginBottom: '-0.5rem' }}>
+						Nombre:
+					</label>
+				</Tooltip>
 				<Input
 					id='name'
 					name='name'
@@ -134,20 +139,21 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 					errorMessage={formik.touched.name && formik.errors.name}
-					className='mb-3'
-					placeholder='Nombre:'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registrar el código con el formato OMXX-YY-ZZZZ'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el código con el formato OMXX-YY-ZZZZ'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Código:</label>
+				</Tooltip>
 				<Input
 					id='code'
 					name='code'
@@ -156,13 +162,11 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 					errorMessage={formik.touched.code && formik.errors.code}
-					className='mb-3'
-					placeholder='Código:'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='problems_opportunities'
@@ -179,12 +183,15 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				formik={formik}
 			/>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registre la denominación de la oportunidad de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registre la denominación de la oportunidad de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Oportunidad de mejora:</label>
+				</Tooltip>
 				<Input
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
@@ -199,12 +206,11 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 					}
 					className='mb-3'
-					placeholder='Oportunidad de mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='improvement_actions'
@@ -213,8 +219,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				onChange={handleInputValues}
 				formik={formik}
 			/>
-
-			{/* <p>{JSON.stringify(formik.errors)}</p> */}
 
 			<Tooltip
 				color='foreground'
