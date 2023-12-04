@@ -25,7 +25,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
-	const [submitting, setSubmitting] = useState(false)
+
+	const [submitClicked, setSubmitClicked] = useState(false)
 
 	const formik = useFormik({
 		initialValues: {
@@ -50,9 +51,17 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			semester: ''
 		},
 		validationSchema,
+		validate: (values) => {
+			try {
+				validationSchema.validateSync(values, { abortEarly: false })
+			} catch (errors) {
+				if (submitClicked) {
+					showToast('error', 'Completar los campos requeridos')
+					setSubmitClicked(false)
+				}
+			}
+		},
 		onSubmit: (values) => {
-			setSubmitting(true)
-
 			const newPlan = {
 				name: values.name,
 				code: values.code,
@@ -98,7 +107,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
-			setSubmitting(false)
 		}
 	})
 
@@ -410,7 +418,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
-					isDisabled={submitting}
+					onClick={() => setSubmitClicked(true)}
+					isDisabled={!formik.isValid}
 				>
 					Guardar
 				</Button>
