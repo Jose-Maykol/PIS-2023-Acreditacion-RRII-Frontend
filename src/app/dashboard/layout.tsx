@@ -44,9 +44,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				const isClosed = res.data[0].is_closed
 				useYearSemesterStore.getState().setId(id)
 				useYearSemesterStore.getState().setIsClosed(isClosed)
-				if (closingDate) {
-					useYearSemesterStore.getState().setClosingDate(closingDate)
-				}
+				useYearSemesterStore.getState().setClosingDate(closingDate)
 			})
 			loadStandards()
 		}

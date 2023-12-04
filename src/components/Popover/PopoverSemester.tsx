@@ -5,7 +5,7 @@ import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 export default function PopoverSemester() {
 	const { year, semester } = useYearSemesterStore()
@@ -13,7 +13,7 @@ export default function PopoverSemester() {
 	const [isOpen, setIsOpen] = useState(false)
 	const { newToast } = useToast()
 
-	useEffect(() => {
+	const getSemesters = useCallback(() => {
 		DateSemesterService.getAll().then((res) => {
 			const periods = res.data.map((item: any) => {
 				const { year, semester } = item
@@ -22,6 +22,12 @@ export default function PopoverSemester() {
 			setListYearSemester(periods.flat())
 		})
 	}, [])
+
+	useEffect(() => {
+		if (year && semester) {
+			getSemesters()
+		}
+	}, [year, semester, getSemesters])
 
 	return (
 		<Popover placement='bottom' offset={10} isOpen={isOpen} defaultOpen={isOpen}>
