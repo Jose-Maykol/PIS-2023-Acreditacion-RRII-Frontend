@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react'
 
 export default function CountdownSemester () {
 	const { closingDate } = useYearSemesterStore()
-	console.log('soy la cuenta regresiva')
-	console.log(closingDate)
 	const [timeLeft, setTimeLeft] = useState({
 		days: '00',
 		hours: '00',
@@ -14,7 +12,6 @@ export default function CountdownSemester () {
 	useEffect(() => {
 		const calculateTimeLeft = () => {
 			const parts = closingDate?.split('-') as string[]
-			console.log(parts)
 			const year = parseInt(parts[0])
 			const month = parseInt(parts[1]) - 1
 			const day = parseInt(parts[2])

@@ -8,21 +8,30 @@ import PencilIcon from '@/components/Icons/PencilIcon'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import CreateSemesterModal from '@/components/Modal/Panel/CreateSemesterModal'
 import EditSemesterModal from '@/components/Modal/Panel/EditSemesterModal'
-import { Button, useDisclosure } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import CloseSemesterModal from '@/components/Modal/Panel/CloseSemesterModal'
 
 export default function PanelPage() {
-	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isCreateSemesterOpen, setCreateSemesterOpen] = useState(false)
 	const [isEditSemesterOpen, setEditSemesterOpen] = useState(false)
+	const [isCloseSemesterOpen, setCloseSemesterOpen] = useState(false)
 
 	const handleCreateSemesterOpen = () => {
 		setCreateSemesterOpen(true)
 		setEditSemesterOpen(false)
+		setCloseSemesterOpen(false)
 	}
 
 	const handleEditSemesterOpen = () => {
 		setCreateSemesterOpen(false)
 		setEditSemesterOpen(true)
+		setCloseSemesterOpen(false)
+	}
+
+	const handleCloseSemesterOpen = () => {
+		setCloseSemesterOpen(true)
+		setCreateSemesterOpen(false)
+		setEditSemesterOpen(false)
 	}
 
 	return (
@@ -40,7 +49,7 @@ export default function PanelPage() {
 				<h3 className='text-xl font-semibold uppercase'>Acciones</h3>
 				<div className='py-8 px-4 w-full'>
 					<div className='flex flex-row gap-4'>
-						<div className='flex flex-col gap-4 max-w-[700px]'>
+						<div className='flex flex-col gap-4 max-w-[550px]'>
 							<div className='flex-1 opacity-70 rounded-lg p-4 border border-lightBlue-600 border-dashed'>
 								<h2 className='font-bold text-lg'>Configurar semestre</h2>
 								<p className='my-3'>Usted puede configurar el semestre actual, crear un nuevo semestre o cerrar el semestre actual</p>
@@ -70,19 +79,19 @@ export default function PanelPage() {
 									<Button
 										color='danger'
 										className='w-[150px] h-[150px] font-bold p-4'
-										onPress={onOpen}
+										onPress={handleCloseSemesterOpen}
 									>
 										<div className='flex gap-4 flex-col items-center justify-center'>
 											<CloseIcon width={40} height={40} fill='fill-white'/>
 											<p>Cerrar semestre</p>
 										</div>
 									</Button>
-
+									<CloseSemesterModal isOpen={isCloseSemesterOpen} onOpenChange={setCloseSemesterOpen}/>
 								</div>
 							</div>
 
 						</div>
-						<div className='flex-1 bg-lightBlue-200 opacity-70 rounded-lg p-4 min-w-[400px] flex justify-center items-center'>
+						<div className='flex-1 bg-lightBlue-200 opacity-70 rounded-lg p-4 flex justify-center items-center'>
 							Disponible en la proxima actualizacion
 						</div>
 					</div>
