@@ -102,7 +102,7 @@ export default function ImprovementPlansTable({
 				return (
 					<div className='flex flex-col'>
 						<p className='text-bold text-sm text-default-600'>
-							{id === '8' ? `(${improvementPlan.nro_standard})` : null} {cellValue}
+							{(id === '8' || !id) ? `(${improvementPlan.nro_standard})` : null} {cellValue}
 						</p>
 					</div>
 				)
