@@ -152,13 +152,17 @@ export default function ImprovementPlanEditForm({
 
 			<Divider className='mb-5' />
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registrar el nombre del plan de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el nombre del plan de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm' style={{ marginBottom: '-0.5rem' }}>
+						Nombre:
+					</label>
+				</Tooltip>
 				<Input
 					id='name'
 					name='name'
@@ -167,21 +171,21 @@ export default function ImprovementPlanEditForm({
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 					errorMessage={formik.touched.name && formik.errors.name}
-					className='mb-4'
-					label='Nombre del Plan de Mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registrar el código con el formato OMXX-YY-ZZZZ'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el código con el formato OMXX-YY-ZZZZ'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Código:</label>
+				</Tooltip>
 				<Input
 					id='code'
 					name='code'
@@ -190,14 +194,12 @@ export default function ImprovementPlanEditForm({
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 					errorMessage={formik.touched.code && formik.errors.code}
-					className='mb-4'
-					label='Código:'
 					placeholder='OMXX-YY-ZZZZ'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='problems_opportunities'
@@ -216,13 +218,15 @@ export default function ImprovementPlanEditForm({
 				formik={formik}
 			/>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registre la denominación de la oportunidad de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registre la denominación de la oportunidad de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Oportunidad de mejora:</label>
+				</Tooltip>
 				<Input
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
@@ -237,12 +241,11 @@ export default function ImprovementPlanEditForm({
 						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 					}
 					className='mb-3'
-					label='Oportunidad de mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='improvement_actions'
@@ -302,13 +305,17 @@ export default function ImprovementPlanEditForm({
 				</div>
 			</Tooltip>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={20}
-				content='Registrar la duración en meses'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-1'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar la duración en meses'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm' style={{ marginBottom: '-.6rem' }}>
+						Duración (meses):
+					</label>
+				</Tooltip>
 				<Input
 					id='duration'
 					name='duration'
@@ -318,14 +325,13 @@ export default function ImprovementPlanEditForm({
 					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
 					errorMessage={formik.touched.duration && formik.errors.duration}
 					className='max-w-xs mb-3'
-					label='Duración (meses):'
 					min={1}
 					max={24}
 					size='sm'
 					type='number'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='resources'
