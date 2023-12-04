@@ -38,9 +38,9 @@ export default function ImprovementPlanEditForm({
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
-	const [submitting, setSubmitting] = useState(false)
 
 	const [showModal, setShowModal] = useState<boolean>(false)
+	const [submitClicked, setSubmitClicked] = useState(false)
 
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -78,11 +78,19 @@ export default function ImprovementPlanEditForm({
 		initialValues: formData,
 		validationSchema,
 		enableReinitialize: true,
+		validate: (values) => {
+			try {
+				validationSchema.validateSync(values, { abortEarly: false })
+			} catch (errors) {
+				if (submitClicked) {
+					showToast('error', 'Completar los campos requeridos')
+					setSubmitClicked(false)
+				}
+			}
+		},
 		onSubmit: (values) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { year, semester, ...remainingPlan } = formData
-
-			setSubmitting(true)
 
 			const newPlan = {
 				...remainingPlan,
@@ -131,8 +139,6 @@ export default function ImprovementPlanEditForm({
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
-
-			setSubmitting(false)
 		}
 	})
 
@@ -481,7 +487,8 @@ export default function ImprovementPlanEditForm({
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
-					isDisabled={submitting}
+					onClick={() => setSubmitClicked(true)}
+					isDisabled={formik.isValid}
 				>
 					Guardar
 				</Button>
