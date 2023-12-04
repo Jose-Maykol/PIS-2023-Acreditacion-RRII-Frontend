@@ -95,7 +95,7 @@ const Header = () => {
 						if (key === 'logout') logout()
 					}}
 				/>
-				{ isClosed && closingDate && (
+				{ closingDate && (
 					<CountdownSemester date={closingDate} />
 				)}
 			</NavbarContent>

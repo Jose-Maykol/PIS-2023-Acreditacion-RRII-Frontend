@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 interface CountdownSemesterProps {
-	date: Date
+	date: string
 }
 
 export default function CountdownSemester ({ date }: CountdownSemesterProps) {
@@ -13,7 +13,12 @@ export default function CountdownSemester ({ date }: CountdownSemesterProps) {
 
 	useEffect(() => {
 		const calculateTimeLeft = () => {
-			const targetDate = date
+			const parts = date.split('-')
+			const year = parseInt(parts[0])
+			const month = parseInt(parts[1]) - 1
+			const day = parseInt(parts[2])
+			const closingDate = new Date(year, month, day)
+			const targetDate = closingDate
 			const now = new Date().getTime()
 			const difference = targetDate.getTime() - now
 

@@ -38,10 +38,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		if (year && semester) {
 			BaseService.configure(year, semester)
 			DateSemesterService.getInfo().then((res) => {
-				const closingDate = new Date(res.data.closing_date)
-				const isClosed = res.data.is_closed
+				const id = res.data[0].id
+				console.log(id)
+				const closingDate = res.data[0].closing_date
+				const isClosed = res.data[0].is_closed
+				useYearSemesterStore.getState().setId(id)
 				useYearSemesterStore.getState().setIsClosed(isClosed)
-				useYearSemesterStore.getState().setClosingDate(closingDate)
+				if (closingDate) {
+					useYearSemesterStore.getState().setClosingDate(closingDate)
+				}
 			})
 			loadStandards()
 		}
