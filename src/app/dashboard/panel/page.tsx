@@ -6,15 +6,18 @@ import BoardIcon from '@/components/Icons/BoardIcon'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import PlusIcon from '@/components/Icons/PlusIcon'
-import CreateSemesterModal from '@/components/Modal/Panel/CreateSemesterModal'
-import EditSemesterModal from '@/components/Modal/Panel/EditSemesterModal'
 import { Button } from '@nextui-org/react'
-import CloseSemesterModal from '@/components/Modal/Panel/CloseSemesterModal'
+import dynamic from 'next/dynamic'
 
 export default function PanelPage() {
 	const [isCreateSemesterOpen, setCreateSemesterOpen] = useState(false)
 	const [isEditSemesterOpen, setEditSemesterOpen] = useState(false)
 	const [isCloseSemesterOpen, setCloseSemesterOpen] = useState(false)
+
+	const CreateSemesterModal = dynamic(() => import('@/components/Modal/Panel/CreateSemesterModal'), { ssr: false })
+	const EditSemesterModal = dynamic(() => import('@/components/Modal/Panel/EditSemesterModal'), { ssr: false })
+	const CloseSemesterModal = dynamic(() => import('@/components/Modal/Panel/CloseSemesterModal'), { ssr: false })
+
 
 	const handleCreateSemesterOpen = () => {
 		setCreateSemesterOpen(true)
