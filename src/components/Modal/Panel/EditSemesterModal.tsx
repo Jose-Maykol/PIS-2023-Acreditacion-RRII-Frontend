@@ -26,7 +26,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 	const [isValidSemester, setIsValidSemester] = useState<boolean | null >(null) */
 	const [isValidDate, setIsValidDate] = useState<boolean | null >(null)
 	/* const [touchedSemester, setTouchedSemester] = useState(false) */
-	const { id, year, semester, closingDate } = useYearSemesterStore()
+	const { year, semester, closingDate } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
 
 	/* const validateYear = (value:string) => {
@@ -34,8 +34,8 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 	} */
 
 	const validateDate = (value:string) => {
-		// valida la fecha en formato dd/mm/yyyy
-		return /^\d{2}\/\d{2}\/\d{4}$/.test(value)
+		// valida la fecha en formato dd-mm-yyyy
+		return /^\d{4}-\d{2}-\d{2}$/.test(value)
 	}
 
 	const handleDateValue = (value: string): void => {
@@ -71,10 +71,13 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 		}) */
 		console.log(dateValue)
 		DateSemesterService.close({
-			closing_date: dateValue.replace(/\//g, '-')
+			closing_date: dateValue
 		}).then((res) => {
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
+				useYearSemesterStore.setState({
+					closingDate: dateValue
+				})
 			} else {
 				updateToast(notification, res.message, 'error')
 			}
@@ -146,11 +149,11 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 								value={dateValue}
 								autoFocus
 								label='Fecha de cierre'
-								placeholder='dd/mm/yyyy'
+								placeholder='yyyy-mm-dd'
 								variant='bordered'
-								color={isValidDate ? 'default' : 'danger'}
-								isInvalid={!isValidDate}
-								errorMessage={isValidDate ? '' : 'Fecha invalida'}
+								color={!isValidDate && isValidDate !== null ? 'danger' : 'default'}
+								isInvalid={!isValidDate && isValidDate !== null }
+								errorMessage={!isValidDate && isValidDate !== null ? 'Fecha invalida' : ''}
 								onValueChange={handleDateValue}
 							/>
 						</ModalBody>
@@ -168,7 +171,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 							</Button>
 							<Button
 								color='primary'
-								isDisabled={!isValidDate}/* {!isValidYear || !isValidSemester || !touchedSemester} */
+								isDisabled={!isValidDate && dateValue === ''}/* {!isValidYear || !isValidSemester || !touchedSemester} */
 								onPress={() => {
 									handleSubmit()
 									onClose()

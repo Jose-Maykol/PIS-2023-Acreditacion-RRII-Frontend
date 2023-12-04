@@ -1,10 +1,10 @@
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { useEffect, useState } from 'react'
 
-interface CountdownSemesterProps {
-	date: string
-}
-
-export default function CountdownSemester ({ date }: CountdownSemesterProps) {
+export default function CountdownSemester () {
+	const { closingDate } = useYearSemesterStore()
+	console.log('soy la cuenta regresiva')
+	console.log(closingDate)
 	const [timeLeft, setTimeLeft] = useState({
 		days: '00',
 		hours: '00',
@@ -13,12 +13,12 @@ export default function CountdownSemester ({ date }: CountdownSemesterProps) {
 
 	useEffect(() => {
 		const calculateTimeLeft = () => {
-			const parts = date.split('-')
+			const parts = closingDate?.split('-') as string[]
+			console.log(parts)
 			const year = parseInt(parts[0])
 			const month = parseInt(parts[1]) - 1
 			const day = parseInt(parts[2])
-			const closingDate = new Date(year, month, day)
-			const targetDate = closingDate
+			const targetDate = new Date(year, month, day)
 			const now = new Date().getTime()
 			const difference = targetDate.getTime() - now
 
@@ -36,7 +36,7 @@ export default function CountdownSemester ({ date }: CountdownSemesterProps) {
 		}, 1000)
 
 		return () => clearInterval(interval)
-	}, [])
+	}, [closingDate])
 
 	return (
 		<div className='fixed top-20 right-4 bg-red-600 text-white px-3 py-2 rounded-lg shadow-lg flex flex-col w-[240px] justify-center'>

@@ -16,7 +16,7 @@ import dynamic from 'next/dynamic'
 const Header = () => {
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
-	const { isClosed, closingDate } = useYearSemesterStore()
+	const { closingDate } = useYearSemesterStore()
 	const PopoverSemester = dynamic(() => import('@/components/Popover/PopoverSemester'), {
 		ssr: false,
 		loading: () => <div className='w-[100px] h-[40px] animate-pulse bg-gray-200 rounded-md'/>
@@ -96,7 +96,7 @@ const Header = () => {
 					}}
 				/>
 				{ closingDate && (
-					<CountdownSemester date={closingDate} />
+					<CountdownSemester />
 				)}
 			</NavbarContent>
 		</Navbar>
