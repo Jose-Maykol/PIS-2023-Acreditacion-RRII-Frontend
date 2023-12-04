@@ -73,4 +73,12 @@ const standardsOptions = [
 	{ label: 'Estándar 32', uid: '32' }
 ]
 
-export { columns, statusOptions, statusColorMap, years, semesters, standardsOptions }
+const status = [
+	{ label: 'Planificado', value: 1 },
+	{ label: 'En desarrollo', value: 2 },
+	{ label: 'Completado', value: 3 },
+	{ label: 'Postergado', value: 4 },
+	{ label: 'Anulado', value: 5 }
+]
+
+export { columns, statusOptions, statusColorMap, years, semesters, standardsOptions, status }

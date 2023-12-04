@@ -44,9 +44,12 @@ export default function ImprovementPlansTable({
 		let filteredPlans = [...improvementPlans]
 
 		if (hasSearchFilter) {
-			filteredPlans = filteredPlans.filter((plan) =>
-				plan.code.toLowerCase().includes(filterValue.toLowerCase())
-			)
+			filteredPlans = filteredPlans.filter((plan) => {
+				const codeMatches = plan.code.toLowerCase().includes(filterValue.toLowerCase())
+				const nameMatches = plan.name.toLowerCase().includes(filterValue.toLowerCase())
+
+				return codeMatches || nameMatches
+			})
 		}
 
 		if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
@@ -55,8 +58,11 @@ export default function ImprovementPlansTable({
 			)
 		}
 
-		if (standardsOptions) {
-			if (standardFilter !== 'all' && Array.from(standardFilter).length !== standardsOptions.length) {
+		if (id === '8' && standardsOptions) {
+			if (
+				standardFilter !== 'all' &&
+				Array.from(standardFilter).length !== standardsOptions.length
+			) {
 				filteredPlans = filteredPlans.filter((plan) =>
 					Array.from(standardFilter).includes(plan.nro_standard.toString())
 				)
@@ -96,7 +102,7 @@ export default function ImprovementPlansTable({
 				return (
 					<div className='flex flex-col'>
 						<p className='text-bold text-sm text-default-600'>
-							{id === '8' ? `${improvementPlan.nro_standard}` : null} {cellValue}
+							{id === '8' ? `(${improvementPlan.nro_standard})` : null} {cellValue}
 						</p>
 					</div>
 				)
@@ -184,7 +190,7 @@ export default function ImprovementPlansTable({
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por código...'
+						placeholder='Buscar por código o nombre...'
 						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
 						defaultValue={filterValue}
 						onClear={() => onClear()}
