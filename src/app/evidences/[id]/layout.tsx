@@ -2,7 +2,7 @@
 
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { useEffect, useState } from 'react'
-import { Button } from '@nextui-org/react'
+import { Button, Spinner } from '@nextui-org/react'
 import UnsupportedFileIcon from '@/components/Icons/UnsupportedFIleIcon'
 import DownloadIcon from '@/components/Icons/DownloadIcon'
 
@@ -16,11 +16,25 @@ interface EvidenceData {
 export default function EvidencesLayout({ params }: { params: { id: number }}) {
 	const id = params.id.toString()
 	const [evidenceData, setEvidenceData] = useState<EvidenceData | null >(null)
+	const [content, setContent] = useState<string>('')
+	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
 		EvidenceService.viewEvidence(id).then((res) => {
+			const byteCharacters = atob(res.data.content)
+			const byteNumbers = new Array(byteCharacters.length)
+			for (let i = 0; i < byteCharacters.length; i++) {
+				byteNumbers[i] = byteCharacters.charCodeAt(i)
+			}
+			const byteArray = new Uint8Array(byteNumbers)
+			const blob = new Blob([byteArray], { type: res.data.type })
+			const blobUrl = URL.createObjectURL(blob)
+			const anchor = document.createElement('a')
+			anchor.href = blobUrl
+			anchor.download = res.data.name
+			setContent(blobUrl)
 			setEvidenceData(res.data)
-			console.log(res.data)
+			setLoading(false)
 		})
 	}, [])
 
@@ -59,6 +73,14 @@ export default function EvidencesLayout({ params }: { params: { id: number }}) {
 		return null
 	}
 
+	if (loading) {
+		return (
+			<div className='flex flex-col gap-4 items-center justify-center w-full h-screen bg-neutral-800 '>
+				<Spinner size='lg' />
+			</div>
+		)
+	}
+
 	if (!allowedMimeTypes.includes(evidenceData.type)) {
 		return (
 			<div className='flex flex-col gap-4 items-center justify-center w-full h-screen bg-neutral-800 text-white'>
@@ -77,32 +99,27 @@ export default function EvidencesLayout({ params }: { params: { id: number }}) {
 	}
 
 	return (
-		<html>
-			<head>
-				<title>{evidenceData.name}</title>
-			</head>
-			<body>
-				<div className='flex flex-row justify-between items-center absolute top-0 left-0 w-full h-14 bg-neutral-800 z-10 px-4'>
-					<p className='text-white'>{`${evidenceData.name}.${evidenceData.extension}`}</p>
-					<Button
-						color='primary'
-						startContent={<DownloadIcon width={20} height={20} fill='fill-white' />}
-						onPress={handleDownload}
-						className='font-bold'
-					>
+		<>
+			{/* <div className='flex flex-row justify-between items-center absolute top-0 left-0 w-full h-14 bg-neutral-800 z-10 px-4'>
+				<p className='text-white'>{`${evidenceData.name}.${evidenceData.extension}`}</p>
+				<Button
+					color='primary'
+					startContent={<DownloadIcon width={20} height={20} fill='fill-white' />}
+					onPress={handleDownload}
+					className='font-bold'
+				>
 					Descargar evidencia
-					</Button>
-				</div>
-				<embed
-					title={evidenceData.name}
-					id={evidenceData.name}
-					style={{ position: 'absolute', left: 0, top: 0 }}
-					width='100%'
-					height='100%'
-					src={`data:${evidenceData.type};base64,${evidenceData.content}`}
-					type={evidenceData.type}
-				/>
-			</body>
-		</html>
+				</Button>
+			</div> */}
+			<embed
+				title={evidenceData.name}
+				id={evidenceData.name}
+				style={{ position: 'absolute', left: 0, top: 0 }}
+				width='100%'
+				height='100%'
+				src={content}
+				type={evidenceData.type}
+			/>
+		</>
 	)
 }
