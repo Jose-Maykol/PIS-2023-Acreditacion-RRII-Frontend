@@ -76,7 +76,7 @@ export default function CreateSemesterModal({ isOpen, onOpenChange }: EditSemest
 				{(onClose) => (
 					<>
 						<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-							Editar semestre
+							Crear semestre
 						</ModalHeader>
 						<ModalBody>
 							<Input
