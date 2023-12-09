@@ -1,5 +1,4 @@
 import PlusIcon from '@/components/Icons/PlusIcon'
-import QuestionIcon from '@/components/Icons/QuestionIcon'
 import { Button, Card, CardBody, Input, Tooltip } from '@nextui-org/react'
 
 const InterestGroupsFields = () => {

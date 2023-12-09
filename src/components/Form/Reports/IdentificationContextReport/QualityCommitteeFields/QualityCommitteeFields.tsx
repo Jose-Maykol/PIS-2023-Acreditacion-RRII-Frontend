@@ -1,5 +1,8 @@
 import PlusIcon from '@/components/Icons/PlusIcon'
-import { Button, Card, CardBody, Input } from '@nextui-org/react'
+import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
+import { ImprovementPlans } from '@/types/ImprovementPlan'
+import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
+import { SetStateAction } from 'react'
 
 const QualityCommitteeFields = () => {
 	return (
@@ -36,6 +39,14 @@ const QualityCommitteeFields = () => {
 					</div>
 				</CardBody>
 			</Card>
+
+			<Divider className='my-5' />
+
+			<div className='mt-5'>
+				<QualityCommitteeTable improvementPlans={[]} setImprovementPlans={function (value: SetStateAction<ImprovementPlans[]>): void {
+					throw new Error('Function not implemented.')
+				} } />
+			</div>
 		</div>
 	)
 }
