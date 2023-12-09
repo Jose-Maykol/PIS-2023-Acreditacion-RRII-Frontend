@@ -3,7 +3,7 @@
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
-import { ImprovementPlans } from '@/types/PlanMejora'
+import { ImprovementPlans } from '@/types/ImprovementPlan'
 import { useEffect, useState } from 'react'
 
 type EvidenceImprovementsPageProps = {

@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 'use client'
 
-import React, { Dispatch, SetStateAction, useEffect } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
@@ -14,7 +14,7 @@ import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import Link from 'next/link'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
-import { ImprovementPlans, StandardOption } from '@/types/PlanMejora'
+import { ImprovementPlans, StandardOption } from '@/types/ImprovementPlan'
 import { useRouter } from 'next/navigation'
 
 type TableProps = {

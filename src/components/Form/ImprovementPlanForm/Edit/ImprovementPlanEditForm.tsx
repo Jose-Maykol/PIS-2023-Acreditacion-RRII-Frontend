@@ -15,7 +15,7 @@ import {
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 
 import DynamicInput from './DynamicInput'
 import CloseIcon from '@/components/Icons/CloseIcon'

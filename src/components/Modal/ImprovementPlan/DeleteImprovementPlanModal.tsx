@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { ImprovementPlans } from '@/types/PlanMejora'
+import { ImprovementPlans } from '@/types/ImprovementPlan'
 
 import {
 	Button,

@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary */
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { Button, Input, ScrollShadow, Tooltip } from '@nextui-org/react'
 import { ChangeEvent, useEffect, useState } from 'react'
 

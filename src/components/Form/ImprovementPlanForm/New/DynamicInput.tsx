@@ -3,7 +3,7 @@ import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input, ScrollShadow, Tooltip } from '@nextui-org/react'
 import DynamicInputItem from './DynamicInputItem'
 import { ChangeEvent, useState } from 'react'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 
 export default function DynamicInput({
 	identifier,

@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { ReportService } from '@/api/Report/ReportService'
 import EyeIcon from '@/components/Icons/EyeIcon'
 import ImprovementEvidencesModal from '@/components/Modal/Evidence/ImprovementEvidencesModal'
@@ -90,7 +90,7 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 						>
 							Ver Evidencias
 						</Button>
-						<Button color='primary' variant='ghost' className='ml-3'>
+						<Button color='primary' variant='ghost' className='ml-3' onClick={handleDownloadPlanReport}>
 							Descargar
 						</Button>
 						{showModal ? (

@@ -8,7 +8,7 @@ import ArrowIcon from '@/components/Icons/ArrowIcon'
 import IdentificationContextProgress from '@/components/Report/IdentificationContextProgress/IdentificationContextProgress'
 import { steps } from '@/utils/reports'
 import { Button, Input } from '@nextui-org/react'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export default function IdentificationContextReportPage() {
 	const [currentStep, setCurrentStep] = useState<number>(1)
@@ -87,11 +87,19 @@ export default function IdentificationContextReportPage() {
 }
 
 const InstitutionFields = () => {
+	const nameInputRef = useRef<HTMLInputElement | null>(null)
+
+	useEffect(() => {
+		if (nameInputRef.current) {
+			nameInputRef.current.focus()
+		}
+	}, [])
+
 	return (
 		<div>
 			<div className='flex flex-col mb-4'>
 				<label className='text-default-600 text-sm ml-1'>Nombre:</label>
-				<Input id='name' name='name' size='sm' type='text' />
+				<Input id='name' name='name' size='sm' type='text' ref={nameInputRef} />
 			</div>
 			<div className='flex flex-col mb-4'>
 				<label className='text-default-600 text-sm ml-1'>Región/Provincia/Distrito:</label>
@@ -132,11 +140,19 @@ const InstitutionFields = () => {
 }
 
 const StudyProgramFields = () => {
+	const dischargeInputRef = useRef<HTMLInputElement | null>(null)
+
+	useEffect(() => {
+        if (dischargeInputRef.current) {
+            dischargeInputRef.current.focus()
+        }
+	}, [])
+
 	return (
 		<div>
 			<div className='flex flex-col mb-3'>
 				<label className='text-default-600 text-sm ml-1'>Resolución de lincenciamiento:</label>
-				<Input id='discharge' name='discharge' size='sm' type='text' />
+				<Input id='discharge' name='discharge' size='sm' type='text' ref={dischargeInputRef} />
 			</div>
 			<div className='flex flex-col mb-3'>
 				<label className='text-default-600 text-sm ml-1'>Nivel Académico:</label>

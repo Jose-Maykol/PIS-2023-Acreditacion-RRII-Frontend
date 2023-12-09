@@ -5,7 +5,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import { ImprovementPlans } from '@/types/PlanMejora'
+import { ImprovementPlans } from '@/types/ImprovementPlan'
 import dynamic from 'next/dynamic'
 
 export default function DashboardPage() {
