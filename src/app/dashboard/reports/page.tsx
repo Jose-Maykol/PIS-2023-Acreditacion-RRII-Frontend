@@ -1,11 +1,15 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { ReportService } from '@/api/Report/ReportService'
 import ReportCard from '@/components/Card/ReportCard'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ReportIcon from '@/components/Icons/ReportIcon'
 
 export default function ReportPage() {
+	const router = useRouter()
+
 	const handleDownloadEvidenceReport = () => {
 		ReportService.generateEvidencesReport()
 			.then((res) => {
@@ -78,7 +82,7 @@ export default function ReportPage() {
 						color='grey'
 						title='Reporte de identificación y contexto'
 						description='Genera un reporte de identificación y contexto'
-						generateReport={() => alert('No disponible')}
+						generateReport={() => router.push('/dashboard/reports/identification-and-context')}
 					/>
 					<ReportCard
 						color='grey'
