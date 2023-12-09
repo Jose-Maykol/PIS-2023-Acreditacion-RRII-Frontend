@@ -4,8 +4,8 @@
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import InstitutionFields from '@/components/Form/Reports/IdentificationContextReport/InstitutionFields'
-import InterestGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestGroupsFields'
-import QualityCommitteeFields from '@/components/Form/Reports/IdentificationContextReport/QualityCommitteeFields'
+import InterestGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestGroupsFields/InterestGroupsFields'
+import QualityCommitteeFields from '@/components/Form/Reports/IdentificationContextReport/QualityCommitteeFields/QualityCommitteeFields'
 import StudyProgramFields from '@/components/Form/Reports/IdentificationContextReport/StudyProgramFields'
 import AngleDoubleRightIcon from '@/components/Icons/AngleDoubleRightIcon'
 import ArrowIcon from '@/components/Icons/ArrowIcon'
