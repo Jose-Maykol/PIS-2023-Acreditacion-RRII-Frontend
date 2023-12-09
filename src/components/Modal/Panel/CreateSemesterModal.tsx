@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
 	Button,
 	Input,
@@ -7,43 +7,33 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalFooter,
-	ModalHeader
+	ModalHeader,
+	Select,
+	SelectItem,
+	Selection
 } from '@nextui-org/react'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { useToast } from '@/hooks/toastProvider'
-import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+
 interface EditSemesterModalProps {
 	isOpen: boolean
 	onOpenChange: (isOpen: boolean) => void
 }
 
-export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
-	/* const semesters = [{ value: 'A' }, { value: 'B' }] */
-	const [dateValue, setDateValue] = useState<string>('')
-	/* const [yearValue, setYearValue] = useState<string >('')
+export default function CreateSemesterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
+	const semesters = [{ value: 'A' }, { value: 'B' }]
+	const [yearValue, setYearValue] = useState<string >('')
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
 	const [isValidYear, setIsValidYear] = useState<boolean | null >(null)
-	const [isValidSemester, setIsValidSemester] = useState<boolean | null >(null) */
-	const [isValidDate, setIsValidDate] = useState<boolean | null >(null)
-	/* const [touchedSemester, setTouchedSemester] = useState(false) */
-	const { year, semester, closingDate } = useYearSemesterStore()
+	const [isValidSemester, setIsValidSemester] = useState<boolean | null >(null)
+	const [touchedSemester, setTouchedSemester] = useState(false)
 	const { showToast, updateToast } = useToast()
 
-	/* const validateYear = (value:string) => {
+	const validateYear = (value:string) => {
 		return /^\d{4}$/.test(value)
-	} */
-
-	const validateDate = (value:string) => {
-		// valida la fecha en formato dd-mm-yyyy
-		return /^\d{4}-\d{2}-\d{2}$/.test(value)
 	}
 
 	const handleDateValue = (value: string): void => {
-		setDateValue(value)
-		setIsValidDate(validateDate(value))
-	}
-
-	/* const handleYearValue = (value: string): void => {
 		setYearValue(value)
 		setIsValidYear(validateYear(value))
 	}
@@ -51,33 +41,16 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 	const handleSemesterValue = (value: Selection): void => {
 		setSemesterValue(value)
 		setIsValidSemester((value as any).size > 0)
-	} */
+	}
 
 	const handleSubmit = () => {
 		const notification = showToast('Procesando...')
-		/* DateSemesterService.edit({
-			id_date_semester: id as number,
+		DateSemesterService.create({
 			year: parseInt(yearValue),
-			semester: (semesterValue as any).values().next().value as string,
-			closing_date: new Date(dateValue)
+			semester: (semesterValue as any).values().next().value as string
 		}).then((res) => {
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
-			} else {
-				updateToast(notification, res.message, 'error')
-			}
-		}).catch((err) => {
-			updateToast(notification, err.response.data.message, 'error')
-		}) */
-		console.log(dateValue)
-		DateSemesterService.close({
-			closing_date: dateValue
-		}).then((res) => {
-			if (res.status === 1) {
-				updateToast(notification, res.message, 'success')
-				useYearSemesterStore.setState({
-					closingDate: dateValue
-				})
 			} else {
 				updateToast(notification, res.message, 'error')
 			}
@@ -86,25 +59,16 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 		})
 	}
 
-	useEffect(() => {
-		/* 		if (year && semester) {
-			setYearValue(year.toString())
-			setSemesterValue(new Set([semester.toString()]))
-		} */
-		setDateValue(closingDate || '')
-	}, [year, semester, closingDate])
-
 	return (
 		<Modal
 			isOpen={isOpen}
 			onOpenChange={() => {
 				onOpenChange(false)
-				/* setYearValue(year?.toString() as string)
-				setSemesterValue(new Set([semester as 'A' | 'B'])) */
-				setDateValue(closingDate || '')
-				/* setIsValidYear(null)
+				setYearValue('')
+				setSemesterValue(new Set([]))
+				setIsValidYear(null)
 				setIsValidSemester(null)
-				setTouchedSemester(false) */
+				setTouchedSemester(false)
 			}}
 			placement='center'
 		>
@@ -112,11 +76,10 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 				{(onClose) => (
 					<>
 						<ModalHeader className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-							Editar semestre
+							Crear semestre
 						</ModalHeader>
 						<ModalBody>
-							{/* <Input
-								value={yearValue}
+							<Input
 								autoFocus
 								label='Año'
 								placeholder='Ingrese el año'
@@ -124,10 +87,9 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 								color={!isValidYear && isValidYear !== null ? 'danger' : 'default'}
 								isInvalid={!isValidYear && isValidYear !== null}
 								errorMessage={!isValidYear && isValidYear !== null ? 'Año inválido' : ''}
-								onValueChange={handleYearValue}
+								onValueChange={handleDateValue}
 							/>
 							<Select
-								selectedKeys={semesterValue}
 								items={semesters}
 								name='semester'
 								placeholder='Semestre'
@@ -144,18 +106,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 								}}
 							>
 								{(semesters) => <SelectItem key={semesters.value}>{semesters.value}</SelectItem>}
-							</Select> */}
-							<Input
-								value={dateValue}
-								autoFocus
-								label='Fecha de cierre'
-								placeholder='yyyy-mm-dd'
-								variant='bordered'
-								color={!isValidDate && isValidDate !== null ? 'danger' : 'default'}
-								isInvalid={!isValidDate && isValidDate !== null }
-								errorMessage={!isValidDate && isValidDate !== null ? 'Fecha invalida' : ''}
-								onValueChange={handleDateValue}
-							/>
+							</Select>
 						</ModalBody>
 						<ModalFooter>
 							<Button
@@ -163,15 +114,15 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 								variant='flat'
 								onPress={() => {
 									onClose()
-									/* setIsValidYear(null)
-									setTouchedSemester(false) */
+									setIsValidYear(null)
+									setTouchedSemester(false)
 								}}
 							>
 								Cancelar
 							</Button>
 							<Button
 								color='primary'
-								isDisabled={!isValidDate && dateValue === ''}/* {!isValidYear || !isValidSemester || !touchedSemester} */
+								isDisabled={!isValidYear || !isValidSemester || !touchedSemester}
 								onPress={() => {
 									handleSubmit()
 									onClose()

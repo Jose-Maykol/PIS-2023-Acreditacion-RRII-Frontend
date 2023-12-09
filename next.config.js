@@ -4,7 +4,7 @@ const nextConfig = {}
 module.exports = nextConfig
 
 module.exports = {
-	async redirects() {
+	async redirects () {
 		return [
 			{
 				source: '/',

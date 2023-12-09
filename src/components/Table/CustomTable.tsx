@@ -33,7 +33,6 @@ const CustomTable = ({
 	return (
 		<Table
 			aria-label='Example table with custom cells'
-			onRowAction={onRowActionClick}
 			topContent={topContent}
 			topContentPlacement='outside'
 			bottomContent={bottomContent}
@@ -51,7 +50,7 @@ const CustomTable = ({
 			</TableHeader>
 			<TableBody items={items} emptyContent={emptyContent}>
 				{(item) => (
-					<TableRow key={item.id}>
+					<TableRow key={item.id} onDoubleClick={() => onRowActionClick?.(item.id)}>
 						{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
 					</TableRow>
 				)}

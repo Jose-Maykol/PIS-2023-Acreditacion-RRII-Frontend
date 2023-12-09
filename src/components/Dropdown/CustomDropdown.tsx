@@ -47,7 +47,7 @@ function CustomDropdown({
 				{items.map((item: any) => (
 					<DropdownItem
 						key={item.uid}
-						className={itemsClassName}
+						className={itemsClassName ?? item.className}
 						color={item.color}
 						startContent={item.startContent}
 						endContent={item.endContent}

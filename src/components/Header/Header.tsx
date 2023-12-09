@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
-import UbuntuIcon from '@/components/Icons/UbuntuIcon'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
@@ -10,11 +10,17 @@ import { AuthService } from '@/api/Auth/authService'
 import LogoutIcon from '../Icons/LogoutIcon'
 import UserIcon from '../Icons/UserIcon'
 import CountdownSemester from '../Countdown/CountdownSemester'
+import dynamic from 'next/dynamic'
+import PopoverSemester from '../Popover/PopoverSemester'
 
 const Header = () => {
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
-	const { year, semester } = useYearSemesterStore()
+	const { closingDate } = useYearSemesterStore()
+	/* const PopoverSemester = dynamic(() => import('@/components/Popover/PopoverSemester'), {
+		ssr: false,
+		loading: () => <div className='w-[100px] h-[40px] animate-pulse bg-gray-200 rounded-md'/>
+	}) */
 
 	const logout = () => {
 		AuthService.logout()
@@ -44,14 +50,13 @@ const Header = () => {
 			height='5.25rem'
 		>
 			<NavbarBrand className='hidden md:flex gap-3'>
-				<UbuntuIcon width={25} height={25} fill='fill-white' />
 				<p className='text-base font-bold text-white uppercase'>
 					sistema de gestión de acreditación
 				</p>
 			</NavbarBrand>
 
 			<NavbarContent className='hidden md:flex' justify='center'>
-				<p className='text-base font-bold text-white border rounded-md p-2'>{`${year} - ${semester}`}</p>
+				<PopoverSemester />
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>
@@ -89,7 +94,9 @@ const Header = () => {
 						if (key === 'logout') logout()
 					}}
 				/>
-				<CountdownSemester/>
+				{ closingDate && (
+					<CountdownSemester />
+				)}
 			</NavbarContent>
 		</Navbar>
 	)

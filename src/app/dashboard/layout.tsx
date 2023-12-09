@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { use, useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { PartialStandard } from '@/types/Standard'
@@ -9,6 +9,7 @@ import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { usePermissionsStore } from '@/store/usePermissionsStore'
+import DateSemesterService from '@/api/DateSemester/DateSemester'
 
 
 // export const metadata: Metadata = {
@@ -36,6 +37,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	useEffect(() => {
 		if (year && semester) {
 			BaseService.configure(year, semester)
+			DateSemesterService.getInfo().then((res) => {
+				const id = res.data[0].id
+				console.log(id)
+				const closingDate = res.data[0].closing_date
+				const isClosed = res.data[0].is_closed
+				useYearSemesterStore.getState().setId(id)
+				useYearSemesterStore.getState().setIsClosed(isClosed)
+				useYearSemesterStore.getState().setClosingDate(closingDate)
+			})
 			loadStandards()
 		}
 	}, [year, semester, loadStandards])

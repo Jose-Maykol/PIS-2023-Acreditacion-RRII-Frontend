@@ -15,6 +15,10 @@ type ToastContextType = {
 		message: string,
 		type: 'success' | 'error' | 'info' | 'warning'
 	) => void
+	newToast: (
+		message: string,
+		type: 'success' | 'error' | 'info' | 'warning'
+	) => void
 };
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined)
@@ -31,6 +35,20 @@ export default function ToastProvider({ children }: ToastProviderProps) {
 			progress: undefined
 		})
 		return notification
+	}
+
+	const newToast = (message: string, type: 'success' | 'error' | 'info' | 'warning') => {
+		toast(message, {
+			type,
+			position: toast.POSITION.TOP_RIGHT,
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			isLoading: false,
+			theme: 'light'
+		})
 	}
 
 	const updateToast = (
@@ -53,7 +71,8 @@ export default function ToastProvider({ children }: ToastProviderProps) {
 
 	const contextValue = {
 		showToast,
-		updateToast
+		updateToast,
+		newToast
 	}
 
 	return (
@@ -65,7 +84,6 @@ export default function ToastProvider({ children }: ToastProviderProps) {
 		</ToastContext.Provider>
 	)
 }
-
 
 export const useToast = (): ToastContextType => {
 	const context = useContext(ToastContext)

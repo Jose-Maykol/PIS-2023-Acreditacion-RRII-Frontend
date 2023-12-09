@@ -1,6 +1,8 @@
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { useEffect, useState } from 'react'
 
 export default function CountdownSemester () {
+	const { closingDate } = useYearSemesterStore()
 	const [timeLeft, setTimeLeft] = useState({
 		days: '00',
 		hours: '00',
@@ -9,7 +11,11 @@ export default function CountdownSemester () {
 
 	useEffect(() => {
 		const calculateTimeLeft = () => {
-			const targetDate = new Date('2023-12-24')
+			const parts = closingDate?.split('-') as string[]
+			const year = parseInt(parts[0])
+			const month = parseInt(parts[1]) - 1
+			const day = parseInt(parts[2])
+			const targetDate = new Date(year, month, day)
 			const now = new Date().getTime()
 			const difference = targetDate.getTime() - now
 
@@ -27,7 +33,7 @@ export default function CountdownSemester () {
 		}, 1000)
 
 		return () => clearInterval(interval)
-	}, [])
+	}, [closingDate])
 
 	return (
 		<div className='fixed top-20 right-4 bg-red-600 text-white px-3 py-2 rounded-lg shadow-lg flex flex-col w-[240px] justify-center'>

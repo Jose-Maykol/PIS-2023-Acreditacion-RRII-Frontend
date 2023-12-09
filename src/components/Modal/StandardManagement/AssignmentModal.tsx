@@ -123,7 +123,7 @@ const AssignmentModal = ({
 				// labelPlacement='outside'
 				classNames={{
 					base: 'h-full py-1',
-					trigger: 'flex flex-col'
+					trigger: 'flex flex-col py-2'
 				}}
 				// size='lg'
 				// className='w-[80%] m-auto'

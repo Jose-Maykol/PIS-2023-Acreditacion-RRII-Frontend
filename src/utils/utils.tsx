@@ -14,6 +14,9 @@ import LinkIcon from '@/components/Icons/LinkIcon'
 import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import FileIcon from '@/components/Icons/FileIcon'
+import FolderMoveIcon from '@/components/Icons/FolderMoveIcon'
+import DownloadIcon from '@/components/Icons/DownloadIcon'
+import TrashIcon from '@/components/Icons/TrashIcon'
 
 
 export const getFileIcon = (fileName?: string, type?: string, size: number = 24): React.JSX.Element | null => {
@@ -38,8 +41,8 @@ export const getFileIcon = (fileName?: string, type?: string, size: number = 24)
 		return <ZipperIcon width={size} height={size} />
 	case 'folder':
 		return <FolderIcon width={size} height={size} />
-	case 'folderPlus':
-		return <FolderPlusIcon width={size} height={size} />
+	case 'folderMove':
+		return <FolderMoveIcon width={size} height={size} fill='fill-neutral-700' />
 	default:
 		return <FileIcon width={size} height={size} fill='fill-neutral-700'/>
 	}
@@ -51,7 +54,9 @@ export const getCommonIcon = (name: string, size: number = 24, fillColor?: strin
 		search: <SearchIcon width={size} height={size} fill={fillColor} />,
 		link: <LinkIcon width={size} height={size} fill={fillColor} />,
 		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />,
-		pencil: <PencilIcon width={size} height={size} fill={fillColor} />
+		pencil: <PencilIcon width={size} height={size} fill={fillColor} />,
+		download: <DownloadIcon width={size} height={size} fill={fillColor} />,
+		trash: <TrashIcon width={size} height={size} fill={fillColor} />
 	}
 
 	return name in icons ? icons[name] : <></>
