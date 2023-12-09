@@ -3,12 +3,16 @@
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
+import InstitutionFields from '@/components/Form/Reports/IdentificationContextReport/InstitutionFields'
+import InterestGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestGroupsFields'
+import QualityCommitteeFields from '@/components/Form/Reports/IdentificationContextReport/QualityCommitteeFields'
+import StudyProgramFields from '@/components/Form/Reports/IdentificationContextReport/StudyProgramFields'
 import AngleDoubleRightIcon from '@/components/Icons/AngleDoubleRightIcon'
 import ArrowIcon from '@/components/Icons/ArrowIcon'
 import IdentificationContextProgress from '@/components/Report/IdentificationContextProgress/IdentificationContextProgress'
 import { steps } from '@/utils/reports'
-import { Button, Input } from '@nextui-org/react'
-import { useEffect, useRef, useState } from 'react'
+import { Button } from '@nextui-org/react'
+import { useState } from 'react'
 
 export default function IdentificationContextReportPage() {
 	const [currentStep, setCurrentStep] = useState<number>(1)
@@ -82,134 +86,6 @@ export default function IdentificationContextReportPage() {
 					</div>
 				</div>
 			</ContentWrapper>
-		</div>
-	)
-}
-
-const InstitutionFields = () => {
-	const nameInputRef = useRef<HTMLInputElement | null>(null)
-
-	useEffect(() => {
-		if (nameInputRef.current) {
-			nameInputRef.current.focus()
-		}
-	}, [])
-
-	return (
-		<div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Nombre:</label>
-				<Input id='name' name='name' size='sm' type='text' ref={nameInputRef} />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Región/Provincia/Distrito:</label>
-				<Input id='region' name='region' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Teléfono Institucional:</label>
-				<Input id='phone' name='phone' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Página Web:</label>
-				<Input id='website' name='website' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Resolución de Licenciamiento:</label>
-				<Input id='resolution' name='resolution' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Fecha de Resolución:</label>
-				<Input id='resolution-date' name='resolution-date' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>
-					Apellidos y Nombres de la máxima autoridad de la IE:
-				</label>
-				<Input id='ei-representant' name='ei-representant' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Correo Electrónico:</label>
-				<Input id='email' name='email' size='sm' type='email' />
-			</div>
-			<div className='flex flex-col mb-4'>
-				<label className='text-default-600 text-sm ml-1'>Teléfono:</label>
-				<Input id='phone' name='phone' size='sm' type='phone' />
-			</div>
-		</div>
-	)
-}
-
-const StudyProgramFields = () => {
-	const dischargeInputRef = useRef<HTMLInputElement | null>(null)
-
-	useEffect(() => {
-        if (dischargeInputRef.current) {
-            dischargeInputRef.current.focus()
-        }
-	}, [])
-
-	return (
-		<div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Resolución de lincenciamiento:</label>
-				<Input id='discharge' name='discharge' size='sm' type='text' ref={dischargeInputRef} />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Nivel Académico:</label>
-				<Input id='academic-level' name='academic-level' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>CUI:</label>
-				<Input id='cui' name='cui' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Denominación de Grado:</label>
-				<Input id='grade' name='grade' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Denominación de Título:</label>
-				<Input id='title' name='title' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Oferta Autorizada:</label>
-				<Input id='offer' name='offer' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>
-					Apellidos y Nombres de la máxima autoridad o responsable del programa de estudio:
-				</label>
-				<Input id='responsible' name='responsible' size='sm' type='text' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Correo Electrónico:</label>
-				<Input id='email' name='email' size='sm' type='email' />
-			</div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Teléfono:</label>
-				<Input id='phone' name='phone' size='sm' type='text' />
-			</div>
-		</div>
-	)
-}
-
-const QualityCommitteeFields = () => {
-	return (
-		<div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Apellidos:</label>
-				<Input id='name' name='name' size='sm' type='text' />
-			</div>
-		</div>
-	)
-}
-
-const InterestGroupsFields = () => {
-	return (
-		<div>
-			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Interesado:</label>
-				<Input id='name' name='name' size='sm' type='text' />
-			</div>
 		</div>
 	)
 }
