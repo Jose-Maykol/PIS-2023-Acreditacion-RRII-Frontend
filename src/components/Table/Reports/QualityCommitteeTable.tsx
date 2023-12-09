@@ -1,77 +1,41 @@
 /* eslint-disable multiline-ternary */
 'use client'
 
-import React, { Dispatch, SetStateAction } from 'react'
+import React from 'react'
 
-import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
-import Link from 'next/link'
-import { ImprovementPlans, StandardOption } from '@/types/ImprovementPlan'
-import { useRouter } from 'next/navigation'
-import { statusOptions } from '@/utils/dataSelect'
-import EyeIcon from '@/components/Icons/EyeIcon'
+import { Tooltip, Pagination, Input } from '@nextui-org/react'
 import PencilIcon from '@/components/Icons/PencilIcon'
-import DeleteImprovementPlanModal from '@/components/Modal/ImprovementPlan/DeleteImprovementPlanModal'
 import SearchIcon from '@/components/Icons/SearchIcon'
-import CustomDropdown from '@/components/Dropdown/CustomDropdown'
-import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
-import PlusIcon from '@/components/Icons/PlusIcon'
 import CustomTable from '../CustomTable'
 import { columns } from '@/utils/qualityMembers'
+import { QualityMember } from '@/types/QualityMember'
+import TrashIcon from '@/components/Icons/TrashIcon'
 
 type TableProps = {
-	id?: string
-	improvementPlans: Array<ImprovementPlans>
-	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
-	standardsOptions?: Array<StandardOption>
+	qualityMembers: Array<QualityMember>
+	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function ImprovementPlansTable({
-	id,
-	improvementPlans,
-	setImprovementPlans,
-	standardsOptions
-}: TableProps) {
-	const router = useRouter()
+export default function ImprovementPlansTable({ qualityMembers }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
-
-	const [statusFilter, setStatusFilter] = React.useState<Selection>('all')
-	const [standardFilter, setStandardFilter] = React.useState<Selection>('all')
 
 	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
 
 	const filteredItems = React.useMemo(() => {
-		let filteredPlans = [...improvementPlans]
+		let filteredMembers = [...qualityMembers]
 
 		if (hasSearchFilter) {
-			filteredPlans = filteredPlans.filter((plan) => {
-				const codeMatches = plan.code.toLowerCase().includes(filterValue.toLowerCase())
-				const nameMatches = plan.name.toLowerCase().includes(filterValue.toLowerCase())
+			filteredMembers = filteredMembers.filter((member) => {
+				const fullnameMatches = member.fullname.toLowerCase().includes(filterValue.toLowerCase())
+				const emailMatches = member.email.toLowerCase().includes(filterValue.toLowerCase())
 
-				return codeMatches || nameMatches
+				return fullnameMatches || emailMatches
 			})
 		}
-
-		if (statusFilter !== 'all' && Array.from(statusFilter).length !== statusOptions.length) {
-			filteredPlans = filteredPlans.filter((plan) =>
-				Array.from(statusFilter).includes(plan.plan_status)
-			)
-		}
-
-		if (id === '8' && standardsOptions) {
-			if (
-				standardFilter !== 'all' &&
-				Array.from(standardFilter).length !== standardsOptions.length
-			) {
-				filteredPlans = filteredPlans.filter((plan) =>
-					Array.from(standardFilter).includes(plan.nro_standard.toString())
-				)
-			}
-		}
-
-		return filteredPlans
-	}, [improvementPlans, filterValue, statusFilter, standardFilter])
+		return filteredMembers
+	}, [qualityMembers, filterValue])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -82,70 +46,53 @@ export default function ImprovementPlansTable({
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback(
-		(improvementPlan: ImprovementPlans, columnKey: React.Key) => {
-			const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
+	const renderCell = React.useCallback((member: QualityMember, columnKey: React.Key) => {
+		const cellValue = member[columnKey as keyof QualityMember]
 
-			switch (columnKey) {
-			case 'fullname':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-sm capitalize'>{cellValue}</p>
-					</div>
-				)
-			case 'email':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-sm capitalize'>{cellValue}</p>
-					</div>
-				)
-			case 'position':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-sm text-default-600'>
-							{(id === '8' || !id) ? `(${improvementPlan.nro_standard})` : null} {cellValue}
-						</p>
-					</div>
-				)
-			case 'phone':
-				return (
-					<div className='flex flex-col'>
-						<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
-					</div>
-				)
-			case 'actions':
-				return (
-					<div className='relative flex gap-4'>
-						<Tooltip content='Detalle'>
-							<Link
-								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/details`}
-							>
-								<span className='text-default-400 cursor-pointer active:opacity-50'>
-									<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900' />
-								</span>
-							</Link>
-						</Tooltip>
-						<Tooltip content='Editar Plan de Mejora'>
-							<Link
-								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/edit`}
-							>
-								<span className='text-default-400 cursor-pointer active:opacity-50'>
-									<PencilIcon width={15} height={15} fill='fill-warning' />
-								</span>
-							</Link>
-						</Tooltip>
-						<DeleteImprovementPlanModal
-							planId={improvementPlan.id}
-							setImprovementPlans={setImprovementPlans}
-						/>
-					</div>
-				)
-			default:
-				return cellValue
-			}
-		},
-		[]
-	)
+		switch (columnKey) {
+		case 'fullname':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm capitalize'>{cellValue}</p>
+				</div>
+			)
+		case 'email':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm capitalize'>{cellValue}</p>
+				</div>
+			)
+		case 'position':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
+				</div>
+			)
+		case 'phone':
+			return (
+				<div className='flex flex-col'>
+					<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
+				</div>
+			)
+		case 'actions':
+			return (
+				<div className='flex gap-4 items-center justify-center'>
+					<Tooltip content='Editar'>
+						<span className='text-default-400 cursor-pointer active:opacity-50'>
+							<PencilIcon width={15} height={15} fill='fill-warning' />
+						</span>
+					</Tooltip>
+					<Tooltip content='Eliminar'>
+						<span className='text-default-400 cursor-pointer active:opacity-50'>
+							<TrashIcon width={15} height={15} fill='fill-gray-400 hover:fill-red-500' />
+						</span>
+					</Tooltip>
+				</div>
+			)
+		default:
+			return cellValue
+		}
+	}, [])
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
@@ -163,75 +110,22 @@ export default function ImprovementPlansTable({
 
 	const topContent = React.useMemo(() => {
 		return (
-			<div className='flex flex-col gap-4 mb-4'>
-				<div className='flex justify-between gap-3 items-end'>
-					<Input
-						isClearable
-						className='w-full sm:max-w-[44%]'
-						placeholder='Buscar por código o nombre...'
-						startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
-						defaultValue={filterValue}
-						onClear={() => onClear()}
-						onValueChange={onSearchChange}
-					/>
-					<div className='flex gap-3'>
-						{id === '8' && standardsOptions ? (
-							<CustomDropdown
-								mode='selector'
-								triggerElement={
-									<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
-										Estándar
-									</Button>
-								}
-								triggerClassName='hidden sm:flex'
-								items={standardsOptions}
-								itemsClassName='capitalize'
-								disallowEmptySelection
-								closeOnSelect={false}
-								selectedKeys={standardFilter}
-								selectionMode='multiple'
-								onSelectionChange={setStandardFilter}
-							/>
-						) : null}
-
-						<CustomDropdown
-							mode='selector'
-							triggerElement={
-								<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
-									Estado
-								</Button>
-							}
-							triggerClassName='hidden sm:flex'
-							items={statusOptions}
-							itemsClassName='capitalize'
-							disallowEmptySelection
-							closeOnSelect={false}
-							selectedKeys={statusFilter}
-							selectionMode='multiple'
-							onSelectionChange={setStatusFilter}
-						/>
-
-						{id ? (
-							<Button
-								color='primary'
-								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
-								onClick={() => router.push(`/dashboard/standards/${id}/evidence_improvements/new`)}
-							>
-								Crear PM
-							</Button>
-						) : null}
-					</div>
-				</div>
+			<div className='grid grid-cols-2 items-center mb-4'>
+				<p className='text-sm font-normal'>
+					Miembros agregados: <span className='font-bold'>32</span>
+				</p>
+				<Input
+					isClearable
+					className='w-full'
+					placeholder='Buscar por nombres o email...'
+					startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
+					defaultValue={filterValue}
+					onClear={() => onClear()}
+					onValueChange={onSearchChange}
+				/>
 			</div>
 		)
-	}, [
-		filterValue,
-		statusFilter,
-		standardFilter,
-		onSearchChange,
-		improvementPlans.length,
-		hasSearchFilter
-	])
+	}, [filterValue, onSearchChange, qualityMembers.length, hasSearchFilter])
 
 	const bottomContent = React.useMemo(() => {
 		return (
@@ -264,13 +158,9 @@ export default function ImprovementPlansTable({
 				'text-md'
 			],
 			td: [
-				// changing the rows border radius
-				// first
 				'group-data-[first=true]:first:before:rounded-none',
 				'group-data-[first=true]:last:before:rounded-none',
-				// middle
 				'group-data-[middle=true]:before:rounded-none',
-				// last
 				'group-data-[last=true]:first:before:rounded-none',
 				'group-data-[last=true]:last:before:rounded-none'
 			],
@@ -288,7 +178,7 @@ export default function ImprovementPlansTable({
 			bottomContent={bottomContent}
 			emptyContent={
 				<div className='flex justify-center items-center min-h-[400px] w-full'>
-					No se encontro elementos
+					No se encontró elementos
 				</div>
 			}
 			classNames={classNames}

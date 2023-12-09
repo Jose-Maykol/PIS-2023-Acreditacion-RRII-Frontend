@@ -1,8 +1,24 @@
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
-import { ImprovementPlans } from '@/types/ImprovementPlan'
+import { QualityMember } from '@/types/QualityMember'
 import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
-import { SetStateAction } from 'react'
+
+const members: QualityMember[] = [
+	{
+		id: 0,
+		fullname: 'Example names',
+		email: 'example@unsa.edu.pe',
+		position: 'Manager',
+		phone: '987654321'
+	},
+	{
+		id: 1,
+		fullname: 'Second example',
+		email: 'second@unsa.edu.pe',
+		position: 'Secretary',
+		phone: '948326400'
+	}
+]
 
 const QualityCommitteeFields = () => {
 	return (
@@ -43,9 +59,7 @@ const QualityCommitteeFields = () => {
 			<Divider className='my-5' />
 
 			<div className='mt-5'>
-				<QualityCommitteeTable improvementPlans={[]} setImprovementPlans={function (value: SetStateAction<ImprovementPlans[]>): void {
-					throw new Error('Function not implemented.')
-				} } />
+				<QualityCommitteeTable qualityMembers={members} />
 			</div>
 		</div>
 	)
