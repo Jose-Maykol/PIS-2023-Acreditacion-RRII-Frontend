@@ -9,7 +9,7 @@ const memberColumns = [
 	{ name: 'Nombres y Apellidos', uid: 'fullname', sortable: true },
 	{ name: 'Correo', uid: 'email', sortable: true },
 	{ name: 'Cargo', uid: 'position', sortable: true },
-	{ name: 'Teléfono', uid: 'phone', sortable: true },
+	{ name: 'Teléfono', uid: 'telephone', sortable: true },
 	{ name: 'Acciones', uid: 'actions' }
 ]
 

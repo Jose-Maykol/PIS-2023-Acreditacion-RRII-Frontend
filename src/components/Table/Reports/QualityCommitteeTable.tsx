@@ -13,10 +13,11 @@ import { QualityMember } from '@/types/Reports'
 
 type TableProps = {
 	qualityMembers: Array<QualityMember>
+	onDelete: (id: number) => void
 	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
+export default function QualityCommitteeTable({ qualityMembers, onDelete }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -54,13 +55,13 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 		case 'fullname':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{`${member.lastname}, ${member.name}`}</p>
+					<p className='text-bold text-sm capitalize'>{`${member.name} ${member.lastname}`}</p>
 				</div>
 			)
 		case 'email':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{cellValue}</p>
+					<p className='text-bold text-sm'>{cellValue}</p>
 				</div>
 			)
 		case 'position':
@@ -69,7 +70,7 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
 				</div>
 			)
-		case 'phone':
+		case 'telephone':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
@@ -84,7 +85,10 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 						</span>
 					</Tooltip>
 					<Tooltip content='Eliminar'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
+						<span
+							className='text-default-400 cursor-pointer active:opacity-50'
+							onClick={() => onDelete(member.id)}
+						>
 							<TrashIcon width={15} height={15} fill='fill-gray-400 hover:fill-red-500' />
 						</span>
 					</Tooltip>
@@ -113,7 +117,7 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 		return (
 			<div className='grid grid-cols-2 items-center mb-4'>
 				<p className='text-sm font-normal'>
-					Miembros agregados: <span className='font-bold'>32</span>
+					Miembros agregados: <span className='font-bold'>{qualityMembers.length}</span>
 				</p>
 				<Input
 					isClearable

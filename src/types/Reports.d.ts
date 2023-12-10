@@ -9,7 +9,7 @@ export interface QualityMember {
 	lastname: string
 	email: string
 	position: string
-	phone: string
+	telephone: string
 }
 
 export interface InterestedGroup {
