@@ -2,6 +2,7 @@ import PlusIcon from '@/components/Icons/PlusIcon'
 import InterestedGroupTable from '@/components/Table/Reports/InterestedGroupsTable'
 import { InterestedGroup } from '@/types/Reports'
 import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
+import { useEffect, useRef } from 'react'
 
 const groups: InterestedGroup[] = [
 	{
@@ -18,8 +19,15 @@ const groups: InterestedGroup[] = [
 	}
 ]
 
-
 const InterestedGroupsFields = () => {
+	const interestedInputRef = useRef<HTMLInputElement | null>(null)
+
+	useEffect(() => {
+		if (interestedInputRef.current) {
+			interestedInputRef.current.focus()
+		}
+	}, [])
+
 	return (
 		<div>
 			<Card className='p-3'>
@@ -38,7 +46,13 @@ const InterestedGroupsFields = () => {
 									<label className='text-default-600 text-sm ml-1'>Interesado:</label>
 								</Tooltip>
 							</div>
-							<Input id='interested' name='interested' size='sm' type='text' />
+							<Input
+								id='interested'
+								name='interested'
+								size='sm'
+								type='text'
+								ref={interestedInputRef}
+							/>
 						</div>
 						<div className='flex flex-col'>
 							<label className='text-default-600 text-sm ml-1'>Tipo:</label>

@@ -2,6 +2,7 @@ import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
 import { QualityMember } from '@/types/Reports'
+import { useEffect, useRef } from 'react'
 
 const members: QualityMember[] = [
 	{
@@ -21,6 +22,14 @@ const members: QualityMember[] = [
 ]
 
 const QualityCommitteeFields = () => {
+	const fullnameInputRef = useRef<HTMLInputElement | null>(null)
+
+	useEffect(() => {
+		if (fullnameInputRef.current) {
+			fullnameInputRef.current.focus()
+		}
+	}, [])
+
 	return (
 		<div>
 			<Card className='p-3'>
@@ -29,7 +38,7 @@ const QualityCommitteeFields = () => {
 					<div className='grid grid-cols-2 gap-4'>
 						<div className='flex flex-col'>
 							<label className='text-default-600 text-sm ml-1'>Apellidos y Nombres:</label>
-							<Input id='fullname' name='fullname' size='sm' type='text' />
+							<Input id='fullname' name='fullname' size='sm' type='text' ref={fullnameInputRef} />
 						</div>
 						<div className='flex flex-col'>
 							<label className='text-default-600 text-sm ml-1'>Cargo:</label>

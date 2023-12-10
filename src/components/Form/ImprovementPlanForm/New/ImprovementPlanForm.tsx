@@ -297,31 +297,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				/>
 			</div>
 
-			{/* <Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={20}
-				content='Registrar la duración en meses'
-				closeDelay={100}
-			>
-				<Input
-					id='duration'
-					name='duration'
-					value={formik.values.duration.toString()}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
-					errorMessage={formik.touched.duration && formik.errors.duration}
-					className='max-w-xs mb-3 mt-3'
-					label='Duración (meses):'
-					min={1}
-					max={24}
-					size='sm'
-					type='number'
-					variant='underlined'
-				/>
-			</Tooltip> */}
-
 			<DynamicInput
 				identifier='resources'
 				label='Recursos:'
