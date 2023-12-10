@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { Tabs, Tab } from '@nextui-org/react'
 import { useRouter, usePathname } from 'next/navigation'
@@ -9,7 +9,11 @@ export default function TabStandard({ id, children }: { id: string; children: Re
 	const { push } = useRouter()
 	const pathname = usePathname()
 
-	const [selected, setSelected] = useState(pathname.split('/').pop() || 'narrative')
+	const [selected, setSelected] = useState('narrative')
+
+	useEffect(() => {
+		setSelected(pathname.split('/').pop() || 'narrative')
+	}, [pathname])
 
 	const tabs = [
 		{
@@ -32,7 +36,6 @@ export default function TabStandard({ id, children }: { id: string; children: Re
 
 	const handleClick = (value: string) => {
 		push(`/dashboard/standards/${id}/${value}`)
-		setSelected(value)
 	}
 
 	return (
