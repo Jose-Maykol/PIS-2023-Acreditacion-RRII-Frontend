@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable indent */
 /* eslint-disable multiline-ternary */
+/* eslint-disable no-unused-vars */
 'use client'
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
@@ -20,58 +22,66 @@ export default function IdentificationContextReportPage() {
 
 	const formik = useFormik({
 		initialValues: {
-			address_headquarters: 'Dirección de prueba',
-			region_province_district: {
-				region: 'Región 1',
-				province: 'Provincia 1',
-				district: 'Distrito 1'
-			},
-			institutional_telephone: '123-456-789',
-			web_page: 'http://www.ejemplo.com',
-			date_resolution: '2023-11-30',
-			highest_authority_institution: 'Autoridad Institucional',
-			highest_authority_institution_email: 'autoridad@example.com',
-			highest_authority_institution_telephone: '987-654-321',
-			licensing_resolution: 'Resolución de Licencia',
-			academic_level: 'Nivel Académico',
-			cui: 12345678,
-			grade_denomination: 'Denominación de Grado',
-			title_denomination: 'Denominación de Título',
-			authorized_offer: 'Oferta Autorizada',
-			highest_authority_study_program: 'Autoridad del Programa de Estudio',
-			highest_authority_study_program_email: 'autoridad_programa@example.com',
-			highest_authority_study_program_telephone: '555-123-456',
+			address_headquarters: '',
+			region: '',
+			province: '',
+			district: '',
+			institutional_telephone: '',
+			web_page: '',
+			date_resolution: '',
+			highest_authority_institution: '',
+			highest_authority_institution_email: '',
+			highest_authority_institution_telephone: '',
+			licensing_resolution: '',
+			academic_level: '',
+			cui: '',
+			grade_denomination: '',
+			title_denomination: '',
+			authorized_offer: '',
+			highest_authority_study_program: '',
+			highest_authority_study_program_email: '',
+			highest_authority_study_program_telephone: '',
 			members_quality_committee: [
 				{
-					name: 'Nombre1',
-					lastname: 'Apellido1',
-					position: 'Cargo1',
-					email: 'miembro1@example.com',
-					telephone: '111-222-333'
+					name: '',
+					lastname: '',
+					position: '',
+					email: '',
+					telephone: ''
 				},
 				{
-					name: 'Nombre2',
-					lastname: 'Apellido2',
-					position: 'Cargo2',
-					email: 'miembro2@example.com',
-					telephone: '444-555-666'
+					name: '',
+					lastname: '',
+					position: '',
+					email: '',
+					telephone: ''
 				}
 			],
 			interest_groups_study_program: [
 				{
-					interested: 'Interesado1',
-					main_requirement_study_program: 'Requisito1',
-					type: 'Tipo1'
+					interested: '',
+					main_requirement_study_program: '',
+					type: ''
 				},
 				{
-					interested: 'Interesado2',
-					main_requirement_study_program: 'Requisito2',
-					type: 'Tipo2'
+					interested: '',
+					main_requirement_study_program: '',
+					type: ''
 				}
 			]
 		},
 		onSubmit: (values) => {
-			alert(JSON.stringify(values))
+			const { region, province, district, cui, ...rest } = values
+			const identificationContextReport = {
+				...rest,
+				cui: parseInt(cui),
+				region_province_district: {
+					region,
+					province,
+					district
+				}
+			}
+			alert(JSON.stringify(identificationContextReport))
 		}
 	})
 
@@ -90,9 +100,9 @@ export default function IdentificationContextReportPage() {
 	const renderFormStep = () => {
 		switch (currentStep) {
 			case 1:
-				return <InstitutionFields />
+				return <InstitutionFields formik={formik} />
 			case 2:
-				return <StudyProgramFields />
+				return <StudyProgramFields formik={formik} />
 			case 3:
 				return <QualityCommitteeFields />
 			case 4:

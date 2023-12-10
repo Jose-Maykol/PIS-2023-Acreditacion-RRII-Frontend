@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
+import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
 import { QualityMember } from '@/types/Reports'
@@ -37,7 +37,16 @@ const QualityCommitteeFields = () => {
 					<h1 className='text-sm font-bold mb-3 '>Agregar Miembro del Cómite</h1>
 					<div className='grid grid-cols-2 gap-4'>
 						<div className='flex flex-col'>
-							<label className='text-default-600 text-sm ml-1'>Apellidos y Nombres:</label>
+							<div>
+								<Tooltip
+									content='Separar con coma (Ejemplo: Apellidos, Nombres)'
+									color='foreground'
+									placement='right'
+									offset={5}
+								>
+									<label className='text-default-600 text-sm ml-1'>Apellidos y Nombres:</label>
+								</Tooltip>
+							</div>
 							<Input id='fullname' name='fullname' size='sm' type='text' ref={fullnameInputRef} />
 						</div>
 						<div className='flex flex-col'>
