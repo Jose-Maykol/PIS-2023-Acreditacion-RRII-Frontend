@@ -73,6 +73,15 @@ export default function IdentificationContextReportPage() {
 								Siguiente
 							</Button>
 						)}
+						{currentStep === 4 && (
+							<Button
+								color='primary'
+								endContent={<AngleDoubleRightIcon width={15} height={15} fill='fill-blue-300' />}
+								onClick={() => alert('Subiendo reporte')}
+							>
+								Subir
+							</Button>
+						)}
 						{currentStep > 1 && (
 							<Button
 								color='primary'
