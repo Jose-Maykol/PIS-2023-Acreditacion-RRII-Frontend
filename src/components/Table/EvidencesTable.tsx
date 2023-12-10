@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
+import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import PlusIcon from '../Icons/PlusIcon'
 import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
@@ -19,6 +19,7 @@ import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal
 import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
+import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
 
 export default function EvidencesTable({
 	id,
@@ -54,24 +55,24 @@ export default function EvidencesTable({
 	const [params, setParams] = useState<{ parent_id: number | null }>({
 		parent_id: null
 	})
-	const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; path: string; key: string }[]>([
-		{
-			name: 'Mis Evidencias',
-			path: 'null',
-			key: 'null'
-		}
-	])
+	const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; path: string; key: number }[]>([{
+		name: 'Mis Evidencias',
+		path: '/',
+		key: 0
+	}])
 	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
 		showModalUpload: false,
 		showModalRename: false,
 		showModalDelete: false,
-		showModalCreateFolder: false
+		showModalCreateFolder: false,
+		showModalMove: false
 	})
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
+			console.log('res.data', res.data)
 			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
 				(evidence: Evidence) => {
 					evidence.uid = Number(evidence.code.split('-')[1])
@@ -80,10 +81,11 @@ export default function EvidencesTable({
 					return evidence
 				}
 			)
-			console.log('useeffect', res.data)
+			// console.log('useEffect', res.data)
 			setEvidencesManagement([...arr])
 		})
 		setReload(false)
+		console.log('breadcrumbs', breadcrumbs)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -141,6 +143,11 @@ export default function EvidencesTable({
 				showModalDelete: true
 			})
 			break
+		case 'move-evidence':
+			setModalManager({
+				...modalManager,
+				showModalMove: true
+			})
 		}
 	}
 
@@ -150,7 +157,7 @@ export default function EvidencesTable({
 			return (
 				<div className='flex gap-2'>
 					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-md capitalize'>{evidence.name}</p>
+					<p className='text-bold text-md'>{evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -264,16 +271,15 @@ export default function EvidencesTable({
 		const type = key.split('-')[0]
 		const id = key.split('-')[1]
 		if (type === 'F') {
-			setEvidence(evidencesManagement.filter((e) => e.id === key)[0])
+			const evidence = evidencesManagement.filter((evidence) => evidence.uid === Number(id))[0]
 			setBreadcrumbs([
 				...breadcrumbs,
 				{
 					name: evidence.name,
-					path: evidence.path.split('/').pop() ?? '',
-					key: String(evidence.uid)
+					path: evidence.path,
+					key: evidence.uid
 				}
 			])
-			console.log(breadcrumbs)
 			setParams({
 				parent_id: Number(id)
 			})
@@ -296,12 +302,52 @@ export default function EvidencesTable({
 		}
 	}, [evidencesManagement])
 
+	const onBreadcrumbClick = React.useCallback((type: string, key: string) => {
+		let index = 0
+		if (type === 'B') {
+			index = breadcrumbs.findIndex((breadcrumb) => String(breadcrumb.key) === String(key))
+		} else {
+			index = breadcrumbs.findIndex((breadcrumb) => breadcrumb.name === String(key))
+		}
+		setBreadcrumbs(
+			breadcrumbs.slice(0, index + 1)
+		)
+		Number(key) ? setParams({ parent_id: Number(key) }) : setParams({ parent_id: null })
+	}, [breadcrumbs])
+
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
-				<Breadcrumbs >
-					{/* <BreadcrumbItem>Mis Evidencias</BreadcrumbItem> */}
-					{breadcrumbs.map(({ name, path, key }) => (
+				<Breadcrumbs
+					maxItems={3}
+					itemsBeforeCollapse={0}
+					itemsAfterCollapse={2}
+					renderEllipsis={({ items, ellipsisIcon, separator }) => (
+						<div className='flex items-center'>
+							<Dropdown>
+								<DropdownTrigger>
+									<Button
+										isIconOnly
+										className='min-w-unit-6 w-unit-6 h-unit-6'
+										size='sm'
+										variant='flat'
+									>
+										{ellipsisIcon}
+									</Button>
+								</DropdownTrigger>
+								<DropdownMenu color='primary' variant='solid' aria-label='Routes'>
+									{items.map((item, index) => (
+										<DropdownItem key={index} onClick={() => onBreadcrumbClick('D', String(item.children))}>
+											{item.children}
+										</DropdownItem>
+									))}
+								</DropdownMenu>
+							</Dropdown>
+							{separator}
+						</div>
+					)}
+					onAction={(key) => onBreadcrumbClick('B', String(key))}>
+					{breadcrumbs && breadcrumbs.map(({ name, key }) => (
 						<BreadcrumbItem key={key}>{name}</BreadcrumbItem>
 					))}
 				</Breadcrumbs>
@@ -412,7 +458,7 @@ export default function EvidencesTable({
 				<UploadEvidenceModal
 					id={id}
 					typeEvidence={typeEvidence}
-					path='/'
+					path={evidence.path}
 					openModal={modalManager.showModalUpload}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
 					onReload={() => setReload(true)}
@@ -443,6 +489,14 @@ export default function EvidencesTable({
 					path='/'
 					openModal={modalManager.showModalCreateFolder}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalMove && (
+				<MoveEvidenceModal
+					evidence={evidence}
+					openModal={modalManager.showModalMove}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalMove: false })}
 					onReload={() => setReload(true)}
 				/>
 			)}
