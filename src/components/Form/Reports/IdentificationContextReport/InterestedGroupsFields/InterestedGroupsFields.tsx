@@ -1,7 +1,25 @@
 import PlusIcon from '@/components/Icons/PlusIcon'
-import { Button, Card, CardBody, Input, Tooltip } from '@nextui-org/react'
+import InterestedGroupTable from '@/components/Table/Reports/InterestedGroupsTable'
+import { InterestedGroup } from '@/types/Reports'
+import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
 
-const InterestGroupsFields = () => {
+const groups: InterestedGroup[] = [
+	{
+		id: 0,
+		interested: 'Joe Sample',
+		type: 'Manager',
+		requirement: 'Some requirement'
+	},
+	{
+		id: 1,
+		interested: 'Moe Sample',
+		type: 'Manager',
+		requirement: 'Another requirement'
+	}
+]
+
+
+const InterestedGroupsFields = () => {
 	return (
 		<div>
 			<Card className='p-3'>
@@ -51,8 +69,14 @@ const InterestGroupsFields = () => {
 					</div>
 				</CardBody>
 			</Card>
+
+			<Divider className='my-5' />
+
+			<div className='mt-5'>
+				<InterestedGroupTable interestedGroup={groups} />
+			</div>
 		</div>
 	)
 }
 
-export default InterestGroupsFields
+export default InterestedGroupsFields

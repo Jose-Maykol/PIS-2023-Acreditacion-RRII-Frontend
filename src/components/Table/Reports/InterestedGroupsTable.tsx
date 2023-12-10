@@ -7,16 +7,16 @@ import { Tooltip, Pagination, Input } from '@nextui-org/react'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import SearchIcon from '@/components/Icons/SearchIcon'
 import CustomTable from '../CustomTable'
-import { memberColumns } from '@/utils/reports'
+import { groupColumns } from '@/utils/reports'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { QualityMember } from '@/types/Reports'
+import { InterestedGroup } from '@/types/Reports'
 
 type TableProps = {
-	qualityMembers: Array<QualityMember>
+	interestedGroup: Array<InterestedGroup>
 	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
+export default function InterestedGroupTable({ interestedGroup }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -24,18 +24,18 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 	const hasSearchFilter = Boolean(filterValue)
 
 	const filteredItems = React.useMemo(() => {
-		let filteredMembers = [...qualityMembers]
+		let filteredGroups = [...interestedGroup]
 
 		if (hasSearchFilter) {
-			filteredMembers = filteredMembers.filter((member) => {
-				const fullnameMatches = member.fullname.toLowerCase().includes(filterValue.toLowerCase())
-				const emailMatches = member.email.toLowerCase().includes(filterValue.toLowerCase())
+			filteredGroups = filteredGroups.filter((group) => {
+				const interesteedMatches = group.interested.toLowerCase().includes(filterValue.toLowerCase())
+				const typeMatches = group.type.toLowerCase().includes(filterValue.toLowerCase())
 
-				return fullnameMatches || emailMatches
+				return interesteedMatches || typeMatches
 			})
 		}
-		return filteredMembers
-	}, [qualityMembers, filterValue])
+		return filteredGroups
+	}, [interestedGroup, filterValue])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -46,32 +46,26 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const renderCell = React.useCallback((member: QualityMember, columnKey: React.Key) => {
-		const cellValue = member[columnKey as keyof QualityMember]
+	const renderCell = React.useCallback((group: InterestedGroup, columnKey: React.Key) => {
+		const cellValue = group[columnKey as keyof InterestedGroup]
 
 		switch (columnKey) {
-		case 'fullname':
+		case 'interested':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
 				</div>
 			)
-		case 'email':
+		case 'type':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
 				</div>
 			)
-		case 'position':
+		case 'requirement':
 			return (
 				<div className='flex flex-col'>
 					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
-				</div>
-			)
-		case 'phone':
-			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize text-default-600'>{cellValue}</p>
 				</div>
 			)
 		case 'actions':
@@ -112,12 +106,12 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 		return (
 			<div className='grid grid-cols-2 items-center mb-4'>
 				<p className='text-sm font-normal'>
-					Miembros agregados: <span className='font-bold'>32</span>
+					Grupos agregados: <span className='font-bold'>12</span>
 				</p>
 				<Input
 					isClearable
 					className='w-full'
-					placeholder='Buscar por nombres o email...'
+					placeholder='Buscar por interesado o tipo...'
 					startContent={<SearchIcon width={15} height={15} fill='fill-gray-600' />}
 					defaultValue={filterValue}
 					onClear={() => onClear()}
@@ -125,7 +119,7 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 				/>
 			</div>
 		)
-	}, [filterValue, onSearchChange, qualityMembers.length, hasSearchFilter])
+	}, [filterValue, onSearchChange, interestedGroup.length, hasSearchFilter])
 
 	const bottomContent = React.useMemo(() => {
 		return (
@@ -172,7 +166,7 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 	return (
 		<CustomTable
 			items={items}
-			columns={memberColumns}
+			columns={groupColumns}
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}

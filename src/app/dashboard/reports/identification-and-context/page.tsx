@@ -4,7 +4,7 @@
 
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import InstitutionFields from '@/components/Form/Reports/IdentificationContextReport/InstitutionFields'
-import InterestGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestGroupsFields/InterestGroupsFields'
+import InterestedGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestedGroupsFields/InterestedGroupsFields'
 import QualityCommitteeFields from '@/components/Form/Reports/IdentificationContextReport/QualityCommitteeFields/QualityCommitteeFields'
 import StudyProgramFields from '@/components/Form/Reports/IdentificationContextReport/StudyProgramFields'
 import AngleDoubleRightIcon from '@/components/Icons/AngleDoubleRightIcon'
@@ -38,7 +38,7 @@ export default function IdentificationContextReportPage() {
 			case 3:
 				return <QualityCommitteeFields />
 			case 4:
-				return <InterestGroupsFields />
+				return <InterestedGroupsFields />
 			default:
 				return null
 		}

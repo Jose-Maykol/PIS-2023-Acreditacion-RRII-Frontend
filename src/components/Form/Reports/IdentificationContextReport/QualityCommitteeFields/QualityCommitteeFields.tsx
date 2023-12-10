@@ -1,7 +1,7 @@
+import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
-import { QualityMember } from '@/types/QualityMember'
-import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
+import { QualityMember } from '@/types/Reports'
 
 const members: QualityMember[] = [
 	{
