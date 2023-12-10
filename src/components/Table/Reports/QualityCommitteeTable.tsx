@@ -28,10 +28,11 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 
 		if (hasSearchFilter) {
 			filteredMembers = filteredMembers.filter((member) => {
-				const fullnameMatches = member.fullname.toLowerCase().includes(filterValue.toLowerCase())
-				const emailMatches = member.email.toLowerCase().includes(filterValue.toLowerCase())
+				const nameMatches = member.name.toLowerCase().includes(filterValue.toLowerCase())
+				const lastnameMatches = member.lastname.toLowerCase().includes(filterValue.toLowerCase())
+				// const emailMatches = member.email.toLowerCase().includes(filterValue.toLowerCase())
 
-				return fullnameMatches || emailMatches
+				return nameMatches || lastnameMatches
 			})
 		}
 		return filteredMembers
@@ -53,7 +54,7 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 		case 'fullname':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{cellValue}</p>
+					<p className='text-bold text-sm capitalize'>{`${member.lastname}, ${member.name}`}</p>
 				</div>
 			)
 		case 'email':

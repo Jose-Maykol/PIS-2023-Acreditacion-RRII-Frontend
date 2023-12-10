@@ -5,7 +5,8 @@ export type IdentificationContextStep = {
 
 export interface QualityMember {
 	id: number
-	fullname: string
+	name: string
+	lastname: string
 	email: string
 	position: string
 	phone: string

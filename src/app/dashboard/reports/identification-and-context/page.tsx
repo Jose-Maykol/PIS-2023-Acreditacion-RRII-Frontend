@@ -104,7 +104,7 @@ export default function IdentificationContextReportPage() {
 			case 2:
 				return <StudyProgramFields formik={formik} />
 			case 3:
-				return <QualityCommitteeFields />
+				return <QualityCommitteeFields formik={formik} />
 			case 4:
 				return <InterestedGroupsFields />
 			default:

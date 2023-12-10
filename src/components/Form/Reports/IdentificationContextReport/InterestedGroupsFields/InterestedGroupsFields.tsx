@@ -28,6 +28,14 @@ const InterestedGroupsFields = () => {
 		}
 	}, [])
 
+	// "interest_groups_study_program": [
+	// 	{
+	// 		"interested": "Interesado1",
+	// 		"main_requirement_study_program": "Requisito1",
+	// 		"type": "Tipo1"
+	// 	}
+	// ]
+
 	return (
 		<div>
 			<Card className='p-3'>
