@@ -78,14 +78,14 @@ const Header = () => {
 							uid: 'my-perfil',
 							label: 'Mi perfil',
 							color: 'primary',
-							startContent: <UserIcon width={25} height={25} />
+							startContent: <UserIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
 						},
 						{
 							uid: 'logout',
 							label: 'Cerrar sesión',
 							className: 'text-danger',
 							color: 'danger',
-							startContent: <LogoutIcon width={25} height={25} fill='fill-danger' />
+							startContent: <LogoutIcon width={25} height={25} fill='fill-danger group-hover/dropdown:fill-white' />
 						}
 					]}
 					placement='bottom-end'

@@ -181,7 +181,7 @@ export default function EvidencesTable({
 				<div className='relative flex items-center gap-2 justify-center'>
 					<CustomDropdown
 						triggerElement={
-							<Button isIconOnly>
+							<Button isIconOnly className='rounded-full bg-transparent hover:bg-default-700'>
 								<EllipsisVerticalIcon width={15} height={15} />
 							</Button>
 						}
@@ -190,20 +190,20 @@ export default function EvidencesTable({
 								uid: 'rename-evidence',
 								label: evidence.type === 'folder' ? 'Renombrar carpeta' : 'Renombrar archivo',
 								color: 'primary',
-								startContent: getCommonIcon('pencil', 20)
+								startContent: getCommonIcon('pencil', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'download-evidence',
 								label: 'Descargar archivo',
 								className: evidence.type === 'folder' ? 'hidden' : undefined,
 								color: 'primary',
-								startContent: getCommonIcon('download', 20)
+								startContent: getCommonIcon('download', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'move-evidence',
 								label: evidence.type === 'folder' ? 'Mover carpeta' : 'Mover archivo',
 								color: 'primary',
-								startContent: getFileIcon('moveFolder', '', 20)
+								startContent: getFileIcon('moveFolder', '', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'delete-evidence',
@@ -211,7 +211,7 @@ export default function EvidencesTable({
 								className: 'danger',
 								color: 'danger',
 								startContent: (
-									getCommonIcon('trash', 20, 'fill-red-500 hover:fill-white')
+									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
 								)
 							}
 						]}
@@ -392,13 +392,13 @@ export default function EvidencesTable({
 									uid: 'upload-evidence',
 									label: 'Subir Evidencias',
 									color: 'primary',
-									startContent: <UploadIcon width={25} height={25} />
+									startContent: <UploadIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
 								},
 								{
 									uid: 'create-folder',
 									label: 'Crear Carpeta',
 									color: 'primary',
-									startContent: <FolderPlusIcon width={25} height={25} />
+									startContent: <FolderPlusIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
 								}
 							]}
 							placement='bottom-end'

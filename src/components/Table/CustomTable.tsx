@@ -17,6 +17,7 @@ type TableProps = {
 	bottomContent?: React.ReactNode
 	emptyContent: React.ReactNode
 	classNames?: any
+	hideHeader?: boolean
 	onRowActionClick?: (key: any) => void
 }
 
@@ -28,6 +29,7 @@ const CustomTable = ({
 	bottomContent,
 	emptyContent,
 	classNames,
+	hideHeader,
 	onRowActionClick
 }: TableProps) => {
 	return (
@@ -40,6 +42,7 @@ const CustomTable = ({
 			classNames={classNames}
 			className='no-scrollbar'
 			removeWrapper
+			hideHeader={hideHeader}
 		>
 			<TableHeader columns={columns}>
 				{(column) => (
