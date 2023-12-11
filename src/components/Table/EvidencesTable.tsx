@@ -486,7 +486,7 @@ export default function EvidencesTable({
 				<CreateFolderModal
 					id={parseInt(id)}
 					typeEvidence={parseInt(typeEvidence)}
-					path='/'
+					path={breadcrumbs[breadcrumbs.length - 1].path}
 					openModal={modalManager.showModalCreateFolder}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
 					onReload={() => setReload(true)}
