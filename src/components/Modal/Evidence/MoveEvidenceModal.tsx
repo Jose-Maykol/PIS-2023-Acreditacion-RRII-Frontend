@@ -3,27 +3,32 @@ import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import {
 	Button
 } from '@nextui-org/react'
-import { useState, ReactNode, useEffect, useMemo, useCallback, Key } from 'react'
+import { useState, ReactNode, useEffect, useMemo, useCallback, Key, use } from 'react'
 import { toast } from 'react-toastify'
 import CustomModal from '../CustomModal'
 import { Evidence } from '@/types/Evidences'
 import CustomTable from '@/components/Table/CustomTable'
-import { getFileIcon } from '@/utils/utils'
+import { getFileIcon, getCommonIcon } from '@/utils/utils'
 
 
 export default function MoveEvidenceModal(
-	{ evidence, openModal, onCloseModal, onReload } : {evidence: Evidence, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
-	const [folderValue, setFolderValue] = useState<string>('')
+	{ evidence, breadcrumbs, openModal, onCloseModal, onReload } : {evidence: Evidence, breadcrumbs: { name: string; path: string; key: number }[], openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
 	const [folders, setFolders] = useState<Evidence[]>([])
+	const [pathFolders] = useState<{ name: string; key: number }[]>([...breadcrumbs])
+	const [params, setParams] = useState<number | null>(pathFolders.length === 1 ? null : pathFolders[pathFolders.length - 1].key)
+	const [currentParams] = useState<number | null>(pathFolders.length === 1 ? null : pathFolders[pathFolders.length - 1].key)
+	const [isActive, setIsActive] = useState<boolean>(true)
 	const columns = [
 		{ name: 'CARPETA', uid: 'name', sortable: true },
 		{ name: 'ACCIONES', uid: 'actions' }
 	]
 
+	console.log('ruta de modal mover', breadcrumbs)
+
 	useEffect(() => {
 		EvidenceService.folderList(
 			{
-				folder_id: evidence.folder_id ?? null,
+				folder_id: params,
 				standard_id: evidence.standard_id,
 				evidence_type_id: evidence.evidence_type_id
 			}
@@ -31,49 +36,85 @@ export default function MoveEvidenceModal(
 			console.log('lista carpetas', res)
 			if (res.status === 1) {
 				setFolders(res.data)
+			} else {
+				setFolders([])
 			}
 		})
-	}, [])
+	}, [params])
 
 	const handleCloseModal = () => {
 		onCloseModal()
 		onReload()
 	}
 
+	const handleSubmitRow = async (params: number) => {
+		await setParams(params)
+		handleSubmitChanges()
+	}
+
 	const handleSubmitChanges = async () => {
 		const notification = toast.loading('Procesando...')
-		// await EvidenceService.createFolder({
-		// 	name: renameValue,
-		// 	standard_id: id,
-		// 	evidence_type_id: typeEvidence,
-		// 	path
-		// }).then((res) => {
-		// 	if (res.status === 1) {
-		// 		toast.update(notification, {
-		// 			render: res.message,
-		// 			type: 'success',
-		// 			autoClose: 5000,
-		// 			hideProgressBar: false,
-		// 			closeOnClick: true,
-		// 			pauseOnHover: true,
-		// 			draggable: true,
-		// 			isLoading: false,
-		// 			theme: 'colored'
-		// 		})
-		// 	} else {
-		// 		toast.update(notification, {
-		// 			render: res.message,
-		// 			type: 'error',
-		// 			autoClose: 5000,
-		// 			hideProgressBar: false,
-		// 			closeOnClick: true,
-		// 			pauseOnHover: true,
-		// 			draggable: true,
-		// 			isLoading: false,
-		// 			theme: 'colored'
-		// 		})
-		// 	}
-		// })
+		if (evidence?.type === 'evidence') {
+			await EvidenceService.moveEvidence(String(evidence.uid), {
+				parent_id: params
+			}).then((res) => {
+				if (res.status === 1) {
+					toast.update(notification, {
+						render: res.message,
+						type: 'success',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'colored'
+					})
+				} else {
+					toast.update(notification, {
+						render: res.message,
+						type: 'error',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'colored'
+					})
+				}
+			})
+		} else {
+			await EvidenceService.moveFolder(String(evidence.uid), {
+				parent_id: params
+			}).then((res) => {
+				if (res.status === 1) {
+					toast.update(notification, {
+						render: res.message,
+						type: 'success',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'colored'
+					})
+				} else {
+					toast.update(notification, {
+						render: res.message,
+						type: 'error',
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: true,
+						draggable: true,
+						isLoading: false,
+						theme: 'colored'
+					})
+				}
+			})
+		}
 		handleCloseModal()
 	}
 
@@ -94,9 +135,11 @@ export default function MoveEvidenceModal(
 			)
 		case 'actions':
 			return (
-				<div className='invisible flex relative items-center gap-2 justify-end group-hover/item:visible'>
-					<Button color='primary' size='sm' variant='ghost'>Mover</Button>
-					<p>ir</p>
+				<div className='invisible flex relative items-center justify-end group-hover/item:visible'>
+					<Button color='primary' size='sm' variant='light' onClick={() => handleSubmitRow(Number(folder.id))}>Mover</Button>
+					<Button className='-rotate-90 bg-transparent' isIconOnly onClick={() => setParams(Number(folder.id))}>
+						{getCommonIcon('chevron', 10, 'hover:bg-default-300')}
+					</Button>
 				</div>
 			)
 		}
@@ -104,8 +147,6 @@ export default function MoveEvidenceModal(
 
 	const classNames = useMemo(
 		() => ({
-			wrapper: ['h-[200px]'],
-			th: ['bg-default-200', 'text-default-600', 'border-b', 'border-divider', 'px-2', 'py-1', 'text-sm'],
 			td: [
 				// changing the rows border radius
 				// first
@@ -118,26 +159,46 @@ export default function MoveEvidenceModal(
 				'group-data-[last=true]:last:before:rounded-none',
 				'group-data-[last=true]:last:hover::rounded-none'
 			],
-			tr: ['hover:bg-default-300 group/item']
+			tr: ['hover:bg-default-300 group/item py-0']
 		}),
 		[]
 	)
 
 	const body: ReactNode = (
-		<div className='h-full flex flex-col gap-2 items-center justify-center max-h-[96%]'>
-			<div className='flex gap-1'>
-				<p className='text-gray-500'>Carpeta actual:</p>
-				<Button variant='bordered' color='primary' size='sm'>{evidence.path.split('/').pop()}</Button>
+		<div className='h-full flex flex-col gap-3 max-h-[96%]'>
+			<div className='flex gap-2 items-center'>
+				<h3 className='text-gray-500'>Carpeta actual:</h3>
+				<Button className='border-1 border-default-600 hover:bg-default-100' variant='bordered' size='sm' onClick={() => setParams(currentParams)} startContent={getFileIcon('', 'folder', 18, 'fill-default-600')}>
+					{pathFolders[pathFolders.length - 1].name}
+				</Button>
 			</div>
 			<CustomTable
 				items={folders}
 				columns={columns}
 				renderCell={renderCell}
 				topContent={<>
-					<div className='flex'>
-						<h2 className='border-b-2 border-lightBlue-600 w-full'>
-							Lista de Carpetas
-						</h2>
+					<div className='flex flex-col'>
+						<div className='flex'>
+							<Button
+								className={`${isActive ? 'bg-blue-200 text-primary after:content-[""] after:w-[90%] after:h-1 after:bg-blue-500' : 'bg-transparent text-default-600'} py-2 rounded-none border-none`}
+								size='sm'
+								onClick={() => {
+									setIsActive(true)
+									setParams(currentParams)
+								}}>
+									Carpeta Actual
+							</Button>
+							<Button
+								className={`${!isActive ? 'bg-blue-200 text-primary' : 'bg-transparent text-default-600'} py-2 rounded-none border-none`}
+								size='sm'
+								onClick={() => {
+									setIsActive(false)
+									setParams(null)
+								}}>
+									Carpeta Raiz
+							</Button>
+						</div>
+						<hr className='w-full'></hr>
 					</div>
 				</>}
 				emptyContent={<div className='flex justify-center items-center min-h-[200px] w-full'>No se encontro elementos</div>}
@@ -167,7 +228,7 @@ export default function MoveEvidenceModal(
 							Cancelar
 						</Button>
 						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges} >
-							Guardar
+							Mover
 						</Button>
 					</>
 				}

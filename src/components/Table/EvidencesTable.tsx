@@ -30,7 +30,6 @@ export default function EvidencesTable({
 	typeEvidence: string
 	plandId?: string
 }) {
-	// console.log({ id, typeEvidence, plandId })
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -181,7 +180,7 @@ export default function EvidencesTable({
 				<div className='relative flex items-center gap-2 justify-center'>
 					<CustomDropdown
 						triggerElement={
-							<Button isIconOnly className='rounded-full bg-transparent hover:bg-default-700'>
+							<Button isIconOnly className='rounded-full bg-transparent hover:bg-default-400'>
 								<EllipsisVerticalIcon width={15} height={15} />
 							</Button>
 						}
@@ -208,7 +207,6 @@ export default function EvidencesTable({
 							{
 								uid: 'delete-evidence',
 								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
-								className: 'danger',
 								color: 'danger',
 								startContent: (
 									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
@@ -453,7 +451,12 @@ export default function EvidencesTable({
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && <PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />}
+			{blobURL && (
+				<PdfVisualizer
+					blobURL={blobURL}
+					setBlobURL={setBlobURL}
+				/>
+			)}
 			{modalManager.showModalUpload && (
 				<UploadEvidenceModal
 					id={id}
@@ -495,6 +498,7 @@ export default function EvidencesTable({
 			{modalManager.showModalMove && (
 				<MoveEvidenceModal
 					evidence={evidence}
+					breadcrumbs={breadcrumbs}
 					openModal={modalManager.showModalMove}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalMove: false })}
 					onReload={() => setReload(true)}
