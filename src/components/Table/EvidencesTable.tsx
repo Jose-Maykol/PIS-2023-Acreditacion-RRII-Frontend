@@ -458,7 +458,7 @@ export default function EvidencesTable({
 				<UploadEvidenceModal
 					id={id}
 					typeEvidence={typeEvidence}
-					path={evidence.path}
+					path={breadcrumbs[breadcrumbs.length - 1].path}
 					openModal={modalManager.showModalUpload}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
 					onReload={() => setReload(true)}

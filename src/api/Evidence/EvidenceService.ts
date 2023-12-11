@@ -12,7 +12,10 @@ const url = {
 	renameFolder: 'evidences/folder/:id/rename',
 	deleteEvidence: 'evidences/:id',
 	deleteFolder: 'evidences/folder/:id',
-	createFolder: 'evidences/folder'
+	createFolder: 'evidences/folder',
+	moveEvidence: 'evidences/:id/move',
+	moveFolder: 'evidences/folder/:id/move',
+	folderList: 'evidences/folder'
 }
 
 export class EvidenceService extends BaseService {
@@ -120,6 +123,24 @@ export class EvidenceService extends BaseService {
 	}) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.createFolder}`, params)
+		return res.data
+	}
+
+	public static async moveEvidence(id: string, params: { parent_id: number | null }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.patch(`/${year}/${semester}/${url.moveEvidence.replace(':id', id)}`, params)
+		return res.data
+	}
+
+	public static async moveFolder(id: string, params: { parent_id: number | null }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.patch(`/${year}/${semester}/${url.moveFolder.replace(':id', id)}`, params)
+		return res.data
+	}
+
+	public static async folderList(params : { folder_id: number | null, standard_id: number, evidence_type_id: number }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.folderList}`, { params })
 		return res.data
 	}
 }
