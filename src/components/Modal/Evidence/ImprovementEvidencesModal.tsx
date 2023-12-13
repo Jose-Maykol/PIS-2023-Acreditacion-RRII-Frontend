@@ -17,9 +17,9 @@ const ImprovementEvidencesModal = ({
 		<CustomModal
 			isOpen={openModal}
 			classNames={{
-				base: 'h-[90%]',
-				header: 'p-2 border-b-[2px] border-gray-200',
-				body: 'h-[55%] py-2'
+				base: 'h-[90%]'
+				/* header: 'p-2 border-b-[2px] border-gray-200',
+				body: 'h-[55%] py-2' */
 			}}
 			size='5xl'
 			onClose={() => onCloseModal()}
