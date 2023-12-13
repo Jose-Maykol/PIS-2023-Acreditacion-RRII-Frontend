@@ -12,7 +12,7 @@ export default function TabStandard({ id, children }: { id: string; children: Re
 	const [selected, setSelected] = useState('narrative')
 
 	useEffect(() => {
-		setSelected(pathname.split('/').pop() || 'narrative')
+		setSelected(pathname.split('/')[4] || 'narrative')
 	}, [pathname])
 
 	const tabs = [
