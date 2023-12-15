@@ -29,7 +29,6 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 	'no logrado': 'danger'
 }
 
-
 export default function StandardTable () {
 	const [filterValue, setFilterValue] = useState<string>('')
 	const [page, setPage] = useState<number>(1)
@@ -100,7 +99,7 @@ export default function StandardTable () {
                 Ver encargados
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent>
+								<PopoverContent className='overflow-y-auto scrollbar-hide max-h-[175px]'>
 									{cellValue.map((user, index) => (
 										<div key={index} className='my-1 border-b-1 flex flex-col w-full m-auto'>
 											<p className='text-bold text-md items-start'>{`${user.name} ${user.lastname}`}</p>
@@ -111,7 +110,7 @@ export default function StandardTable () {
 							</Popover>
 						)
 						: (
-							<p>No se asignaron aun encargados</p>
+							<p>Sin encargados</p>
 						)}
 				</div>)
 			}

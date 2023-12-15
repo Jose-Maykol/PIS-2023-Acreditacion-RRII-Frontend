@@ -18,6 +18,8 @@ import FolderMoveIcon from '@/components/Icons/FolderMoveIcon'
 import DownloadIcon from '@/components/Icons/DownloadIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
 
+import CheckIcon from '@/components/Icons/CheckIcon'
+import CloseIcon from '@/components/Icons/CloseIcon'
 
 export const getFileIcon = (fileName?: string, type?: string, size: number = 24, fill?: string): React.JSX.Element | null => {
 	let fileExtension
@@ -56,7 +58,9 @@ export const getCommonIcon = (name: string, size: number = 24, fillColor?: strin
 		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />,
 		pencil: <PencilIcon width={size} height={size} fill={fillColor} />,
 		download: <DownloadIcon width={size} height={size} fill={fillColor} />,
-		trash: <TrashIcon width={size} height={size} fill={fillColor} />
+		trash: <TrashIcon width={size} height={size} fill={fillColor} />,
+		check: <CheckIcon width={size} height={size} fill={fillColor} />,
+		close: <CloseIcon width={size} height={size} fill={fillColor} />
 	}
 
 	return name in icons ? icons[name] : <></>
