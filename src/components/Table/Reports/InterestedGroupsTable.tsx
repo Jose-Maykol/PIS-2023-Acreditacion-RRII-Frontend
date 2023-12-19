@@ -62,10 +62,10 @@ export default function InterestedGroupTable({ interestedGroup }: TableProps) {
 					<p className='text-bold text-sm capitalize'>{cellValue}</p>
 				</div>
 			)
-		case 'requirement':
+		case 'main_requirement_study_program':
 			return (
 				<div className='flex flex-col'>
-					<p className='text-bold text-sm text-default-600'>{cellValue}</p>
+					<p className='text-bold text-sm capitalize'>{cellValue}</p>
 				</div>
 			)
 		case 'actions':
@@ -106,7 +106,7 @@ export default function InterestedGroupTable({ interestedGroup }: TableProps) {
 		return (
 			<div className='grid grid-cols-2 items-center mb-4'>
 				<p className='text-sm font-normal'>
-					Grupos agregados: <span className='font-bold'>12</span>
+					Grupos agregados: <span className='font-bold'>{interestedGroup.length}</span>
 				</p>
 				<Input
 					isClearable

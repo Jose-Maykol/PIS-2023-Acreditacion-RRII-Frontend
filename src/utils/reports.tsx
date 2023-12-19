@@ -16,7 +16,7 @@ const memberColumns = [
 const groupColumns = [
 	{ name: 'Interesado', uid: 'interested' },
 	{ name: 'Tipo', uid: 'type' },
-	{ name: 'Requerimiento Principal', uid: 'requirement' },
+	{ name: 'Requerimiento Principal', uid: 'main_requirement_study_program' },
 	{ name: 'Acciones', uid: 'actions' }
 ]
 

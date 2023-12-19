@@ -16,5 +16,5 @@ export interface InterestedGroup {
 	id: number
 	interested: string
 	type: string
-	requirement: string
+	main_requirement_study_program: string
 }
