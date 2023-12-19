@@ -185,7 +185,7 @@ export default function QualityCommitteeTable({ qualityMembers, onDelete, onEdit
 			topContent={topContent}
 			bottomContent={bottomContent}
 			emptyContent={
-				<div className='flex justify-center items-center min-h-[400px] w-full'>
+				<div className='flex justify-center items-center min-h-[100px] w-full'>
 					No se encontró elementos
 				</div>
 			}

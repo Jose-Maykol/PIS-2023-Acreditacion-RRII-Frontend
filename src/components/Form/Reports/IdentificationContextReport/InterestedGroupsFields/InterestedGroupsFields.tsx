@@ -93,6 +93,9 @@ const InterestedGroupsFields = ({
 		setIsEditing(true)
 		const groupToEdit = groups.find((group) => group.id === _id)
 
+		console.log(groups)
+		console.log(groupToEdit)
+
 		if (groupToEdit) {
 			setSingleGroup({
 				id: groupToEdit.id,
