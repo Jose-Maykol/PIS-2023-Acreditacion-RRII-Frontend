@@ -1,5 +1,7 @@
+/* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import PlusIcon from '@/components/Icons/PlusIcon'
+import SaveIcon from '@/components/Icons/SaveIcon'
 import InterestedGroupTable from '@/components/Table/Reports/InterestedGroupsTable'
 import { InterestedGroup } from '@/types/Reports'
 import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
@@ -13,6 +15,8 @@ const InterestedGroupsFields = ({
 	interestedGroups: any
 }) => {
 	const interestedInputRef = useRef<HTMLInputElement | null>(null)
+
+	const [isEditing, setIsEditing] = useState(false)
 
 	const [singleGroup, setSingleGroup] = useState<InterestedGroup>({
 		id: 0,
@@ -43,9 +47,27 @@ const InterestedGroupsFields = ({
 			return
 		}
 
-		const updatedGroups = [...groups, { ...singleGroup, id: Date.now() }]
-		setGroups(updatedGroups)
-		formik.setFieldValue('interest_groups_study_program', updatedGroups)
+		if (isEditing) {
+			const updatedGroups = groups.map((group) => {
+				if (group.id === singleGroup.id) {
+					const updatedGroup = {
+						...group,
+						interested: singleGroup.interested,
+						type: singleGroup.type,
+						main_requirement_study_program: singleGroup.main_requirement_study_program
+					}
+					return updatedGroup
+				}
+				return group
+			})
+			setGroups(updatedGroups)
+			formik.setFieldValue('interest_groups_study_program', updatedGroups)
+			setIsEditing(false)
+		} else {
+			const updatedGroups = [...groups, { ...singleGroup, id: Date.now() }]
+			setGroups(updatedGroups)
+			formik.setFieldValue('interest_groups_study_program', updatedGroups)
+		}
 
 		setSingleGroup({
 			id: 0,
@@ -60,7 +82,26 @@ const InterestedGroupsFields = ({
 		// formik.setFieldValue('interest_groups_study_program', groupsForFormik)
 	}
 
-	// TODO: Delete & Update
+	// TODO: Fix Delete
+	const handleDelete = (id: number) => {
+		const updatedGroups = groups.filter((group) => group.id !== id)
+		setGroups(updatedGroups)
+		formik.setFieldValue('interest_groups_study_program', updatedGroups)
+	}
+
+	const handleEdit = (_id: number) => {
+		setIsEditing(true)
+		const groupToEdit = groups.find((group) => group.id === _id)
+
+		if (groupToEdit) {
+			setSingleGroup({
+				id: groupToEdit.id,
+				interested: groupToEdit.interested,
+				type: groupToEdit.type,
+				main_requirement_study_program: groupToEdit.main_requirement_study_program
+			})
+		}
+	}
 
 	return (
 		<div>
@@ -125,10 +166,16 @@ const InterestedGroupsFields = ({
 					<div className='flex flex-row-reverse mt-5'>
 						<Button
 							color='primary'
-							startContent={<PlusIcon width={15} height={15} fill='fill-blue-300' />}
+							startContent={
+								isEditing ? (
+									<SaveIcon width={15} height={15} fill='fill-blue-300' />
+								) : (
+									<PlusIcon width={15} height={15} fill='fill-blue-300' />
+								)
+							}
 							onClick={handleAdd}
 						>
-							Agregar
+							{isEditing ? 'Guardar' : 'Agregar'}
 						</Button>
 					</div>
 				</CardBody>
@@ -137,7 +184,11 @@ const InterestedGroupsFields = ({
 			<Divider className='my-5' />
 
 			<div className='mt-5'>
-				<InterestedGroupTable interestedGroup={groups} />
+				<InterestedGroupTable
+					interestedGroup={groups}
+					onDelete={handleDelete}
+					onEdit={handleEdit}
+				/>
 			</div>
 		</div>
 	)

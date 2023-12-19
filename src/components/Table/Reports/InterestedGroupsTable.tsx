@@ -13,10 +13,12 @@ import { InterestedGroup } from '@/types/Reports'
 
 type TableProps = {
 	interestedGroup: Array<InterestedGroup>
+	onDelete: (id: number) => void
+	onEdit: (id: number) => void
 	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function InterestedGroupTable({ interestedGroup }: TableProps) {
+export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -28,7 +30,9 @@ export default function InterestedGroupTable({ interestedGroup }: TableProps) {
 
 		if (hasSearchFilter) {
 			filteredGroups = filteredGroups.filter((group) => {
-				const interesteedMatches = group.interested.toLowerCase().includes(filterValue.toLowerCase())
+				const interesteedMatches = group.interested
+					.toLowerCase()
+					.includes(filterValue.toLowerCase())
 				const typeMatches = group.type.toLowerCase().includes(filterValue.toLowerCase())
 
 				return interesteedMatches || typeMatches
@@ -72,12 +76,18 @@ export default function InterestedGroupTable({ interestedGroup }: TableProps) {
 			return (
 				<div className='flex gap-4 items-center justify-center'>
 					<Tooltip content='Editar'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
+						<span
+							className='text-default-400 cursor-pointer active:opacity-50'
+							onClick={() => onEdit(group.id)}
+						>
 							<PencilIcon width={15} height={15} fill='fill-warning' />
 						</span>
 					</Tooltip>
 					<Tooltip content='Eliminar'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
+						<span
+							className='text-default-400 cursor-pointer active:opacity-50'
+							onClick={() => onDelete(group.id)}
+						>
 							<TrashIcon width={15} height={15} fill='fill-gray-400 hover:fill-red-500' />
 						</span>
 					</Tooltip>
