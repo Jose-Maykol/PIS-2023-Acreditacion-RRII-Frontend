@@ -1,12 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable multiline-ternary */
 import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
 import { QualityMember } from '@/types/Reports'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
+import SaveIcon from '@/components/Icons/SaveIcon'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const QualityCommitteeFields = ({ formik }: { formik: any }) => {
+const QualityCommitteeFields = ({
+	formik,
+	qualityMembersCommittee
+}: {
+	formik: any
+	qualityMembersCommittee: any
+}) => {
 	const fullnameInputRef = useRef<HTMLInputElement | null>(null)
+
+	const [isEditing, setIsEditing] = useState(false)
+
 	const [singleMember, setSingleMember] = useState<QualityMember>({
 		id: 0,
 		name: '',
@@ -15,7 +27,7 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 		email: '',
 		telephone: ''
 	})
-	const [members, setMembers] = useState<QualityMember[]>([])
+	const [members, setMembers] = useState<QualityMember[]>(qualityMembersCommittee)
 
 	useEffect(() => {
 		if (fullnameInputRef.current) {
@@ -40,10 +52,54 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 			return
 		}
 
-		const updatedMembers = [...members, { ...singleMember, id: Date.now() }]
-		setMembers(updatedMembers)
-		formik.setFieldValue('members_quality_committee', members)
+		if (isEditing) {
+			const updatedMembers = members.map((member) => {
+				if (member.id === singleMember.id) {
+					const updatedMember = {
+						...member,
+						name: singleMember.name,
+						lastname: singleMember.lastname,
+						position: singleMember.position,
+						email: singleMember.email,
+						telephone: singleMember.telephone
+					}
+					return updatedMember
+				}
+				return member
+			})
+			setMembers(updatedMembers)
+			formik.setFieldValue('members_quality_committee', updatedMembers)
+			setIsEditing(false)
+		} else {
+			const updatedMembers = [...members, { ...singleMember, id: Date.now() }]
+			setMembers(updatedMembers)
+			formik.setFieldValue('members_quality_committee', updatedMembers)
+		}
+
 		setSingleMember({ id: 0, name: '', lastname: '', position: '', email: '', telephone: '' })
+	}
+
+	// TODO: Fix Delete
+	const handleDelete = (_id: number) => {
+		const updatedMembers = members.filter((member) => member.id !== _id)
+		setMembers(updatedMembers)
+		formik.setFieldValue('members_quality_committee', updatedMembers)
+	}
+
+	const handleEdit = (_id: number) => {
+		setIsEditing(true)
+		const memberToEdit = members.find((member) => member.id === _id)
+
+		if (memberToEdit) {
+			setSingleMember({
+				id: memberToEdit.id,
+				name: memberToEdit.name,
+				lastname: memberToEdit.lastname,
+				position: memberToEdit.position,
+				email: memberToEdit.email,
+				telephone: memberToEdit.telephone
+			})
+		}
 	}
 
 	return (
@@ -111,10 +167,16 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 					<div className='flex flex-row-reverse mt-5'>
 						<Button
 							color='primary'
-							startContent={<PlusIcon width={15} height={15} fill='fill-blue-300' />}
+							startContent={
+								isEditing ? (
+									<SaveIcon width={15} height={15} fill='fill-blue-300' />
+								) : (
+									<PlusIcon width={15} height={15} fill='fill-blue-300' />
+								)
+							}
 							onClick={handleAdd}
 						>
-							Agregar
+							{isEditing ? 'Guardar' : 'Agregar'}
 						</Button>
 					</div>
 				</CardBody>
@@ -123,7 +185,11 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 			<Divider className='my-5' />
 
 			<div className='mt-5'>
-				<QualityCommitteeTable qualityMembers={members} />
+				<QualityCommitteeTable
+					qualityMembers={members}
+					onDelete={handleDelete}
+					onEdit={handleEdit}
+				/>
 			</div>
 		</div>
 	)

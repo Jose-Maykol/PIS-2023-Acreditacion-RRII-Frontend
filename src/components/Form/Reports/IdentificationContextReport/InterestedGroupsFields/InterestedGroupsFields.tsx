@@ -43,7 +43,7 @@ const InterestedGroupsFields = ({
 			singleGroup.type.trim() === '' ||
 			singleGroup.main_requirement_study_program.trim() === ''
 		) {
-			alert('Empty values')
+			alert('Missing values')
 			return
 		}
 
@@ -83,8 +83,8 @@ const InterestedGroupsFields = ({
 	}
 
 	// TODO: Fix Delete
-	const handleDelete = (id: number) => {
-		const updatedGroups = groups.filter((group) => group.id !== id)
+	const handleDelete = (_id: number) => {
+		const updatedGroups = groups.filter((group) => group.id !== _id)
 		setGroups(updatedGroups)
 		formik.setFieldValue('interest_groups_study_program', updatedGroups)
 	}

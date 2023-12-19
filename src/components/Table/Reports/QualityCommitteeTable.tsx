@@ -13,11 +13,11 @@ import { QualityMember } from '@/types/Reports'
 
 type TableProps = {
 	qualityMembers: Array<QualityMember>
-	// onDelete: (id: number) => void
-	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
+	onDelete: (id: number) => void
+	onEdit: (id: number) => void
 }
 
-export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
+export default function QualityCommitteeTable({ qualityMembers, onDelete, onEdit }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -80,14 +80,17 @@ export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 			return (
 				<div className='flex gap-4 items-center justify-center'>
 					<Tooltip content='Editar'>
-						<span className='text-default-400 cursor-pointer active:opacity-50'>
+						<span
+							className='text-default-400 cursor-pointer active:opacity-50'
+							onClick={() => onEdit(member.id)}
+						>
 							<PencilIcon width={15} height={15} fill='fill-warning' />
 						</span>
 					</Tooltip>
 					<Tooltip content='Eliminar'>
 						<span
 							className='text-default-400 cursor-pointer active:opacity-50'
-							onClick={() => {}}
+							onClick={() => onDelete(member.id)}
 						>
 							<TrashIcon width={15} height={15} fill='fill-gray-400 hover:fill-red-500' />
 						</span>
