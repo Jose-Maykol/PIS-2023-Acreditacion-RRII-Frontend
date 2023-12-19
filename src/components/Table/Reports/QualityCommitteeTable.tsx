@@ -13,11 +13,11 @@ import { QualityMember } from '@/types/Reports'
 
 type TableProps = {
 	qualityMembers: Array<QualityMember>
-	onDelete: (id: number) => void
+	// onDelete: (id: number) => void
 	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function QualityCommitteeTable({ qualityMembers, onDelete }: TableProps) {
+export default function QualityCommitteeTable({ qualityMembers }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -87,7 +87,7 @@ export default function QualityCommitteeTable({ qualityMembers, onDelete }: Tabl
 					<Tooltip content='Eliminar'>
 						<span
 							className='text-default-400 cursor-pointer active:opacity-50'
-							onClick={() => onDelete(member.id)}
+							onClick={() => {}}
 						>
 							<TrashIcon width={15} height={15} fill='fill-gray-400 hover:fill-red-500' />
 						</span>

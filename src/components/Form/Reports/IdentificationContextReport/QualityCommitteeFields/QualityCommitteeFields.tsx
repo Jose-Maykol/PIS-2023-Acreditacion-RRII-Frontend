@@ -1,27 +1,8 @@
-import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
+import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTable'
 import { QualityMember } from '@/types/Reports'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
-
-// const members: QualityMember[] = [
-// 	{
-// 		id: 0,
-// 		name: 'Example names',
-// 		lastname: 'Example lastnames',
-// 		email: 'example@unsa.edu.pe',
-// 		position: 'Manager',
-// 		phone: '987654321'
-// 	},
-// 	{
-// 		id: 1,
-// 		name: 'Scond names',
-// 		lastname: 'Second lastnames',
-// 		email: 'second@unsa.edu.pe',
-// 		position: 'Secretary',
-// 		phone: '948326400'
-// 	}
-// ]
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const QualityCommitteeFields = ({ formik }: { formik: any }) => {
@@ -43,7 +24,8 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 	}, [])
 
 	const handleChange = (ev: ChangeEvent<HTMLInputElement>) => {
-		setSingleMember({ ...singleMember, [ev.target.name]: ev.target.value })
+		const updatedMember = { ...singleMember, [ev.target.name]: ev.target.value }
+		setSingleMember(updatedMember)
 	}
 
 	const handleAdd = () => {
@@ -62,14 +44,6 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 		setMembers(updatedMembers)
 		formik.setFieldValue('members_quality_committee', members)
 		setSingleMember({ id: 0, name: '', lastname: '', position: '', email: '', telephone: '' })
-	}
-
-	// TODO: FIX all members deleted
-	const handleDelete = (id: number) => {
-		const updatedMembers = members.filter((member) => member.id !== id)
-		alert(`${JSON.stringify(members)}`)
-		// setMembers(updatedMembers)
-		// formik.setFieldValue('members_quality_committee', members)
 	}
 
 	return (
@@ -149,7 +123,7 @@ const QualityCommitteeFields = ({ formik }: { formik: any }) => {
 			<Divider className='my-5' />
 
 			<div className='mt-5'>
-				<QualityCommitteeTable qualityMembers={members} onDelete={handleDelete} />
+				<QualityCommitteeTable qualityMembers={members} />
 			</div>
 		</div>
 	)

@@ -81,7 +81,7 @@ export default function IdentificationContextReportPage() {
 					district
 				}
 			}
-			alert(JSON.stringify(identificationContextReport))
+			console.log(identificationContextReport)
 		}
 	})
 
