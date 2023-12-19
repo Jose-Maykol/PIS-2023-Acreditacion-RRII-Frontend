@@ -41,34 +41,8 @@ export default function IdentificationContextReportPage() {
 			highest_authority_study_program: '',
 			highest_authority_study_program_email: '',
 			highest_authority_study_program_telephone: '',
-			members_quality_committee: [
-				{
-					name: '',
-					lastname: '',
-					position: '',
-					email: '',
-					telephone: ''
-				},
-				{
-					name: '',
-					lastname: '',
-					position: '',
-					email: '',
-					telephone: ''
-				}
-			],
-			interest_groups_study_program: [
-				{
-					interested: '',
-					main_requirement_study_program: '',
-					type: ''
-				},
-				{
-					interested: '',
-					main_requirement_study_program: '',
-					type: ''
-				}
-			]
+			members_quality_committee: [],
+			interest_groups_study_program: []
 		},
 		onSubmit: (values) => {
 			const { region, province, district, cui, ...rest } = values
@@ -106,7 +80,12 @@ export default function IdentificationContextReportPage() {
 			case 3:
 				return <QualityCommitteeFields formik={formik} />
 			case 4:
-				return <InterestedGroupsFields formik={formik}/>
+				return (
+					<InterestedGroupsFields
+						formik={formik}
+						interestedGroups={formik.values.interest_groups_study_program}
+					/>
+				)
 			default:
 				return null
 		}

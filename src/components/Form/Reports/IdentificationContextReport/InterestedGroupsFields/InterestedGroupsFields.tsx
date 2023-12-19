@@ -1,10 +1,17 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PlusIcon from '@/components/Icons/PlusIcon'
 import InterestedGroupTable from '@/components/Table/Reports/InterestedGroupsTable'
 import { InterestedGroup } from '@/types/Reports'
 import { Button, Card, CardBody, Divider, Input, Tooltip } from '@nextui-org/react'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 
-const InterestedGroupsFields = ({ formik }: { formik: any }) => {
+const InterestedGroupsFields = ({
+	formik,
+	interestedGroups
+}: {
+	formik: any
+	interestedGroups: any
+}) => {
 	const interestedInputRef = useRef<HTMLInputElement | null>(null)
 
 	const [singleGroup, setSingleGroup] = useState<InterestedGroup>({
@@ -13,7 +20,7 @@ const InterestedGroupsFields = ({ formik }: { formik: any }) => {
 		type: '',
 		main_requirement_study_program: ''
 	})
-	const [groups, setGroups] = useState<InterestedGroup[]>([])
+	const [groups, setGroups] = useState<InterestedGroup[]>(interestedGroups)
 
 	useEffect(() => {
 		if (interestedInputRef.current) {
@@ -38,9 +45,19 @@ const InterestedGroupsFields = ({ formik }: { formik: any }) => {
 
 		const updatedGroups = [...groups, { ...singleGroup, id: Date.now() }]
 		setGroups(updatedGroups)
-		formik.setFieldValue('interest_groups_study_program', groups)
-		setSingleGroup({ id: 0, interested: '', type: '', main_requirement_study_program: '' })
-		console.log(groups)
+		formik.setFieldValue('interest_groups_study_program', updatedGroups)
+
+		setSingleGroup({
+			id: 0,
+			interested: '',
+			type: '',
+			main_requirement_study_program: ''
+		})
+		// const groupsForFormik = updatedGroups.map((group) => {
+		// 	const { id, ...groupWithoutId } = group
+		// 	return groupWithoutId
+		// })
+		// formik.setFieldValue('interest_groups_study_program', groupsForFormik)
 	}
 
 	// TODO: Delete & Update
