@@ -8,7 +8,6 @@ import ReportIcon from '@/components/Icons/ReportIcon'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
-import { error } from 'console'
 import React, { useEffect, useState } from 'react'
 
 type Semester = 'A' | 'B'
