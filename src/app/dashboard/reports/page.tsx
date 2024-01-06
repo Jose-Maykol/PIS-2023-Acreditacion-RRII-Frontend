@@ -7,7 +7,7 @@ import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ReportIcon from '@/components/Icons/ReportIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 type Semester = 'A' | 'B'
 
@@ -24,8 +24,8 @@ export default function ReportPage() {
 	const [yearIndex, setYearIndex] = useState(0)
 	const [semesterIndex, setSemesterIndex] = useState(0)
 
-	const handleDownloadEvidenceReport = () => {
-		ReportService.generateEvidencesReport()
+	const downloadEvidenceReport = (params: any) => {
+		ReportService.generateEvidencesReport(params)
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
 				const link = document.createElement('a')
@@ -33,11 +33,12 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_evidencias.docx')
 				document.body.appendChild(link)
 				link.click()
-			})
+			}
+			)
 	}
 
-	const handleDownloadNarrativeReport = () => {
-		ReportService.generateNarrativesReport()
+	const downloadNarrativeReport = (params: any) => {
+		ReportService.generateNarrativesReport(params)
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
 				const link = document.createElement('a')
@@ -45,10 +46,11 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_narrativas.docx')
 				document.body.appendChild(link)
 				link.click()
-			})
+			}
+			)
 	}
 
-	const handleDownloadPlanReport = () => {
+	const downloadPlanReport = () => {
 		ReportService.generateSummaryPlansReport()
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -57,16 +59,52 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_plan_resumen.docx')
 				document.body.appendChild(link)
 				link.click()
-			})
+			}
+			)
+	}
+
+	const downloadContextReport = () => {
+		ReportService.generateContextReport()
+			.then((res) => {
+				const url = window.URL.createObjectURL(new Blob([res.data]))
+				const link = document.createElement('a')
+				link.href = url
+				link.setAttribute('download', 'reporte_identificacion_contexto.docx')
+				document.body.appendChild(link)
+				link.click()
+			}
+			)
 	}
 
 	const reports = [
 		{ label: 'Reporte de evidencias', value: 'evidences' },
 		{ label: 'Reporte de narrativas', value: 'narratives' },
 		{ label: 'Reporte de plan de mejora', value: 'plan' },
-		{ label: 'Reporte de identificación y contexto', value: 'context' },
-		{ label: 'Reporte anual RRII', value: 'rrhh' }
+		{ label: 'Reporte de identificación y contexto', value: 'context' }
+		// { label: 'Reporte anual RRII', value: 'rrhh' }
 	]
+
+	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		const data = new FormData(e.currentTarget)
+		const reportType = data.get('report')
+		const params = {
+			startYear: data.get('startYear'),
+			startSemester: data.get('startSemester'),
+			endYear: data.get('endYear'),
+			endSemester: data.get('endSemester')
+		}
+
+		if (reportType === 'evidences') {
+			downloadEvidenceReport(params)
+		} else if (reportType === 'narratives') {
+			downloadNarrativeReport(params)
+		} else if (reportType === 'plan') {
+			downloadPlanReport()
+		} else if (reportType === 'context') {
+			downloadContextReport()
+		}
+	}
 
 	useEffect(() => {
 		DateSemesterService.getAll().then((res) => {
@@ -101,9 +139,10 @@ export default function ReportPage() {
 			</ContentWrapper>
 			<ContentWrapper className='bg-white -top-24 m-auto w-[96%] rounded-md p-6 flex-1'>
 				<h3 className='text-xl font-semibold uppercase'>Generar reportes</h3>
-				<div className='py-8 w-[600px] flex flex-row flex-wrap gap-5'>
+				<form className='py-8 w-[600px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
 					<Select
 						defaultSelectedKeys={[reports[0].value]}
+						name='report'
 						labelPlacement='outside'
 						label='Tipo de reporte'
 						placeholder='Seleccione un reporte'
@@ -118,7 +157,7 @@ export default function ReportPage() {
 					<div className='flex flex-row justify-between gap-4 w-full'>
 						<Select
 							defaultSelectedKeys={[years[yearIndex]?.value]}
-							name='year'
+							name='startYear'
 							placeholder='Año'
 							label='Semestre inicial'
 							labelPlacement='outside'
@@ -137,7 +176,7 @@ export default function ReportPage() {
 						</Select>
 						<Select
 							defaultSelectedKeys={[semesters[semesterIndex]?.value]}
-							name='semester'
+							name='startSemester'
 							placeholder='Semestre'
 							label=''
 							labelPlacement='outside'
@@ -157,7 +196,7 @@ export default function ReportPage() {
 						</Select>
 						<Select
 							defaultSelectedKeys={[years[yearIndex]?.value]}
-							name='year'
+							name='endYear'
 							placeholder='Año'
 							label='Semestre final'
 							labelPlacement='outside'
@@ -176,7 +215,7 @@ export default function ReportPage() {
 						</Select>
 						<Select
 							defaultSelectedKeys={[semesters[semesterIndex]?.value]}
-							name='semester'
+							name='endSemester'
 							placeholder='Semestre'
 							label=''
 							labelPlacement='outside'
@@ -198,40 +237,11 @@ export default function ReportPage() {
 						radius='sm'
 						color='primary'
 						className='w-full'
+						type='submit'
 					>
 						<strong className='mx-2 uppercase text-xs'>Generar reporte</strong>
 					</Button>
-					{/* <ReportCard
-					color='blue'
-					title='Reporte de evidencias'
-					description='Genera un reporte de lista de evidencias'
-					generateReport={handleDownloadEvidenceReport}
-				/>
-				<ReportCard
-					color='orange'
-					title='Reporte de narrativas'
-					description='Genera un reporte de lista de narrativas'
-					generateReport={handleDownloadNarrativeReport}
-				/>
-				<ReportCard
-					color='green'
-					title='Reporte de plan de mejora'
-					description='Genera un reporte de plan de mejoras'
-					generateReport={handleDownloadPlanReport}
-				/>
-				<ReportCard
-					color='grey'
-					title='Reporte de identificación y contexto'
-					description='Genera un reporte de identificación y contexto'
-					generateReport={() => alert('No disponible')}
-				/>
-				<ReportCard
-					color='grey'
-					title='Reporte anual RRII'
-					description='Genera un reporte anual de RRII'
-					generateReport={() => alert('No disponible')}
-				/> */}
-				</div>
+				</form>
 			</ContentWrapper>
 		</div>
 	)
