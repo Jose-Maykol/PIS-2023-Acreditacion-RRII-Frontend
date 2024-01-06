@@ -1,8 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { ReportService } from '@/api/Report/ReportService'
-import ReportCard from '@/components/Card/ReportCard'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ReportIcon from '@/components/Icons/ReportIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
@@ -19,10 +19,10 @@ interface YearSemester {
 export default function ReportPage() {
 	const { year, semester } = useYearSemesterStore()
 	const [years, setYears] = useState<{ value: string }[]>([{ value: year?.toString() || '2023' }])
-	const [semesters, setSemesters] = useState<{ value: string }[]>([{ value: semester || 'C' }])
-	const [yearSemester, setYearSemester] = useState<YearSemester[]>([])
+	const [semesters, setSemesters] = useState<{ value: string }[]>([{ value: semester || 'B' }])
 	const [yearIndex, setYearIndex] = useState(0)
 	const [semesterIndex, setSemesterIndex] = useState(0)
+	const [activeFilters, setActiveFilters] = useState(false)
 
 	const downloadEvidenceReport = (params: any) => {
 		ReportService.generateEvidencesReport(params)
@@ -84,6 +84,19 @@ export default function ReportPage() {
 		// { label: 'Reporte anual RRII', value: 'rrhh' }
 	]
 
+	const handleReport = (value: Selection): void => {
+		const reportType = (value as any).values().next().value
+		if (reportType === 'evidences') {
+			setActiveFilters(false)
+		} else if (reportType === 'narratives') {
+			setActiveFilters(false)
+		} else if (reportType === 'plan') {
+			setActiveFilters(true)
+		} else if (reportType === 'context') {
+			setActiveFilters(true)
+		}
+	}
+
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		const data = new FormData(e.currentTarget)
@@ -109,7 +122,6 @@ export default function ReportPage() {
 	useEffect(() => {
 		DateSemesterService.getAll().then((res) => {
 			const data: YearSemester[] = res.data
-			setYearSemester(res.data)
 			const valueYear = Array.from(new Set(data.map(data => data.year)))
 				.map(year => ({ value: year.toString() }))
 			setYears(valueYear)
@@ -147,6 +159,7 @@ export default function ReportPage() {
 						label='Tipo de reporte'
 						placeholder='Seleccione un reporte'
 						disallowEmptySelection
+						onSelectionChange={handleReport}
 					>
 						{reports.map((report) => (
 							<SelectItem key={report.value} value={report.value}>
@@ -163,7 +176,7 @@ export default function ReportPage() {
 							labelPlacement='outside'
 							size='sm'
 							selectionMode='single'
-							disallowEmptySelection
+							isDisabled={activeFilters}
 							// onSelectionChange={handleYearValue}
 						>
 							{
@@ -184,6 +197,7 @@ export default function ReportPage() {
 							selectionMode='single'
 							className='pr-8'
 							disallowEmptySelection
+							isDisabled={activeFilters}
 							// onSelectionChange={handleSemesterValue}
 						>
 							{
@@ -203,6 +217,7 @@ export default function ReportPage() {
 							size='sm'
 							selectionMode='single'
 							disallowEmptySelection
+							isDisabled={activeFilters}
 							// onSelectionChange={handleYearValue}
 						>
 							{
@@ -222,6 +237,7 @@ export default function ReportPage() {
 							size='sm'
 							selectionMode='single'
 							disallowEmptySelection
+							isDisabled={activeFilters}
 							// onSelectionChange={handleSemesterValue}
 						>
 							{
