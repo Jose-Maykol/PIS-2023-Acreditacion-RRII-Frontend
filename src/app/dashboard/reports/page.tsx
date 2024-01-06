@@ -5,8 +5,10 @@ import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { ReportService } from '@/api/Report/ReportService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ReportIcon from '@/components/Icons/ReportIcon'
+import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
+import { error } from 'console'
 import React, { useEffect, useState } from 'react'
 
 type Semester = 'A' | 'B'
@@ -23,8 +25,10 @@ export default function ReportPage() {
 	const [yearIndex, setYearIndex] = useState(0)
 	const [semesterIndex, setSemesterIndex] = useState(0)
 	const [activeFilters, setActiveFilters] = useState(false)
+	const { showToast, updateToast } = useToast()
 
 	const downloadEvidenceReport = (params: any) => {
+		const notification = showToast('Generando reporte...')
 		ReportService.generateEvidencesReport(params)
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -33,11 +37,14 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_evidencias.docx')
 				document.body.appendChild(link)
 				link.click()
-			}
-			)
+				updateToast(notification, 'Reporte generado', 'success')
+			}).catch((err) => {
+				updateToast(notification, err.message, 'error')
+			})
 	}
 
 	const downloadNarrativeReport = (params: any) => {
+		const notification = showToast('Generando reporte...')
 		ReportService.generateNarrativesReport(params)
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -46,11 +53,13 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_narrativas.docx')
 				document.body.appendChild(link)
 				link.click()
-			}
-			)
+			}).catch((err) => {
+				updateToast(notification, err.message, 'error')
+			})
 	}
 
 	const downloadPlanReport = () => {
+		const notification = showToast('Generando reporte...')
 		ReportService.generateSummaryPlansReport()
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -59,11 +68,13 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_plan_resumen.docx')
 				document.body.appendChild(link)
 				link.click()
-			}
-			)
+			}).catch((err) => {
+				updateToast(notification, err.message, 'error')
+			})
 	}
 
 	const downloadContextReport = () => {
+		const notification = showToast('Generando reporte...')
 		ReportService.generateContextReport()
 			.then((res) => {
 				const url = window.URL.createObjectURL(new Blob([res.data]))
@@ -72,8 +83,9 @@ export default function ReportPage() {
 				link.setAttribute('download', 'reporte_identificacion_contexto.docx')
 				document.body.appendChild(link)
 				link.click()
-			}
-			)
+			}).catch((err) => {
+				updateToast(notification, err.message, 'error')
+			})
 	}
 
 	const reports = [
