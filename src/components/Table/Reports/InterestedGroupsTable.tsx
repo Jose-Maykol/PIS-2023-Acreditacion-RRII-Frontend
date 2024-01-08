@@ -15,7 +15,7 @@ type TableProps = {
 	interestedGroups: Array<InterestedGroup>
 	onDelete: (_id: number) => void
 	onEdit: (_id: number) => void
-	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
+	// setInterestedGroups: Dispatch<SetStateAction<InterestedGroup[]>>
 }
 
 export default function InterestedGroupTable({ interestedGroups, onDelete, onEdit }: TableProps) {

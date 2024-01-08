@@ -75,6 +75,7 @@ const InterestedGroupsFields = ({
 			type: '',
 			main_requirement_study_program: ''
 		})
+		// TODO: Remove PSEUDO_ID
 		// const groupsForFormik = updatedGroups.map((group) => {
 		// 	const { id, ...groupWithoutId } = group
 		// 	return groupWithoutId
@@ -82,28 +83,32 @@ const InterestedGroupsFields = ({
 		// formik.setFieldValue('interest_groups_study_program', groupsForFormik)
 	}
 
-	// TODO: Fix Delete
 	const handleDelete = (_id: number) => {
-		const updatedGroups = groups.filter((group) => group.id !== _id)
-		setGroups(updatedGroups)
-		formik.setFieldValue('interest_groups_study_program', updatedGroups)
+		setGroups((prevGroups) => {
+			const updatedGroups = prevGroups.filter((group) => group.id !== _id)
+			formik.setFieldValue('interest_groups_study_program', updatedGroups)
+
+			return updatedGroups
+		})
 	}
 
 	const handleEdit = (_id: number) => {
 		setIsEditing(true)
-		const groupToEdit = groups.find((group) => group.id === _id)
 
-		console.log(groups)
-		console.log(groupToEdit)
+		setGroups((prevGroups) => {
+			const groupToEdit = prevGroups.find((group) => group.id === _id)
 
-		if (groupToEdit) {
-			setSingleGroup({
-				id: groupToEdit.id,
-				interested: groupToEdit.interested,
-				type: groupToEdit.type,
-				main_requirement_study_program: groupToEdit.main_requirement_study_program
-			})
-		}
+			if (groupToEdit) {
+				setSingleGroup({
+					id: groupToEdit.id,
+					interested: groupToEdit.interested,
+					type: groupToEdit.type,
+					main_requirement_study_program: groupToEdit.main_requirement_study_program
+				})
+			}
+
+			return prevGroups
+		})
 	}
 
 	return (
