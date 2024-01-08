@@ -10,7 +10,6 @@ import { AuthService } from '@/api/Auth/authService'
 import LogoutIcon from '../Icons/LogoutIcon'
 import UserIcon from '../Icons/UserIcon'
 import CountdownSemester from '../Countdown/CountdownSemester'
-import dynamic from 'next/dynamic'
 import PopoverSemester from '../Popover/PopoverSemester'
 
 const Header = () => {
