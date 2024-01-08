@@ -12,13 +12,13 @@ import TrashIcon from '@/components/Icons/TrashIcon'
 import { InterestedGroup } from '@/types/Reports'
 
 type TableProps = {
-	interestedGroup: Array<InterestedGroup>
-	onDelete: (id: number) => void
-	onEdit: (id: number) => void
+	interestedGroups: Array<InterestedGroup>
+	onDelete: (_id: number) => void
+	onEdit: (_id: number) => void
 	// setQualityMembers: Dispatch<SetStateAction<QualityMember[]>>
 }
 
-export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit }: TableProps) {
+export default function InterestedGroupTable({ interestedGroups, onDelete, onEdit }: TableProps) {
 	const [filterValue, setFilterValue] = React.useState('')
 	const [page, setPage] = React.useState(1)
 
@@ -26,7 +26,7 @@ export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit
 	const hasSearchFilter = Boolean(filterValue)
 
 	const filteredItems = React.useMemo(() => {
-		let filteredGroups = [...interestedGroup]
+		let filteredGroups = [...interestedGroups]
 
 		if (hasSearchFilter) {
 			filteredGroups = filteredGroups.filter((group) => {
@@ -39,7 +39,7 @@ export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit
 			})
 		}
 		return filteredGroups
-	}, [interestedGroup, filterValue])
+	}, [interestedGroups, filterValue])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -116,7 +116,7 @@ export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit
 		return (
 			<div className='grid grid-cols-2 items-center mb-4'>
 				<p className='text-sm font-normal'>
-					Grupos agregados: <span className='font-bold'>{interestedGroup.length}</span>
+					Grupos agregados: <span className='font-bold'>{interestedGroups.length}</span>
 				</p>
 				<Input
 					isClearable
@@ -129,7 +129,7 @@ export default function InterestedGroupTable({ interestedGroup, onDelete, onEdit
 				/>
 			</div>
 		)
-	}, [filterValue, onSearchChange, interestedGroup.length, hasSearchFilter])
+	}, [filterValue, onSearchChange, interestedGroups.length, hasSearchFilter])
 
 	const bottomContent = React.useMemo(() => {
 		return (

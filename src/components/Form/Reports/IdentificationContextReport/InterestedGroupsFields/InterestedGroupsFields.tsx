@@ -188,7 +188,7 @@ const InterestedGroupsFields = ({
 
 			<div className='mt-5'>
 				<InterestedGroupTable
-					interestedGroup={groups}
+					interestedGroups={groups}
 					onDelete={handleDelete}
 					onEdit={handleEdit}
 				/>
