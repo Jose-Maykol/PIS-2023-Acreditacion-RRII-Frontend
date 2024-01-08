@@ -13,8 +13,8 @@ import { QualityMember } from '@/types/Reports'
 
 type TableProps = {
 	qualityMembers: Array<QualityMember>
-	onDelete: (id: number) => void
-	onEdit: (id: number) => void
+	onDelete: (_id: number) => void
+	onEdit: (_id: number) => void
 }
 
 export default function QualityCommitteeTable({ qualityMembers, onDelete, onEdit }: TableProps) {

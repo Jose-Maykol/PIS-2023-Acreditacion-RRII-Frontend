@@ -79,27 +79,33 @@ const QualityCommitteeFields = ({
 		setSingleMember({ id: 0, name: '', lastname: '', position: '', email: '', telephone: '' })
 	}
 
-	// TODO: Fix Delete
 	const handleDelete = (_id: number) => {
-		const updatedMembers = members.filter((member) => member.id !== _id)
-		setMembers(updatedMembers)
-		formik.setFieldValue('members_quality_committee', updatedMembers)
+		setMembers((prevMembers) => {
+			const updatedMembers = prevMembers.filter((member) => member.id !== _id)
+			formik.setFieldValue('members_quality_committee', updatedMembers)
+
+			return updatedMembers
+		})
 	}
 
 	const handleEdit = (_id: number) => {
 		setIsEditing(true)
-		const memberToEdit = members.find((member) => member.id === _id)
 
-		if (memberToEdit) {
-			setSingleMember({
-				id: memberToEdit.id,
-				name: memberToEdit.name,
-				lastname: memberToEdit.lastname,
-				position: memberToEdit.position,
-				email: memberToEdit.email,
-				telephone: memberToEdit.telephone
-			})
-		}
+		setMembers((prevMembers) => {
+			const memberToEdit = prevMembers.find((member) => member.id === _id)
+			if (memberToEdit) {
+				setSingleMember({
+					id: memberToEdit.id,
+					name: memberToEdit.name,
+					lastname: memberToEdit.lastname,
+					position: memberToEdit.position,
+					email: memberToEdit.email,
+					telephone: memberToEdit.telephone
+				})
+			}
+
+			return prevMembers
+		})
 	}
 
 	return (
