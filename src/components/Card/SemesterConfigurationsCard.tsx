@@ -36,7 +36,7 @@ export default function SemesterConfigurationsCard() {
 	}
 
 	return (
-		<div className='flex-1 opacity-70 rounded-lg p-4 border border-lightBlue-600 border-dashed w-[500px] my-4'>
+		<div className='flex-1 opacity-70 rounded-lg p-4 border border-lightBlue-600 border-dashed w-[500px]'>
 			<div className='flex flex-row justify-between items-center w-full'>
 				<h2 className='font-bold text-lg'>Configurar semestre actual</h2>
 				<Button

@@ -4,6 +4,7 @@
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { ReportService } from '@/api/Report/ReportService'
 import SemesterConfigurationsCard from '@/components/Card/SemesterConfigurationsCard'
+import PlanChart from '@/components/Chart/PlanChart'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ReportIcon from '@/components/Icons/ReportIcon'
 import { useToast } from '@/hooks/toastProvider'
@@ -163,7 +164,11 @@ export default function ReportPage() {
 			</ContentWrapper>
 			<ContentWrapper className='bg-white -top-24 m-auto w-[96%] rounded-md p-6 flex-1'>
 				<h3 className='text-xl font-semibold uppercase'>Generar reportes</h3>
-				<SemesterConfigurationsCard/>
+				<div className='flex flex-row flex-wrap my-4 gap-4 items-start'>
+					<PlanChart/>
+					<SemesterConfigurationsCard/>
+				</div>
+
 				<form className='py-8 w-[600px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
 					<Select
 						defaultSelectedKeys={[reports[0].value]}
