@@ -125,7 +125,6 @@ export default function IdentificationContextReportPage() {
 			formik.setTouched({})
 		} else {
 			showToast('error', 'Completar los campos requeridos')
-			console.log(formik.errors)
 		}
 	}
 

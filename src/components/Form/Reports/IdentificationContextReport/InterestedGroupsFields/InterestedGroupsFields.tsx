@@ -16,9 +16,7 @@ const InterestedGroupsFields = ({
 	interestedGroups: any
 }) => {
 	const interestedInputRef = useRef<HTMLInputElement | null>(null)
-
 	const [isEditing, setIsEditing] = useState(false)
-
 	const [singleGroup, setSingleGroup] = useState<InterestedGroup>({
 		id: 0,
 		interested: '',
@@ -26,6 +24,11 @@ const InterestedGroupsFields = ({
 		main_requirement_study_program: ''
 	})
 	const [groups, setGroups] = useState<InterestedGroup[]>(interestedGroups)
+	const [errors, setErrors] = useState({
+		interested: '',
+		type: '',
+		main_requirement_study_program: ''
+	})
 
 	useEffect(() => {
 		if (interestedInputRef.current) {
@@ -39,6 +42,36 @@ const InterestedGroupsFields = ({
 	}
 
 	const handleAdd = () => {
+		const updatedErrors = {
+			interested: '',
+			type: '',
+			main_requirement_study_program: ''
+		}
+
+		if (singleGroup.interested.trim() === '') {
+			updatedErrors.interested = 'Campo necesario'
+		}
+		if (singleGroup.type.trim() === '') {
+			updatedErrors.type = 'Campo necesario'
+		}
+		if (singleGroup.main_requirement_study_program.trim() === '') {
+			updatedErrors.main_requirement_study_program = 'Campo necesario'
+		}
+
+		setErrors({ ...updatedErrors })
+
+		if (Object.values(updatedErrors).some((error) => error !== '')) {
+			showToast('error', 'Completar campos del miembro de cómite')
+
+			return
+		}
+
+		setErrors({
+			interested: '',
+			type: '',
+			main_requirement_study_program: ''
+		})
+
 		if (
 			singleGroup.interested.trim() === '' ||
 			singleGroup.type.trim() === '' ||
@@ -138,6 +171,8 @@ const InterestedGroupsFields = ({
 								ref={interestedInputRef}
 								value={singleGroup.interested}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.interested)}
+								errorMessage={errors.interested}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -149,6 +184,8 @@ const InterestedGroupsFields = ({
 								type='text'
 								value={singleGroup.type}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.type)}
+								errorMessage={errors.type}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -169,6 +206,8 @@ const InterestedGroupsFields = ({
 								type='text'
 								value={singleGroup.main_requirement_study_program}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.main_requirement_study_program)}
+								errorMessage={errors.main_requirement_study_program}
 							/>
 						</div>
 					</div>

@@ -17,9 +17,7 @@ const QualityCommitteeFields = ({
 	qualityMembersCommittee: any
 }) => {
 	const fullnameInputRef = useRef<HTMLInputElement | null>(null)
-
 	const [isEditing, setIsEditing] = useState(false)
-
 	const [singleMember, setSingleMember] = useState<QualityMember>({
 		id: 0,
 		name: '',
@@ -29,6 +27,13 @@ const QualityCommitteeFields = ({
 		telephone: ''
 	})
 	const [members, setMembers] = useState<QualityMember[]>(qualityMembersCommittee)
+	const [errors, setErrors] = useState({
+		name: '',
+		lastname: '',
+		position: '',
+		email: '',
+		telephone: ''
+	})
 
 	useEffect(() => {
 		if (fullnameInputRef.current) {
@@ -42,16 +47,55 @@ const QualityCommitteeFields = ({
 	}
 
 	const handleAdd = () => {
-		if (
-			singleMember.name.trim() === '' ||
-			singleMember.lastname.trim() === '' ||
-			singleMember.position.trim() === '' ||
-			singleMember.email.trim() === '' ||
-			singleMember.telephone.trim() === ''
-		) {
+		const updatedErrors = {
+			name: '',
+			lastname: '',
+			position: '',
+			email: '',
+			telephone: ''
+		}
+
+		if (singleMember.name.trim() === '') {
+			updatedErrors.name = 'Campo necesario'
+		}
+		if (singleMember.lastname.trim() === '') {
+			updatedErrors.lastname = 'Campo necesario'
+		}
+		if (singleMember.position.trim() === '') {
+			updatedErrors.position = 'Campo necesario'
+		}
+		if (singleMember.telephone.trim() === '') {
+			updatedErrors.telephone = 'Campo necesario'
+		} else {
+			const phoneRegex = /^[0-9()\s.-]+$/
+			if (singleMember.telephone.trim() !== '' && !phoneRegex.test(singleMember.telephone.trim())) {
+				updatedErrors.telephone = 'Colocar un teléfono válido'
+			}
+		}
+		if (singleMember.email.trim() === '') {
+			updatedErrors.email = 'Campo necesario'
+		} else {
+			const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/
+			if (singleMember.email.trim() !== '' && !emailRegex.test(singleMember.email.trim())) {
+				updatedErrors.email = 'Colocar un email válido'
+			}
+		}
+
+		setErrors({ ...updatedErrors })
+
+		if (Object.values(updatedErrors).some((error) => error !== '')) {
 			showToast('error', 'Completar campos del miembro de cómite')
+
 			return
 		}
+
+		setErrors({
+			name: '',
+			lastname: '',
+			position: '',
+			email: '',
+			telephone: ''
+		})
 
 		if (isEditing) {
 			const updatedMembers = members.map((member) => {
@@ -122,6 +166,8 @@ const QualityCommitteeFields = ({
 								name='name'
 								value={singleMember.name}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.name)}
+								errorMessage={errors.name}
 								size='sm'
 								type='text'
 							/>
@@ -133,6 +179,8 @@ const QualityCommitteeFields = ({
 								name='lastname'
 								value={singleMember.lastname}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.lastname)}
+								errorMessage={errors.lastname}
 								size='sm'
 								type='text'
 							/>
@@ -144,6 +192,8 @@ const QualityCommitteeFields = ({
 								name='position'
 								value={singleMember.position}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.position)}
+								errorMessage={errors.position}
 								size='sm'
 								type='text'
 							/>
@@ -155,6 +205,8 @@ const QualityCommitteeFields = ({
 								name='email'
 								value={singleMember.email}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.email)}
+								errorMessage={errors.email}
 								size='sm'
 								type='email'
 							/>
@@ -166,6 +218,8 @@ const QualityCommitteeFields = ({
 								name='telephone'
 								value={singleMember.telephone}
 								onChange={handleChange}
+								isInvalid={Boolean(errors.telephone)}
+								errorMessage={errors.telephone}
 								size='sm'
 								type='phone'
 							/>
