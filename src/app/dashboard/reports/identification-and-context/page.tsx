@@ -35,6 +35,7 @@ export default function IdentificationContextReportPage() {
 			highest_authority_institution_email: '',
 			highest_authority_institution_telephone: '',
 			licensing_resolution: '',
+			licensing_resolution2: '',
 			academic_level: '',
 			cui: '',
 			grade_denomination: '',

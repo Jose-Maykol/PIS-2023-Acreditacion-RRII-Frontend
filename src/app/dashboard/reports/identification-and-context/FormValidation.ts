@@ -2,6 +2,7 @@
 import * as yup from 'yup'
 
 export const validationSchema = yup.object().shape({
+	// [PARTE 01]
 	name: yup.string().trim().required('Campo requerido'),
 	region: yup.string().trim().required('Campo requerido'),
 	province: yup.string().trim().required('Campo requerido'),
@@ -39,7 +40,29 @@ export const validationSchema = yup.object().shape({
 		.string()
 		.trim()
 		.required('Campo requerido')
+		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido'),
+	// [PARTE 02]
+	licensing_resolution2: yup.string().trim().required('Campo requerido'),
+	academic_level: yup.string().trim().required('Campo requerido'),
+	cui: yup.string().trim().required('Campo requerido'),
+	grade_denomination: yup.string().trim().required('Campo requerido'),
+	title_denomination: yup.string().trim().required('Campo requerido'),
+	authorized_offer: yup.string().trim().required('Campo requerido'),
+	highest_authority_study_program: yup.string().trim().required('Campo requerido'),
+	highest_authority_study_program_email: yup
+		.string()
+		.trim()
+		.required('Campo requerido')
+		.matches(/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}$/, 'Agregar un email válido'),
+	highest_authority_study_program_telephone: yup
+		.string()
+		.trim()
+		.required('Campo requerido')
 		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido')
+	// [PARTE 03]
+
+	// [PARTE 04]
+
 	// responsibles: yup.array().min(1, 'Campo requerido'),
 	// observations: yup.array().required('Campos requerido')
 })
