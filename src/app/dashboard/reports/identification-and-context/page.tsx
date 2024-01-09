@@ -16,7 +16,12 @@ import { steps } from '@/utils/reports'
 import { Button } from '@nextui-org/react'
 import { useFormik } from 'formik'
 import { useState } from 'react'
-import { validationSchemaPart1, validationSchemaPart2 } from './FormValidation'
+import {
+	validationSchemaPart1,
+	validationSchemaPart2,
+	validationSchemaPart3,
+	validationSchemaPart4
+} from './FormValidation'
 import showToast from './toastHelper'
 
 export default function IdentificationContextReportPage() {
@@ -28,6 +33,10 @@ export default function IdentificationContextReportPage() {
 			return validationSchemaPart1
 		} else if (currentStep === 2) {
 			return validationSchemaPart2
+		} else if (currentStep === 3) {
+			return validationSchemaPart3
+		} else if (currentStep === 4) {
+			return validationSchemaPart4
 		}
 	}
 

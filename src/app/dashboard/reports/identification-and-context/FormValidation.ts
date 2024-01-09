@@ -61,10 +61,12 @@ export const validationSchemaPart2 = yup.object().shape({
 		.required('Campo requerido')
 		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido')
 })
-// [PARTE 03]
-// members_quality_committee: yup.array().min(0, 'Agregar miembros de cómite de calidad')
 
-// [PARTE 04]
+export const validationSchemaPart3 = yup.object().shape({
+	members_quality_committee: yup.array().min(1, 'Agregar miembros de cómite de calidad')
+})
 
-// responsibles: yup.array().min(1, 'Campo requerido'),
-// observations: yup.array().required('Campos requerido')
+export const validationSchemaPart4 = yup.object().shape({
+	interest_groups_study_program: yup.array().min(1, 'Agregar grupos de interés')
+})
+
