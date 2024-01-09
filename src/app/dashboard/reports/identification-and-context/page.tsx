@@ -16,6 +16,8 @@ import { steps } from '@/utils/reports'
 import { Button } from '@nextui-org/react'
 import { useFormik } from 'formik'
 import { useState } from 'react'
+import { validationSchema } from './FormValidation'
+import showToast from './toastHelper'
 
 export default function IdentificationContextReportPage() {
 	const [currentStep, setCurrentStep] = useState<number>(1)
@@ -44,6 +46,7 @@ export default function IdentificationContextReportPage() {
 			members_quality_committee: [],
 			interest_groups_study_program: []
 		},
+		validationSchema,
 		onSubmit: (values) => {
 			const { region, province, district, cui, ...rest } = values
 			const identificationContextReport = {
@@ -96,6 +99,15 @@ export default function IdentificationContextReportPage() {
 		}
 	}
 
+	const handleValidateFields = () => {
+		formik.submitForm()
+		if (formik.isValid) {
+			handleNext()
+		} else {
+			showToast('error', 'Completar los campos requeridos')
+		}
+	}
+
 	return (
 		<div
 			className='h-full py-10 px-20 '
@@ -121,7 +133,7 @@ export default function IdentificationContextReportPage() {
 								<Button
 									color='primary'
 									endContent={<AngleDoubleRightIcon width={15} height={15} fill='fill-white' />}
-									onClick={handleNext}
+									onClick={handleValidateFields}
 								>
 									Siguiente
 								</Button>
