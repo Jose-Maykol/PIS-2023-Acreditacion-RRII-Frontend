@@ -6,6 +6,7 @@ import QualityCommitteeTable from '@/components/Table/Reports/QualityCommitteeTa
 import { QualityMember } from '@/types/Reports'
 import { ChangeEvent, useEffect, useRef, useState } from 'react'
 import SaveIcon from '@/components/Icons/SaveIcon'
+import showToast from '@/components/Form/ImprovementPlanForm/toastHelper'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const QualityCommitteeFields = ({
@@ -48,7 +49,7 @@ const QualityCommitteeFields = ({
 			singleMember.email.trim() === '' ||
 			singleMember.telephone.trim() === ''
 		) {
-			alert('Missing fields')
+			showToast('error', 'Completar campos del miembro de cómite')
 			return
 		}
 

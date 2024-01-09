@@ -1,5 +1,6 @@
 /* eslint-disable multiline-ternary */
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import showToast from '@/components/Form/ImprovementPlanForm/toastHelper'
 import PlusIcon from '@/components/Icons/PlusIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import InterestedGroupTable from '@/components/Table/Reports/InterestedGroupsTable'
@@ -43,7 +44,7 @@ const InterestedGroupsFields = ({
 			singleGroup.type.trim() === '' ||
 			singleGroup.main_requirement_study_program.trim() === ''
 		) {
-			alert('Missing values')
+			showToast('error', 'Completar campos del grupo de interés')
 			return
 		}
 
