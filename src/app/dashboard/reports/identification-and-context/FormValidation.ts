@@ -1,8 +1,7 @@
 /* eslint-disable no-useless-escape */
 import * as yup from 'yup'
 
-export const validationSchema = yup.object().shape({
-	// [PARTE 01]
+export const validationSchemaPart1 = yup.object().shape({
 	name: yup.string().trim().required('Campo requerido'),
 	region: yup.string().trim().required('Campo requerido'),
 	province: yup.string().trim().required('Campo requerido'),
@@ -40,8 +39,10 @@ export const validationSchema = yup.object().shape({
 		.string()
 		.trim()
 		.required('Campo requerido')
-		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido'),
-	// [PARTE 02]
+		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido')
+})
+
+export const validationSchemaPart2 = yup.object().shape({
 	licensing_resolution2: yup.string().trim().required('Campo requerido'),
 	academic_level: yup.string().trim().required('Campo requerido'),
 	cui: yup.string().trim().required('Campo requerido'),
@@ -59,10 +60,11 @@ export const validationSchema = yup.object().shape({
 		.trim()
 		.required('Campo requerido')
 		.matches(/^[0-9()\s.-]+$/, 'Agregar un número telefónico válido')
-	// [PARTE 03]
-
-	// [PARTE 04]
-
-	// responsibles: yup.array().min(1, 'Campo requerido'),
-	// observations: yup.array().required('Campos requerido')
 })
+// [PARTE 03]
+// members_quality_committee: yup.array().min(0, 'Agregar miembros de cómite de calidad')
+
+// [PARTE 04]
+
+// responsibles: yup.array().min(1, 'Campo requerido'),
+// observations: yup.array().required('Campos requerido')

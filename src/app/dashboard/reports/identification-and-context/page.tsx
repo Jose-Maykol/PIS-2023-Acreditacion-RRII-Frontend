@@ -16,11 +16,20 @@ import { steps } from '@/utils/reports'
 import { Button } from '@nextui-org/react'
 import { useFormik } from 'formik'
 import { useState } from 'react'
-import { validationSchema } from './FormValidation'
+import { validationSchemaPart1, validationSchemaPart2 } from './FormValidation'
 import showToast from './toastHelper'
 
 export default function IdentificationContextReportPage() {
 	const [currentStep, setCurrentStep] = useState<number>(1)
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	const validationSchema = () => {
+		if (currentStep === 1) {
+			return validationSchemaPart1
+		} else if (currentStep === 2) {
+			return validationSchemaPart2
+		}
+	}
 
 	const formik = useFormik({
 		initialValues: {
@@ -106,6 +115,7 @@ export default function IdentificationContextReportPage() {
 			handleNext()
 		} else {
 			showToast('error', 'Completar los campos requeridos')
+			console.log(formik.errors)
 		}
 	}
 

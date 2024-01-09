@@ -11,6 +11,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 		}
 	}, [])
 
+	// TODO: Check error after click form and all field are invalid
 	return (
 		<div>
 			<div className='flex flex-col mb-3'>
