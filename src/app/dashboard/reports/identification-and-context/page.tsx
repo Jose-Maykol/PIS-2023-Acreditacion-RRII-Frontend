@@ -122,6 +122,7 @@ export default function IdentificationContextReportPage() {
 		formik.submitForm()
 		if (formik.isValid) {
 			handleNext()
+			formik.setTouched({})
 		} else {
 			showToast('error', 'Completar los campos requeridos')
 			console.log(formik.errors)
