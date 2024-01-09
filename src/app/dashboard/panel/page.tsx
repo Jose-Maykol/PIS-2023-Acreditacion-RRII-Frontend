@@ -18,7 +18,6 @@ export default function PanelPage() {
 	const EditSemesterModal = dynamic(() => import('@/components/Modal/Panel/EditSemesterModal'), { ssr: false })
 	const CloseSemesterModal = dynamic(() => import('@/components/Modal/Panel/CloseSemesterModal'), { ssr: false })
 
-
 	const handleCreateSemesterOpen = () => {
 		setCreateSemesterOpen(true)
 		setEditSemesterOpen(false)
