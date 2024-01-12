@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable indent */
 /* eslint-disable multiline-ternary */
@@ -23,6 +24,7 @@ import {
 	validationSchemaPart4
 } from './FormValidation'
 import showToast from './toastHelper'
+import { InterestedGroup, QualityMember } from '@/types/Reports'
 
 export default function IdentificationContextReportPage() {
 	const [currentStep, setCurrentStep] = useState<number>(1)
@@ -68,7 +70,16 @@ export default function IdentificationContextReportPage() {
 		},
 		validationSchema,
 		onSubmit: (values) => {
-			const { region, province, district, cui, ...rest } = values
+			const {
+				region,
+				province,
+				district,
+				cui,
+				members_quality_committee,
+				interest_groups_study_program,
+				...rest
+			} = values
+
 			const identificationContextReport = {
 				...rest,
 				cui: parseInt(cui),
@@ -76,7 +87,15 @@ export default function IdentificationContextReportPage() {
 					region,
 					province,
 					district
-				}
+				},
+				members_quality_committee: members_quality_committee.map((member: QualityMember) => {
+					const { id, ...memberWithoutId } = member
+					return memberWithoutId
+				}),
+				interest_groups_study_program: interest_groups_study_program.map((group: InterestedGroup) => {
+					const { id, ...groupWithoutId } = group
+					return groupWithoutId
+				})
 			}
 			console.log(identificationContextReport)
 		}

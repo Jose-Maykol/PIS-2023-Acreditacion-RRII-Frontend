@@ -109,12 +109,6 @@ const InterestedGroupsFields = ({
 			type: '',
 			main_requirement_study_program: ''
 		})
-		// TODO: Remove PSEUDO_ID
-		// const groupsForFormik = updatedGroups.map((group) => {
-		// 	const { id, ...groupWithoutId } = group
-		// 	return groupWithoutId
-		// })
-		// formik.setFieldValue('interest_groups_study_program', groupsForFormik)
 	}
 
 	const handleDelete = (_id: number) => {
