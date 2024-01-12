@@ -50,6 +50,7 @@ export default function GenerateReportForm() {
 				link.setAttribute('download', 'reporte_narrativas.docx')
 				document.body.appendChild(link)
 				link.click()
+				updateToast(notification, 'Reporte generado', 'success')
 			}).catch((err) => {
 				updateToast(notification, err.message, 'error')
 			})
@@ -65,6 +66,7 @@ export default function GenerateReportForm() {
 				link.setAttribute('download', 'reporte_plan_resumen.docx')
 				document.body.appendChild(link)
 				link.click()
+				updateToast(notification, 'Reporte generado', 'success')
 			}).catch((err) => {
 				updateToast(notification, err.message, 'error')
 			})
@@ -80,6 +82,7 @@ export default function GenerateReportForm() {
 				link.setAttribute('download', 'reporte_identificacion_contexto.docx')
 				document.body.appendChild(link)
 				link.click()
+				updateToast(notification, 'Reporte generado', 'success')
 			}).catch((err) => {
 				updateToast(notification, err.message, 'error')
 			})
