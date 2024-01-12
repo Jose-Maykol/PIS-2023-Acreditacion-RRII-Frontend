@@ -90,19 +90,19 @@ export default function SideBar({
 					{isSidebarOpen && (
 						<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
 					)}
-					<ul className='text-sm list-none mt-3'>
+					{/* <ul className='text-sm list-none mt-3'>
 						<SideBarItem
 							isOpen={isSidebarOpen}
 							icon={<UserAdminIcon width={18} height={18} />}
 							text='panel'
 							link='/dashboard/panel'
 						/>
-					</ul>
+					</ul> */}
 					<ul className='text-sm list-none'>
 						<SideBarItem
 							isOpen={isSidebarOpen}
 							icon={<ReportIcon width={18} height={18} fill='fill-black'/>}
-							text='Reportes'
+							text='Panel'
 							link='/dashboard/reports'
 						/>
 					</ul>

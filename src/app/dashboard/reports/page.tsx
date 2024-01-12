@@ -15,13 +15,13 @@ export default function ReportPage() {
 				<div className='flex items-center gap-2 pt-16 pl-6'>
 					<ReportIcon width={40} height={40} fill='fill-white'/>
 					<div className='text-white'>
-						<h1 className='text-xl font-bold uppercase' >Reportes</h1>
+						<h1 className='text-xl font-bold uppercase' >Panel de administrador</h1>
 						<p className='text-base'>Aqui se muestran los reportes que puede realizar un administrador</p>
 					</div>
 				</div>
 			</ContentWrapper>
 			<ContentWrapper className='bg-white -top-24 m-auto w-[96%] rounded-md p-6 flex-1'>
-				<h3 className='text-xl font-semibold uppercase'>Generar reportes</h3>
+				{/* <h3 className='text-xl font-semibold uppercase'>Generar reportes</h3> */}
 				<div className='flex flex-row justify-between gap-8'>
 					<div className='flex flex-col flex-wrap my-4 gap-4 items-start'>
 						<SemesterConfigurationsCard/>
