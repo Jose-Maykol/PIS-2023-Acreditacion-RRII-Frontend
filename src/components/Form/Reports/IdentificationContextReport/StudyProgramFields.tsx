@@ -17,16 +17,20 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 			<div className='flex flex-col mb-3'>
 				<label className='text-default-600 text-sm ml-1'>Resolución de lincenciamiento:</label>
 				<Input
-					name='licensing_resolution2'
-					id='licensing_resolution2'
+					name='resolution_authorizing_offering_program'
+					id='resolution_authorizing_offering_program'
 					ref={dischargeInputRef}
-					value={formik.values.licensing_resolution2}
+					value={formik.values.resolution_authorizing_offering_program}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					isInvalid={
-						formik.touched.licensing_resolution2 && Boolean(formik.errors.licensing_resolution2)
+						formik.touched.resolution_authorizing_offering_program &&
+						Boolean(formik.errors.resolution_authorizing_offering_program)
 					}
-					errorMessage={formik.touched.licensing_resolution2 && formik.errors.licensing_resolution2}
+					errorMessage={
+						formik.touched.resolution_authorizing_offering_program &&
+						formik.errors.resolution_authorizing_offering_program
+					}
 					size='sm'
 					type='text'
 				/>

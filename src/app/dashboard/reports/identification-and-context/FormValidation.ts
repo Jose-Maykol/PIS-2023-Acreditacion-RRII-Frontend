@@ -2,7 +2,7 @@
 import * as yup from 'yup'
 
 export const validationSchemaPart1 = yup.object().shape({
-	name: yup.string().trim().required('Campo requerido'),
+	name_institution: yup.string().trim().required('Campo requerido'),
 	region: yup.string().trim().required('Campo requerido'),
 	province: yup.string().trim().required('Campo requerido'),
 	district: yup.string().trim().required('Campo requerido'),
@@ -20,7 +20,7 @@ export const validationSchemaPart1 = yup.object().shape({
 			/^(https?|ftp):\/\/[^\s\/$.?#].[^\s]*$/,
 			'Ingresar un URL válido como https://www.google.com'
 		),
-	licensing_resolution: yup.string().trim().required('Campo requerido'),
+	resolution_authorizes_institution: yup.string().trim().required('Campo requerido'),
 	date_resolution: yup
 		.string()
 		.trim()
@@ -43,7 +43,7 @@ export const validationSchemaPart1 = yup.object().shape({
 })
 
 export const validationSchemaPart2 = yup.object().shape({
-	licensing_resolution2: yup.string().trim().required('Campo requerido'),
+	resolution_authorizing_offering_program: yup.string().trim().required('Campo requerido'),
 	academic_level: yup.string().trim().required('Campo requerido'),
 	cui: yup.string().trim().required('Campo requerido'),
 	grade_denomination: yup.string().trim().required('Campo requerido'),
@@ -69,4 +69,3 @@ export const validationSchemaPart3 = yup.object().shape({
 export const validationSchemaPart4 = yup.object().shape({
 	interest_groups_study_program: yup.array().min(1, 'Agregar grupos de interés')
 })
-

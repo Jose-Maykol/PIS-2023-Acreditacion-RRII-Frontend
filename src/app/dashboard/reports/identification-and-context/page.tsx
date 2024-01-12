@@ -42,6 +42,7 @@ export default function IdentificationContextReportPage() {
 
 	const formik = useFormik({
 		initialValues: {
+			name_institution: '',
 			address_headquarters: '',
 			region: '',
 			province: '',
@@ -52,8 +53,8 @@ export default function IdentificationContextReportPage() {
 			highest_authority_institution: '',
 			highest_authority_institution_email: '',
 			highest_authority_institution_telephone: '',
-			licensing_resolution: '',
-			licensing_resolution2: '',
+			resolution_authorizes_institution: '',
+			resolution_authorizing_offering_program: '',
 			academic_level: '',
 			cui: '',
 			grade_denomination: '',

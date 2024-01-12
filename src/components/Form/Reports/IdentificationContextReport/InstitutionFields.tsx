@@ -16,14 +16,14 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 			<div className='flex flex-col mb-4'>
 				<label className='text-default-600 text-sm ml-1'>Nombre:</label>
 				<Input
-					id='name'
-					name='name'
+					id='name_institution'
+					name='name_institution'
 					ref={nameInputRef}
-					value={formik.values.name}
+					value={formik.values.name_institution}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
-					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
-					errorMessage={formik.touched.name && formik.errors.name}
+					isInvalid={formik.touched.name_institution && Boolean(formik.errors.name_institution)}
+					errorMessage={formik.touched.name_institution && formik.errors.name_institution}
 					size='sm'
 					type='text'
 				/>
@@ -123,15 +123,19 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 			<div className='flex flex-col mb-4'>
 				<label className='text-default-600 text-sm ml-1'>Resolución de Licenciamiento:</label>
 				<Input
-					id='licensing_resolution'
-					name='licensing_resolution'
-					value={formik.values.licensing_resolution}
+					id='resolution_authorizes_institution'
+					name='resolution_authorizes_institution'
+					value={formik.values.resolution_authorizes_institution}
 					onChange={formik.handleChange}
 					onBlur={formik.handleBlur}
 					isInvalid={
-						formik.touched.licensing_resolution && Boolean(formik.errors.licensing_resolution)
+						formik.touched.resolution_authorizes_institution &&
+						Boolean(formik.errors.resolution_authorizes_institution)
 					}
-					errorMessage={formik.touched.licensing_resolution && formik.errors.licensing_resolution}
+					errorMessage={
+						formik.touched.resolution_authorizes_institution &&
+						formik.errors.resolution_authorizes_institution
+					}
 					size='sm'
 					type='text'
 				/>
