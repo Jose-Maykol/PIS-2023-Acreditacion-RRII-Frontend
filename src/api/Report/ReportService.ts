@@ -1,16 +1,16 @@
 import { BaseService } from '../Base/BaseService'
 import api from '../axios'
 
-
 const url = {
 	narratives: 'standards/narratives/export',
 	summaryPlans: 'plans/export',
 	evidences: 'evidences/export',
-	plan: 'plans/:id/export'
+	plan: 'plans/:id/export',
+	createContextIdentification: 'ident-context/'
 }
 
 export class ReportService extends BaseService {
-	public static async generateNarrativesReport () {
+	public static async generateNarrativesReport() {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -20,7 +20,7 @@ export class ReportService extends BaseService {
 		return res
 	}
 
-	public static async generateSummaryPlansReport () {
+	public static async generateSummaryPlansReport() {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -30,7 +30,7 @@ export class ReportService extends BaseService {
 		return res
 	}
 
-	public static async generateEvidencesReport () {
+	public static async generateEvidencesReport() {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -40,7 +40,7 @@ export class ReportService extends BaseService {
 		return res
 	}
 
-	public static async generatePlanReport (id: string) {
+	public static async generatePlanReport(id: string) {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -49,5 +49,10 @@ export class ReportService extends BaseService {
 		const res = await api.get(`/${year}/${semester}/${url.plan.replace(':id', id)}`, config)
 		return res
 	}
-}
 
+	public static async createContextIdentificationReport(params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.createContextIdentification}`, params)
+		return res
+	}
+}

@@ -5,6 +5,7 @@
 /* eslint-disable no-unused-vars */
 'use client'
 
+import { useRouter } from 'next/navigation'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import InstitutionFields from '@/components/Form/Reports/IdentificationContextReport/InstitutionFields'
 import InterestedGroupsFields from '@/components/Form/Reports/IdentificationContextReport/InterestedGroupsFields/InterestedGroupsFields'
@@ -25,9 +26,12 @@ import {
 } from './FormValidation'
 import showToast from './toastHelper'
 import { InterestedGroup, QualityMember } from '@/types/Reports'
+import { ReportService } from '@/api/Report/ReportService'
 
 export default function IdentificationContextReportPage() {
+	const router = useRouter()
 	const [currentStep, setCurrentStep] = useState<number>(1)
+	const [submitClicked, setSubmitClicked] = useState(false)
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const validationSchema = () => {
@@ -92,12 +96,31 @@ export default function IdentificationContextReportPage() {
 					const { id, ...memberWithoutId } = member
 					return memberWithoutId
 				}),
-				interest_groups_study_program: interest_groups_study_program.map((group: InterestedGroup) => {
-					const { id, ...groupWithoutId } = group
-					return groupWithoutId
-				})
+				interest_groups_study_program: interest_groups_study_program.map(
+					(group: InterestedGroup) => {
+						const { id, ...groupWithoutId } = group
+						return groupWithoutId
+					}
+				)
 			}
 			console.log(identificationContextReport)
+
+			if (submitClicked) {
+				ReportService.createContextIdentificationReport(identificationContextReport)
+					.then((res) => {
+						console.log(res)
+						if (res.status === 1) {
+							setSubmitClicked(false)
+							showToast('success', 'Reporte creado con éxito')
+							router.push('/dashboard/reports')
+						}
+					})
+					.catch((error) => {
+						console.log(error)
+						setSubmitClicked(false)
+						showToast('error', 'Ocurrió un problema, intentar nuevamente')
+					})
+			}
 		}
 	})
 
@@ -183,6 +206,7 @@ export default function IdentificationContextReportPage() {
 									color='primary'
 									endContent={<AngleDoubleRightIcon width={15} height={15} fill='fill-blue-300' />}
 									type='submit'
+									onClick={() => setSubmitClicked(true)}
 								>
 									Subir
 								</Button>
