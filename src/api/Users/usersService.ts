@@ -13,8 +13,8 @@ const url = {
 }
 
 export const UsersService = {
-	listUsers: async () => {
-		const res = await api.get(url.listUsers)
+	list: async (params: { page?: number; items?: number, search?: string }) => {
+		const res = await api.get(url.listUsers, { params })
 		return res.data
 	},
 
