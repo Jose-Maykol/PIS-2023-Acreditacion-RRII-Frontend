@@ -1,5 +1,6 @@
 'use client'
 
+import UserTableContainer from '@/components/Container/UserTableContainer'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import TableUserSkeleton from '@/components/Skeletons/UserTableSkeleton'
 import dynamic from 'next/dynamic'
@@ -15,7 +16,7 @@ export default function UsersPage() {
 			<div className='flex w-full mb-5'>
 				<h2 className='text-xl font-semibold uppercase'>Lista de usuarios del sistema</h2>
 			</div>
-			<UserTable />
+			<UserTableContainer />
 		</ContentWrapper>
 	)
 }
