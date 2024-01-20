@@ -61,7 +61,7 @@ export default function PlanPerStandardChart() {
 
 	return (
 		<div className='h-[440px] max-h-[440px] w-full border border-lightBlue-600 border-dashed rounded-lg p-4'>
-			<h2 className='text-lg font-semibold text-lightBlue-600'>Planes de mejora</h2>
+			<h2 className='text-lg font-semibold text-lightBlue-600'>Planes de mejora por estándar</h2>
 			<div className='flex items-center justify-center h-[350px] max-h-[350px] my-4'>
 				{chartData && <Bar data={chartData} options={options}/>}
 			</div>

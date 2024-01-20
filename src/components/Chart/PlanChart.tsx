@@ -14,13 +14,18 @@ type ChartData = {
   }[]
 }
 
+type data = {
+	label: string
+	value: number
+}
+
 export default function PlanChart() {
 	const [chartData, setCharData] = useState<ChartData | null >(null)
 
 	useEffect(() => {
 		StatisticService.plansStatistics().then((res) => {
-			const labels = res.data.map((plan: any) => plan.label)
-			const values = res.data.map((plan: any) => plan.value)
+			const labels = res.data.map((plan: data) => plan.label)
+			const values = res.data.map((plan: data) => plan.value)
 
 			setCharData({
 				labels,
@@ -45,7 +50,7 @@ export default function PlanChart() {
 
 	return (
 		<div className='h-[400px] max-h-[400px] w-[400px] max-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4'>
-			<h2 className='text-lg font-semibold text-lightBlue-600'>Planes de mejora</h2>
+			<h2 className='text-lg font-semibold text-lightBlue-600'>Planes de mejora por estado</h2>
 			{chartData && <Pie data={chartData} options={options}/>}
 		</div>
 	)

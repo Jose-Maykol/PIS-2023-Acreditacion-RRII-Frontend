@@ -18,7 +18,7 @@ export default function AdminPage() {
 						<ReportIcon width={40} height={40} fill='fill-white'/>
 						<div className='text-white'>
 							<h1 className='text-xl font-bold uppercase' >Panel de administrador</h1>
-							<p className='text-base'>Aqui se muestran los reportes que puede realizar un administrador</p>
+							<p className='text-base'>Aqui se muestran las opciones de administrador</p>
 						</div>
 					</div>
 				</ContentWrapper>
