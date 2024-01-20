@@ -84,50 +84,41 @@ export default function SideBar({
 				/>
 			</ul>
 			<hr className='my-4 w-full'></hr>
-			{isAdmin && (
-				<>
-					{isSidebarOpen && (
-						<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
-					)}
-					{/* <ul className='text-sm list-none mt-3'>
-						<SideBarItem
-							isOpen={isSidebarOpen}
-							icon={<UserAdminIcon width={18} height={18} />}
-							text='panel'
-							link='/dashboard/panel'
-						/>
-					</ul> */}
-					<ul className='text-sm list-none'>
-						<SideBarItem
-							isOpen={isSidebarOpen}
-							icon={<ReportIcon width={18} height={18} fill='fill-black'/>}
-							text='Panel'
-							link='/dashboard/admin'
-						/>
-					</ul>
-					<ul className='text-sm list-none'>
-						<SideBarItem
-							isOpen={isSidebarOpen}
-							icon={<UsersIcon width={18} height={18} />}
-							text='usuarios'
-							link='/dashboard/users'
-						/>
-					</ul>
-					<hr className='my-4 w-full'></hr>
-					{isSidebarOpen && (
-						<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>
-					)}
-					<ul className='text-sm list-none mt-3'>
-						<SideBarItem
-							isOpen={isSidebarOpen}
-							icon={<UsersIcon width={18} height={18} />}
-							text='estándares'
-							link='/dashboard/standards-management'
-						/>
-					</ul>
-					<hr className='my-4 w-full'></hr>
-				</>
+			{isSidebarOpen && (
+				<h3 className='text-xs text-gray-600 uppercase font-semibold'>administrador</h3>
 			)}
+			<ul className='text-sm list-none'>
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<ReportIcon width={18} height={18} fill='fill-black'/>}
+					text='Panel'
+					link='/dashboard/admin'
+					disabled={!isAdmin}
+				/>
+			</ul>
+			<ul className='text-sm list-none'>
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={18} height={18} />}
+					text='usuarios'
+					link='/dashboard/users'
+					disabled={!isAdmin}
+				/>
+			</ul>
+			<hr className='my-4 w-full'></hr>
+			{isSidebarOpen && (
+				<h3 className='text-xs text-gray-600 uppercase font-semibold'>gestión de estándares</h3>
+			)}
+			<ul className='text-sm list-none mt-3'>
+				<SideBarItem
+					isOpen={isSidebarOpen}
+					icon={<UsersIcon width={18} height={18} />}
+					text='estándares'
+					link='/dashboard/standards-management'
+					disabled={!isAdmin}
+				/>
+			</ul>
+			<hr className='my-4 w-full'></hr>
 			{isSidebarOpen && (
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
