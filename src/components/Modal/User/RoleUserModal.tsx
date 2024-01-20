@@ -17,7 +17,7 @@ import {
 import { useMemo, useState } from 'react'
 import { toast } from 'react-toastify'
 
-export default function RoleUserModel({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
+export default function RoleUserModal({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
