@@ -9,7 +9,6 @@ import logoUnsa from '../../../public/img/logo-unsa.webp'
 import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
-import UserAdminIcon from '../Icons/UserAdminIcon'
 import ReportIcon from '../Icons/ReportIcon'
 
 export default function SideBar({
@@ -103,7 +102,7 @@ export default function SideBar({
 							isOpen={isSidebarOpen}
 							icon={<ReportIcon width={18} height={18} fill='fill-black'/>}
 							text='Panel'
-							link='/dashboard/reports'
+							link='/dashboard/admin'
 						/>
 					</ul>
 					<ul className='text-sm list-none'>
