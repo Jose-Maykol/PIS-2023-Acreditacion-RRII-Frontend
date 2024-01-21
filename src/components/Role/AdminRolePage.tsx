@@ -1,3 +1,5 @@
+'use client'
+
 import { usePermissionsStore } from '@/store/usePermissionsStore'
 import { redirect } from 'next/navigation'
 import { ReactNode } from 'react'
@@ -9,7 +11,7 @@ interface AdminRolePageProps {
 export default function AdminRolePage ({ children } : AdminRolePageProps) {
 	const { role } = usePermissionsStore()
 
-	if (role !== 'administrador') {
+	if (role !== 'administrador' && role !== '') {
 		redirect('/dashboard')
 	}
 
