@@ -3,6 +3,7 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Selec
 import React, { useEffect, useState } from 'react'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { Standard } from '@/types/Standard'
+import { useToast } from '@/hooks/toastProvider'
 
 type Semester = 'A' | 'B'
 
@@ -18,6 +19,7 @@ interface LoadStandardsModalProps {
 export default function LoadStandardsModal({
 	setStandards
 }: LoadStandardsModalProps) {
+	const { showToast, updateToast } = useToast()
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [years, setYears] = useState<{ value: string }[]>([{ value: '2023' }])
 	const [semesters, setSemesters] = useState<{ value: string }[]>([{ value: 'A' }])
@@ -41,6 +43,7 @@ export default function LoadStandardsModal({
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+		const notification = showToast('Caragando estándares...')
 		const data = new FormData(e.currentTarget)
 		console.log('data', data)
 		const year = data.get('year')?.toString()
@@ -51,7 +54,12 @@ export default function LoadStandardsModal({
 				semester
 			}
 			StandardService.getHeaders(params).then((res) => {
-				setStandards(res.data)
+				if (res.status === 1) {
+					setStandards(res.data)
+					updateToast(notification, res.message, 'success')
+				} else {
+					updateToast(notification, res.message, 'error')
+				}
 			})
 		}
 	}
