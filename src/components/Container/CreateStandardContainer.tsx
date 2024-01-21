@@ -44,6 +44,7 @@ export default function CreateStandardContainer() {
 				addStandard={addStandard}
 				editingStandard={editingStandard}
 				saveEditedStandard={saveEditedStandard}
+				setStandards={setStandards}
 			/>
 			<CreateStandardTable
 				standards={standards}

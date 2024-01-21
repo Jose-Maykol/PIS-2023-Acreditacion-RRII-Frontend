@@ -1,3 +1,4 @@
+import LoadStandardsModal from '@/components/Modal/StandardManagement/LoadStandardsModal'
 import { Standard } from '@/types/Standard'
 import { Button, Textarea } from '@nextui-org/react'
 import { useEffect, useState } from 'react'
@@ -6,13 +7,15 @@ import { useEffect, useState } from 'react'
 interface CreateStandardFormProps {
 	addStandard: (newStandard: Standard) => void,
 	editingStandard?: Standard | null,
-	saveEditedStandard?: (editedStandard: Standard) => void
+	saveEditedStandard?: (editedStandard: Standard) => void,
+	setStandards: (standards: Standard[]) => void
 }
 
 export default function CreateStandardForm({
 	addStandard,
 	editingStandard,
-	saveEditedStandard
+	saveEditedStandard,
+	setStandards
 }: CreateStandardFormProps) {
 	useEffect(() => {
 		if (editingStandard) {
@@ -112,12 +115,7 @@ export default function CreateStandardForm({
 				className='w-full'
 			/>
 			<div className='flex flex-row justify-end w-full gap-2'>
-				<Button
-					color='primary'
-					variant='ghost'
-				>
-					Cargar estándares
-				</Button>
+				<LoadStandardsModal setStandards={setStandards} />
 				<Button
 					color='primary'
 					onPress={onPressButtonStandard}

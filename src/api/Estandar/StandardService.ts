@@ -39,6 +39,12 @@ export class StandardService extends BaseService {
 		return res.data
 	}
 
+	public static async getHeaders (params: { year: string, semester: string }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/standards/headers`, { params })
+		return res.data
+	}
+
 	public static async assignUsersToStandard (id: string, params: AssignedUsers) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.put(`/${year}/${semester}/${url.assignment.replace(':id', id)}`, params)

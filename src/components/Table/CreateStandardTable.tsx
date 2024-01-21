@@ -65,7 +65,14 @@ export default function CreateStandardTable({
 	}, [])
 
 	return (
-		<Table isStriped aria-label='Example static collection table'>
+		<Table
+			isStriped aria-label='Tabla de estándares'
+			isHeaderSticky
+			classNames={{
+				base: 'max-h-[520px] overflow-scroll no-scrollbar',
+				table: 'min-h-[400px]'
+			}}
+		>
 			<TableHeader columns={colums}>
 				{(column) => (
 					<TableColumn key={column.uid}>
