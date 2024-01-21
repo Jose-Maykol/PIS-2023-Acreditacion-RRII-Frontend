@@ -1,9 +1,10 @@
 import { User } from './User'
 
 export interface Standard {
-	id: number
+	id?: number
 	name: string
-	nro_standard: number
+	description: string
+	nro_standard?: number
 	factor?: string
 	dimension?: string
 	related_standards?: string
