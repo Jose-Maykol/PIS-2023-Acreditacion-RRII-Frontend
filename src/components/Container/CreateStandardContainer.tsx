@@ -16,13 +16,25 @@ export default function CreateStandardContainer() {
 	}
 
 	const deleteStandard = (id: number) => {
-		console.log('standards dajksdkajsjk', standards)
-		setStandards((prevStandards) => prevStandards.filter((item) => item.id !== id))
+		setStandards((prevStandards) => {
+			const newStandards = prevStandards.filter((item) => item.id !== id)
+			const updatedStandards = newStandards.map((item, index) => ({
+				...item,
+				nro_standard: index + 1
+			}))
+			return updatedStandards
+		})
 	}
 
 	const editStandard = (standard: Standard) => {
-		console.log('estandar a esditar', standard)
 		setEditingStandard(standard)
+		setStandards((prevStandards) => {
+			const newStandards = prevStandards.map((item) => ({
+				...item,
+				is_editing: item.id === standard.id
+			}))
+			return newStandards
+		})
 	}
 
 	const saveEditedStandard = (editedStandard: Standard) => {
@@ -33,10 +45,6 @@ export default function CreateStandardContainer() {
 		)
 		setEditingStandard(null)
 	}
-
-	/* const onSubmit = (e: any) => {
-		e.preventDefault()
-	} */
 
 	return (
 		<>

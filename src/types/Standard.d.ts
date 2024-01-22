@@ -15,6 +15,7 @@ export interface Standard {
 	user_email?: string
 	date_id?: number
 	registration_status_id?: number
+	is_editing?: boolean
 }
 
 export interface PartialStandard {

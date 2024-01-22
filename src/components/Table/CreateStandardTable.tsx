@@ -6,8 +6,8 @@ import TrashIcon from '../Icons/TrashIcon'
 
 interface CreateStandardTableProps {
   standards: Standard[],
-  deleteStandard: (id: number) => void
-	editStandard: (standard: Standard) => void
+  deleteStandard: (id: number) => void,
+	editStandard: (standard: Standard) => void,
 }
 
 export default function CreateStandardTable({
@@ -24,7 +24,6 @@ export default function CreateStandardTable({
 
 	const renderCell = useCallback((standard: Standard, columnKey: React.Key) => {
 		const cellValue = standard[columnKey as keyof Standard]
-
 		switch (columnKey) {
 		case 'name':
 			return (
@@ -45,11 +44,13 @@ export default function CreateStandardTable({
 						startContent={<PencilIcon width={20} height={20} fill='fill-blue-500' />}
 						isIconOnly={true}
 						className='bg-transparent'
+						isDisabled={standard.is_editing}
 						onPress={() => editStandard(standard)}
 					/>
 					<Button
 						startContent={<TrashIcon width={20} height={20} fill='fill-red-500' />}
 						isIconOnly={true}
+						isDisabled={standard.is_editing}
 						onPress={() => {
 							if (typeof standard.id === 'number') {
 								deleteStandard(standard.id)
@@ -69,8 +70,8 @@ export default function CreateStandardTable({
 			isStriped aria-label='Tabla de estándares'
 			isHeaderSticky
 			classNames={{
-				base: 'max-h-[520px] overflow-scroll no-scrollbar',
-				table: 'min-h-[400px]'
+				base: 'max-h-[520px] overflow-scroll no-scrollbar'
+				// table: 'min-h-[400px]'
 			}}
 		>
 			<TableHeader columns={colums}>

@@ -26,7 +26,8 @@ export default function CreateStandardForm({
 				description: '',
 				factor: '',
 				dimension: '',
-				related_standards: ''
+				related_standards: '',
+				is_editing: false
 			})
 		}
 	}, [editingStandard])
