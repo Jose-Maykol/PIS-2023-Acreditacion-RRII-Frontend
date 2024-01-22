@@ -25,8 +25,8 @@ export default function AuthPage() {
 	const [yearValue, setYearValue] = useState<Selection>(new Set([]))
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
 	const [isValid, setIsValid] = useState<{ year: boolean, semester: boolean }>({ year: false, semester: false })
-	const [touchedSemester, setTouchedSemester] = useState(false)
-	const [touchedYear, setTouchedYear] = useState(false)
+	// const [touchedSemester, setTouchedSemester] = useState(false)
+	// const [touchedYear, setTouchedYear] = useState(false)
 	const [yearSemester, setYearSemester] = useState<YearSemester[]>([])
 
 	const handleYearValue = (value: Selection): void => {
@@ -120,15 +120,15 @@ export default function AuthPage() {
 				</div>
 				<div className='flex flex-col gap-3 m-auto'>
 					<Select
+						defaultSelectedKeys={[years[0].value]}
 						name='year'
 						placeholder='Año'
 						label='Año'
 						size='sm'
 						selectionMode='single'
-						errorMessage={ isValid.year || !touchedYear ? '' : 'Seleccione un año'}
-						isInvalid={!(isValid.year || !touchedYear)}
 						onSelectionChange={handleYearValue}
-						onClose={() => setTouchedYear(true)}
+						// onClose={() => setTouchedYear(true)}
+						disallowEmptySelection
 						className='w-[200px]'>
 						{
 							years.map((year) => (
@@ -139,15 +139,15 @@ export default function AuthPage() {
 						}
 					</Select>
 					<Select
+						defaultSelectedKeys={[semesters[0].value]}
 						name='semester'
 						placeholder='Semestre'
 						label='Semestre'
 						size='sm'
 						selectionMode='single'
-						errorMessage={ isValid.semester || !touchedSemester ? '' : 'Seleccione un semestre'}
-						isInvalid={!(isValid.semester || !touchedSemester)}
 						onSelectionChange={handleSemesterValue}
-						onClose={() => setTouchedSemester(true)}
+						// onClose={() => setTouchedSemester(true)}
+						disallowEmptySelection
 						className='w-[200px]'>
 						{
 							semesters.map((semester) => (
@@ -162,7 +162,6 @@ export default function AuthPage() {
 					color='default'
 					radius='sm'
 					onClick={() => handleLoginWithGoogle()}
-					isDisabled={!isValid.year || !isValid.semester || !touchedYear || !touchedSemester}
 					startContent={<Image
 						alt='logo-unsa'
 						className='w-5 mx-1'
