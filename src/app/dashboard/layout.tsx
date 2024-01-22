@@ -4,13 +4,13 @@ import React, { use, useEffect, useMemo, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { PartialStandard } from '@/types/Standard'
-import { Metadata } from 'next'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { usePermissionsStore } from '@/store/usePermissionsStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
-
+import useInactivityMonitor from '@/hooks/useInactivityMonitor'
+import InactivityModal from '@/components/Modal/Auth/InactivityModal'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -22,6 +22,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	const { role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
+	useInactivityMonitor()
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen)
 	}
@@ -59,6 +60,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 					{children}
 				</main>
 			</div>
+			<InactivityModal />
 		</div>
 	)
 }
