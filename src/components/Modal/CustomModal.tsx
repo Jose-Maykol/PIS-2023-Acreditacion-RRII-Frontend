@@ -7,13 +7,15 @@ interface CustomModalProps {
 	footer?: React.ReactNode
 	size?: 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'
 	classNames?: any
+	modalPlacement?: 'center' | 'top' | 'bottom' | 'auto' | 'top-center' | 'bottom-center'
+	isDismissable?: boolean
 	isOpen: boolean
 	onClose: () => void
 }
 
-const CustomModal = ({ header, body, footer, size = 'md', classNames, isOpen, onClose }: CustomModalProps) => {
+const CustomModal = ({ header, body, footer, size = 'md', classNames, modalPlacement = 'center', isDismissable = false, isOpen, onClose }: CustomModalProps) => {
 	return (
-		<Modal size={size} isOpen={isOpen} onOpenChange={onClose} classNames={classNames}>
+		<Modal size={size} isOpen={isOpen} onOpenChange={onClose} classNames={classNames} placement={modalPlacement} isDismissable={!isDismissable}>
 			<ModalContent>
 				{() => (
 					<>
