@@ -32,8 +32,8 @@ export default function PlanChart() {
 				datasets: [
 					{
 						data: values,
-						backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-						hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF']
+						backgroundColor: ['#4CAF50', '#E74C3C', '#FFCD00', '#3498DB', '#FF5733'],
+						hoverBackgroundColor: ['#388E3C', '#C0392B', '#FFC500', '#2980B9', '#D35400']
 					}
 				]
 			})
