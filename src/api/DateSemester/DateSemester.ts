@@ -1,11 +1,11 @@
 import api from '../axios'
 
-
 const url = {
 	infoSemester: '/info',
 	createDateSemester: '/date-semester',
 	listDateSemester: '/date-semester',
 	editDateSemester: '/date-semester',
+	statusDateSemester: '/date-semester/status',
 	closeDateSemester: '/close'
 }
 
@@ -34,6 +34,22 @@ export default class DateSemesterService {
 	public static async edit (data: {id_date_semester: number, year: number, semester: string, closing_date: Date }) {
 		const res = await api.put(url.editDateSemester, data)
 		return res.data
+	}
+
+	public static async status () {
+		const storedYear = localStorage.getItem('year')
+		const storedSemester = localStorage.getItem('semester')
+		if (storedYear && storedSemester) {
+			const year = parseInt(storedYear)
+			const semester = storedSemester as 'A' | 'B'
+			const res = await api.get(url.statusDateSemester, {
+				params: {
+					year,
+					semester
+				}
+			})
+			return res.data
+		}
 	}
 
 	public static async close (data: { closing_date: string }) {
