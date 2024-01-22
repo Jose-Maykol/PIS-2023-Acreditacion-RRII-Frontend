@@ -45,7 +45,7 @@ export default function FilterUserTable({
 				>
 					<DropdownTrigger>
 						<Button endContent={<ChevronDownIcon width={10} height={10} />} variant='faded'>
-              Estado
+              Roles
 						</Button>
 					</DropdownTrigger>
 					<DropdownMenu

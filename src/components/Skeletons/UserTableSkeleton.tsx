@@ -1,5 +1,5 @@
 
-export default function TableUserSkeleton ({ rows = 10 }: { rows?: number }) {
+export default function UserTableSkeleton ({ rows = 10 }: { rows?: number }) {
 	return (
 		<div className='max-w-full space-y-4 rounded animate-pulse'>
 			<div className='h-10 w-full flex flex-row justify-between items-center content-center mb-8'>

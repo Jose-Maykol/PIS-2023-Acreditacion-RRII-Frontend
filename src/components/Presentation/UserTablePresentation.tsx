@@ -2,6 +2,7 @@
 import { User } from '@/types/User'
 import UserTable from '../Table/UserTable'
 import FilterUserTable from '../Filter/FilterUserTable'
+import UserTableSkeleton from '../Skeletons/UserTableSkeleton'
 
 interface UserTablePresentationProps {
   tableData: User[];
@@ -28,7 +29,7 @@ export default function UserTablePresentation({
 		<div>
 			{ isLoading
 				? (
-					<div>Loading...</div>
+					<UserTableSkeleton rows={8} />
 				)
 				: error
 					? (
