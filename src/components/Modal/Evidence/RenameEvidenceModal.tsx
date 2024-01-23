@@ -5,6 +5,7 @@ import { Button, Input } from '@nextui-org/react'
 import { useState, useMemo, ReactNode } from 'react'
 import { useToast } from '@/hooks/toastProvider'
 import CustomModal from '../CustomModal'
+import _ from 'lodash'
 
 interface RenameEvidenceModalProps {
 	evidence: Evidence
@@ -12,15 +13,17 @@ interface RenameEvidenceModalProps {
 	onCloseModal: () => void
 	onReload: () => void
 }
+
 export default function RenameEvidenceModal({ evidence, openModal, onCloseModal, onReload } : RenameEvidenceModalProps) {
 	const [newNameEvidence, setNewNameEvidence] = useState<string>(evidence.name)
 	const { showToast, updateToast } = useToast()
-	const validateNewNameEvidence = (newNameEvidence: string) => newNameEvidence.match(/^[A-Za-z0-9.\-_ ]{1,100}$/)
+
+	const validateNewNameEvidence = (newNameEvidence: string) => /^[A-Za-zñÑ][A-Za-z0-9ñÑ.\-_ ]{0,59}$/i.test(newNameEvidence)
 
 	const isInvalid = useMemo(() => {
-		if (newNameEvidence === '') return false
+		if (newNameEvidence === '') return true
 
-		return Boolean(validateNewNameEvidence(newNameEvidence))
+		return !validateNewNameEvidence(newNameEvidence)
 	}, [newNameEvidence])
 
 	const handleCloseModal = () => {
@@ -57,7 +60,7 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 
 	const header: ReactNode = (
 		<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-			Cambiar nombre de {evidence.type === 'evidence' ? 'archivo' : 'carpeta'}
+			Cambiar nombre
 		</h2>
 	)
 
@@ -65,13 +68,17 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 		<div className='h-full max-h-[96%]'>
 			<Input
 				autoFocus
+				radius='sm'
 				variant='bordered'
 				value={newNameEvidence}
 				isInvalid={isInvalid}
-				color={isInvalid ? 'danger' : 'success'}
+				color={isInvalid ? 'danger' : 'default'}
 				errorMessage={isInvalid && 'Ingresa un nombre válido'}
 				onValueChange={setNewNameEvidence}
 			/>
+			<div className='flex justify-end mt-2 mx-1'>
+				<p className='text-default-600 text-sm'>{newNameEvidence.length}/60</p>
+			</div>
 		</div>
 	)
 
@@ -88,8 +95,8 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges}>
-							Guardar
+						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges} isDisabled={isInvalid || _.isEqual(newNameEvidence, evidence.name)}>
+							Aceptar
 						</Button>
 					</>
 				}

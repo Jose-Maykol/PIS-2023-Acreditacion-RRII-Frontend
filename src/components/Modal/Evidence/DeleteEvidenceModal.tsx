@@ -65,11 +65,11 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 				body={body}
 				footer={
 					<>
-						<Button color='danger' variant='flat' onPress={handleCloseModal}>
+						<Button className='bg-lightBlue-600 text-white' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges}>
-							Guardar
+						<Button color='danger' variant='solid' onPress={handleSubmitChanges}>
+							Eliminar
 						</Button>
 					</>
 				}
