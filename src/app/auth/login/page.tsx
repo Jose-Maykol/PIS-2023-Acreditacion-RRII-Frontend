@@ -52,7 +52,7 @@ export default function AuthPage() {
 				localStorage.setItem('semester', semester.toString())
 			}
 		}
-		const url = `${SERVER_PATH}/api/auth/login/google`
+		const url = `${SERVER_PATH}/api/auth/google`
 		window.location.href = url
 	}
 
