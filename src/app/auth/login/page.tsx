@@ -46,7 +46,7 @@ export default function AuthPage() {
 				localStorage.setItem('year', (yearValue as any).values().next().value)
 				localStorage.setItem('semester', (semesterValue as any).values().next().value)
 			}
-			const url = `${SERVER_PATH}/api/auth/login/google`
+			const url = `${SERVER_PATH}/api/auth/google`
 			window.location.href = url
 		}
 	}
