@@ -15,7 +15,7 @@ import {
 	Selection
 } from '@nextui-org/react'
 import { useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 
 export default function AddUserModal({ onUserChanged }: { onUserChanged: () => void }) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
@@ -23,6 +23,7 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	const [roleValue, setRoleValue] = useState<Selection>(new Set([]))
 	const [isValid, setIsValid] = useState<{email: boolean | null, role: boolean}>({ email: null, role: false })
 	const [touched, setTouched] = useState(false)
+	const { showToast, updateToast } = useToast()
 
 	const validateEmail = (value:string) => {
 		return /.+@unsa\.edu\.pe$/.test(value)
@@ -45,35 +46,15 @@ export default function AddUserModal({ onUserChanged }: { onUserChanged: () => v
 	}
 
 	const handleSubmit = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		UsersService.createUser({
 			email: emailValue,
 			role: (roleValue as any).values().next().value
 		}).then((res) => {
 			if (res.status === 1) {
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				updateToast(notification, res.message, 'success')
 			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				updateToast(notification, res.message, 'error')
 			}
 			setEmailValue('')
 			setRoleValue(new Set([]))

@@ -6,7 +6,9 @@ import RatingSwitch from '../RatingSwitch/RatingSwitch'
 import PencilIcon from '../Icons/PencilIcon'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardHeader, StandardValues } from '@/types/Standard'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
@@ -26,7 +28,10 @@ const HeaderStandards = ({ id }: { id: string }) => {
 	})
 
 	const [isRead, setIsRead] = useState<boolean>(true)
-	const [isReload, setIsReload] = useState<boolean>(false)
+	const [reload, setReload] = useState<boolean>(false)
+	const { year, semester } = useYearSemesterStore()
+	const { showToast, updateToast } = useToast()
+
 
 	const handleChange = (key: string, value: string) => {
 		setStandardHeader((prev) => ({
@@ -51,11 +56,11 @@ const HeaderStandards = ({ id }: { id: string }) => {
 				}
 			})
 		})
-		setIsReload(false)
-	}, [isReload])
+		setReload(false)
+	}, [reload, year, semester])
 
 	const handleUpdateHeader = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		const { name, description, dimension, factor, standardRelated } : StandardValues = standardHeader
 		await StandardService.updateHeader(
 			id,
@@ -67,30 +72,10 @@ const HeaderStandards = ({ id }: { id: string }) => {
 				standardRelated
 			}).then((res) => {
 			if (res.status === 1) {
-				setIsReload(true)
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				setReload(true)
+				updateToast(notification, res.message, 'success')
 			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				updateToast(notification, res.message, 'error')
 			}
 		})
 		setIsRead(true)
@@ -98,7 +83,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	const handleCancelUpdateHeader = () => {
 		setIsRead(true)
-		setIsReload(true)
+		setReload(true)
 	}
 
 	return (
@@ -109,26 +94,26 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					maxRows={1}
 					className='max-w-4xl'
 					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
-					value={standardHeader.name}
+					value={standardHeader.name.toUpperCase()}
 					onValueChange={(value) => handleChange('name', value)}
 					classNames={{
 						base: 'bg-transparent',
 						input: `scrollbar-hide text-3xl font-bold ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`,
-						inputWrapper: `border-none ${isRead || !standardHeader.permissions.isAdministrator ? 'bg-transparent px-0' : 'bg-white px-2'}`
+						inputWrapper: `border-none rounded-md ${isRead || !standardHeader.permissions.isAdministrator ? 'bg-transparent px-0' : 'bg-white px-2'}`
 					}}
 				/>
-				<p className='text-white text-xl mb-2'>Estandar #{id}</p>
-				<hr className='my-4 w-full'></hr>
+				<p className='text-white text-xl uppercase'>Estándar #{id}</p>
+				<hr className='my-2 w-full'></hr>
 				<Textarea
 					isReadOnly={isRead || !standardHeader.permissions.isAdministrator}
 					maxRows={2}
 					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 					value={standardHeader.description}
 					onValueChange={(value) => handleChange('description', value)}
-					classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
+					classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 				/>
 			</div>
-			<div className='flex gap-20 grow mt-2'>
+			<div className='flex gap-20 grow mt-1'>
 				<div className='flex-1'>
 					<p className='text-white text-xl mb-1'>Factor</p>
 					<Textarea
@@ -137,7 +122,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.factor}
 						onValueChange={(value) => handleChange('factor', value)}
-						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
+						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 					/>
 				</div>
 				<div className='flex-1'>
@@ -148,24 +133,24 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.dimension}
 						onValueChange={(value) => handleChange('dimension', value)}
-						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}` }}
+						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 					/>
 				</div>
 			</div>
-			<div className='grow mt-2'>
-				<p className='text-white text-xl mb-2'>Estandares Relacionados</p>
+			<div className='grow mt-1'>
+				<p className='text-white text-xl mb-1'>Estándares Relacionados</p>
 				<Textarea
 					isReadOnly={isRead}
 					maxRows={2}
 					variant={isRead ? 'bordered' : 'faded'}
 					value={standardHeader.standardRelated}
 					onValueChange={(value) => handleChange('standardRelated', value)}
-					classNames={{ input: `scrollbar-hide ${isRead ? '' : 'text-black'}` }}
+					classNames={{ input: `scrollbar-hide ${isRead ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 				/>
 			</div>
-			<div className='grow flex justify-between items-center mt-2'>
+			<div className='grow flex justify-between items-center mt-1'>
 				<div>
-					<p className='text-white text-xl'>Valoracion Estandar</p>
+					<p className='text-white text-xl'>Valoración de Estándar</p>
 					<RatingSwitch standardID={id} isManager={standardHeader.permissions.isManager} statusID={standardHeader.status.id} />
 				</div>
 				<div className='flex gap-2'>

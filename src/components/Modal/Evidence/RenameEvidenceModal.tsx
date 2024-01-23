@@ -1,82 +1,57 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
-import {
-	Button,
-	Input
-} from '@nextui-org/react'
-import { useState, ReactNode } from 'react'
-import { toast } from 'react-toastify'
+import { Button, Input } from '@nextui-org/react'
+import { useState, useMemo, ReactNode } from 'react'
+import { useToast } from '@/hooks/toastProvider'
 import CustomModal from '../CustomModal'
+import _ from 'lodash'
 
-export default function RenameEvidenceModal({ evidence, openModal, onCloseModal, onReload } : {evidence: Evidence, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
-	const [renameValue, setRenameValue] = useState<string>(evidence.name)
+interface RenameEvidenceModalProps {
+	evidence: Evidence
+	openModal: boolean
+	onCloseModal: () => void
+	onReload: () => void
+}
+
+export default function RenameEvidenceModal({ evidence, openModal, onCloseModal, onReload } : RenameEvidenceModalProps) {
+	const [newNameEvidence, setNewNameEvidence] = useState<string>(evidence.name)
+	const { showToast, updateToast } = useToast()
+
+	const validateNewNameEvidence = (newNameEvidence: string) => /^[A-Za-zñÑ][A-Za-z0-9ñÑ.\-_ ]{0,59}$/i.test(newNameEvidence)
+
+	const isInvalid = useMemo(() => {
+		if (newNameEvidence === '') return true
+
+		return !validateNewNameEvidence(newNameEvidence)
+	}, [newNameEvidence])
+
 	const handleCloseModal = () => {
-		setRenameValue('')
+		setNewNameEvidence('')
 		onCloseModal()
 		onReload()
 	}
 
 	const handleSubmitChanges = async () => {
-		const notification = toast.loading('Procesando...')
-		if (evidence?.type === 'evidence') {
+		const notification = showToast('Procesando...')
+		if (evidence.type === 'evidence') {
 			await EvidenceService.renameEvidence(evidence.id.split('-')[1], {
-				new_filename: renameValue
+				new_filename: newNameEvidence
 			}).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		} else {
 			await EvidenceService.renameFolder(evidence.id.split('-')[1], {
-				new_name: renameValue
+				new_name: newNameEvidence
 			}).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		}
@@ -85,7 +60,7 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 
 	const header: ReactNode = (
 		<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-			Renombrar {evidence.type === 'evidence' ? 'Archivo' : 'Carpeta'}
+			Cambiar nombre
 		</h2>
 	)
 
@@ -93,10 +68,17 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 		<div className='h-full max-h-[96%]'>
 			<Input
 				autoFocus
+				radius='sm'
 				variant='bordered'
-				value={renameValue}
-				onValueChange={setRenameValue}
+				value={newNameEvidence}
+				isInvalid={isInvalid}
+				color={isInvalid ? 'danger' : 'default'}
+				errorMessage={isInvalid && 'Ingresa un nombre válido'}
+				onValueChange={setNewNameEvidence}
 			/>
+			<div className='flex justify-end mt-2 mx-1'>
+				<p className='text-default-600 text-sm'>{newNameEvidence.length}/60</p>
+			</div>
 		</div>
 	)
 
@@ -104,12 +86,6 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 		<>
 			<CustomModal
 				isOpen={openModal}
-				classNames={{
-					// base: 'h-[60%]',
-					// header: 'p-2 border-b-[2px] border-gray-200'
-					// body: 'h-[55%] py-2',
-					// footer: 'h-[22%]'
-				}}
 				size='xl'
 				onClose={handleCloseModal}
 				header={header}
@@ -119,8 +95,8 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' onPress={handleSubmitChanges} >
-							Guardar
+						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges} isDisabled={isInvalid || _.isEqual(newNameEvidence, evidence.name)}>
+							Aceptar
 						</Button>
 					</>
 				}

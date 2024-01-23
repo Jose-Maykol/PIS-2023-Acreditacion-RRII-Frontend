@@ -1,29 +1,32 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
-import {
-	Button
-} from '@nextui-org/react'
-import { useState, ReactNode, useEffect, useMemo, useCallback, Key, use } from 'react'
-import { toast } from 'react-toastify'
+import { Button } from '@nextui-org/react'
+import { useState, ReactNode, useEffect, useMemo, useCallback, Key } from 'react'
+import { useToast } from '@/hooks/toastProvider'
 import CustomModal from '../CustomModal'
 import { Evidence } from '@/types/Evidences'
 import CustomTable from '@/components/Table/CustomTable'
 import { getFileIcon, getCommonIcon } from '@/utils/utils'
 
+interface MoveEvidenceModalProps {
+	evidence: Evidence
+	breadcrumbs: { name: string; path: string; key: number }[]
+	openModal: boolean
+	onCloseModal: () => void
+	onReload: () => void
+}
 
-export default function MoveEvidenceModal(
-	{ evidence, breadcrumbs, openModal, onCloseModal, onReload } : {evidence: Evidence, breadcrumbs: { name: string; path: string; key: number }[], openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
+export default function MoveEvidenceModal({ evidence, breadcrumbs, openModal, onCloseModal, onReload } : MoveEvidenceModalProps) {
 	const [folders, setFolders] = useState<Evidence[]>([])
 	const [pathFolders] = useState<{ name: string; key: number }[]>([...breadcrumbs])
 	const [params, setParams] = useState<number | null>(pathFolders.length === 1 ? null : pathFolders[pathFolders.length - 1].key)
 	const [currentParams] = useState<number | null>(pathFolders.length === 1 ? null : pathFolders[pathFolders.length - 1].key)
 	const [isActive, setIsActive] = useState<boolean>(true)
+	const { showToast, updateToast } = useToast()
 	const columns = [
 		{ name: 'CARPETA', uid: 'name', sortable: true },
 		{ name: 'ACCIONES', uid: 'actions' }
 	]
-
-	console.log('ruta de modal mover', breadcrumbs)
 
 	useEffect(() => {
 		EvidenceService.folderList(
@@ -33,7 +36,6 @@ export default function MoveEvidenceModal(
 				evidence_type_id: evidence.evidence_type_id
 			}
 		).then((res) => {
-			console.log('lista carpetas', res)
 			if (res.status === 1) {
 				setFolders(res.data)
 			} else {
@@ -53,35 +55,15 @@ export default function MoveEvidenceModal(
 	}
 
 	const handleSubmitChanges = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		if (evidence?.type === 'evidence') {
 			await EvidenceService.moveEvidence(String(evidence.uid), {
 				parent_id: params
 			}).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		} else {
@@ -89,29 +71,9 @@ export default function MoveEvidenceModal(
 				parent_id: params
 			}).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		}
@@ -212,12 +174,6 @@ export default function MoveEvidenceModal(
 		<>
 			<CustomModal
 				isOpen={openModal}
-				classNames={{
-					// base: 'h-[60%]',
-					// header: 'p-2 border-b-[2px] border-gray-200'
-					// body: 'h-[55%] py-2',
-					// footer: 'h-[22%]'
-				}}
 				size='xl'
 				onClose={handleCloseModal}
 				header={header}
@@ -227,7 +183,7 @@ export default function MoveEvidenceModal(
 						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges} >
+						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges}>
 							Mover
 						</Button>
 					</>

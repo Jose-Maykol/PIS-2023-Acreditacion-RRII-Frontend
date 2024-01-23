@@ -15,18 +15,24 @@ import {
 	SelectItem
 } from '@nextui-org/react'
 import { useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 
-export default function ActivateUserModal({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
+interface ActivateUserModalProps {
+	userId: number
+	onUserChanged: () => void
+}
+
+export default function ActivateUserModal({ userId, onUserChanged }: ActivateUserModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
 	const [statusValue, setStatusValue] = useState<Selection>(new Set([]))
+	const { showToast, updateToast } = useToast()
 
 	const handleSubmit = async () => {
 		setTouched(true)
 		if ((statusValue as any).size > 0) {
-			const notification = toast.loading('Procesando...')
+			const notification = showToast('Procesando...')
 			UsersService.updateStatus(
 				userId,
 				{
@@ -34,29 +40,9 @@ export default function ActivateUserModal({ userId, onUserChanged }: {userId: nu
 				}
 			).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 				onUserChanged()
 				setTouched(false)
