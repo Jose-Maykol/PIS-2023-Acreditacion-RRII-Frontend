@@ -1,76 +1,42 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
-import {
-	Button
-} from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import { ReactNode } from 'react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 import CustomModal from '../CustomModal'
 
-export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal, onReload } : {id: string, type: string, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
+interface DeleteEvidenceModalProps {
+	id: string
+	type: string
+	openModal: boolean
+	onCloseModal: () => void
+	onReload: () => void
+}
+
+export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal, onReload } : DeleteEvidenceModalProps) {
+	const { showToast, updateToast } = useToast()
 	const handleCloseModal = () => {
 		onCloseModal()
 		onReload()
 	}
 
 	const handleSubmitChanges = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 
 		if (type === 'evidence') {
 			await EvidenceService.deleteEvidence(id).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		} else {
 			await EvidenceService.deleteFolder(id).then((res) => {
-				console.log(res)
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'colored'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 			})
 		}
@@ -85,7 +51,7 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 
 	const body: ReactNode = (
 		<div className='h-full max-h-[96%]'>
-			<p>Esta seguro de Eliminar {type === 'evidence' ? 'este Archivo!!!' : 'esta Carpeta!!!'}?</p>
+			<p>¿Está seguro que desea eliminar {type === 'evidence' ? 'este archivo' : 'esta carpeta'} de evidencia?</p>
 		</div>
 	)
 
@@ -93,12 +59,6 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 		<>
 			<CustomModal
 				isOpen={openModal}
-				classNames={{
-					// base: 'h-[60%]',
-					// header: 'p-2 border-b-[2px] border-gray-200'
-					// body: 'h-[55%] py-2',
-					// footer: 'h-[22%]'
-				}}
 				size='xl'
 				onClose={handleCloseModal}
 				header={header}
@@ -108,7 +68,7 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' onPress={handleSubmitChanges} >
+						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges}>
 							Guardar
 						</Button>
 					</>

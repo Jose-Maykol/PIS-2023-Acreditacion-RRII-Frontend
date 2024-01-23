@@ -10,13 +10,12 @@ import { useToast } from '@/hooks/toastProvider'
 import { getCommonIcon } from '@/utils/utils'
 import _ from 'lodash'
 
-const AssignmentModal = ({
-	id,
-	onReload
-}: {
+interface AssignmentModalProps {
 	id: string
 	onReload: () => void
-}) => {
+}
+
+const AssignmentModal = ({ id, onReload }: AssignmentModalProps) => {
 	const [users, setUsers] = useState<EnabledUsers[]>([])
 	const [values, setValues] = useState<Selection>(new Set([]))
 	const [initialValues, setInitialValues] = useState<Selection>(new Set([]))

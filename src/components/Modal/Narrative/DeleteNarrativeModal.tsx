@@ -8,7 +8,7 @@ import {
 	ModalFooter,
 	ModalHeader
 } from '@nextui-org/react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 
 interface DeleteNarrativeModalProps {
 	id: number
@@ -18,33 +18,15 @@ interface DeleteNarrativeModalProps {
 }
 
 export default function DeleteNarrativeModal ({ id, isOpen, onOpenChange, onDelete }: DeleteNarrativeModalProps) {
+	const { showToast, updateToast } = useToast()
+
 	const handleSubmit = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		NarrativeService.deleteNarrative(id).then((res) => {
 			if (res.status === 1) {
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				updateToast(notification, res.message, 'success')
 			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'light'
-				})
+				updateToast(notification, res.message, 'error')
 			}
 			onDelete()
 		})

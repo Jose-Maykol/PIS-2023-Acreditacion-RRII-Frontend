@@ -13,7 +13,7 @@ interface CustomModalProps {
 	onClose: () => void
 }
 
-const CustomModal = ({ header, body, footer, size = 'md', classNames, modalPlacement = 'center', isDismissable = false, isOpen, onClose }: CustomModalProps) => {
+const CustomModal = ({ header, body, footer, size = 'md', classNames, modalPlacement = 'auto', isDismissable = false, isOpen, onClose }: CustomModalProps) => {
 	return (
 		<Modal size={size} isOpen={isOpen} onOpenChange={onClose} classNames={classNames} placement={modalPlacement} isDismissable={!isDismissable}>
 			<ModalContent>

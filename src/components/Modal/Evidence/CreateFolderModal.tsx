@@ -1,16 +1,30 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
-import {
-	Button,
-	Input
-} from '@nextui-org/react'
-import { useState, ReactNode } from 'react'
-import { toast } from 'react-toastify'
+import { Button, Input } from '@nextui-org/react'
+import { useState, useMemo, ReactNode } from 'react'
+import { useToast } from '@/hooks/toastProvider'
 import CustomModal from '../CustomModal'
 
-export default function CreateFolderModal(
-	{ id, typeEvidence, path, openModal, onCloseModal, onReload } : {id: number, typeEvidence: number, path: string, openModal: boolean, onCloseModal: () => void, onReload: () => void}) {
-	const [renameValue, setRenameValue] = useState<string>('')
+interface CreateFolderModalProps {
+	id: number
+	typeEvidence: number
+	path: string
+	openModal: boolean
+	onCloseModal: () => void
+	onReload: () => void
+}
+
+export default function CreateFolderModal({ id, typeEvidence, path, openModal, onCloseModal, onReload } : CreateFolderModalProps) {
+	const [folderName, setFolderName] = useState<string>('')
+	const { showToast, updateToast } = useToast()
+
+	const validateFolderName = (folderName: string) => folderName.match(/^[A-Za-z0-9.\-_ ]{1,100}$/)
+
+	const isInvalid = useMemo(() => {
+		if (folderName === '') return false
+
+		return Boolean(validateFolderName(folderName))
+	}, [folderName])
 
 	const handleCloseModal = () => {
 		onCloseModal()
@@ -18,37 +32,17 @@ export default function CreateFolderModal(
 	}
 
 	const handleSubmitChanges = async () => {
-		const notification = toast.loading('Procesando...')
+		const notification = showToast('Procesando...')
 		await EvidenceService.createFolder({
-			name: renameValue,
+			name: folderName,
 			standard_id: id,
 			evidence_type_id: typeEvidence,
 			path
 		}).then((res) => {
 			if (res.status === 1) {
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				updateToast(notification, res.message, 'success')
 			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				updateToast(notification, res.message, 'error')
 			}
 		})
 		handleCloseModal()
@@ -64,9 +58,12 @@ export default function CreateFolderModal(
 		<div className='h-full max-h-[96%]'>
 			<Input
 				autoFocus
-				placeholder='Nombre de nueva carpeta'
+				defaultValue='Carpeta sin título'
 				variant='bordered'
-				onValueChange={setRenameValue}
+				isInvalid={isInvalid}
+				color={isInvalid ? 'danger' : 'success'}
+				errorMessage={isInvalid && 'Ingresa un nombre de carpeta válido'}
+				onValueChange={setFolderName}
 			/>
 		</div>
 	)
@@ -75,12 +72,6 @@ export default function CreateFolderModal(
 		<>
 			<CustomModal
 				isOpen={openModal}
-				classNames={{
-					// base: 'h-[60%]',
-					// header: 'p-2 border-b-[2px] border-gray-200'
-					// body: 'h-[55%] py-2',
-					// footer: 'h-[22%]'
-				}}
 				size='xl'
 				onClose={handleCloseModal}
 				header={header}
@@ -90,7 +81,7 @@ export default function CreateFolderModal(
 						<Button color='danger' variant='flat' onPress={handleCloseModal}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges} >
+						<Button className='bg-lightBlue-600 text-white' variant='solid' onPress={handleSubmitChanges}>
 							Guardar
 						</Button>
 					</>
