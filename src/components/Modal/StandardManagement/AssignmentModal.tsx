@@ -109,7 +109,7 @@ const AssignmentModal = ({ id, onReload }: AssignmentModalProps) => {
 					return (
 						<div className='flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[75px]'>
 							{items.map((item) => (
-								<Chip key={item.key} className='bg-default-200' onClose={() => setValues(new Set([...values].filter((value) => value !== item.key)))}>
+								<Chip key={item.key} classNames={{ content: 'text-xs' }} className='bg-default-200' onClose={() => setValues(new Set([...values].filter((value) => value !== item.key)))}>
 									{item.data?.name} {item.data?.lastname}
 								</Chip>
 							))}
@@ -145,7 +145,7 @@ const AssignmentModal = ({ id, onReload }: AssignmentModalProps) => {
 			</Tooltip>
 			<CustomModal
 				isOpen={isOpen}
-				size='2xl'
+				size='xl'
 				onClose={onClose}
 				header={header}
 				body={body}
