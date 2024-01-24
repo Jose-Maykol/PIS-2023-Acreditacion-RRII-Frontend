@@ -88,7 +88,7 @@ export default function ReportPage() {
 						color='grey'
 						title='Reporte anual RRII'
 						description='Genera un reporte anual de RRII'
-						generateReport={() => alert('No disponible')}
+						generateReport={() => router.push('/dashboard/reports/annual')}
 					/>
 				</div>
 			</ContentWrapper>
