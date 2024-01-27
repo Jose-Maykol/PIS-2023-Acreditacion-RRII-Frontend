@@ -15,6 +15,11 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 	'pendiente de autenticación': 'warning'
 }
 
+const roleColorMap: Record<string, ChipProps['color']> = {
+	administrador: 'primary',
+	docente: 'success'
+}
+
 export default function UserTable({
 	data,
 	handleUsersChanged
@@ -46,9 +51,9 @@ export default function UserTable({
 			)
 		case 'role':
 			return (
-				<div className='flex flex-col'>
-					<p className='text-bold text-sm capitalize'>{cellValue}</p>
-				</div>
+				<Chip className='capitalize' color={roleColorMap[user.role]} size='sm' variant='flat'>
+					{cellValue}
+				</Chip>
 			)
 		case 'status':
 			return (
@@ -79,19 +84,6 @@ export default function UserTable({
 	return (
 		<Table
 			aria-label='Tabla de usuarios'
-			/* bottomContent={
-				<div className='flex w-full justify-center'>
-					<Pagination
-						isCompact
-						showControls
-						showShadow
-						color='primary'
-						page={currentPage}
-						total={totalPages}
-						onChange={(page) => handlePageChange(page)}
-					/>
-				</div>
-			} */
 			removeWrapper
 			classNames={{
 				base: 'min-h-[370px] h-[370px]'
