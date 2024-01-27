@@ -1,17 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable eqeqeq */
 import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
+import { Editor } from '@tinymce/tinymce-react'
 import { Key, useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
 import SaveIcon from '../Icons/SaveIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
+import { TINY_API_KEY } from '../../../config'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
 import { getFileIcon } from '@/utils/utils'
-import ReactQuill from 'react-quill'
-import 'quill/dist/quill.snow.css'
 
 interface Evidence {
   value: string
@@ -24,7 +24,7 @@ interface NarrativeEditorProps {
 }
 
 export default function NarrativeEditor({ id } : NarrativeEditorProps) {
-	const quillRef = useRef<any>(null)
+	const editorRef = useRef<any>(null)
 	const router = useRouter()
 	const [content, setContent] = useState<string>('')
 	const [evidences, setEvidences] = useState<Evidence[]>([])
@@ -52,9 +52,11 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 
 	const handleSaveNarrative = () => {
 		const notification = showToast('Procesando...')
-		const contentNarrative = content
+		const contentNarrative = {
+			narrative: editorRef.current?.getContent() as string
+		}
 		if (year && semester) {
-			NarrativeService.updateNarrative(id, { narrative: contentNarrative }).then((res) => {
+			NarrativeService.updateNarrative(id, contentNarrative).then((res) => {
 				if (res.status === 1) {
 					updateToast(notification, res.message, 'success')
 				} else {
@@ -74,53 +76,16 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const insertEvidence = () => {
 		const evidenceId = evidenceSelected
 		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-
-		console.log('evidenceLabel', evidenceLabel)
-
 		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank">${evidenceLabel}</a>`
-
-		const quill = quillRef.current?.getEditor()
-
-		console.log('quill', quill)
-		if (quill) {
-			const range = quill.getSelection(true)
-			quill.clipboard.dangerouslyPasteHTML(range.index, evidenceToInsert)
-			quill.setSelection(range.index + evidenceToInsert.length)
-			quill.focus()
+		const editor = editorRef.current
+		if (editor) {
+			editor.insertContent(evidenceToInsert)
+			editor.focus()
 		}
 	}
 
 	const handleEvidenceSelected = (key: Key): void => {
 		setEvidenceSelected(key)
-	}
-
-	const modules = {
-		toolbar: [
-			[{ size: ['small', false, 'large', 'huge'] }],
-			['bold', 'italic', 'underline', 'strike', 'blockquote'],
-			[{ list: 'ordered' }, { list: 'bullet' }],
-			['link', 'image'],
-			[
-				{ list: 'ordered' },
-				{ list: 'bullet' },
-				{ indent: '-1' },
-				{ indent: '+1' },
-				{ align: [] }
-			],
-			[{ color: ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff', '#ffffff', '#facccc', '#ffebcc', '#ffffcc', '#cce8cc', '#cce0f5', '#ebd6ff', '#bbbbbb', '#f06666', '#ffc266', '#ffff66', '#66b966', '#66a3e0', '#c285ff', '#888888', '#a10000', '#b26b00', '#b2b200', '#006100', '#0047b2', '#6b24b2', '#444444', '#5c0000', '#663d00', '#666600', '#003700', '#002966', '#3d1466', 'custom-color'] }]
-		]
-	}
-
-	const formats = [
-		'header', 'height', 'bold', 'italic',
-		'underline', 'strike', 'blockquote',
-		'list', 'color', 'bullet', 'indent',
-		'link', 'image', 'align', 'size'
-	]
-
-	const handleContentChange = (content: any) => {
-		console.log('content---->', content)
-		setContent(content)
 	}
 
 	return (
@@ -134,6 +99,37 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 					variant='bordered'
 					className='w-full'
 					onSelectionChange={handleEvidenceSelected}
+					/* listboxProps={{
+						itemClasses: {
+							base: [
+								'rounded-md',
+								'text-default-500',
+								'transition-opacity',
+								'data-[hover=true]:text-foreground',
+								'data-[hover=true]:bg-default-100',
+								'dark:data-[hover=true]:bg-default-50',
+								'data-[selectable=true]:focus:bg-default-50',
+								'data-[pressed=true]:opacity-70',
+								'data-[focus-visible=true]:ring-default-500'
+							]
+						}
+					}}
+					popoverProps={{
+						classNames: {
+							base: 'p-0 border-small border-divider bg-background',
+							arrow: 'bg-default-200'
+						}
+					}} */
+					/* renderValue={(items) => {
+						return items.map((item) => (
+							<div key={item.key} className='flex gap-2 items-center'>
+								{getFileIcon(item.data?.label, item.data?.type, 20)}
+								<div className='flex flex-col'>
+									{item.data?.label}
+								</div>
+							</div>
+						))
+					}} */
 				>
 					{(evidence) => (
 						<AutocompleteItem key={evidence.value} textValue={evidence.label}>
@@ -157,17 +153,19 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 				</Button>
 			</div>
 			<div className='h-[600px]'>
-				<ReactQuill
-					ref={quillRef}
-					theme='snow'
-					value={content}
-					modules={modules}
-					formats={formats}
-					placeholder='write your content ....'
-					onChange={handleContentChange}
-					style={{ height: '560px' }}
-				>
-				</ReactQuill>
+				<Editor
+					apiKey={TINY_API_KEY}
+					onInit={(evt, editor) => { editorRef.current = editor }}
+					initialValue={content}
+					init={{
+						height: 600,
+						menubar: true,
+						language: 'es',
+						plugins: 'anchor link image lists table',
+						toolbar: 'undo redo | fontfamily fontsize | bold italic underline forecolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent removeformat',
+						content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+					}}
+				/>
 			</div>
 			<div className='flex flex-row w-full justify-end gap-2 pt-4'>
 				<Button
