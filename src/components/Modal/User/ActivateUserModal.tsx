@@ -20,9 +20,14 @@ import { useToast } from '@/hooks/toastProvider'
 interface ActivateUserModalProps {
 	userId: number
 	onUserChanged: () => void
+	status: string
 }
 
-export default function ActivateUserModal({ userId, onUserChanged }: ActivateUserModalProps) {
+export default function ActivateUserModal({
+	userId,
+	onUserChanged,
+	status
+}: ActivateUserModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
@@ -89,12 +94,14 @@ export default function ActivateUserModal({ userId, onUserChanged }: ActivateUse
 							</ModalHeader>
 							<ModalBody>
 								<Select
+									defaultSelectedKeys={[states.find(state => state.label.toLowerCase() === status.toLowerCase())?.value.toString() || '1']}
 									items={states}
 									label='Estado'
 									placeholder='Selecciona nuevo estado del usuario'
 									variant='bordered'
 									errorMessage={isValid || !touched ? '' : 'Seleccione un estado'}
 									isInvalid={!(isValid || !touched)}
+									disallowEmptySelection
 									onSelectionChange={handleStatusValue}
 									onClose={() => setTouched(true)}
 								>

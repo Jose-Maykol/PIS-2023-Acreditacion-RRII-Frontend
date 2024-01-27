@@ -3,6 +3,7 @@ import { Chip, ChipProps, Pagination, Table, TableBody, TableCell, TableColumn, 
 import React, { useCallback } from 'react'
 import ActivateUserModal from '../Modal/User/ActivateUserModal'
 import RoleUserModal from '../Modal/User/RoleUserModal'
+import { status } from '@/utils/data_improvement_plans'
 
 interface UserTableProps {
   data: User[];
@@ -71,6 +72,7 @@ export default function UserTable({
 						onUserChanged={handleUsersChanged}
 					/>
 					<ActivateUserModal
+						status={user.status}
 						userId={user.id}
 						onUserChanged={handleUsersChanged}
 					/>
