@@ -3,6 +3,7 @@ import { User } from '@/types/User'
 import UserTable from '../Table/UserTable'
 import FilterUserTable from '../Filter/FilterUserTable'
 import UserTableSkeleton from '../Skeletons/UserTableSkeleton'
+import { Pagination } from '@nextui-org/react'
 
 interface UserTablePresentationProps {
   tableData: User[];
@@ -27,29 +28,40 @@ export default function UserTablePresentation({
 }: UserTablePresentationProps) {
 	return (
 		<div>
-			{ isLoading
+			{ error
 				? (
-					<UserTableSkeleton rows={8} />
+					<div>Error</div>
 				)
-				: error
-					? (
-						<div>Error</div>
-					)
-					: (
-						<div className='flex flex-col gap-4'>
-							<FilterUserTable
-								handleUsersChanged={onUsersChanged}
-								handleSearchChange={onSearchChange}
-							/>
-							<UserTable
-								data={tableData}
-								handleUsersChanged={onUsersChanged}
-								currentPage={currentPage}
-								totalPages={totalPages}
-								handlePageChange={onPageChange}
+				: (
+					<div className='flex flex-col gap-4'>
+						<FilterUserTable
+							handleUsersChanged={onUsersChanged}
+							handleSearchChange={onSearchChange}
+						/>
+						{ isLoading
+							? (
+								<UserTableSkeleton />
+							)
+							: (
+								<UserTable
+									data={tableData}
+									handleUsersChanged={onUsersChanged}
+								/>
+							)
+						}
+						<div className='flex w-full justify-center'>
+							<Pagination
+								isCompact
+								showControls
+								showShadow
+								color='primary'
+								page={currentPage}
+								total={totalPages}
+								onChange={onPageChange}
 							/>
 						</div>
-					)}
+					</div>
+				)}
 		</div>
 	)
 }

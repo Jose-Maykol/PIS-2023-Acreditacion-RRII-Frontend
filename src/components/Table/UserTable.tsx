@@ -1,16 +1,12 @@
 import { User } from '@/types/User'
-import { Chip, ChipProps, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
+import { Chip, ChipProps, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from '@nextui-org/react'
 import React, { useCallback } from 'react'
 import ActivateUserModal from '../Modal/User/ActivateUserModal'
 import RoleUserModal from '../Modal/User/RoleUserModal'
-import { status } from '@/utils/data_improvement_plans'
 
 interface UserTableProps {
   data: User[];
   handleUsersChanged: () => void;
-  currentPage: number;
-  totalPages: number;
-  handlePageChange: (page: number) => void;
 }
 
 const statusColorMap: Record<string, ChipProps['color']> = {
@@ -21,10 +17,7 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 
 export default function UserTable({
 	data,
-	handleUsersChanged,
-	currentPage,
-	totalPages,
-	handlePageChange
+	handleUsersChanged
 }: UserTableProps) {
 	const columns = [
 		{ name: 'N°', uid: 'index', sortable: true },
@@ -86,7 +79,7 @@ export default function UserTable({
 	return (
 		<Table
 			aria-label='Tabla de usuarios'
-			bottomContent={
+			/* bottomContent={
 				<div className='flex w-full justify-center'>
 					<Pagination
 						isCompact
@@ -98,7 +91,11 @@ export default function UserTable({
 						onChange={(page) => handlePageChange(page)}
 					/>
 				</div>
-			}
+			} */
+			removeWrapper
+			classNames={{
+				base: 'min-h-[370px] h-[370px]'
+			}}
 		>
 			<TableHeader columns={columns}>
 				{(column) => (
@@ -107,7 +104,10 @@ export default function UserTable({
 					</TableColumn>
 				)}
 			</TableHeader>
-			<TableBody items={data}>
+			<TableBody
+				items={data}
+				emptyContent='No hay usuarios registrados'
+			>
 				{(item) => (
 					<TableRow key={item.id}>
 						{(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}

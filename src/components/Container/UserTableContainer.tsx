@@ -1,5 +1,5 @@
 import { UsersService } from '@/api/Users/usersService'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery } from 'react-query'
 import UserTablePresentation from '../Presentation/UserTablePresentation'
 import { useDebouncedCallback } from 'use-debounce'
@@ -7,6 +7,7 @@ import { useDebouncedCallback } from 'use-debounce'
 export default function UserTableContainer() {
 	const [currentPage, setCurrentPage] = useState(1)
 	const [searchQuery, setSearchQuery] = useState('')
+	const [totalPages, setTotalPages] = useState(1)
 
 	const { data, isLoading, error, refetch } = useQuery(
 		['users', currentPage, searchQuery],
@@ -16,6 +17,12 @@ export default function UserTableContainer() {
 			items: 8
 		})
 	)
+
+	useEffect(() => {
+		if (data) {
+			setTotalPages(data?.data.last_page)
+		}
+	}, [data])
 
 	const handleUserChange = () => {
 		refetch()
@@ -38,7 +45,7 @@ export default function UserTableContainer() {
 			isLoading={isLoading}
 			error={error}
 			currentPage={currentPage}
-			totalPages={data?.data.last_page}
+			totalPages={totalPages}
 			onPageChange={handlePageChange}
 			onSearchChange={handleSearchChange}
 			onUsersChanged={handleUserChange}
