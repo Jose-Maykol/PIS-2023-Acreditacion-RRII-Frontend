@@ -66,6 +66,7 @@ export default function UserTable({
 			return (
 				<div className='flex flex-row gap-2'>
 					<RoleUserModal
+						role={user.role}
 						userId={user.id}
 						onUserChanged={handleUsersChanged}
 					/>

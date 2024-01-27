@@ -17,7 +17,17 @@ import {
 import { useMemo, useState } from 'react'
 import { useToast } from '@/hooks/toastProvider'
 
-export default function RoleUserModal({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
+interface RoleUserModalProps {
+	userId: number
+	onUserChanged: () => void
+	role: string
+}
+
+export default function RoleUserModal({
+	userId,
+	onUserChanged,
+	role
+}: RoleUserModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
@@ -52,9 +62,7 @@ export default function RoleUserModal({ userId, onUserChanged }: {userId: number
 		() => [
 			{ label: 'Administrador', value: 1 },
 			{ label: 'Docente', value: 2 }
-		],
-		[]
-	)
+		], [])
 
 	const handleRoleValue = (value: Selection): void => {
 		setStatusValue(value)
@@ -84,12 +92,14 @@ export default function RoleUserModal({ userId, onUserChanged }: {userId: number
 							</ModalHeader>
 							<ModalBody>
 								<Select
+									defaultSelectedKeys={[roles.find(item => item.label.toLowerCase() === role.toLowerCase())?.value.toString() || '2']}
 									items={roles}
 									label='Rol'
 									placeholder='Selecciona rol de usuario'
 									variant='bordered'
 									errorMessage={isValid || !touched ? '' : 'Seleccione un rol'}
 									isInvalid={!(isValid || !touched)}
+									disallowEmptySelection
 									onSelectionChange={handleRoleValue}
 									onClose={() => setTouched(true)}
 								>
