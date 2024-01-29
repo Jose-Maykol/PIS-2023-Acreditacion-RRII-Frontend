@@ -4,12 +4,12 @@ import { useEffect, useState } from 'react'
 
 import {
 	Button,
-	Checkbox,
 	Divider,
 	Input,
 	Select,
 	SelectItem,
 	Slider,
+	Switch,
 	Tooltip
 } from '@nextui-org/react'
 
@@ -159,9 +159,7 @@ export default function ImprovementPlanEditForm({
 					content='Registrar el nombre del plan de mejora'
 					closeDelay={100}
 				>
-					<label className='text-default-600 text-sm' style={{ marginBottom: '-0.5rem' }}>
-						Nombre:
-					</label>
+					<label className='text-default-600 text-sm'>Nombre:</label>
 				</Tooltip>
 				<Input
 					id='name'
@@ -312,9 +310,7 @@ export default function ImprovementPlanEditForm({
 					content='Registrar la duración en meses'
 					closeDelay={100}
 				>
-					<label className='text-default-600 text-sm' style={{ marginBottom: '-.6rem' }}>
-						Duración (meses):
-					</label>
+					<label className='text-default-600 text-sm'>Duración (meses):</label>
 				</Tooltip>
 				<Input
 					id='duration'
@@ -470,14 +466,15 @@ export default function ImprovementPlanEditForm({
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
 				</Tooltip>
-				<Checkbox
+				<Switch
 					name='efficacy_evaluation'
 					isSelected={isSelected}
 					onValueChange={setIsSelected}
 					onChange={formik.handleChange}
+					size='sm'
 				>
-					<span className='text-sm'>{isSelected ? 'Sí' : 'No'}</span>
-				</Checkbox>
+					{isSelected ? 'Sí' : 'No'}
+				</Switch>
 			</div>
 
 			<div className='flex gap-4 justify-end p-3'>
@@ -494,7 +491,6 @@ export default function ImprovementPlanEditForm({
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
 					onClick={() => setSubmitClicked(true)}
-					isDisabled={formik.isValid}
 				>
 					Guardar
 				</Button>
