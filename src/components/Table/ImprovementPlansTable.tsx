@@ -140,7 +140,7 @@ export default function ImprovementPlansTable({
 					<div className='relative flex gap-4'>
 						<Tooltip content='Detalle'>
 							<Link
-								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/details`}
+								href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/details`}
 							>
 								<span className='text-default-400 cursor-pointer active:opacity-50'>
 									<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900' />
@@ -149,7 +149,7 @@ export default function ImprovementPlansTable({
 						</Tooltip>
 						<Tooltip content='Editar Plan de Mejora'>
 							<Link
-								href={`/dashboard/standards/${improvementPlan.nro_standard}/evidence_improvements/${improvementPlan.id}/edit`}
+								href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}
 							>
 								<span className='text-default-400 cursor-pointer active:opacity-50'>
 									<PencilIcon width={15} height={15} fill='fill-warning' />
