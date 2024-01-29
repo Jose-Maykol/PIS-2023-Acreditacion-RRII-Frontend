@@ -140,6 +140,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
 			</div>
 
@@ -163,6 +164,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={12}
 				/>
 			</div>
 
@@ -207,6 +209,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
 			</div>
 

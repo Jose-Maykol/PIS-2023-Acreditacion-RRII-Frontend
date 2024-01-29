@@ -172,6 +172,7 @@ export default function ImprovementPlanEditForm({
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
 			</div>
 
@@ -196,6 +197,7 @@ export default function ImprovementPlanEditForm({
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={12}
 				/>
 			</div>
 
@@ -242,6 +244,7 @@ export default function ImprovementPlanEditForm({
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
 			</div>
 
