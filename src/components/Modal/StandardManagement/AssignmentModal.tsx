@@ -2,30 +2,29 @@
 'use client'
 
 import { useState, useEffect, ReactNode } from 'react'
-import { Button, Select, SelectItem, Avatar, Chip, SelectedItems, Selection, Tooltip } from '@nextui-org/react'
+import { Button, Select, SelectItem, Avatar, Chip, SelectedItems, Selection, Tooltip, useDisclosure } from '@nextui-org/react'
 import CustomModal from '@/components/Modal/CustomModal'
 import { EnabledUsers, AssignedUsers } from '@/types/Standard'
 import { StandardService } from '@/api/Estandar/StandardService'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 import { getCommonIcon } from '@/utils/utils'
+import _ from 'lodash'
 
-const AssignmentModal = ({
-	id,
-	onReload
-}: {
+interface AssignmentModalProps {
 	id: string
 	onReload: () => void
-}) => {
+}
+
+const AssignmentModal = ({ id, onReload }: AssignmentModalProps) => {
 	const [users, setUsers] = useState<EnabledUsers[]>([])
 	const [values, setValues] = useState<Selection>(new Set([]))
-	const [isValid, setIsValid] = useState<{isEmpty: boolean, isChangeValues: boolean}>({ isEmpty: true, isChangeValues: false })
 	const [initialValues, setInitialValues] = useState<Selection>(new Set([]))
-	const [showModal, setShowModal] = useState<boolean>(false)
-	const [touched, setTouched] = useState(false)
+	const { isOpen, onOpen, onClose } = useDisclosure()
+	const { showToast, updateToast } = useToast()
 
 	useEffect(() => {
 		loadInitialValues()
-	}, [])
+	}, [isOpen])
 
 	const loadInitialValues = async () => {
 		await StandardService.getListOfEnabledUsers(id).then((res) => {
@@ -44,31 +43,11 @@ const AssignmentModal = ({
 			const iniciales = res.data.filter((user: EnabledUsers) => user.isManager).map((user: EnabledUsers) => user.id.toString())
 			setInitialValues(new Set([...iniciales]))
 			setValues(new Set([...iniciales]))
-			setIsValid({ isEmpty: (values as any).size, isChangeValues: false })
 		})
 	}
 
-	const handleCloseModal = () => {
-		setShowModal(false)
-	}
-
-	const hasValuesChanged = () => {
-		const sortedValues = [...values].sort()
-		const sortedInitialValues = [...initialValues].sort()
-		return JSON.stringify(sortedValues) !== JSON.stringify(sortedInitialValues)
-	}
-
-	const handleValidation = () => {
-		setTouched(true)
-		if ((values as any).size === 0) {
-			setIsValid({ isEmpty: true, isChangeValues: isValid.isChangeValues })
-		} else {
-			setIsValid({ isEmpty: false, isChangeValues: hasValuesChanged() })
-		}
-		setTouched(false)
-	}
-	const handleSaveChanges = async () => {
-		const notification = toast.loading('Procesando...')
+	const handleSubmitChanges = async () => {
+		const notification = showToast('Procesando...')
 		const users = [...values].map((item) => item.toString())
 		await StandardService.assignUsersToStandard(
 			id,
@@ -76,37 +55,17 @@ const AssignmentModal = ({
 		).then((res) => {
 			if (res.status === 1) {
 				onReload()
-				toast.update(notification, {
-					render: res.message,
-					type: 'success',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				updateToast(notification, res.message, 'success')
 			} else {
-				toast.update(notification, {
-					render: res.message,
-					type: 'error',
-					autoClose: 5000,
-					hideProgressBar: false,
-					closeOnClick: true,
-					pauseOnHover: true,
-					draggable: true,
-					isLoading: false,
-					theme: 'colored'
-				})
+				updateToast(notification, res.message, 'error')
 			}
 		})
-		handleCloseModal()
+		onClose()
 	}
 
 	const header: ReactNode = (
 		<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
-			Asignar encargados a estándar {id}
+			Asignar encargados al "Estándar {id}"
 		</h2>
 	)
 
@@ -114,32 +73,43 @@ const AssignmentModal = ({
 		<div className='h-full max-h-[96%]'>
 			<Select
 				items={users}
-				label='Asignar Encargados'
-				description={`Se seleccionaron ${(values as any).size} encargados`}
+				label='Encargados'
+				description={
+					<div className='flex justify-between px-1 py-1'>
+						<div>
+							<div className='flex items-center gap-1'>
+								{ (values as any).size ? getCommonIcon('check', 15, 'fill-green-600') : getCommonIcon('close', 15, 'fill-red-600')}<span>El formulario no esta vacio</span>
+							</div>
+							<div className='flex items-center gap-1'>
+								{ !_.isEqual(values, initialValues) ? getCommonIcon('check', 15, 'fill-green-600') : getCommonIcon('close', 15, 'fill-red-600')}<span>Hubo cambios en los encargados</span>
+							</div>
+						</div>
+						<div>
+							<span>Encargados: {(values as any).size}</span>
+						</div>
+					</div>
+				}
 				variant='bordered'
 				isMultiline={true}
 				selectionMode='multiple'
-				placeholder='Selecciona los usuarios'
-				// labelPlacement='outside'
+				placeholder='Selecciona 1 o más encargados'
 				classNames={{
-					base: 'h-full py-1',
-					trigger: 'flex flex-col py-2'
+					base: 'h-full',
+					trigger: 'flex py-2 rounded-lg',
+					label: 'hidden',
+					value: '-mt-4 p-2 text-md',
+					description: 'text-xs text-default-500'
 				}}
-				// size='lg'
-				// className='w-[80%] m-auto'
 				scrollShadowProps={{
 					isEnabled: false
 				}}
-				isInvalid={isValid.isEmpty || touched }
-				errorMessage={isValid.isEmpty || touched ? 'Debe seleccionar almenos un encargado' : ''}
-				onClose={handleValidation}
 				selectedKeys={values}
 				onSelectionChange={setValues}
 				renderValue={(items: SelectedItems<EnabledUsers>) => {
 					return (
 						<div className='flex flex-wrap gap-2 overflow-y-auto scrollbar-hide max-h-[75px]'>
 							{items.map((item) => (
-								<Chip key={item.key} className='bg-default-200'>
+								<Chip key={item.key} classNames={{ content: 'text-xs' }} className='bg-default-200' onClose={() => setValues(new Set([...values].filter((value) => value !== item.key)))}>
 									{item.data?.name} {item.data?.lastname}
 								</Chip>
 							))}
@@ -168,33 +138,32 @@ const AssignmentModal = ({
 		<>
 			<Tooltip content='Editar Encargados'>
 				<span className='text-default-400 cursor-pointer active:opacity-50' onClick={() =>
-					setShowModal(true)
+					onOpen()
 				}>
 					{getCommonIcon('pencil', 17, 'fill-amber-300 hover:fill-amber-500')}
 				</span>
 			</Tooltip>
 			<CustomModal
-				isOpen={showModal}
-				classNames={{
-					// base: 'h-[60%]',
-					// header: 'p-2 border-b-[2px] border-gray-200'
-					// body: 'h-[55%] py-2',
-					// footer: 'h-[22%]'
-				}}
+				isOpen={isOpen}
 				size='xl'
-				onClose={handleCloseModal}
+				onClose={onClose}
 				header={header}
 				body={body}
 				footer={
 					<>
-						<Button color='danger' variant='flat' onPress={handleCloseModal}>
+						<Button color='danger' variant='light' onPress={onClose}>
 							Cancelar
 						</Button>
-						<Button className='bg-lightBlue-600 text-white' variant='solid' size='lg' isDisabled={isValid.isEmpty || !isValid.isChangeValues} onPress={handleSaveChanges} >
+						<Button className='bg-lightBlue-600 text-white' variant='solid' isDisabled={(values as any).size === 0 || _.isEqual(values, initialValues)} onPress={handleSubmitChanges} >
 							Guardar
 						</Button>
 					</>
 				}
+				classNames={{
+					base: 'rounded-lg shadow-[0_5px_20px_-5px_rgba(0,0,0,0.7)]',
+					backdrop: 'bg-[#292f46]/30 backdrop-opacity-40',
+					closeButton: 'hover:bg-red-600 hover:text-white'
+				}}
 			/>
 		</>
 	)

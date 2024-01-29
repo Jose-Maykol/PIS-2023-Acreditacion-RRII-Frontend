@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState, useCallback, useMemo, Key } from 'react'
-
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import {
 	Chip,
 	Tooltip,
@@ -29,7 +29,6 @@ const statusColorMap: Record<string, ChipProps['color']> = {
 	'no logrado': 'danger'
 }
 
-
 export default function StandardTable () {
 	const [filterValue, setFilterValue] = useState<string>('')
 	const [page, setPage] = useState<number>(1)
@@ -38,13 +37,14 @@ export default function StandardTable () {
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const [reload, setReload] = useState<boolean>(false)
+	const { year, semester } = useYearSemesterStore()
 
 	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
 			setStandardsManagement(res.data)
 		})
 		setReload(false)
-	}, [reload])
+	}, [reload, year, semester])
 
 	const filteredItems = useMemo(() => {
 		let filteredStandards = [...standardsManagement]
@@ -100,7 +100,7 @@ export default function StandardTable () {
                 Ver encargados
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent>
+								<PopoverContent className='overflow-y-auto scrollbar-hide max-h-[175px]'>
 									{cellValue.map((user, index) => (
 										<div key={index} className='my-1 border-b-1 flex flex-col w-full m-auto'>
 											<p className='text-bold text-md items-start'>{`${user.name} ${user.lastname}`}</p>
@@ -111,7 +111,7 @@ export default function StandardTable () {
 							</Popover>
 						)
 						: (
-							<p>No se asignaron aun encargados</p>
+							<p>Sin Encargados</p>
 						)}
 				</div>)
 			}
@@ -120,7 +120,7 @@ export default function StandardTable () {
 		case 'standard_status':
 			if (typeof cellValue === 'string') {
 				return (
-					<Chip className='capitalize' color={statusColorMap[standard.standard_status]} size='md' variant='flat'>
+					<Chip className='capitalize' color={statusColorMap[standard.standard_status]} size='md' variant='flat' radius='md'>
 						{cellValue}
 					</Chip>
 				)
@@ -166,6 +166,7 @@ export default function StandardTable () {
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
+						radius='sm'
 						placeholder='Buscar por nombre, apellido o correo'
 						startContent={getCommonIcon('search', 15, 'fill-gray-500')}
 						defaultValue={filterValue}
@@ -205,7 +206,7 @@ export default function StandardTable () {
 	const bottomContent = useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				{ pages !== 1 && (
+				{ pages >= 1 && (
 					<Pagination
 						isCompact
 						showControls

@@ -14,7 +14,7 @@ import {
 	useDisclosure
 } from '@nextui-org/react'
 import { Dispatch, SetStateAction } from 'react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 
 type DeleteImprovementPlanModalProps = {
 	planId: number
@@ -26,6 +26,7 @@ export default function DeleteImprovementPlanModal({
 	setImprovementPlans
 }: DeleteImprovementPlanModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const { showToast, updateToast } = useToast()
 
 	return (
 		<div className='flex flex-col gap-2'>
@@ -60,29 +61,14 @@ export default function DeleteImprovementPlanModal({
 									onPress={() => {
 										PlanMejoraService.delete(planId)
 											.then((res) => {
+												const notification = showToast('Eliminando...')
 												if (res.data.status === 1) {
-													toast.success('Plan de mejora eliminado satisfactoriamente', {
-														autoClose: 2000,
-														hideProgressBar: false,
-														closeOnClick: true,
-														pauseOnHover: true,
-														draggable: true,
-														isLoading: false,
-														theme: 'light'
-													})
+													updateToast(notification, 'Plan de mejora eliminado satisfactoriamente', 'success')
 													setImprovementPlans((previous: Array<ImprovementPlans>) =>
 														previous.filter((plan) => plan.id !== planId)
 													)
 												} else {
-													toast.error('Ocurrió un error al elimnar plan de mejora', {
-														autoClose: 2000,
-														hideProgressBar: false,
-														closeOnClick: true,
-														pauseOnHover: true,
-														draggable: true,
-														isLoading: false,
-														theme: 'light'
-													})
+													updateToast(notification, 'Ocurrió un error al elimnar plan de mejora', 'error')
 												}
 											})
 											.catch(console.log)

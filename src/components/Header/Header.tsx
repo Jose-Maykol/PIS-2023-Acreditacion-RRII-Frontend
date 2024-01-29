@@ -2,21 +2,21 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Navbar, NavbarBrand, NavbarContent, Avatar } from '@nextui-org/react'
+import { Navbar, NavbarBrand, NavbarContent, Avatar, Chip } from '@nextui-org/react'
 import CustomDropdown from '../Dropdown/CustomDropdown'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { BaseService } from '@/api/Base/BaseService'
 import { AuthService } from '@/api/Auth/authService'
 import LogoutIcon from '../Icons/LogoutIcon'
-import UserIcon from '../Icons/UserIcon'
 import CountdownSemester from '../Countdown/CountdownSemester'
-import dynamic from 'next/dynamic'
 import PopoverSemester from '../Popover/PopoverSemester'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 
 const Header = () => {
 	const [picture, setPicture] = useState('')
 	const [user, setUser] = useState({ name: '', lastname: '' })
 	const { closingDate } = useYearSemesterStore()
+	const { role } = usePermissionsStore()
 	/* const PopoverSemester = dynamic(() => import('@/components/Popover/PopoverSemester'), {
 		ssr: false,
 		loading: () => <div className='w-[100px] h-[40px] animate-pulse bg-gray-200 rounded-md'/>
@@ -60,7 +60,10 @@ const Header = () => {
 			</NavbarContent>
 
 			<NavbarContent as='div' justify='end'>
-				<p className='text-base text-white opacity-80'>{`${user.name} ${user.lastname}`}</p>
+				<Chip color='success' variant='solid' className='text-white font-bold uppercase min-w-[80px]'>
+					{role}
+				</Chip>
+				<p className='text-base text-white opacity-80 min-w-[50px] text-right'>{`${user.name} ${user.lastname}`}</p>
 				<CustomDropdown
 					triggerElement={
 						<Avatar
@@ -74,18 +77,18 @@ const Header = () => {
 						/>
 					}
 					items={[
-						{
+						/* {
 							uid: 'my-perfil',
 							label: 'Mi perfil',
 							color: 'primary',
-							startContent: <UserIcon width={25} height={25} />
-						},
+							startContent: <UserIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
+						}, */
 						{
 							uid: 'logout',
 							label: 'Cerrar sesión',
 							className: 'text-danger',
 							color: 'danger',
-							startContent: <LogoutIcon width={25} height={25} fill='fill-danger' />
+							startContent: <LogoutIcon width={25} height={25} fill='fill-danger group-hover/dropdown:fill-white' />
 						}
 					]}
 					placement='bottom-end'

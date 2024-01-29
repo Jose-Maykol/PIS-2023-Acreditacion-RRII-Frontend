@@ -1,7 +1,12 @@
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
-import StandardTable from '@/components/Table/StandardTable'
+import TableStandardSkeleton from '@/components/Skeletons/StandardTableSkeleton'
+import dynamic from 'next/dynamic'
 
-const page = () => {
+const StandardManagementPage = () => {
+	const StandardTable = dynamic(() => import('@/components/Table/StandardTable'), {
+		ssr: false,
+		loading: () => <TableStandardSkeleton/>
+	})
 	return (
 		<ContentWrapper className='bg-white h-[670px] -top-24 w-[96%] m-auto rounded-md py-5 px-10 flex flex-col'>
 			<div className='flex w-full mb-5'>
@@ -12,4 +17,4 @@ const page = () => {
 	)
 }
 
-export default page
+export default StandardManagementPage

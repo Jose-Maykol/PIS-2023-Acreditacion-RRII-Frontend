@@ -22,33 +22,38 @@ interface YearSemester {
 export default function AuthPage() {
 	const [years, setYears] = useState<{ value: string }[]>([{ value: '2023' }])
 	const [semesters, setSemesters] = useState<{ value: string }[]>([{ value: 'A' }])
-	const [yearValue, setYearValue] = useState<Selection>(new Set([]))
-	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
-	const [isValid, setIsValid] = useState<{ year: boolean, semester: boolean }>({ year: false, semester: false })
-	const [touchedSemester, setTouchedSemester] = useState(false)
-	const [touchedYear, setTouchedYear] = useState(false)
+	// const [yearValue, setYearValue] = useState<Selection>(new Set([]))
+	// const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
+	// const [isValid, setIsValid] = useState<{ year: boolean, semester: boolean }>({ year: false, semester: false })
+	// const [touchedSemester, setTouchedSemester] = useState(false)
+	// const [touchedYear, setTouchedYear] = useState(false)
 	const [yearSemester, setYearSemester] = useState<YearSemester[]>([])
 
 	const handleYearValue = (value: Selection): void => {
-		setYearValue(value)
-		setIsValid({ year: (value as any).size > 0, semester: (semesterValue as any).size > 0 })
+		// setYearValue(value)
+		// setIsValid({ year: (value as any).size > 0, semester: (semesterValue as any).size > 0 })
 		setSemesters(filterSemester(yearSemester, (value as any).values().next().value))
 	}
 
-	const handleSemesterValue = (value: Selection): void => {
-		setSemesterValue(value)
-		setIsValid({ year: (yearValue as any).size > 0, semester: (value as any).size > 0 })
-	}
+	/* const handleSemesterValue = (value: Selection): void => {
+		// setSemesterValue(value)
+		// setIsValid({ year: (yearValue as any).size > 0, semester: (value as any).size > 0 })
+	} */
 
-	const handleLoginWithGoogle = (): void => {
-		if (isValid.year && isValid.semester === true) {
-			if (typeof window !== 'undefined' && window.localStorage) {
-				localStorage.setItem('year', (yearValue as any).values().next().value)
-				localStorage.setItem('semester', (semesterValue as any).values().next().value)
+	const handleLoginWithGoogle = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault()
+		console.log('login with google')
+		if (typeof window !== 'undefined' && window.localStorage) {
+			const data = new FormData(e.currentTarget)
+			const year = data.get('year')
+			const semester = data.get('semester')
+			if (year && semester) {
+				localStorage.setItem('year', year.toString())
+				localStorage.setItem('semester', semester.toString())
 			}
-			const url = `${SERVER_PATH}/api/auth/login/google`
-			window.location.href = url
 		}
+		const url = `${SERVER_PATH}/api/auth/google`
+		window.location.href = url
 	}
 
 	useEffect(() => {
@@ -113,22 +118,22 @@ export default function AuthPage() {
 
 	return (
 		<div className='flex flex-row items-center w-[800px] h-[600px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl overflow-hidden'>
-			<div className='flex flex-col justify-between flex-1 bg-lightBlue-600 w-max h-[600px] p-12'>
+			<form className='flex flex-col justify-between flex-1 bg-lightBlue-600 w-max h-[600px] p-12' onSubmit={handleLoginWithGoogle}>
 				<div className='text-white'>
 					<p className='text-lg'>Bienvenido al sistema</p>
 					<h1 className='text-3xl uppercase font-bold'>GESTIÓN DE ESTÁNDARES DE ACREDITACIÓN</h1>
 				</div>
-				<div className='flex flex-col gap-3 m-auto'>
+				<div className='flex flex-col gap-3 m-auto' >
 					<Select
+						defaultSelectedKeys={[years[0].value]}
 						name='year'
 						placeholder='Año'
 						label='Año'
 						size='sm'
 						selectionMode='single'
-						errorMessage={ isValid.year || !touchedYear ? '' : 'Seleccione un año'}
-						isInvalid={!(isValid.year || !touchedYear)}
 						onSelectionChange={handleYearValue}
-						onClose={() => setTouchedYear(true)}
+						// onClose={() => setTouchedYear(true)}
+						disallowEmptySelection
 						className='w-[200px]'>
 						{
 							years.map((year) => (
@@ -139,15 +144,15 @@ export default function AuthPage() {
 						}
 					</Select>
 					<Select
+						defaultSelectedKeys={[semesters[0].value]}
 						name='semester'
 						placeholder='Semestre'
 						label='Semestre'
 						size='sm'
 						selectionMode='single'
-						errorMessage={ isValid.semester || !touchedSemester ? '' : 'Seleccione un semestre'}
-						isInvalid={!(isValid.semester || !touchedSemester)}
-						onSelectionChange={handleSemesterValue}
-						onClose={() => setTouchedSemester(true)}
+						// onSelectionChange={handleSemesterValue}
+						// onClose={() => setTouchedSemester(true)}
+						disallowEmptySelection
 						className='w-[200px]'>
 						{
 							semesters.map((semester) => (
@@ -161,15 +166,14 @@ export default function AuthPage() {
 				<Button
 					color='default'
 					radius='sm'
-					onClick={() => handleLoginWithGoogle()}
-					isDisabled={!isValid.year || !isValid.semester || !touchedYear || !touchedSemester}
+					type='submit'
 					startContent={<Image
 						alt='logo-unsa'
 						className='w-5 mx-1'
 						src={logoUnsa}/>}>
 					<strong className='mx-2 uppercase text-xs'>Accede con tu cuenta institucional</strong>
 				</Button>
-			</div>
+			</form>
 			<div className='flex-1 bg-white w-max h-full flex justify-center items-center'>
 				<Image
 					alt='logo-unsa'

@@ -2,13 +2,11 @@
 
 import React, { useEffect, useState } from 'react'
 
-import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
-import PencilIcon from '../Icons/PencilIcon'
+import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import PlusIcon from '../Icons/PlusIcon'
 import UploadIcon from '../Icons/UploadIcon'
 import FolderPlusIcon from '../Icons/FolderPlusIcon'
 import EllipsisVerticalIcon from '../Icons/EllipsisVerticalIcon'
-import DownloadIcon from '../Icons/DownloadIcon'
 import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
 import CustomDropdown from '../Dropdown/CustomDropdown'
@@ -16,12 +14,12 @@ import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils'
 import { columns } from '@/utils/data_evidence'
-import TrashIcon from '../Icons/TrashIcon'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
+import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
 
 export default function EvidencesTable({
 	id,
@@ -32,7 +30,6 @@ export default function EvidencesTable({
 	typeEvidence: string
 	plandId?: string
 }) {
-	// console.log({ id, typeEvidence, plandId })
 	const [filterValue, setFilterValue] = useState('')
 	const [page, setPage] = React.useState(1)
 	const [statusFilter, setStatusFilter] = useState<Selection>('all')
@@ -57,24 +54,24 @@ export default function EvidencesTable({
 	const [params, setParams] = useState<{ parent_id: number | null }>({
 		parent_id: null
 	})
-	const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; path: string; key: string }[]>([
-		{
-			name: 'Mis Evidencias',
-			path: 'null',
-			key: 'null'
-		}
-	])
+	const [breadcrumbs, setBreadcrumbs] = useState<{ name: string; path: string; key: number }[]>([{
+		name: 'Mis Evidencias',
+		path: '/',
+		key: 0
+	}])
 	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
 		showModalUpload: false,
 		showModalRename: false,
 		showModalDelete: false,
-		showModalCreateFolder: false
+		showModalCreateFolder: false,
+		showModalMove: false
 	})
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
+			console.log('res.data', res.data)
 			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
 				(evidence: Evidence) => {
 					evidence.uid = Number(evidence.code.split('-')[1])
@@ -83,10 +80,11 @@ export default function EvidencesTable({
 					return evidence
 				}
 			)
-			console.log('useeffect', res.data)
+			// console.log('useEffect', res.data)
 			setEvidencesManagement([...arr])
 		})
 		setReload(false)
+		console.log('breadcrumbs', breadcrumbs)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -144,6 +142,11 @@ export default function EvidencesTable({
 				showModalDelete: true
 			})
 			break
+		case 'move-evidence':
+			setModalManager({
+				...modalManager,
+				showModalMove: true
+			})
 		}
 	}
 
@@ -153,7 +156,7 @@ export default function EvidencesTable({
 			return (
 				<div className='flex gap-2'>
 					{getFileIcon(undefined, evidence.file?.split('.').pop() ?? 'folder', 24)}
-					<p className='text-bold text-md capitalize'>{evidence.name}</p>
+					<p className='text-bold text-md'>{evidence.name}</p>
 				</div>
 			)
 		case 'full_name':
@@ -177,7 +180,7 @@ export default function EvidencesTable({
 				<div className='relative flex items-center gap-2 justify-center'>
 					<CustomDropdown
 						triggerElement={
-							<Button isIconOnly>
+							<Button isIconOnly className='rounded-full bg-transparent hover:bg-default-400'>
 								<EllipsisVerticalIcon width={15} height={15} />
 							</Button>
 						}
@@ -186,28 +189,27 @@ export default function EvidencesTable({
 								uid: 'rename-evidence',
 								label: evidence.type === 'folder' ? 'Renombrar carpeta' : 'Renombrar archivo',
 								color: 'primary',
-								startContent: getCommonIcon('pencil', 20)
+								startContent: getCommonIcon('pencil', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'download-evidence',
 								label: 'Descargar archivo',
 								className: evidence.type === 'folder' ? 'hidden' : undefined,
 								color: 'primary',
-								startContent: getCommonIcon('download', 20)
+								startContent: getCommonIcon('download', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'move-evidence',
 								label: evidence.type === 'folder' ? 'Mover carpeta' : 'Mover archivo',
 								color: 'primary',
-								startContent: getFileIcon('moveFolder', '', 20)
+								startContent: getFileIcon('moveFolder', '', 20, 'group-hover/dropdown:fill-white')
 							},
 							{
 								uid: 'delete-evidence',
 								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
-								className: 'danger',
 								color: 'danger',
 								startContent: (
-									getCommonIcon('trash', 20, 'fill-red-500 hover:fill-white')
+									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
 								)
 							}
 						]}
@@ -267,16 +269,15 @@ export default function EvidencesTable({
 		const type = key.split('-')[0]
 		const id = key.split('-')[1]
 		if (type === 'F') {
-			setEvidence(evidencesManagement.filter((e) => e.id === key)[0])
+			const evidence = evidencesManagement.filter((evidence) => evidence.uid === Number(id))[0]
 			setBreadcrumbs([
 				...breadcrumbs,
 				{
 					name: evidence.name,
-					path: evidence.path.split('/').pop() ?? '',
-					key: String(evidence.uid)
+					path: evidence.path,
+					key: evidence.uid
 				}
 			])
-			console.log(breadcrumbs)
 			setParams({
 				parent_id: Number(id)
 			})
@@ -299,12 +300,52 @@ export default function EvidencesTable({
 		}
 	}, [evidencesManagement])
 
+	const onBreadcrumbClick = React.useCallback((type: string, key: string) => {
+		let index = 0
+		if (type === 'B') {
+			index = breadcrumbs.findIndex((breadcrumb) => String(breadcrumb.key) === String(key))
+		} else {
+			index = breadcrumbs.findIndex((breadcrumb) => breadcrumb.name === String(key))
+		}
+		setBreadcrumbs(
+			breadcrumbs.slice(0, index + 1)
+		)
+		Number(key) ? setParams({ parent_id: Number(key) }) : setParams({ parent_id: null })
+	}, [breadcrumbs])
+
 	const topContent = React.useMemo(() => {
 		return (
 			<div className='flex flex-col gap-4 mb-4'>
-				<Breadcrumbs >
-					{/* <BreadcrumbItem>Mis Evidencias</BreadcrumbItem> */}
-					{breadcrumbs.map(({ name, path, key }) => (
+				<Breadcrumbs
+					maxItems={3}
+					itemsBeforeCollapse={0}
+					itemsAfterCollapse={2}
+					renderEllipsis={({ items, ellipsisIcon, separator }) => (
+						<div className='flex items-center'>
+							<Dropdown>
+								<DropdownTrigger>
+									<Button
+										isIconOnly
+										className='min-w-unit-6 w-unit-6 h-unit-6'
+										size='sm'
+										variant='flat'
+									>
+										{ellipsisIcon}
+									</Button>
+								</DropdownTrigger>
+								<DropdownMenu color='primary' variant='solid' aria-label='Routes'>
+									{items.map((item, index) => (
+										<DropdownItem key={index} onClick={() => onBreadcrumbClick('D', String(item.children))}>
+											{item.children}
+										</DropdownItem>
+									))}
+								</DropdownMenu>
+							</Dropdown>
+							{separator}
+						</div>
+					)}
+					onAction={(key) => onBreadcrumbClick('B', String(key))}>
+					{breadcrumbs && breadcrumbs.map(({ name, key }) => (
 						<BreadcrumbItem key={key}>{name}</BreadcrumbItem>
 					))}
 				</Breadcrumbs>
@@ -349,13 +390,13 @@ export default function EvidencesTable({
 									uid: 'upload-evidence',
 									label: 'Subir Evidencias',
 									color: 'primary',
-									startContent: <UploadIcon width={25} height={25} />
+									startContent: <UploadIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
 								},
 								{
 									uid: 'create-folder',
 									label: 'Crear Carpeta',
 									color: 'primary',
-									startContent: <FolderPlusIcon width={25} height={25} />
+									startContent: <FolderPlusIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
 								}
 							]}
 							placement='bottom-end'
@@ -410,12 +451,17 @@ export default function EvidencesTable({
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && <PdfVisualizer blobURL={blobURL} setBlobURL={setBlobURL} />}
+			{blobURL && (
+				<PdfVisualizer
+					blobURL={blobURL}
+					setBlobURL={setBlobURL}
+				/>
+			)}
 			{modalManager.showModalUpload && (
 				<UploadEvidenceModal
 					id={id}
 					typeEvidence={typeEvidence}
-					path='/'
+					path={breadcrumbs[breadcrumbs.length - 1].path}
 					openModal={modalManager.showModalUpload}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
 					onReload={() => setReload(true)}
@@ -443,9 +489,18 @@ export default function EvidencesTable({
 				<CreateFolderModal
 					id={parseInt(id)}
 					typeEvidence={parseInt(typeEvidence)}
-					path='/'
+					path={breadcrumbs[breadcrumbs.length - 1].path}
 					openModal={modalManager.showModalCreateFolder}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
+					onReload={() => setReload(true)}
+				/>
+			)}
+			{modalManager.showModalMove && (
+				<MoveEvidenceModal
+					evidence={evidence}
+					breadcrumbs={breadcrumbs}
+					openModal={modalManager.showModalMove}
+					onCloseModal={() => setModalManager({ ...modalManager, showModalMove: false })}
 					onReload={() => setReload(true)}
 				/>
 			)}

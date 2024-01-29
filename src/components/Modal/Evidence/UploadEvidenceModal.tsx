@@ -143,9 +143,16 @@ const UploadEvidenceModal = ({
 					>
 						<div className='flex items-center ml-2'>
 							{getFileIcon(file.name)}
-							<p className='ml-2 font-medium'>
-								{file.name} - {(file.size / 1024).toFixed(2)}KB
-							</p>
+							<div className='flex flex-col'>
+								<p className='ml-2 block text-md font-light truncate text-ellipsis'>
+									{file.name.substring(0, 30) + '..' + file.name.substring(file.name.lastIndexOf('.'), file.name.length)}
+								</p>
+								<p className='ml-2 text-sm text-default-600'>
+									{file.size < 1024 * 1024
+										? (file.size / 1024).toFixed(2) + 'KB'
+										: (file.size / 1024 / 1024).toFixed(2) + 'MB'}
+								</p>
+							</div>
 						</div>
 						<Button color='danger' variant='light' size='sm' onPress={() => removeFile(index)}>
 							<TrashIcon width={20} height={20} fill='fill-danger' />

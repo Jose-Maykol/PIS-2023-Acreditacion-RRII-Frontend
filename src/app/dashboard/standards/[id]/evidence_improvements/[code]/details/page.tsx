@@ -98,12 +98,7 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 						>
 							Ver Evidencias
 						</Button>
-						<Button
-							color='primary'
-							variant='ghost'
-							className='ml-3'
-							onClick={handleDownloadPlanReport}
-						>
+						<Button color='primary' variant='ghost' className='ml-3' onClick={handleDownloadPlanReport}>
 							Descargar
 						</Button>
 						{showModal ? (
