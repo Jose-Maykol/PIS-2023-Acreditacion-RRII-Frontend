@@ -42,6 +42,7 @@ export default function DynamicInputItem({
 				value={singleInputValue}
 				onChange={handleChange}
 				disabled={!isEditing}
+				maxLength={100}
 			/>
 			<Button
 				isIconOnly

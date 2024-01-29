@@ -80,7 +80,7 @@ export default function DynamicInput({
 		<div>
 			<div className='flex flex-col'>
 				<Tooltip color='foreground' placement='top-start' content={tooltip} closeDelay={100}>
-					<label className='text-default-600 text-sm mt-2' style={{ marginBottom: '-0.5rem' }}>
+					<label className='text-default-600 text-sm mt-2'>
 						{label}
 					</label>
 				</Tooltip>
@@ -96,6 +96,7 @@ export default function DynamicInput({
 						size='sm'
 						type='text'
 						variant='underlined'
+						maxLength={100}
 					/>
 					<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
 						<PlusIcon width={15} height={15} fill='fill-white' />

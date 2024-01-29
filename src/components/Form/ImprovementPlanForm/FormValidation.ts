@@ -1,13 +1,17 @@
 import * as yup from 'yup'
 
 export const validationSchema = yup.object().shape({
-	name: yup.string().trim().required('Nombre de plan necesario'),
+	name: yup.string().trim().required('Nombre de plan necesario').max(50, 'Máximo 50 caracteres'),
 	code: yup
 		.string()
 		.required('Código del plan necesario')
 		.trim()
-		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ'),
-	opportunity_for_improvement: yup.string().required('Oportunidad de mejora necesaria'),
+		.matches(/^OM\d{2}-\d{2}-20\d{2}$/, 'El código debe tener el formato OMXX-YY-ZZZZ')
+		.max(30, 'Máximo 20 caracteres'),
+	opportunity_for_improvement: yup
+		.string()
+		.required('Oportunidad de mejora necesaria')
+		.max(100, 'Máximo 100 caracteres'),
 	year: yup.string().required('Campo requerido'),
 	semester: yup.string().required('Campo requerido'),
 	advance: yup.number().required('Campo requerido'),
