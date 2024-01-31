@@ -53,10 +53,15 @@ export default function AnnualReportPage() {
 		},
 		validationSchema,
 		onSubmit: (values) => {
-			console.log(values)
-			ReportService.createFacultyStaffReport(values)
+			const facultyStaffData = {
+				...values,
+				number_contractor_professor:
+					values.contractor_professor_fulltime + values.contractor_professor_parttime
+			}
+			console.log(facultyStaffData)
+			ReportService.createFacultyStaffReport(facultyStaffData)
 				.then((res) => {
-					if (res.status === 1) {
+					if (res.status === 201) {
 						showToast('success', 'Datos del Personal guardados con éxito')
 						router.back()
 					}
