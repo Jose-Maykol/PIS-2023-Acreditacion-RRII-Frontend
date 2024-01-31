@@ -128,7 +128,6 @@ export default function SemesterConfigurationsCard() {
 								isIconOnly
 								startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
 								onPress={() => router.push('/dashboard/reports/identification-and-context')}
-								// onPress={() => router.push('/dashboard/reports/annual')}
 							/>
 						</Tooltip>
 					</div>
@@ -141,7 +140,7 @@ export default function SemesterConfigurationsCard() {
 							<Button
 								isIconOnly
 								startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
-							// onPress={handleEditSemesterOpen}
+								onPress={() => router.push('/dashboard/reports/annual')}
 							/>
 						</Tooltip>
 					</div>
