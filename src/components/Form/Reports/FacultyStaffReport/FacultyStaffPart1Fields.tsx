@@ -1,6 +1,7 @@
 import { Input, Tooltip } from '@nextui-org/react'
 
-export const FacultyStaffPart1Fields = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const FacultyStaffPart1Fields = ({ formik }: { formik: any }) => {
 	return (
 		<div className='flex flex-col gap-y-5 mx-10'>
 			<div className='flex items-center'>
@@ -10,7 +11,24 @@ export const FacultyStaffPart1Fields = () => {
 				>
 					Número de docentes extraordinarios:
 				</label>
-				<Input id='docents_number' name='docents_number' size='sm' type='number' className='w-16' />
+				<Input
+					id='number_extraordinary_professor'
+					name='number_extraordinary_professor'
+					value={formik.values.number_extraordinary_professor}
+					onChange={formik.handleChange}
+					onBlur={formik.handleBlur}
+					isInvalid={
+						formik.touched.number_extraordinary_professor &&
+						Boolean(formik.number_extraordinary_professor)
+					}
+					errorMessage={
+						formik.touched.number_extraordinary_professor &&
+						formik.errors.number_extraordinary_professor
+					}
+					size='sm'
+					type='number'
+					className='w-16'
+				/>
 			</div>
 
 			<div>
@@ -31,8 +49,19 @@ export const FacultyStaffPart1Fields = () => {
 							Principales:
 						</label>
 						<Input
-							id='principals'
-							name='principals'
+							id='number_ordinary_professor_main'
+							name='number_ordinary_professor_main'
+							value={formik.values.number_ordinary_professor_main}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.number_ordinary_professor_main &&
+								Boolean(formik.number_ordinary_professor_main)
+							}
+							errorMessage={
+								formik.touched.number_ordinary_professor_main &&
+								formik.errors.number_ordinary_professor_main
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -44,8 +73,19 @@ export const FacultyStaffPart1Fields = () => {
 							Dedicación exclusiva:
 						</label>
 						<Input
-							id='exclusive_dedication'
-							name='exclusive_dedication'
+							id='ordinary_professor_exclusive_dedication'
+							name='ordinary_professor_exclusive_dedication'
+							value={formik.values.ordinary_professor_exclusive_dedication}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.ordinary_professor_exclusive_dedication &&
+								Boolean(formik.ordinary_professor_exclusive_dedication)
+							}
+							errorMessage={
+								formik.touched.ordinary_professor_exclusive_dedication &&
+								formik.errors.ordinary_professor_exclusive_dedication
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -57,8 +97,19 @@ export const FacultyStaffPart1Fields = () => {
 							Asociados:
 						</label>
 						<Input
-							id='associates'
-							name='associates'
+							id='number_ordinary_professor_associate'
+							name='number_ordinary_professor_associate'
+							value={formik.values.number_ordinary_professor_associate}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.number_ordinary_professor_associate &&
+								Boolean(formik.number_ordinary_professor_associate)
+							}
+							errorMessage={
+								formik.touched.number_ordinary_professor_associate &&
+								formik.errors.number_ordinary_professor_associate
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -70,8 +121,19 @@ export const FacultyStaffPart1Fields = () => {
 							Tiempo completo:
 						</label>
 						<Input
-							id='complete_time'
-							name='complete_time'
+							id='ordinary_professor_fulltime'
+							name='ordinary_professor_fulltime'
+							value={formik.values.ordinary_professor_fulltime}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.ordinary_professor_fulltime &&
+								Boolean(formik.ordinary_professor_fulltime)
+							}
+							errorMessage={
+								formik.touched.ordinary_professor_fulltime &&
+								formik.errors.ordinary_professor_fulltime
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -82,7 +144,24 @@ export const FacultyStaffPart1Fields = () => {
 						<label className='text-default-600 text-sm font-extrabold mr-3 max-w-[60px]'>
 							Auxiliares:
 						</label>
-						<Input id='auxiliars' name='auxiliars' size='sm' type='number' className='w-16 ml-2' />
+						<Input
+							id='number_ordinary_professor_assistant'
+							name='number_ordinary_professor_assistant'
+							value={formik.values.number_ordinary_professor_assistant}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.number_ordinary_professor_assistant &&
+								Boolean(formik.number_ordinary_professor_assistant)
+							}
+							errorMessage={
+								formik.touched.number_ordinary_professor_assistant &&
+								formik.errors.number_ordinary_professor_assistant
+							}
+							size='sm'
+							type='number'
+							className='w-16 ml-2'
+						/>
 					</div>
 
 					<div className='flex items-center'>
@@ -90,8 +169,19 @@ export const FacultyStaffPart1Fields = () => {
 							Tiempo parcial:
 						</label>
 						<Input
-							id='partial_time'
-							name='partial_time'
+							id='ordinary_professor_parttime'
+							name='ordinary_professor_parttime'
+							value={formik.values.ordinary_professor_parttime}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.ordinary_professor_parttime &&
+								Boolean(formik.ordinary_professor_parttime)
+							}
+							errorMessage={
+								formik.touched.ordinary_professor_parttime &&
+								formik.errors.ordinary_professor_parttime
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -100,7 +190,7 @@ export const FacultyStaffPart1Fields = () => {
 				</div>
 			</div>
 
-			<div className='mb-10'>
+			<div className='mb-5'>
 				<Tooltip
 					color='foreground'
 					placement='top-start'
@@ -117,8 +207,19 @@ export const FacultyStaffPart1Fields = () => {
 							Tiempo completo:
 						</label>
 						<Input
-							id='complete_time'
-							name='complete_time'
+							id='contractor_professor_fulltime'
+							name='contractor_professor_fulltime'
+							value={formik.values.contractor_professor_fulltime}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.contractor_professor_fulltime &&
+								Boolean(formik.contractor_professor_fulltime)
+							}
+							errorMessage={
+								formik.touched.contractor_professor_fulltime &&
+								formik.errors.contractor_professor_fulltime
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
@@ -130,14 +231,26 @@ export const FacultyStaffPart1Fields = () => {
 							Tiempo parcial:
 						</label>
 						<Input
-							id='partial_time'
-							name='partial_time'
+							id='contractor_professor_parttime'
+							name='contractor_professor_parttime'
+							value={formik.values.contractor_professor_parttime}
+							onChange={formik.handleChange}
+							onBlur={formik.handleBlur}
+							isInvalid={
+								formik.touched.contractor_professor_parttime &&
+								Boolean(formik.contractor_professor_parttime)
+							}
+							errorMessage={
+								formik.touched.contractor_professor_parttime &&
+								formik.errors.contractor_professor_parttime
+							}
 							size='sm'
 							type='number'
 							className='w-16 ml-2'
 						/>
 					</div>
 				</div>
+				<hr className='mt-5'/>
 			</div>
 		</div>
 	)
