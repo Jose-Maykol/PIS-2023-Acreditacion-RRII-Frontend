@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation'
+
 import { Button, Chip, ChipProps, Tooltip } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import CloseIcon from '../Icons/CloseIcon'
@@ -19,6 +21,8 @@ interface DateSemesterStatus {
 }
 
 export default function SemesterConfigurationsCard() {
+	const router = useRouter()
+
 	const { year, semester } = useYearSemesterStore()
 	const [isCreateSemesterOpen, setCreateSemesterOpen] = useState(false)
 	const [isEditSemesterOpen, setEditSemesterOpen] = useState(false)
@@ -123,7 +127,8 @@ export default function SemesterConfigurationsCard() {
 							<Button
 								isIconOnly
 								startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
-							// onPress={handleEditSemesterOpen}
+								onPress={() => router.push('/dashboard/reports/identification-and-context')}
+								// onPress={() => router.push('/dashboard/reports/annual')}
 							/>
 						</Tooltip>
 					</div>

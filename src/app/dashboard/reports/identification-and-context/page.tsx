@@ -109,10 +109,10 @@ export default function IdentificationContextReportPage() {
 				ReportService.createContextIdentificationReport(identificationContextReport)
 					.then((res) => {
 						console.log(res)
-						if (res.status === 1) {
+						if (res.status === 201) {
 							setSubmitClicked(false)
 							showToast('success', 'Reporte creado con éxito')
-							router.push('/dashboard/reports')
+							router.push('/dashboard/admin')
 						}
 					})
 					.catch((error) => {
