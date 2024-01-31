@@ -178,7 +178,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 			<div className='mb-5'>
 				<div className='flex items-center mb-3'>
 					<label className='text-default-600 text-sm font-extrabold mr-3'>
-						Número de publicaciones en Revistas Indizadas:
+						Publicaciones en Revistas Indizadas:
 					</label>
 					<Input
 						id='number_publications_indexed'
@@ -227,7 +227,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 
 				<div className='flex items-center mb-3'>
 					<label className='text-default-600 text-sm font-extrabold mr-3'>
-						Número de proyectos de investigación con financiamiento institucional y externo – en
+						Proyectos de investigación con financiamiento institucional y externo – en
 						ejecución:
 					</label>
 					<Input
@@ -252,7 +252,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 
 				<div className='flex items-center mb-3'>
 					<label className='text-default-600 text-sm font-extrabold mr-3'>
-						Número de proyectos de investigación con financiamiento institucional y externo –
+						Proyectos de investigación con financiamiento institucional y externo –
 						culminadas:
 					</label>
 					<Input
@@ -277,7 +277,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 
 				<div className='flex items-center mb-3'>
 					<label className='text-default-600 text-sm font-extrabold mr-3'>
-						Número de docentes que han realizado movilidad académica presencial:
+						Docentes que han realizado movilidad académica presencial:
 					</label>
 					<Input
 						id='number_professor_inperson_academic_movility'
@@ -301,7 +301,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 
 				<div className='flex items-center mb-3'>
 					<label className='text-default-600 text-sm font-extrabold mr-3'>
-						Número de docentes que han realizado movilidad académica virtual:
+						Docentes que han realizado movilidad académica virtual:
 					</label>
 					<Input
 						id='number_professor_virtual_academic_movility'
@@ -322,7 +322,7 @@ export const FacultyStaffPart2Fields = ({ formik }: { formik: any }) => {
 						className='w-16 ml-auto'
 					/>
 				</div>
-				<hr />
+				<hr className='mt-5'/>
 			</div>
 		</div>
 	)

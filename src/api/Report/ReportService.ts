@@ -7,18 +7,19 @@ const url = {
 	evidences: 'evidences/export',
 	plan: 'plans/:id/export',
 	context: 'standards/context/export',
-	createContextIdentification: 'ident-context/'
+	createContextIdentification: 'ident-context/',
+	createFacultyStaff: 'faculty-staff'
 }
 
 interface reportParams {
-	startYear: string,
-	endYear: string,
-	semester: string,
-	standardId: string,
+	startYear: string
+	endYear: string
+	semester: string
+	standardId: string
 }
 
 export class ReportService extends BaseService {
-	public static async generateNarrativesReport (params: reportParams) {
+	public static async generateNarrativesReport(params: reportParams) {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -41,7 +42,7 @@ export class ReportService extends BaseService {
 		return res
 	}
 
-	public static async generateEvidencesReport (params: reportParams) {
+	public static async generateEvidencesReport(params: reportParams) {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -64,7 +65,7 @@ export class ReportService extends BaseService {
 		return res
 	}
 
-	public static async generateContextReport () {
+	public static async generateContextReport() {
 		const config = {
 			timeout: 60000,
 			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
@@ -74,9 +75,17 @@ export class ReportService extends BaseService {
 		return res
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public static async createContextIdentificationReport(params: any) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.createContextIdentification}`, params)
+		return res
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public static async createFacultyStaffReport(params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.createFacultyStaff}`, params)
 		return res
 	}
 }

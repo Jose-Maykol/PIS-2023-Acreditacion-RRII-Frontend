@@ -11,6 +11,8 @@ import { FacultyStaffPart3Fields } from '@/components/Form/Reports/FacultyStaffR
 import { Button } from '@nextui-org/react'
 import AngleDoubleRightIcon from '@/components/Icons/AngleDoubleRightIcon'
 import CloseIcon from '@/components/Icons/CloseIcon'
+import { ReportService } from '@/api/Report/ReportService'
+import showToast from '../identification-and-context/toastHelper'
 
 export default function AnnualReportPage() {
 	const router = useRouter()
@@ -50,7 +52,20 @@ export default function AnnualReportPage() {
 			number_degree_recipients: 0
 		},
 		validationSchema,
-		onSubmit: () => {}
+		onSubmit: (values) => {
+			console.log(values)
+			ReportService.createFacultyStaffReport(values)
+				.then((res) => {
+					if (res.status === 1) {
+						showToast('success', 'Datos del Personal guardados con éxito')
+						router.back()
+					}
+				})
+				.catch((error) => {
+					console.log(error)
+					showToast('error', 'Ocurrió un problema, intentar nuevamente')
+				})
+		}
 	})
 
 	return (
