@@ -4,6 +4,7 @@ import { BaseService } from '../Base/BaseService'
 import api from '../axios'
 
 const url = {
+	createVarious: 'standards/various',
 	listStandarPartial: 'standards/partial',
 	standardsAssignments: 'standards/users',
 	standards: 'standards/:id',
@@ -19,6 +20,12 @@ export class StandardService extends BaseService {
 	public static async getAll () {
 		const res = await api.get('/estandar')
 		return res
+	}
+
+	public static async createVarious (params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.createVarious}`, params)
+		return res.data
 	}
 
 	public static async getPartial () {

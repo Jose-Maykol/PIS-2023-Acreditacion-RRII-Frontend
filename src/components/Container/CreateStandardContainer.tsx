@@ -2,11 +2,17 @@ import { useState } from 'react'
 import CreateStandardForm from '../Form/Standard/CreateStandardForm'
 import CreateStandardTable from '../Table/CreateStandardTable'
 import { Standard } from '@/types/Standard'
+import { StandardService } from '@/api/Estandar/StandardService'
+import { useToast } from '@/hooks/toastProvider'
+import { useRouter } from 'next/navigation'
+import { Button } from '@nextui-org/react'
 
 
 export default function CreateStandardContainer() {
 	const [standards, setStandards] = useState<Standard[]>([])
 	const [editingStandard, setEditingStandard] = useState<Standard | null>(null)
+	const { showToast, updateToast } = useToast()
+	const router = useRouter()
 
 	const addStandard = (newStandard: Standard) => {
 		setStandards((prevStandards) => [
@@ -46,8 +52,20 @@ export default function CreateStandardContainer() {
 		setEditingStandard(null)
 	}
 
+	const saveStandards = () => {
+		const notification = showToast('Procesando...')
+		StandardService.createVarious(standards).then((res) => {
+			if (res.status === 1) {
+				updateToast(notification, res.message, 'success')
+			} else {
+				updateToast(notification, res.message, 'error')
+			}
+		})
+		router.push('/dashboard/admin')
+	}
+
 	return (
-		<>
+		<div>
 			<CreateStandardForm
 				addStandard={addStandard}
 				editingStandard={editingStandard}
@@ -59,6 +77,20 @@ export default function CreateStandardContainer() {
 				editStandard={editStandard}
 				deleteStandard={deleteStandard}
 			/>
-		</>
+			<div className='flex flex-row gap-2 justify-end py-2'>
+				<Button
+					color='danger'
+					onPress={() => router.push('/dashboard/admin')}
+				>
+					Cancelar
+				</Button>
+				<Button
+					color='primary'
+					onPress={saveStandards}
+				>
+					Guardar
+				</Button>
+			</div>
+		</div>
 	)
 }
