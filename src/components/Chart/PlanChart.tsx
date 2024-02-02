@@ -25,7 +25,7 @@ type data = {
 export default function PlanChart() {
 	const [chartData, setCharData] = useState<ChartData | null >(null)
 	const { year, semester } = useYearSemesterStore()
-	const { isLoading } = useQuery(
+	const { data, isLoading } = useQuery(
 		['plansStatistics', year, semester],
 		StatisticService.plansStatistics, {
 			onSuccess(data) {
@@ -48,6 +48,14 @@ export default function PlanChart() {
 		}
 	)
 
+	const options: ChartOptions<'pie'> = {
+		plugins: {
+			legend: {
+				position: 'right'
+			}
+		}
+	}
+
 	if (isLoading) {
 		return (
 			<div className='h-[400px] max-h-[400px] w-full min-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4 flex items-center justify-center'>
@@ -56,12 +64,12 @@ export default function PlanChart() {
 		)
 	}
 
-	const options: ChartOptions<'pie'> = {
-		plugins: {
-			legend: {
-				position: 'right'
-			}
-		}
+	if (data.data.every((plan: data) => plan.value === 0)) {
+		return (
+			<div className='h-[400px] max-h-[400px] w-full min-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4 flex flex-col items-center justify-center'>
+				<h2 className='text-neutral-400 text-sm'>No hay datos para mostrar</h2>
+			</div>
+		)
 	}
 
 	return (
