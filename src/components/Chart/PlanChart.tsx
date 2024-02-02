@@ -1,7 +1,10 @@
 import { StatisticService } from '@/api/Statistic/StatisticService'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { Spinner } from '@nextui-org/react'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'chart.js'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Pie } from 'react-chartjs-2'
+import { useQuery } from 'react-query'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -21,24 +24,37 @@ type data = {
 
 export default function PlanChart() {
 	const [chartData, setCharData] = useState<ChartData | null >(null)
+	const { year, semester } = useYearSemesterStore()
+	const { isLoading } = useQuery(
+		['plansStatistics', year, semester],
+		StatisticService.plansStatistics, {
+			onSuccess(data) {
+				const labels = data.data.map((plan: data) => plan.label)
+				const values = data.data.map((plan: data) => plan.value)
 
-	useEffect(() => {
-		StatisticService.plansStatistics().then((res) => {
-			const labels = res.data.map((plan: data) => plan.label)
-			const values = res.data.map((plan: data) => plan.value)
+				setCharData({
+					labels,
+					datasets: [
+						{
+							data: values,
+							backgroundColor: ['#4CAF50', '#E74C3C', '#FFCD00', '#3498DB', '#FF5733'],
+							hoverBackgroundColor: ['#388E3C', '#C0392B', '#FFC500', '#2980B9', '#D35400']
+						}
+					]
+				})
+			},
+			retry: 2,
+			staleTime: 1000 * 60 * 5 // 5 minutos
+		}
+	)
 
-			setCharData({
-				labels,
-				datasets: [
-					{
-						data: values,
-						backgroundColor: ['#4CAF50', '#E74C3C', '#FFCD00', '#3498DB', '#FF5733'],
-						hoverBackgroundColor: ['#388E3C', '#C0392B', '#FFC500', '#2980B9', '#D35400']
-					}
-				]
-			})
-		})
-	}, [])
+	if (isLoading) {
+		return (
+			<div className='h-[400px] max-h-[400px] w-full min-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4 flex items-center justify-center'>
+				<Spinner/>
+			</div>
+		)
+	}
 
 	const options: ChartOptions<'pie'> = {
 		plugins: {

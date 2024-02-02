@@ -1,7 +1,10 @@
 import { StatisticService } from '@/api/Statistic/StatisticService'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, BarElement, BarController, Tooltip, Legend, ChartOptions } from 'chart.js'
 import { Bar } from 'react-chartjs-2'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { useQuery } from 'react-query'
+import { Spinner } from '@nextui-org/react'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, BarController, Tooltip, Legend)
 
@@ -22,26 +25,29 @@ type data = {
 
 export default function PlanPerStandardChart() {
 	const [chartData, setCharData] = useState<ChartData | null >(null)
-	const [data, setData] = useState<data[]>([])
+	const { year, semester } = useYearSemesterStore()
 
-	useEffect(() => {
-		StatisticService.plansPerStandardStatistics().then((res) => {
-			setData(res.data)
-			const labels = res.data.map((plan: data) => `E${plan.standard_id}`)
-			const values = res.data.map((plan: data) => plan.total_plans)
-
-			setCharData({
-				labels,
-				datasets: [
-					{
-						data: values,
-						backgroundColor: ['#FF6384'],
-						hoverBackgroundColor: ['#FF6384']
-					}
-				]
-			})
-		})
-	}, [])
+	const { data, isLoading } = useQuery(
+		['plansPerStandard', year, semester],
+		() => StatisticService.plansPerStandardStatistics(), {
+			onSuccess(data) {
+				const labels = data.data.map((plan: data) => `E${plan.standard_id}`)
+				const values = data.data.map((plan: data) => plan.total_plans)
+				setCharData({
+					labels,
+					datasets: [
+						{
+							data: values,
+							backgroundColor: ['#FF6384'],
+							hoverBackgroundColor: ['#FF6384']
+						}
+					]
+				})
+			},
+			retry: 2,
+			staleTime: 1000 * 60 * 5 // 5 minutos
+		}
+	)
 
 	const options: ChartOptions<'bar'> = {
 		plugins: {
@@ -51,12 +57,20 @@ export default function PlanPerStandardChart() {
 			tooltip: {
 				callbacks: {
 					label: function(context) {
-						const label = data[context.dataIndex].standard_name
+						const label = data.data[context.dataIndex].standard_name
 						return label
 					}
 				}
 			}
 		}
+	}
+
+	if (isLoading) {
+		return (
+			<div className='h-[440px] max-h-[440px] w-full border border-lightBlue-600 border-dashed rounded-lg p-4 flex justify-center items-center'>
+				<Spinner/>
+			</div>
+		)
 	}
 
 	return (

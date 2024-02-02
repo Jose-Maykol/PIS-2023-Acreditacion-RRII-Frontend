@@ -41,7 +41,7 @@ export default function CreateStandardTable({
 			return (
 				<div className='flex flex-row gap-2'>
 					<Button
-						startContent={<PencilIcon width={20} height={20} fill='fill-blue-500' />}
+						startContent={<PencilIcon width={20} height={20} fill='fill-lightBlue-500' />}
 						isIconOnly={true}
 						className='bg-transparent'
 						isDisabled={standard.is_editing}
@@ -66,28 +66,32 @@ export default function CreateStandardTable({
 	}, [])
 
 	return (
-		<Table
-			isStriped aria-label='Tabla de estándares'
-			isHeaderSticky
-			classNames={{
-				base: 'max-h-[520px] overflow-scroll no-scrollbar'
-				// table: 'min-h-[400px]'
-			}}
-		>
-			<TableHeader columns={colums}>
-				{(column) => (
-					<TableColumn key={column.uid}>
-						{column.name}
-					</TableColumn>
-				)}
-			</TableHeader>
-			<TableBody items={standards}>
-				{(item) => (
-					<TableRow key={item.id}>
-						{(columnKey) => <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>}
-					</TableRow>
-				)}
-			</TableBody>
-		</Table>
+		<div className='h-[520px]'>
+			<Table
+				aria-label='Tabla de estándares'
+				isHeaderSticky
+				classNames={{
+					base: 'max-h-[520px] overflow-scroll no-scrollbar'
+				}}
+			>
+				<TableHeader columns={colums}>
+					{(column) => (
+						<TableColumn key={column.uid}>
+							{column.name}
+						</TableColumn>
+					)}
+				</TableHeader>
+				<TableBody
+					emptyContent={'No hay estándares'}
+					items={standards}
+				>
+					{(item) => (
+						<TableRow key={item.id}>
+							{(columnKey) => <TableCell key={columnKey}>{renderCell(item, columnKey)}</TableCell>}
+						</TableRow>
+					)}
+				</TableBody>
+			</Table>
+		</div>
 	)
 }

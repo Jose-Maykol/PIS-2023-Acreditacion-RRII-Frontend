@@ -67,6 +67,8 @@ export default function CreateStandardForm({
 
 			<Textarea
 				minRows={1}
+				radius='sm'
+				variant='bordered'
 				isRequired
 				isInvalid={isValid === false}
 				errorMessage={isValid !== false ? '' : 'Este campo es requerido'}
@@ -79,6 +81,8 @@ export default function CreateStandardForm({
 			/>
 			<Textarea
 				minRows={3}
+				radius='sm'
+				variant='bordered'
 				label='Descripcion'
 				labelPlacement='outside'
 				placeholder='Ingrese la descripción del estándar'
@@ -89,6 +93,8 @@ export default function CreateStandardForm({
 			<div className='flex flex-row w-full gap-2'>
 				<Textarea
 					minRows={2}
+					radius='sm'
+					variant='bordered'
 					label='Factor'
 					labelPlacement='outside'
 					placeholder='Ingrese el factor del estándar'
@@ -98,6 +104,8 @@ export default function CreateStandardForm({
 				/>
 				<Textarea
 					minRows={2}
+					radius='sm'
+					variant='bordered'
 					label='Dimensión'
 					labelPlacement='outside'
 					placeholder='Ingrese la dimensión del estándar'
@@ -108,6 +116,8 @@ export default function CreateStandardForm({
 			</div>
 			<Textarea
 				minRows={3}
+				radius='sm'
+				variant='bordered'
 				label='Estándares relacionados'
 				labelPlacement='outside'
 				placeholder='Ingrese los estándares relacionados'

@@ -23,7 +23,6 @@ export default function AdminPage() {
 					</div>
 				</ContentWrapper>
 				<ContentWrapper className='bg-white -top-24 m-auto w-[96%] rounded-md p-6 flex-1'>
-					{/* <h3 className='text-xl font-semibold uppercase'>Generar reportes</h3> */}
 					<div className='flex flex-row justify-between gap-8'>
 						<div className='flex flex-col flex-wrap my-4 gap-4 items-start'>
 							<SemesterConfigurationsCard/>

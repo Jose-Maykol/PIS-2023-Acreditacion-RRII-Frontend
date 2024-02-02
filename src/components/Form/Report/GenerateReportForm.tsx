@@ -5,8 +5,9 @@ import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { ReportService } from '@/api/Report/ReportService'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import { Button, Select, SelectItem, Selection } from '@nextui-org/react'
+import { Button, Select, SelectItem, Selection, Spinner } from '@nextui-org/react'
 import React, { useEffect, useState } from 'react'
+import { useQuery } from 'react-query'
 
 type Semester = 'A' | 'B'
 
@@ -131,29 +132,45 @@ export default function GenerateReportForm() {
 		}
 	}
 
+	const { isLoading } = useQuery(
+		['generateReports', year, semester],
+		() => DateSemesterService.getAll(), {
+			onSuccess(res) {
+				const data = res.data as YearSemester[]
+				const valueYear = Array.from(new Set(data.map(data => data.year)))
+					.map(year => ({ value: year.toString() }))
+				setYears(valueYear)
+				const valueSemesters = data.reduce((result, data) => {
+					if (data.year === parseInt(years[0].value)) {
+						const semesterValues = data.semester.map(s => ({ value: s }))
+						result.push(...semesterValues)
+					}
+					return result
+				}, [] as { value: string }[])
+				setSemesters(valueSemesters)
+			},
+			retry: 2,
+			staleTime: Infinity
+		}
+	)
+
 	useEffect(() => {
-		DateSemesterService.getAll().then((res) => {
-			const data: YearSemester[] = res.data
-			const valueYear = Array.from(new Set(data.map(data => data.year)))
-				.map(year => ({ value: year.toString() }))
-			setYears(valueYear)
-			const valueSemesters = data.reduce((result, data) => {
-				if (data.year === parseInt(years[0].value)) {
-					const semesterValues = data.semester.map(s => ({ value: s }))
-					result.push(...semesterValues)
-				}
-				return result
-			}, [] as { value: string }[])
-			setSemesters(valueSemesters)
-		})
 		setYearIndex(years.findIndex(item => item.value === (year?.toString())))
-		setSemesterIndex(semesters.findIndex(item => item.value === (semester)))
-	}, [])
+		setSemesterIndex(semesters.findIndex(item => item.value === (semester?.toString())))
+	}, [year, semester])
+
+	if (isLoading) {
+		return (
+			<div className='border border-lightBlue-600 border-dashed rounded-lg p-4 w-[600px] h-[276px] flex justify-center content-center'>
+				<Spinner/>
+			</div>
+		)
+	}
 
 	return (
 		<div className='border border-lightBlue-600 border-dashed rounded-lg p-4'>
 			<h2 className='text-lg font-semibold text-lightBlue-600'>Generar reporte</h2>
-			<form className='py-8 w-[600px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
+			<form className='pt-4 w-[600px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
 				<Select
 					defaultSelectedKeys={[reports[0].value]}
 					name='report'
@@ -178,8 +195,8 @@ export default function GenerateReportForm() {
 						labelPlacement='outside'
 						size='sm'
 						selectionMode='single'
+						disallowEmptySelection
 						isDisabled={activeFilters}
-					// onSelectionChange={handleYearValue}
 					>
 						{
 							years.map((year) => (
@@ -200,7 +217,6 @@ export default function GenerateReportForm() {
 						className='pr-8'
 						disallowEmptySelection
 						isDisabled={activeFilters}
-					// onSelectionChange={handleSemesterValue}
 					>
 						{
 							semesters.map((semester) => (
@@ -220,7 +236,6 @@ export default function GenerateReportForm() {
 						selectionMode='single'
 						disallowEmptySelection
 						isDisabled={activeFilters}
-					// onSelectionChange={handleYearValue}
 					>
 						{
 							years.map((year) => (
@@ -240,7 +255,6 @@ export default function GenerateReportForm() {
 						selectionMode='single'
 						disallowEmptySelection
 						isDisabled={activeFilters}
-					// onSelectionChange={handleSemesterValue}
 					>
 						{
 							semesters.map((semester) => (

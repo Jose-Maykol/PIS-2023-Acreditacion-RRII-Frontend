@@ -6,6 +6,8 @@ import { StandardService } from '@/api/Estandar/StandardService'
 import { useToast } from '@/hooks/toastProvider'
 import { useRouter } from 'next/navigation'
 import { Button } from '@nextui-org/react'
+import TrashIcon from '../Icons/TrashIcon'
+import SaveIcon from '../Icons/SaveIcon'
 
 
 export default function CreateStandardContainer() {
@@ -65,7 +67,7 @@ export default function CreateStandardContainer() {
 	}
 
 	return (
-		<div>
+		<div className='flex flex-col gap-4'>
 			<CreateStandardForm
 				addStandard={addStandard}
 				editingStandard={editingStandard}
@@ -80,12 +82,14 @@ export default function CreateStandardContainer() {
 			<div className='flex flex-row gap-2 justify-end py-2'>
 				<Button
 					color='danger'
+					startContent={<TrashIcon width={20} height={20} fill='fill-white' />}
 					onPress={() => router.push('/dashboard/admin')}
 				>
 					Cancelar
 				</Button>
 				<Button
 					color='primary'
+					startContent={<SaveIcon width={20} height={20} fill='fill-white' />}
 					onPress={saveStandards}
 				>
 					Guardar
