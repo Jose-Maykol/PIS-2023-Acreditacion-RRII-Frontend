@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SideBar from '@/components/SideBar/SideBar'
 import Header from '@/components/Header/Header'
 import { PartialStandard } from '@/types/Standard'
@@ -11,6 +11,7 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import useInactivityMonitor from '@/hooks/useInactivityMonitor'
 import InactivityModal from '@/components/Modal/Auth/InactivityModal'
+import { useQuery, useQueryClient } from 'react-query'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -22,34 +23,45 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	const { role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
+	const queryClient = useQueryClient()
+
 	useInactivityMonitor()
 	const toggleSidebar = () => {
 		setIsSidebarOpen(!isSidebarOpen)
 	}
 
-	const loadStandards = useMemo(() => {
-		return () => {
-			StandardService.getPartial().then((res) => {
-				setStandards(res.data)
-			})
-		}
-	}, [])
-
 	useEffect(() => {
 		if (year && semester) {
 			BaseService.configure(year, semester)
-			DateSemesterService.getInfo().then((res) => {
-				const id = res.data[0].id
-				console.log(id)
-				const closingDate = res.data[0].closing_date
-				const isClosed = res.data[0].is_closed
+		}
+	}, [year, semester, queryClient])
+
+	useQuery(
+		['standards', year, semester],
+		StandardService.getPartial, {
+			onSuccess(data) {
+				setStandards(data.data)
+			},
+			staleTime: Infinity,
+			enabled: !!year && !!semester
+		}
+	)
+
+	useQuery(
+		['dateSemester', year, semester],
+		DateSemesterService.getInfo, {
+			onSuccess(data) {
+				const id = data.data[0].id
+				const closingDate = data.data[0].closing_date
+				const isClosed = data.data[0].is_closed
 				useYearSemesterStore.getState().setId(id)
 				useYearSemesterStore.getState().setIsClosed(isClosed)
 				useYearSemesterStore.getState().setClosingDate(closingDate)
-			})
-			loadStandards()
+			},
+			staleTime: Infinity,
+			enabled: !!year && !!semester
 		}
-	}, [year, semester, loadStandards])
+	)
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
