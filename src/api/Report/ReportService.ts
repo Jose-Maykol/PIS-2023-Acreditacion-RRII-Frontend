@@ -7,6 +7,7 @@ const url = {
 	evidences: 'evidences/export',
 	plan: 'plans/:id/export',
 	context: 'standards/context/export',
+	anual: 'standards/anual/export',
 	createContextIdentification: 'ident-context/',
 	createFacultyStaff: 'faculty-staff'
 }
@@ -72,6 +73,19 @@ export class ReportService extends BaseService {
 		}
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.context}`, config)
+		return res
+	}
+
+	public static async generateAnualReport(params: reportParams) {
+		const config = {
+			timeout: 60000,
+			responseType: 'blob' as 'json' | 'blob' | 'text' | 'arraybuffer' | 'stream'
+		}
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.anual}`, {
+			...config,
+			params
+		})
 		return res
 	}
 

@@ -89,12 +89,28 @@ export default function GenerateReportForm() {
 			})
 	}
 
+	const downloadAnualReport = (params: any) => {
+		const notification = showToast('Generando reporte...')
+		ReportService.generateAnualReport(params)
+			.then((res) => {
+				const url = window.URL.createObjectURL(new Blob([res.data]))
+				const link = document.createElement('a')
+				link.href = url
+				link.setAttribute('download', 'reporte_anual_RRII.xlsx')
+				document.body.appendChild(link)
+				link.click()
+				updateToast(notification, 'Reporte generado', 'success')
+			}).catch((err) => {
+				updateToast(notification, err.message, 'error')
+			})
+	}
+
 	const reports = [
 		{ label: 'Reporte de evidencias', value: 'evidences' },
 		{ label: 'Reporte de narrativas', value: 'narratives' },
 		{ label: 'Reporte de plan de mejora', value: 'plan' },
-		{ label: 'Reporte de identificación y contexto', value: 'context' }
-		// { label: 'Reporte anual RRII', value: 'rrhh' }
+		{ label: 'Reporte de identificación y contexto', value: 'context' },
+		{ label: 'Reporte anual RRII', value: 'anual' }
 	]
 
 	const handleReport = (value: Selection): void => {
@@ -107,6 +123,8 @@ export default function GenerateReportForm() {
 			setActiveFilters(true)
 		} else if (reportType === 'context') {
 			setActiveFilters(true)
+		} else if (reportType === 'anual') {
+			setActiveFilters(false)
 		}
 	}
 
@@ -129,6 +147,8 @@ export default function GenerateReportForm() {
 			downloadPlanReport()
 		} else if (reportType === 'context') {
 			downloadContextReport()
+		} else if (reportType === 'anual') {
+			downloadAnualReport(params)
 		}
 	}
 
