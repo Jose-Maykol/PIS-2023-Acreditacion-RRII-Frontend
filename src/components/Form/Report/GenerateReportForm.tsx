@@ -150,7 +150,8 @@ export default function GenerateReportForm() {
 				setSemesters(valueSemesters)
 			},
 			retry: 2,
-			staleTime: Infinity
+			staleTime: Infinity,
+			enabled: !!year && !!semester
 		}
 	)
 

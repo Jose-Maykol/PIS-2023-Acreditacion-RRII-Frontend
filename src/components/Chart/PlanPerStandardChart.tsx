@@ -45,7 +45,8 @@ export default function PlanPerStandardChart() {
 				})
 			},
 			retry: 2,
-			staleTime: 1000 * 60 * 5 // 5 minutos
+			staleTime: 1000 * 60 * 5, // 5 minutos
+			enabled: !!year && !!semester
 		}
 	)
 
@@ -73,7 +74,7 @@ export default function PlanPerStandardChart() {
 		)
 	}
 
-	if (data.data.every((plan: data) => plan.total_plans === 0)) {
+	if (data && data.data.every((plan: data) => plan.total_plans === 0)) {
 		return (
 			<div className='h-[440px] max-h-[440px] w-full border border-lightBlue-600 border-dashed rounded-lg p-4 flex flex-col items-center justify-center'>
 				<p className='text-neutral-400 text-sm'>No hay datos para mostrar</p>

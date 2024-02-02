@@ -31,7 +31,6 @@ export default function PlanChart() {
 			onSuccess(data) {
 				const labels = data.data.map((plan: data) => plan.label)
 				const values = data.data.map((plan: data) => plan.value)
-
 				setCharData({
 					labels,
 					datasets: [
@@ -44,7 +43,8 @@ export default function PlanChart() {
 				})
 			},
 			retry: 2,
-			staleTime: 1000 * 60 * 5 // 5 minutos
+			staleTime: 1000 * 60 * 5, // 5 minutos
+			enabled: !!year && !!semester
 		}
 	)
 
@@ -64,7 +64,7 @@ export default function PlanChart() {
 		)
 	}
 
-	if (data.data.every((plan: data) => plan.value === 0)) {
+	if (data && data.data.every((plan: data) => plan.value === 0)) {
 		return (
 			<div className='h-[400px] max-h-[400px] w-full min-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4 flex flex-col items-center justify-center'>
 				<h2 className='text-neutral-400 text-sm'>No hay datos para mostrar</h2>

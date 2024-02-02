@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation'
 import { Button, Chip, ChipProps, Spinner, Tooltip } from '@nextui-org/react'
 import PencilIcon from '../Icons/PencilIcon'
 import CloseIcon from '../Icons/CloseIcon'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import dynamic from 'next/dynamic'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
@@ -13,12 +13,6 @@ import { useQuery } from 'react-query'
 const statusColorMap: Record<string, ChipProps['color']> = {
 	completado: 'success',
 	faltante: 'danger'
-}
-
-interface DateSemesterStatus {
-	faculty_staff: string
-	identification_context: string
-	standards: string
 }
 
 export default function SemesterConfigurationsCard() {
@@ -55,7 +49,8 @@ export default function SemesterConfigurationsCard() {
 		['dateSemesterStatus', year, semester],
 		() => DateSemesterService.status(), {
 			retry: 2,
-			staleTime: Infinity
+			staleTime: Infinity,
+			enabled: !!year && !!semester
 		}
 	)
 
@@ -99,59 +94,61 @@ export default function SemesterConfigurationsCard() {
 					<CloseSemesterModal isOpen={isCloseSemesterOpen} onOpenChange={setCloseSemesterOpen}/>
 				</div>
 			</div>
-			<div className='pt-4 flex flex-col gap-4'>
-				<div className='flex flex-row justify-between w-full items-center'>
-					<p>Creación de estándares</p>
-					<div className='flex flex-row gap-2 items-center'>
-						<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.standards]} size='sm' variant='flat'>{dateSemesterStatus.data.standards}</Chip>
-						<Tooltip content='Crear estándares'>
-							{dateSemesterStatus.data.standards === 'completado'
-								? (
-									<Button
-										isIconOnly
-										isDisabled
-										startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
-									/>
-								)
-								: (
-									<Link
-										className='px-2'
-										href='/dashboard/admin/create-standards'
-									>
-										<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>
-									</Link>
-								)
-							}
-						</Tooltip>
+			{dateSemesterStatus && (
+				<div className='pt-4 flex flex-col gap-4'>
+					<div className='flex flex-row justify-between w-full items-center'>
+						<p>Creación de estándares</p>
+						<div className='flex flex-row gap-2 items-center'>
+							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.standards]} size='sm' variant='flat'>{dateSemesterStatus.data.standards}</Chip>
+							<Tooltip content='Crear estándares'>
+								{dateSemesterStatus.data.standards === 'completado'
+									? (
+										<Button
+											isIconOnly
+											isDisabled
+											startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
+										/>
+									)
+									: (
+										<Link
+											className='px-2'
+											href='/dashboard/admin/create-standards'
+										>
+											<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>
+										</Link>
+									)
+								}
+							</Tooltip>
+						</div>
+					</div>
+					<div className='flex flex-row justify-between w-full items-center'>
+						<p>Datos indentificación y contexto</p>
+						<div className='flex flex-row gap-2 items-center'>
+							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.identification_context]} size='sm' variant='flat'>{dateSemesterStatus.data.identification_context}</Chip>
+							<Tooltip content='Editar datos de indentificación y contexto'>
+								<Button
+									isIconOnly
+									startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
+									onPress={() => router.push('/dashboard/reports/identification-and-context')}
+								/>
+							</Tooltip>
+						</div>
+					</div>
+					<div className='flex flex-row justify-between w-full items-center'>
+						<p>Datos personal docente</p>
+						<div className='flex flex-row gap-2 items-center'>
+							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.faculty_staff]} size='sm' variant='flat'>{dateSemesterStatus.data.faculty_staff}</Chip>
+							<Tooltip content='Editar datos personal docente'>
+								<Button
+									isIconOnly
+									startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
+									onPress={() => router.push('/dashboard/reports/annual')}
+								/>
+							</Tooltip>
+						</div>
 					</div>
 				</div>
-				<div className='flex flex-row justify-between w-full items-center'>
-					<p>Datos indentificación y contexto</p>
-					<div className='flex flex-row gap-2 items-center'>
-						<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.identification_context]} size='sm' variant='flat'>{dateSemesterStatus.data.identification_context}</Chip>
-						<Tooltip content='Editar datos de indentificación y contexto'>
-							<Button
-								isIconOnly
-								startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
-								onPress={() => router.push('/dashboard/reports/identification-and-context')}
-							/>
-						</Tooltip>
-					</div>
-				</div>
-				<div className='flex flex-row justify-between w-full items-center'>
-					<p>Datos personal docente</p>
-					<div className='flex flex-row gap-2 items-center'>
-						<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.faculty_staff]} size='sm' variant='flat'>{dateSemesterStatus.data.faculty_staff}</Chip>
-						<Tooltip content='Editar datos personal docente'>
-							<Button
-								isIconOnly
-								startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
-								onPress={() => router.push('/dashboard/reports/annual')}
-							/>
-						</Tooltip>
-					</div>
-				</div>
-			</div>
+			)}
 		</div>
 	)
 }
