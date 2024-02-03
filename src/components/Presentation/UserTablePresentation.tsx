@@ -6,19 +6,21 @@ import UserTableSkeleton from '../Skeletons/UserTableSkeleton'
 import { Pagination } from '@nextui-org/react'
 
 interface UserTablePresentationProps {
-  tableData: User[];
-  isLoading: boolean;
-  error: unknown;
-  currentPage: number;
-  totalPages: number;
-  onPageChange: (page: number) => void;
-  onSearchChange: (searchQuery: string) => void;
-  onUsersChanged: () => void;
+  tableData: User[]
+  isLoading: boolean
+	isFetching: boolean
+  error: unknown
+  currentPage: number
+  totalPages: number
+  onPageChange: (page: number) => void
+  onSearchChange: (searchQuery: string) => void
+  onUsersChanged: () => void
 }
 
 export default function UserTablePresentation({
 	tableData,
 	isLoading,
+	isFetching,
 	error,
 	currentPage,
 	totalPages,
@@ -38,7 +40,7 @@ export default function UserTablePresentation({
 							handleUsersChanged={onUsersChanged}
 							handleSearchChange={onSearchChange}
 						/>
-						{ isLoading
+						{ isLoading && isFetching
 							? (
 								<UserTableSkeleton />
 							)
