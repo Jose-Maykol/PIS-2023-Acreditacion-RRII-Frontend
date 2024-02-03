@@ -125,7 +125,7 @@ export default function SemesterConfigurationsCard() {
 						<p>Datos indentificación y contexto</p>
 						<div className='flex flex-row gap-2 items-center'>
 							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.identification_context]} size='sm' variant='flat'>{dateSemesterStatus.data.identification_context}</Chip>
-							<Tooltip content='Editar datos de indentificación y contexto'>
+							<Tooltip content={`${dateSemesterStatus.data.identification_context === 'completado' ? 'Editar' : 'Subir'} datos de indentificación y contexto`}>
 								<Button
 									isIconOnly
 									startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
@@ -138,7 +138,7 @@ export default function SemesterConfigurationsCard() {
 						<p>Datos personal docente</p>
 						<div className='flex flex-row gap-2 items-center'>
 							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.faculty_staff]} size='sm' variant='flat'>{dateSemesterStatus.data.faculty_staff}</Chip>
-							<Tooltip content='Editar datos personal docente'>
+							<Tooltip content={`${dateSemesterStatus.data.faculty_staff === 'completado' ? 'Editar' : 'Subir'} datos personal docente`}>
 								<Button
 									isIconOnly
 									startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}
