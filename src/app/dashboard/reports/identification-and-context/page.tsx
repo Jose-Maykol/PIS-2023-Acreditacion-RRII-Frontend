@@ -106,7 +106,7 @@ export default function IdentificationContextReportPage() {
 			console.log(identificationContextReport)
 
 			if (submitClicked) {
-				ReportService.createContextIdentificationReport(identificationContextReport)
+				ReportService.createContextIdentification(identificationContextReport)
 					.then((res) => {
 						console.log(res)
 						if (res.status === 201) {

@@ -90,7 +90,7 @@ export default function AnnualReportPage() {
 						showToast('error', 'Ocurrió un problema, intentar nuevamente')
 					})
 			} else {
-				ReportService.createFacultyStaffReport(facultyStaffData)
+				ReportService.createFacultyStaff(facultyStaffData)
 					.then((res) => {
 						if (res.status === 201) {
 							showToast('success', 'Datos del Personal guardados con éxito')
