@@ -9,7 +9,7 @@ const url = {
 	context: 'standards/context/export',
 	anual: 'standards/anual/export',
 	createContextIdentification: 'ident-context/',
-	createFacultyStaff: 'faculty-staff'
+	facultyStaff: 'faculty-staff'
 }
 
 interface reportParams {
@@ -99,7 +99,20 @@ export class ReportService extends BaseService {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	public static async createFacultyStaffReport(params: any) {
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.post(`/${year}/${semester}/${url.createFacultyStaff}`, params)
+		const res = await api.post(`/${year}/${semester}/${url.facultyStaff}`, params)
+		return res
+	}
+
+	public static async readFacultyStaff() {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.facultyStaff}`)
+		return res
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	public static async updateFacultyStaff(params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.put(`/${year}/${semester}/${url.facultyStaff}`, params)
 		return res
 	}
 }

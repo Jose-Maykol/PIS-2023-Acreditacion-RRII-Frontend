@@ -2,6 +2,8 @@ import { Input, Tooltip } from '@nextui-org/react'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const FacultyStaffPart1Fields = ({ formik }: { formik: any }) => {
+	console.log(formik.values)
+
 	return (
 		<div className='flex flex-col gap-y-5 mx-10'>
 			<div className='flex items-center'>
