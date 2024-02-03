@@ -17,7 +17,7 @@ import IdentificationContextProgress from '@/components/Report/IdentificationCon
 import { steps } from '@/utils/reports'
 import { Button } from '@nextui-org/react'
 import { useFormik } from 'formik'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
 	validationSchemaPart1,
 	validationSchemaPart2,
@@ -27,9 +27,55 @@ import {
 import showToast from './toastHelper'
 import { InterestedGroup, QualityMember } from '@/types/Reports'
 import { ReportService } from '@/api/Report/ReportService'
+import SaveIcon from '@/components/Icons/SaveIcon'
 
 export default function IdentificationContextReportPage() {
 	const router = useRouter()
+	const [isEditing, setIsEditing] = useState(false)
+	const [initialValues, setInitialValues] = useState({
+		name_institution: '',
+		address_headquarters: '',
+		region: '',
+		province: '',
+		district: '',
+		institutional_telephone: '',
+		web_page: '',
+		date_resolution: '',
+		highest_authority_institution: '',
+		highest_authority_institution_email: '',
+		highest_authority_institution_telephone: '',
+		resolution_authorizes_institution: '',
+		resolution_authorizing_offering_program: '',
+		academic_level: '',
+		cui: '',
+		grade_denomination: '',
+		title_denomination: '',
+		authorized_offer: '',
+		highest_authority_study_program: '',
+		highest_authority_study_program_email: '',
+		highest_authority_study_program_telephone: '',
+		members_quality_committee: [],
+		interest_groups_study_program: []
+	})
+
+	useEffect(() => {
+		ReportService.readContextIdentification()
+			.then((res) => {
+				console.log(res)
+				if (res.status === 200) {
+					let data = res.data.data
+					const { region, province, district } = data.region_province_district
+					const { date_id, updated_at, id, created_at, ...rest } = data
+					data = { ...rest, region, province, district }
+					setInitialValues(data)
+					setIsEditing(true)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}, [])
+
 	const [currentStep, setCurrentStep] = useState<number>(1)
 	const [submitClicked, setSubmitClicked] = useState(false)
 
@@ -47,32 +93,9 @@ export default function IdentificationContextReportPage() {
 	}
 
 	const formik = useFormik({
-		initialValues: {
-			name_institution: '',
-			address_headquarters: '',
-			region: '',
-			province: '',
-			district: '',
-			institutional_telephone: '',
-			web_page: '',
-			date_resolution: '',
-			highest_authority_institution: '',
-			highest_authority_institution_email: '',
-			highest_authority_institution_telephone: '',
-			resolution_authorizes_institution: '',
-			resolution_authorizing_offering_program: '',
-			academic_level: '',
-			cui: '',
-			grade_denomination: '',
-			title_denomination: '',
-			authorized_offer: '',
-			highest_authority_study_program: '',
-			highest_authority_study_program_email: '',
-			highest_authority_study_program_telephone: '',
-			members_quality_committee: [],
-			interest_groups_study_program: []
-		},
+		initialValues,
 		validationSchema,
+		enableReinitialize: true,
 		onSubmit: (values) => {
 			const {
 				region,
@@ -106,20 +129,35 @@ export default function IdentificationContextReportPage() {
 			console.log(identificationContextReport)
 
 			if (submitClicked) {
-				ReportService.createContextIdentification(identificationContextReport)
-					.then((res) => {
-						console.log(res)
-						if (res.status === 201) {
+				if (isEditing) {
+					ReportService.updateContextIdentification(identificationContextReport)
+						.then((res) => {
+							if (res.status === 200) {
+								setSubmitClicked(false)
+								showToast('success', 'Reporte actualizado con éxito')
+								router.push('/dashboard/admin')
+							}
+						})
+						.catch((error) => {
+							console.log(error)
 							setSubmitClicked(false)
-							showToast('success', 'Reporte creado con éxito')
-							router.push('/dashboard/admin')
-						}
-					})
-					.catch((error) => {
-						console.log(error)
-						setSubmitClicked(false)
-						showToast('error', 'Ocurrió un problema, intentar nuevamente')
-					})
+							showToast('error', 'Ocurrió un problema, intentar nuevamente')
+						})
+				} else {
+					ReportService.createContextIdentification(identificationContextReport)
+						.then((res) => {
+							if (res.status === 201) {
+								setSubmitClicked(false)
+								showToast('success', 'Reporte creado con éxito')
+								router.push('/dashboard/admin')
+							}
+						})
+						.catch((error) => {
+							console.log(error)
+							setSubmitClicked(false)
+							showToast('error', 'Ocurrió un problema, intentar nuevamente')
+						})
+				}
 			}
 		}
 	})
@@ -204,11 +242,11 @@ export default function IdentificationContextReportPage() {
 							{currentStep === 4 && (
 								<Button
 									color='primary'
-									endContent={<AngleDoubleRightIcon width={15} height={15} fill='fill-blue-300' />}
+									endContent={<SaveIcon width={15} height={15} fill='fill-blue-300' />}
 									type='submit'
 									onClick={() => setSubmitClicked(true)}
 								>
-									Subir
+									Guardar
 								</Button>
 							)}
 							{currentStep > 1 && (

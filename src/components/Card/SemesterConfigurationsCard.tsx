@@ -122,7 +122,7 @@ export default function SemesterConfigurationsCard() {
 						</div>
 					</div>
 					<div className='flex flex-row justify-between w-full items-center'>
-						<p>Datos indentificación y contexto</p>
+						<p>Datos de identificación y contexto</p>
 						<div className='flex flex-row gap-2 items-center'>
 							<Chip className='capitalize' color={statusColorMap[dateSemesterStatus.data.identification_context]} size='sm' variant='flat'>{dateSemesterStatus.data.identification_context}</Chip>
 							<Tooltip content={`${dateSemesterStatus.data.identification_context === 'completado' ? 'Editar' : 'Subir'} datos de indentificación y contexto`}>
