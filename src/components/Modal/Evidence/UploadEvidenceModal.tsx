@@ -30,15 +30,7 @@ const UploadEvidenceModal = ({
 	onCloseModal,
 	onReload,
 	planId
-}: {
-	id: string
-	typeEvidence: string
-	path: string
-	openModal: boolean
-	onCloseModal: () => void
-	onReload: () => void
-	planId?: string
-}) => {
+}: UploadEvidenceModalProps) => {
 	const [files, setFiles] = useState<File[]>([])
 	const [totalSize, setTotalSize] = useState<number>(0)
 	const fileInputRef = useRef<HTMLInputElement | null>(null)
