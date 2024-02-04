@@ -61,7 +61,6 @@ export default function EvidencesTable({
 		path: '/',
 		key: 0
 	}])
-	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
 		showModalUpload: false,
@@ -230,10 +229,7 @@ export default function EvidencesTable({
 						mode='action'
 						onAction={(key: string) => {
 							setEvidence(evidence)
-							setModalManager({
-								...modalManager,
-								showPreviewPdf: true
-							})
+							handleSelectOption(key)
 						}}
 					/>
 				</div>
