@@ -12,6 +12,7 @@ import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils
 import { columnsEvidenceNarrative } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
+import LinkToIcon from '../Icons/LinkToIcon'
 
 
 export default function EvidencesNarrativeTable({
@@ -103,26 +104,28 @@ export default function EvidencesNarrativeTable({
 		case 'evidence_code':
 			if (evidence.evidence_code) {
 				return (
-					<div className='flex justify-start bg-red-400'>
+					<div className='flex justify-start'>
 						<p>{evidence.evidence_code}</p>
 					</div>
 				)
 			} else {
 				return (
-					<div className='flex justify-center bg-red-400'><p className='text-center'>---</p></div>
+					<div className='flex justify-start'><p className='text-center'>---</p></div>
 				)
 			}
 
 		case 'actions':
 			if (evidence.evidence_id) {
 				return (
-					<div className='relative flex items-center gap-2 justify-center'>
-						<Button color='success' className='text-white' onClick={() => setEvidenceNarrative(evidence)}>Vincular</Button>
+					<div className='invisible flex items-center justify-end group-hover/item:visible'>
+						<Button startContent={<LinkToIcon width={16} height={16} fill='fill-white'/>} color='success' className='text-white' size='sm' onClick={() => setEvidenceNarrative(evidence)}>Vincular</Button>
 					</div>
 				)
 			} else {
 				return (
-					<></>
+					<div className='invisible flex items-center justify-end group-hover/item:visible'>
+						No Es Evidencia
+					</div>
 				)
 			}
 		}
@@ -295,7 +298,7 @@ export default function EvidencesNarrativeTable({
 				'group-data-[last=true]:first:before:rounded-none',
 				'group-data-[last=true]:last:before:rounded-none'
 			],
-			tr: ['hover:bg-default-300 focus:bg-neutral-200']
+			tr: ['hover:bg-default-300 focus:bg-neutral-200 group/item py-0']
 		}),
 		[]
 	)
