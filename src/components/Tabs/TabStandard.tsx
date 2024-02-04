@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 
 import { Tabs, Tab } from '@nextui-org/react'
 import { useRouter, usePathname } from 'next/navigation'
+import { NarrativeService } from '@/api/Narrative/narrativeService'
 
 export default function TabStandard({ id, children }: { id: string; children: React.ReactNode }) {
 	const { push } = useRouter()
@@ -13,6 +14,11 @@ export default function TabStandard({ id, children }: { id: string; children: Re
 
 	useEffect(() => {
 		setSelected(pathname.split('/')[4] || 'narrative')
+		if (selected !== 'narrative') {
+			NarrativeService.blockNarrative(String(id)).then((res) => {
+				console.log(res)
+			})
+		}
 	}, [pathname])
 
 	const tabs = [
