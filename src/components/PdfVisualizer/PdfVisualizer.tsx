@@ -64,7 +64,7 @@ const PdfVisualizer = ({ id, onClose }: { id: string, onClose: () => void }) => 
 							label='Cargando previsualización...'
 							size='sm'
 							isIndeterminate
-							className='max-w-md'
+							className='max-w-sm'
 						/>
 					</div>
 				)
