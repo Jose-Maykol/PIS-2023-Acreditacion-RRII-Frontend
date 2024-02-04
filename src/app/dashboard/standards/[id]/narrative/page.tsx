@@ -9,7 +9,7 @@ import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import ConfirmationEditModal from '@/components/Modal/Narrative/ConfirmationEditModal'
+import EnableNarrativeModal from '@/components/Modal/Narrative/EnableNarrativeModal'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 
 type NarrativePageParams = {
@@ -132,7 +132,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 						</div>
 					)}
 			</div>
-			{openModal && <ConfirmationEditModal id={params.id} isOpen={openModal} onConfirmation={handleConfirmation} onCancel={handleCancel} />}
+			{openModal && <EnableNarrativeModal id={params.id} isOpen={openModal} onConfirmation={handleConfirmation} onCancel={handleCancel} />}
 		</div>
 	)
 }
