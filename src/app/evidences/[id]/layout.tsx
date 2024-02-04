@@ -15,26 +15,31 @@ interface EvidenceData {
 
 export default function EvidencesLayout({ params }: { params: { id: number }}) {
 	const id = params.id.toString()
+	const [listEvidences, setListEvidences] = useState<any[]>([])
 	const [evidenceData, setEvidenceData] = useState<EvidenceData | null >(null)
 	const [content, setContent] = useState<string>('')
 	const [loading, setLoading] = useState(true)
 
 	useEffect(() => {
-		EvidenceService.viewEvidence(id).then((res) => {
-			const byteCharacters = atob(res.data.content)
-			const byteNumbers = new Array(byteCharacters.length)
-			for (let i = 0; i < byteCharacters.length; i++) {
-				byteNumbers[i] = byteCharacters.charCodeAt(i)
+		EvidenceService.viewEvidenceNarrative(id).then((res) => {
+			if (Array.isArray(res.data)) {
+				setListEvidences(res.data)
+			} else {
+				const byteCharacters = atob(res.data.content)
+				const byteNumbers = new Array(byteCharacters.length)
+				for (let i = 0; i < byteCharacters.length; i++) {
+					byteNumbers[i] = byteCharacters.charCodeAt(i)
+				}
+				const byteArray = new Uint8Array(byteNumbers)
+				const blob = new Blob([byteArray], { type: res.data.type })
+				const blobUrl = URL.createObjectURL(blob)
+				const anchor = document.createElement('a')
+				anchor.href = blobUrl
+				anchor.download = res.data.name
+				setContent(blobUrl)
+				setEvidenceData(res.data)
+				setLoading(false)
 			}
-			const byteArray = new Uint8Array(byteNumbers)
-			const blob = new Blob([byteArray], { type: res.data.type })
-			const blobUrl = URL.createObjectURL(blob)
-			const anchor = document.createElement('a')
-			anchor.href = blobUrl
-			anchor.download = res.data.name
-			setContent(blobUrl)
-			setEvidenceData(res.data)
-			setLoading(false)
 		})
 	}, [])
 

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable eqeqeq */
-import { Autocomplete, AutocompleteItem, Button } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import { Editor } from '@tinymce/tinymce-react'
 import { Key, useEffect, useMemo, useRef, useState } from 'react'
 import CloseIcon from '../Icons/CloseIcon'
@@ -11,7 +11,8 @@ import { TINY_API_KEY } from '../../../config'
 import { StandardService } from '@/api/Estandar/StandardService'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
-import { getFileIcon } from '@/utils/utils'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useSidebarStore } from '@/store/useSidebarStore'
 
 interface Evidence {
   value: string
@@ -28,9 +29,11 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const router = useRouter()
 	const [content, setContent] = useState<string>('')
 	const [evidences, setEvidences] = useState<Evidence[]>([])
-	const [evidenceSelected, setEvidenceSelected] = useState<Key | null>(null)
 	const { year, semester } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
+	const { evidenceNarrative, setEvidenceNarrative, setIsEditingNarrative } = useNarrativeStore()
+	const { toggleSidebar } = useSidebarStore()
+
 
 	const loadNarrative = useMemo(() => {
 		return (id: number) => {
@@ -44,9 +47,17 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 		if (year && semester) {
 			loadNarrative(id)
 		}
+		toggleSidebar(true)
+		NarrativeService.blockNarrative(String(id)).then((res) => {
+			console.log(res)
+		})
 	}, [year, semester, loadNarrative])
 
 	const handleNotSaveNarrative = () => {
+		setIsEditingNarrative(false)
+		NarrativeService.enableNarrative(String(id)).then((res) => {
+			console.log(res)
+		})
 		router.push(`/dashboard/standards/${id}/narrative`)
 	}
 
@@ -56,7 +67,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			narrative: editorRef.current?.getContent() as string
 		}
 		if (year && semester) {
-			NarrativeService.updateNarrative(id, contentNarrative).then((res) => {
+			NarrativeService.updateNarrative(String(id), contentNarrative).then((res) => {
 				if (res.status === 1) {
 					updateToast(notification, res.message, 'success')
 				} else {
@@ -65,6 +76,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			})
 			router.push(`/dashboard/standards/${id}/narrative`)
 		}
+		setIsEditingNarrative(false)
 	}
 
 	useEffect(() => {
@@ -74,18 +86,14 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	}, [])
 
 	const insertEvidence = () => {
-		const evidenceId = evidenceSelected
-		const evidenceLabel = evidences.find((evidence) => evidence.value == evidenceId)?.label
-		const evidenceToInsert = `<a href="/evidences/${evidenceId}" style="color: blue;" target="_blank">${evidenceLabel}</a>`
-		const editor = editorRef.current
-		if (editor) {
-			editor.insertContent(evidenceToInsert)
-			editor.focus()
+		if (evidenceNarrative && evidenceNarrative.evidence_code) {
+			const evidenceToInsert = `<a href="/evidences/${evidenceNarrative.evidence_id}" style="color: blue; text-decoration: none" target="_blank">${evidenceNarrative.evidence_code}</a>`
+			const editor = editorRef.current
+			if (editor) {
+				editor.insertContent(evidenceToInsert)
+				editor.focus()
+			}
 		}
-	}
-
-	const handleEvidenceSelected = (key: Key): void => {
-		setEvidenceSelected(key)
 	}
 
 	return (
