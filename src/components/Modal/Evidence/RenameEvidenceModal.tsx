@@ -35,7 +35,9 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 	const handleSubmitChanges = async () => {
 		const notification = showToast('Procesando...')
 		if (evidence.type === 'evidence') {
-			await EvidenceService.renameEvidence(evidence.id.split('-')[1], {
+			console.log('Renombrar archivo', evidence.file_id)
+
+			await EvidenceService.renameEvidence(String(evidence.file_id), {
 				new_filename: newNameEvidence
 			}).then((res) => {
 				if (res.status === 1) {
@@ -45,7 +47,7 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 				}
 			})
 		} else {
-			await EvidenceService.renameFolder(evidence.id.split('-')[1], {
+			await EvidenceService.renameFolder(String(evidence.folder_id), {
 				new_name: newNameEvidence
 			}).then((res) => {
 				if (res.status === 1) {

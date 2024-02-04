@@ -7,12 +7,25 @@ import { toast } from 'react-toastify'
 import UploadIcon from '@/components/Icons/UploadIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
-import { getFileIcon } from '@/utils/utils'
+import { getFileIcon, getCommonIcon } from '@/utils/utils'
+import { useToast } from '@/hooks/toastProvider'
+
+interface UploadEvidenceModalProps {
+	id: string
+	typeEvidence: string
+	path: string
+	folderId?: string
+	openModal: boolean
+	onCloseModal: () => void
+	onReload: () => void
+	planId?: string
+}
 
 const UploadEvidenceModal = ({
 	id,
 	typeEvidence,
 	path,
+	folderId,
 	openModal,
 	onCloseModal,
 	onReload,
@@ -88,6 +101,10 @@ const UploadEvidenceModal = ({
 			formData.append(`files[${index}]`, file)
 		})
 		formData.append('path', path)
+
+		if (folderId) {
+			formData.append('folder_id', folderId)
+		}
 
 		// Add planId when the evidences were uploaded from PM form
 		if (planId) {
