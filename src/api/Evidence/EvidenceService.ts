@@ -5,14 +5,15 @@ import api from '../axios'
 const url = {
 	evidences: 'standards/:id/type-evidence/:idType',
 	evidencesByPlan: 'standards/:id/type-evidence/:idType?plan_id=:planId',
-	upload: 'evidences/various',
-	view: 'evidences/:id/view',
-	download: 'evidences/:id/download',
-	renameEvidence: 'evidences/:id/rename',
-	renameFolder: 'evidences/folder/:id/rename',
-	deleteEvidence: 'evidences/:id',
-	deleteFolder: 'evidences/folder/:id',
-	createFolder: 'evidences/folder',
+	upload: 'evidences',
+	view: 'evidences/files/:id/view',
+	viewEvidence: 'evidences/:id/view',
+	download: 'evidences/files/:id/download',
+	renameEvidence: 'evidences/files/:id/rename',
+	renameFolder: 'folders/:id/rename',
+	deleteEvidence: 'evidences/files/:id',
+	deleteFolder: 'folders/:id',
+	createFolder: 'folders',
 	moveEvidence: 'evidences/:id/move',
 	moveFolder: 'evidences/folder/:id/move',
 	folderList: 'evidences/folder'
@@ -62,14 +63,28 @@ export class EvidenceService extends BaseService {
 	}
 
 	public static async viewEvidence(id: string) {
+		console.log('view evidence', id)
 		const config = {
-			timeout: 60000,
-			headers: {
-				'Content-Type': 'multipart/form-data'
-			}
+			timeout: 60000
+			// headers: {
+			// 	'Content-Type': 'multipart/form-data'
+			// }
 		}
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.view.replace(':id', id)}`, config)
+		console.log('res narrativa view', res.data)
+		return res.data
+	}
+
+	public static async viewEvidenceNarrative(id: string) {
+		const config = {
+			timeout: 60000
+			// headers: {
+			// 	'Content-Type': 'multipart/form-data'
+			// }
+		}
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.viewEvidence.replace(':id', id)}`, config)
 		return res.data
 	}
 
@@ -94,6 +109,7 @@ export class EvidenceService extends BaseService {
 	}
 
 	public static async renameFolder(id: string, params: { new_name: string }) {
+		console.log('folder evidence id,', id)
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.patch(
 			`/${year}/${semester}/${url.renameFolder.replace(':id', id)}`,
@@ -118,9 +134,12 @@ export class EvidenceService extends BaseService {
 	public static async createFolder(params: {
 		name: string
 		standard_id: number
-		evidence_type_id: number
+		type_evidence_id: number
 		path: string
+		folder_id: number
+		is_evidence : boolean
 	}) {
+		console.log('params folrder', params)
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.createFolder}`, params)
 		return res.data
