@@ -82,40 +82,40 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 			<div className='p-4 w-full'>
 				<div className='my-4 flex flex-row w-full justify-between items-center'>
 					<h3 className='text-2xl text-sky-600 font-semibold'>Narrativa</h3>
-					<Popover showArrow placement='bottom' className='w-[200px]'>
-						<PopoverTrigger>
-							<div>
-								<Badge content='' color='success' shape='circle' placement='bottom-right'>
-									<Avatar
-										radius='full'
-										src='https://i.pravatar.cc/150?u=a04258114e29026702d'
-									/>
-								</Badge>
-							</div>
-						</PopoverTrigger>
-						<PopoverContent className='p-1'>
-							<Card shadow='none' className='max-w-[300px] border-none bg-transparent'>
-								<CardHeader className='justify-between'>
-									<div className='flex gap-3'>
-										<Avatar isBordered radius='full' size='md' src='https://i.pravatar.cc/150?u=a04258114e29026702d' />
-										<div className='flex flex-col items-start justify-center'>
-											<h4 className='text-small font-semibold leading-none text-default-600'>Zoey Lang</h4>
-											<h5 className='text-small tracking-tight text-default-500'>@zoeylang</h5>
+					{ data.isManager && (<>
+						<Popover showArrow placement='bottom' className='w-[200px]'>
+							<PopoverTrigger>
+								<div>
+									<Badge content='' color='success' shape='circle' placement='bottom-right'>
+										<Avatar
+											radius='full'
+											src='https://i.pravatar.cc/150?u=a04258114e29026702d'
+										/>
+									</Badge>
+								</div>
+							</PopoverTrigger>
+							<PopoverContent className='p-1'>
+								<Card shadow='none' className='max-w-[300px] border-none bg-transparent'>
+									<CardHeader className='justify-between'>
+										<div className='flex gap-3'>
+											<Avatar isBordered radius='full' size='md' src='https://i.pravatar.cc/150?u=a04258114e29026702d' />
+											<div className='flex flex-col items-start justify-center'>
+												<h4 className='text-small font-semibold leading-none text-default-600'>Zoey Lang</h4>
+												<h5 className='text-small tracking-tight text-default-500'>@zoeylang</h5>
+											</div>
 										</div>
-									</div>
-									<div className='flex flex-col items-end gap-1'>
-										<span className='text-tiny text-default-500'>Estado</span>
-										<Chip color='success' size='sm' variant='flat'>
-											{'Activo'}
-										</Chip>
-									</div>
-								</CardHeader>
-							</Card>
-						</PopoverContent>
-					</Popover>
-					{ data.isManager && (
+										<div className='flex flex-col items-end gap-1'>
+											<span className='text-tiny text-default-500'>Estado</span>
+											<Chip color='success' size='sm' variant='flat'>
+												{'Activo'}
+											</Chip>
+										</div>
+									</CardHeader>
+								</Card>
+							</PopoverContent>
+						</Popover>
 						<div className='flex flex-row gap-2 items-center'>
-							<Switch color='primary' isSelected={isEditable} onValueChange={handleOnValueChange} isDisabled={isEditable}>
+							<Switch color='primary' isSelected={isEditable} onValueChange={handleOnValueChange} isDisabled={isEditable} className={isEditMode ? 'hidden' : 'block'}>
 								{isEditMode ? 'Habilitado' : 'Habilitar Narrativa'}
 							</Switch>
 							{isEditMode && (
@@ -137,7 +137,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 									<DeleteNarrativeModal id={id} isOpen={isOpen} onOpenChange={onOpenChange} onDelete={() => loadNarrative(id)} />
 								</>
 							)}
-						</div>)}
+						</div></>)}
 				</div>
 				{narrative
 					? (

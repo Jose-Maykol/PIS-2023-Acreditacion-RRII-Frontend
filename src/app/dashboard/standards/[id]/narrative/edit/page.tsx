@@ -18,7 +18,7 @@ export default function EditNarrativePage({ params }: EditNarrativePageParams) {
 	})
 
 	return (
-		<ContentWrapper className='bg-white h-full w-full m-auto rounded-md py-5 px-10 flex'>
+		<ContentWrapper className='bg-white h-full w-full m-auto rounded-md py-5 px-10 flex gap-5'>
 			<div className='flex-1'>
 				<EvidencesNarrativeTable id={String(params.id)} />
 			</div>
