@@ -85,6 +85,12 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 		})
 	}, [])
 
+	useEffect(() => {
+		if (evidenceNarrative) {
+			insertEvidence()
+		}
+	}, [evidenceNarrative])
+
 	const insertEvidence = () => {
 		if (evidenceNarrative && evidenceNarrative.evidence_code) {
 			const evidenceToInsert = `<a href="/evidences/${evidenceNarrative.evidence_id}" style="color: blue; text-decoration: none" target="_blank">${evidenceNarrative.evidence_code}</a>`
@@ -94,72 +100,11 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 				editor.focus()
 			}
 		}
+		setEvidenceNarrative(null)
 	}
 
 	return (
 		<div className='min-h-[600px]'>
-			<div className='flex flex-row py-4 w-full items-end'>
-				<Autocomplete
-					defaultItems={evidences}
-					placeholder='Selecciona una evidencia'
-					label='Insertar evidencia'
-					labelPlacement='outside'
-					variant='bordered'
-					className='w-full'
-					onSelectionChange={handleEvidenceSelected}
-					/* listboxProps={{
-						itemClasses: {
-							base: [
-								'rounded-md',
-								'text-default-500',
-								'transition-opacity',
-								'data-[hover=true]:text-foreground',
-								'data-[hover=true]:bg-default-100',
-								'dark:data-[hover=true]:bg-default-50',
-								'data-[selectable=true]:focus:bg-default-50',
-								'data-[pressed=true]:opacity-70',
-								'data-[focus-visible=true]:ring-default-500'
-							]
-						}
-					}}
-					popoverProps={{
-						classNames: {
-							base: 'p-0 border-small border-divider bg-background',
-							arrow: 'bg-default-200'
-						}
-					}} */
-					/* renderValue={(items) => {
-						return items.map((item) => (
-							<div key={item.key} className='flex gap-2 items-center'>
-								{getFileIcon(item.data?.label, item.data?.type, 20)}
-								<div className='flex flex-col'>
-									{item.data?.label}
-								</div>
-							</div>
-						))
-					}} */
-				>
-					{(evidence) => (
-						<AutocompleteItem key={evidence.value} textValue={evidence.label}>
-							<div className='flex gap-2 items-center'>
-								<div className='w-[20px]'>
-									{getFileIcon(evidence.label, evidence.type, 20)}
-								</div>
-								<div className='flex flex-col'>
-									{evidence.label}
-								</div>
-							</div>
-						</AutocompleteItem>
-					)}
-				</Autocomplete>
-				<Button
-					isDisabled={(evidenceSelected === null)}
-					color='primary'
-					className='ml-2'
-					onPress={insertEvidence}>
-					Insertar
-				</Button>
-			</div>
 			<div className='h-[600px]'>
 				<Editor
 					apiKey={TINY_API_KEY}

@@ -20,6 +20,7 @@ import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
 
 export default function EvidencesTable({
 	id,

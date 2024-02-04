@@ -10,18 +10,14 @@ import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 import ReportIcon from '../Icons/ReportIcon'
-import { useSidebarStore } from '@/store/useSidebarStore'
 import { Button } from '@nextui-org/react'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useSidebarStore } from '@/store/useSidebarStore'
 
 export default function SideBar({
-	isSidebarOpen,
-	toggleSidebar,
 	standards,
 	role
 }: {
-	isSidebarOpen: boolean
-	toggleSidebar: () => void
 	standards: PartialStandard[]
 	role: string
 }) {
@@ -47,13 +43,6 @@ export default function SideBar({
 						<AngleDoubleRightIcon width={20} height={20} fill='hover:fill-lightBlue-600' />
 					</div>
 				</Button>
-				{/* <button
-					className={`${
-						isSidebarOpen ? 'rotate-0' : 'rotate-180'
-					} transform transition duration-1000 ease-in-out`}
-					onClick={toggleSidebar}
-				>
-				</button> */}
 			</div>
 			{isSidebarOpen
 				? (

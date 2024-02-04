@@ -3,6 +3,7 @@
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import EditorSkeleton from '@/components/Skeletons/EditorSkeleton'
 import dynamic from 'next/dynamic'
+import EvidencesNarrativeTable from '@/components/Table/EvidencesNarrativeTable'
 
 interface EditNarrativePageParams {
   params: {
@@ -17,8 +18,13 @@ export default function EditNarrativePage({ params }: EditNarrativePageParams) {
 	})
 
 	return (
-		<ContentWrapper className='bg-white h-full w-full m-auto rounded-md py-5 px-10'>
-			<NarrativeEditor id={params.id} />
+		<ContentWrapper className='bg-white h-full w-full m-auto rounded-md py-5 px-10 flex'>
+			<div className='flex-1'>
+				<EvidencesNarrativeTable id={String(params.id)} />
+			</div>
+			<div className='flex-1'>
+				<NarrativeEditor id={params.id} />
+			</div>
 		</ContentWrapper>
 	)
 }

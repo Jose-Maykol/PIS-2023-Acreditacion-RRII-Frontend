@@ -60,6 +60,23 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 		return { __html: narrative || '' }
 	}
 
+	const handleOnValueChange = () => {
+		setOpenModal(true)
+		setIsEditable(true)
+	}
+
+	const handleConfirmation = () => {
+		setOpenModal(false)
+		setIsEditMode(true)
+		setIsEditable(true)
+	}
+
+	const handleCancel = () => {
+		setOpenModal(false)
+		setIsEditable(false)
+		setIsEditMode(false)
+	}
+
 	return (
 		<div className='w-[96%] h-full bg-white m-auto flex flex-col gap-5 rounded-md'>
 			<div className='p-4 w-full'>
