@@ -57,7 +57,7 @@ export default function MoveEvidenceModal({ evidence, breadcrumbs, openModal, on
 	const handleSubmitChanges = async () => {
 		const notification = showToast('Procesando...')
 		if (evidence?.type === 'evidence') {
-			await EvidenceService.moveEvidence(String(evidence.uid), {
+			await EvidenceService.moveEvidence(String(evidence.file_id), {
 				parent_id: params
 			}).then((res) => {
 				if (res.status === 1) {
@@ -67,7 +67,7 @@ export default function MoveEvidenceModal({ evidence, breadcrumbs, openModal, on
 				}
 			})
 		} else {
-			await EvidenceService.moveFolder(String(evidence.uid), {
+			await EvidenceService.moveFolder(String(evidence.folder_id), {
 				parent_id: params
 			}).then((res) => {
 				if (res.status === 1) {

@@ -1,5 +1,5 @@
 import { BaseService } from '../Base/BaseService'
-import { AxiosRequestConfig } from 'axios'
+import { AxiosRequestConfig, AxiosProgressEvent } from 'axios'
 import api from '../axios'
 
 const url = {
@@ -14,18 +14,24 @@ const url = {
 	deleteEvidence: 'evidences/files/:id',
 	deleteFolder: 'folders/:id',
 	createFolder: 'folders',
-	moveEvidence: 'evidences/:id/move',
-	moveFolder: 'evidences/folder/:id/move',
+	moveEvidence: 'evidences/files/:id/move',
+	moveFolder: 'folders/:id/move',
 	folderList: 'evidences/folder'
 }
 
 export class EvidenceService extends BaseService {
-	public static async uploadEvidences(params: any) {
+	public static async uploadEvidences(params: any, onProgress: any) {
 		const { year, semester } = BaseService.getConfig()
 		const config = {
 			timeout: 60000,
 			headers: {
 				'Content-Type': 'multipart/form-data'
+			},
+			onUploadProgress: (progressEvent: any) => {
+				if (onProgress) {
+					const percentaje = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+					onProgress(percentaje)
+				}
 			}
 		}
 		const res = await api.post(`/${year}/${semester}/${url.upload}`, params, config)

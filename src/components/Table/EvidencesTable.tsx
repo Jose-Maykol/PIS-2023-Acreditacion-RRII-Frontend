@@ -219,7 +219,7 @@ export default function EvidencesTable({
 								uid: 'delete-evidence',
 								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
 								color: 'danger',
-								className: isNarrativeEnabled ? 'hidden' : undefined,
+								// className: isNarrativeEnabled ? 'hidden' : undefined,
 								startContent: (
 									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
 								)
