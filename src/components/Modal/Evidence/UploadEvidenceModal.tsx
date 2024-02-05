@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Button, Popover, PopoverTrigger, PopoverContent, Input, Tooltip } from '@nextui-org/react'
+import { Button, Popover, PopoverTrigger, PopoverContent, Input, Tooltip, CircularProgress } from '@nextui-org/react'
 import CustomModal from '@/components/Modal/CustomModal'
 import { toast } from 'react-toastify'
 import UploadIcon from '@/components/Icons/UploadIcon'
@@ -36,6 +36,8 @@ const UploadEvidenceModal = ({
 	const fileInputRef = useRef<HTMLInputElement | null>(null)
 	const [newNameEvidence, setNewNameEvidence] = useState<string>('')
 	const [openPopovers, setOpenPopovers] = useState<{ [key: string]: boolean }>({})
+	const [progress, setProgress] = useState<any>({})
+	const [isSendingForm, setIsSendingForm] = useState<boolean>(false)
 
 	const togglePopover = (index: number) => {
 		setOpenPopovers(prevState => ({ ...prevState, [index]: !prevState[index] }))
@@ -50,6 +52,10 @@ const UploadEvidenceModal = ({
 	}, [newNameEvidence])
 
 	const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+		if (isSendingForm) {
+			toast.warning('No se puede realizar esta accion mientras se envian los archivos')
+			return
+		}
 		e.preventDefault()
 		const droppedFiles = Array.from(e.dataTransfer.files)
 		addFiles(droppedFiles)
@@ -97,6 +103,7 @@ const UploadEvidenceModal = ({
 		setFiles([])
 		setTotalSize(0)
 		onCloseModal()
+		onReload()
 	}
 
 	const handleOpenPopover = (index: number, name: string) => {
@@ -114,50 +121,36 @@ const UploadEvidenceModal = ({
 	}
 
 	const handleUploadEvidences = async () => {
-		const formData = new FormData()
-		formData.append('standard_id', id)
-		formData.append('type_evidence_id', typeEvidence)
-		console.log('files', files[0])
-		files.forEach((file, index) => {
-			formData.append(`file`, file)
-		})
-		formData.append('path', path)
+		setIsSendingForm(true)
+		const formDataBase = new FormData()
+		formDataBase.append('standard_id', id)
+		formDataBase.append('type_evidence_id', typeEvidence)
+		formDataBase.append('path', path)
+		if (folderId) formDataBase.append('folder_id', folderId)
+		if (planId) formDataBase.append('plan_id', planId)
 
-		if (folderId) {
-			formData.append('folder_id', folderId)
-		}
-
-		// Add planId when the evidences were uploaded from PM form
-		if (planId) {
-			formData.append('plan_id', planId)
-		}
-
-		const resPromise = EvidenceService.uploadEvidences(formData).then((res) => {
-			if (res.status === 1) return Promise.resolve({ message: res.message })
-			else return Promise.reject(new Error(res.message))
-		})
-
-		toast.promise(
-			resPromise,
-			{
-				pending: 'Subiendo Archivos...',
-				success: {
-					render({ data }) {
-						onReload()
-						return `${data?.message}`
-					}
-				},
-				error: {
-					render({ data }) {
-						return `${data}`
-					}
-				}
-			},
-			{
-				theme: 'colored'
+		const uploadPromises = files.map((file, index) => {
+			const formData = new FormData()
+			for (const key of formDataBase.keys()) {
+				formData.append(key, String(formDataBase.get(key)))
 			}
-		)
-		handleCloseModal()
+			formData.append('file', file)
+			return new Promise((resolve, reject) => {
+				EvidenceService.uploadEvidences(formData, (progressPercentaje: any) => {
+					setProgress((prevState: any) => ({ ...prevState, [index]: progressPercentaje }))
+				}).then(resolve).catch(reject)
+			})
+		})
+
+		try {
+			await Promise.all(uploadPromises)
+			toast.success('Todos los archivos se han subido exitosamente')
+		} catch (error: any) {
+			toast.error(`Error al subir los archivos: ${error.data.message}`)
+		} finally {
+			setIsSendingForm(false)
+			handleCloseModal()
+		}
 	}
 
 	const header: React.ReactNode = (
@@ -171,7 +164,7 @@ const UploadEvidenceModal = ({
 	)
 
 	const body: React.ReactNode = (
-		<div className='h-full max-h-[96%] flex flex-row gap-5'>
+		<div className='h-full flex flex-row gap-5'>
 			<div className='w-[60%] rounded-lg overflow-y-auto py-2 px-4 scrollbar-hide'>
 				<p className='text-center text-black text-md font-bold'>Archivos subidos</p>
 				{[...files].reverse().map((file, index) => (
@@ -194,48 +187,63 @@ const UploadEvidenceModal = ({
 								</div>
 							</div>
 						</Tooltip>
-						<div className='flex items-center mr-2'>
-							<Popover placement='left' showArrow offset={10} isOpen={openPopovers[index] || false} onOpenChange={() => handleOpenPopover(index, file.name)}>
-								<PopoverTrigger>
-									<Button isIconOnly color='primary' variant='light' size='sm'>
-										{getCommonIcon('pencil', 20, 'fill-primary')}
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className='w-[240px]'>
-									{(titleProps) => (
-										<div className='px-1 py-2 w-full'>
-											<p className='text-small font-bold text-foreground' {...titleProps}>
-												Cambiar nombre
-											</p>
-											<div className='mt-2 flex flex-col gap-2 w-full'>
-												<Input
-													autoFocus
-													size='sm'
-													variant='bordered'
-													value={newNameEvidence}
-													onValueChange={setNewNameEvidence}
-													isInvalid={isInvalid}
-													color={isInvalid ? 'danger' : 'default'}
-													description={newNameEvidence.length}
-													errorMessage={isInvalid && 'Ingresa un nombre válido'}
-												/>
-												<div className='flex justify-between'>
-													<Button color='danger' size='sm' onPress={() => { setOpenPopovers(prevState => ({ ...prevState, [index]: false })) }}>Cancelar</Button>
-													<Button color='primary' size='sm' onPress={() => handleRenameFile(index)}>Aceptar</Button>
+						{isSendingForm
+							? (
+								<>
+									<CircularProgress
+										aria-label='Loading Files...'
+										size='md'
+										value={progress[index] || 0}
+										color={progress[index] === 100 ? 'success' : 'primary'}
+										showValueLabel={true}
+									/>
+								</>
+							)
+							: (
+								<div className='flex items-center mr-2'>
+									<Popover placement='left' showArrow offset={10} isOpen={openPopovers[index] || false} onOpenChange={() => handleOpenPopover(index, file.name)}>
+										<PopoverTrigger>
+											<Button isIconOnly color='primary' variant='light' size='sm'>
+												{getCommonIcon('pencil', 20, 'fill-primary')}
+											</Button>
+										</PopoverTrigger>
+										<PopoverContent className='w-[240px]'>
+											{(titleProps) => (
+												<div className='px-1 py-2 w-full'>
+													<p className='text-small font-bold text-foreground' {...titleProps}>
+														Cambiar nombre
+													</p>
+													<div className='mt-2 flex flex-col gap-2 w-full'>
+														<Input
+															autoFocus
+															size='sm'
+															variant='bordered'
+															value={newNameEvidence}
+															onValueChange={setNewNameEvidence}
+															isInvalid={isInvalid}
+															color={isInvalid ? 'danger' : 'default'}
+															description={newNameEvidence.length}
+															errorMessage={isInvalid && 'Ingresa un nombre válido'}
+														/>
+														<div className='flex justify-between'>
+															<Button color='danger' size='sm' onPress={() => { setOpenPopovers(prevState => ({ ...prevState, [index]: false })) }}>Cancelar</Button>
+															<Button color='primary' size='sm' onPress={() => handleRenameFile(index)}>Aceptar</Button>
+														</div>
+													</div>
 												</div>
-											</div>
-										</div>
-									)}
-								</PopoverContent>
-							</Popover>
-							<Button isIconOnly color='danger' variant='light' size='sm' onPress={() => removeFile(index)}>
-								{getCommonIcon('trash', 20, 'fill-danger')}
-							</Button>
-						</div>
+											)}
+										</PopoverContent>
+									</Popover>
+									<Button isIconOnly color='danger' variant='light' size='sm' onPress={() => removeFile(index)}>
+										{getCommonIcon('trash', 20, 'fill-danger')}
+									</Button>
+								</div>
+							)
+						}
 					</div>
 				))}
 			</div>
-			<div className='flex flex-col w-[40%] justify-center items-center p-4 bg-lightBlue-100 border-dashed border-2 border-black rounded-lg'>
+			<div className={`flex flex-col w-[40%] justify-center items-center p-4 ${isSendingForm ? 'bg-lightBlue-50' : 'bg-lightBlue-100'} border-dashed border-2 border-black rounded-lg`}>
 				<div
 					className='flex flex-col items-center justify-center'
 					onDrop={handleDrop}
@@ -257,6 +265,7 @@ const UploadEvidenceModal = ({
 					</div>
 					<p className='text-sm mt-1 mb-2'>o</p>
 					<Button
+						isDisabled={isSendingForm}
 						color='primary'
 						size='sm'
 						className='text-white text-sm rounded'
