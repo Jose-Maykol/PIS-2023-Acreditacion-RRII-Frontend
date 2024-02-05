@@ -10,7 +10,7 @@ import FolderIcon from '@/components/Icons/FolderIcon'
 
 import PlusIcon from '@/components/Icons/PlusIcon'
 import SearchIcon from '@/components/Icons/SearchIcon'
-import LinkIcon from '@/components/Icons/LinkIcon'
+import RedirectIcon from '@/components/Icons/RedirectIcon'
 import ChevronDownIcon from '@/components/Icons/ChevronDownIcon'
 import PencilIcon from '@/components/Icons/PencilIcon'
 import FileIcon from '@/components/Icons/FileIcon'
@@ -54,7 +54,7 @@ export const getCommonIcon = (name: string, size: number = 24, fillColor?: strin
 	const icons: Record<string, React.JSX.Element> = {
 		plus: <PlusIcon width={size} height={size} fill={fillColor} />,
 		search: <SearchIcon width={size} height={size} fill={fillColor} />,
-		link: <LinkIcon width={size} height={size} fill={fillColor} />,
+		redirect: <RedirectIcon width={size} height={size} fill={fillColor} />,
 		chevron: <ChevronDownIcon width={size} height={size} fill={fillColor} />,
 		pencil: <PencilIcon width={size} height={size} fill={fillColor} />,
 		download: <DownloadIcon width={size} height={size} fill={fillColor} />,
