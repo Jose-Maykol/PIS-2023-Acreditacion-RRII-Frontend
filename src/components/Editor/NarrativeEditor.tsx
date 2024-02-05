@@ -31,7 +31,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const [evidences, setEvidences] = useState<Evidence[]>([])
 	const { year, semester } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
-	const { evidenceNarrative, setEvidenceNarrative, setIsEditingNarrative } = useNarrativeStore()
+	const { evidenceNarrative, setEvidenceNarrative, setIsEditingNarrative, setNarrativeBlockedId } = useNarrativeStore()
 	const { toggleSidebar } = useSidebarStore()
 
 
@@ -82,6 +82,8 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 		StandardService.getEvidences(id.toString()).then((res) => {
 			setEvidences(res.data)
 		})
+		setIsEditingNarrative(true)
+		setNarrativeBlockedId(id)
 	}, [])
 
 	useEffect(() => {
