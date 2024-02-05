@@ -17,10 +17,6 @@ const Header = () => {
 	const [user, setUser] = useState({ name: '', lastname: '' })
 	const { closingDate } = useYearSemesterStore()
 	const { role } = usePermissionsStore()
-	/* const PopoverSemester = dynamic(() => import('@/components/Popover/PopoverSemester'), {
-		ssr: false,
-		loading: () => <div className='w-[100px] h-[40px] animate-pulse bg-gray-200 rounded-md'/>
-	}) */
 
 	const logout = () => {
 		AuthService.logout()
@@ -77,12 +73,6 @@ const Header = () => {
 						/>
 					}
 					items={[
-						/* {
-							uid: 'my-perfil',
-							label: 'Mi perfil',
-							color: 'primary',
-							startContent: <UserIcon width={25} height={25} fill='group-hover/dropdown:fill-white'/>
-						}, */
 						{
 							uid: 'logout',
 							label: 'Cerrar sesión',
