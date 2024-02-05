@@ -10,19 +10,20 @@ import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 import ReportIcon from '../Icons/ReportIcon'
+import { Button } from '@nextui-org/react'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useSidebarStore } from '@/store/useSidebarStore'
 
 export default function SideBar({
-	isSidebarOpen,
-	toggleSidebar,
 	standards,
 	role
 }: {
-	isSidebarOpen: boolean
-	toggleSidebar: () => void
 	standards: PartialStandard[]
 	role: string
 }) {
 	const isAdmin = role === 'administrador'
+	const { isSidebarOpen, toggleSidebar } = useSidebarStore()
+	const { isEditingNarrative } = useNarrativeStore()
 
 	return (
 		<nav
@@ -35,14 +36,13 @@ export default function SideBar({
 					isSidebarOpen ? 'justify-end' : 'justify-center pl-1'
 				}`}
 			>
-				<button
-					className={`${
+				<Button isIconOnly onPress={() => toggleSidebar(isSidebarOpen)} isDisabled={isEditingNarrative}>
+					<div className={`${
 						isSidebarOpen ? 'rotate-0' : 'rotate-180'
-					} transform transition duration-1000 ease-in-out`}
-					onClick={toggleSidebar}
-				>
-					<AngleDoubleRightIcon width={20} height={20} fill='hover:fill-lightBlue-600' />
-				</button>
+					} transform transition duration-1000 ease-in-out`}>
+						<AngleDoubleRightIcon width={20} height={20} fill='hover:fill-lightBlue-600' />
+					</div>
+				</Button>
 			</div>
 			{isSidebarOpen
 				? (

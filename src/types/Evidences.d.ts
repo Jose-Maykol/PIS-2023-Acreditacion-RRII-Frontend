@@ -1,6 +1,5 @@
 export interface Evidence {
     id: string;
-    uid: number;
     code: string;
     name: string;
     path: string;
@@ -9,7 +8,11 @@ export interface Evidence {
     user_id: number;
     plan_id?: number | null; //
     folder_id?: number; //
+    evidence_id?: number;
     evidence_type_id: number;
+    evidence_code?: number;
+    file_id?: number;
+    folder_id?: number;
     standard_id: number;
     date_id: number;
     created_at: string;

@@ -8,7 +8,7 @@ import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardHeader, StandardValues } from '@/types/Standard'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-
+import { useNarrativeStore } from '@/store/useNarrativeStore'
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
@@ -31,7 +31,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 	const [reload, setReload] = useState<boolean>(false)
 	const { year, semester } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
-
+	const { setNarrativeEnable, setNarrativeDisable } = useNarrativeStore()
 
 	const handleChange = (key: string, value: string) => {
 		setStandardHeader((prev) => ({
@@ -42,7 +42,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
+			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager, narrative_is_active: isNarrativeEdit } = res.data
 			setStandardHeader({
 				name,
 				description,
@@ -55,6 +55,11 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					isManager
 				}
 			})
+			if (isNarrativeEdit) {
+				setNarrativeEnable()
+			} else {
+				setNarrativeDisable()
+			}
 		})
 		setReload(false)
 	}, [reload, year, semester])
