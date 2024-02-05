@@ -42,7 +42,6 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			console.log('header standar', res.data)
 			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager, narrative_is_active: isNarrativeEdit } = res.data
 			setStandardHeader({
 				name,

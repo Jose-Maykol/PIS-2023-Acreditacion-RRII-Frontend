@@ -14,7 +14,6 @@ export class NarrativeService extends BaseService {
 	public static async getNarrative (id: number) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/standards/${id}/${url.getNarrative}`)
-		console.log('get narrativa', res.data)
 		return res.data
 	}
 

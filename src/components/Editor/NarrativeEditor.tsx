@@ -38,6 +38,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const loadNarrative = useMemo(() => {
 		return (id: number) => {
 			NarrativeService.getNarrative(id).then((res) => {
+				console.log('carga de narrativa', res.data)
 				setContent(res.data.narrative)
 			})
 		}
@@ -48,17 +49,15 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			loadNarrative(id)
 		}
 		toggleSidebar(true)
-		NarrativeService.blockNarrative(String(id)).then((res) => {
-			console.log(res)
-		})
 	}, [year, semester, loadNarrative])
 
 	const handleNotSaveNarrative = () => {
-		setIsEditingNarrative(false)
-		NarrativeService.enableNarrative(String(id)).then((res) => {
-			console.log(res)
+		NarrativeService.unlockNarrative(String(id)).then((res) => {
+			setIsEditingNarrative(false)
+			router.push(`/dashboard/standards/${id}/narrative`)
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Se ha liberado la narrativa', 'success')
 		})
-		router.push(`/dashboard/standards/${id}/narrative`)
 	}
 
 	const handleSaveNarrative = () => {
