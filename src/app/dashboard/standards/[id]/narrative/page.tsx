@@ -22,7 +22,7 @@ type NarrativePageParams = {
 export default function NarrativePage({ params }: NarrativePageParams) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { year, semester } = useYearSemesterStore()
-	const { isNarrativeEnabled, setIsEditingNarrative } = useNarrativeStore()
+	const { isNarrativeEnabled, setIsEditingNarrative, setNarrativeBlockedId } = useNarrativeStore()
 	const [narrative, setNarrative] = useState<string>('')
 	const [isEditable, setIsEditable] = useState<boolean>(false)
 	const [isEditMode, setIsEditMode] = useState<boolean>(false)
@@ -52,7 +52,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 		}
 		setIsEditable(isNarrativeEnabled)
 		setIsEditMode(isNarrativeEnabled)
-	}, [year, semester, isNarrativeEnabled, loadNarrative])
+	}, [year, semester, isNarrativeEnabled, loadNarrative, setNarrativeBlockedId])
 
 	const handleEditNarrative = () => {
 		if (data.isBlock) {
@@ -64,6 +64,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 		NarrativeService.blockNarrative(String(id)).then((res) => {
 			console.log('res de blockNarrative', res.data)
 			setIsEditingNarrative(true)
+			setNarrativeBlockedId(id)
 			router.push(`/dashboard/standards/${id}/narrative/edit`)
 		})
 	}

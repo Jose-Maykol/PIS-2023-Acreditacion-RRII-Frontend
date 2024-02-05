@@ -8,6 +8,8 @@ interface NarrativeStore {
     setEvidenceNarrative: (evidence: Evidence | null) => void
     isEditingNarrative: boolean
     setIsEditingNarrative: (value: boolean) => void
+    narrativeBlockedId: number | null
+    setNarrativeBlockedId: (id: number | null) => void
 }
 
 export const useNarrativeStore = create<NarrativeStore>((set) => ({
@@ -17,5 +19,7 @@ export const useNarrativeStore = create<NarrativeStore>((set) => ({
 	evidenceNarrative: null,
 	setEvidenceNarrative: (evidence: Evidence | null) => set({ evidenceNarrative: evidence }),
 	isEditingNarrative: false,
-	setIsEditingNarrative: (value: boolean) => set({ isEditingNarrative: value })
+	setIsEditingNarrative: (value: boolean) => set({ isEditingNarrative: value }),
+	narrativeBlockedId: null,
+	setNarrativeBlockedId: (id: number | null) => set({ narrativeBlockedId: id })
 }))
