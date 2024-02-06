@@ -9,12 +9,13 @@ interface CreateFolderModalProps {
 	id: number
 	typeEvidence: number
 	path: string
+	folderId: number
 	openModal: boolean
 	onCloseModal: () => void
 	onReload: () => void
 }
 
-export default function CreateFolderModal({ id, typeEvidence, path, openModal, onCloseModal, onReload } : CreateFolderModalProps) {
+export default function CreateFolderModal({ id, typeEvidence, path, folderId, openModal, onCloseModal, onReload } : CreateFolderModalProps) {
 	const [folderName, setFolderName] = useState<string>('Carpeta sin titulo')
 	const [isSelected, setIsSelected] = useState<boolean>(false)
 	const { showToast, updateToast } = useToast()
@@ -37,14 +38,18 @@ export default function CreateFolderModal({ id, typeEvidence, path, openModal, o
 		await EvidenceService.createFolder({
 			name: folderName,
 			standard_id: id,
-			evidence_type_id: typeEvidence,
-			path
+			type_evidence_id: typeEvidence,
+			path,
+			folder_id: folderId,
+			is_evidence: isSelected
 		}).then((res) => {
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
 			} else {
 				updateToast(notification, res.message, 'error')
 			}
+		}).catch((err) => {
+			updateToast(notification, err.response.data.message, 'error')
 		})
 		handleCloseModal()
 	}

@@ -1,23 +1,23 @@
+import { ImprovementPlans } from '@/types/ImprovementPlan'
+import { Pagination, Spinner } from '@nextui-org/react'
+import MyImprovementPlansTable from '../Table/MyImprovementPlansTable'
+import FilterMyImprovementPlansTable from '../Filter/FilterMyImprovementPlansTable'
 
-import { User } from '@/types/User'
-import UserTable from '../Table/UserTable'
-import FilterUserTable from '../Filter/FilterUserTable'
-import UserTableSkeleton from '../Skeletons/UserTableSkeleton'
-import { Pagination } from '@nextui-org/react'
 
-interface UserTablePresentationProps {
-  tableData: User[]
+
+interface MyImprovementPlansTablePresentationProps {
+  tableData: ImprovementPlans[]
   isLoading: boolean
-	isFetching: boolean
+  isFetching: boolean
   error: unknown
   currentPage: number
   totalPages: number
   onPageChange: (page: number) => void
   onSearchChange: (searchQuery: string) => void
-  onUsersChanged: () => void
+  onImprovementPlansChanged: () => void
 }
 
-export default function UserTablePresentation({
+export default function MyImprovementPlansTablePresentation({
 	tableData,
 	isLoading,
 	isFetching,
@@ -26,8 +26,8 @@ export default function UserTablePresentation({
 	totalPages,
 	onPageChange,
 	onSearchChange,
-	onUsersChanged
-}: UserTablePresentationProps) {
+	onImprovementPlansChanged
+}: MyImprovementPlansTablePresentationProps) {
 	return (
 		<div>
 			{ error
@@ -36,18 +36,19 @@ export default function UserTablePresentation({
 				)
 				: (
 					<div className='flex flex-col gap-4'>
-						<FilterUserTable
-							handleUsersChanged={onUsersChanged}
+						<FilterMyImprovementPlansTable
 							handleSearchChange={onSearchChange}
 						/>
 						{ isLoading && isFetching
 							? (
-								<UserTableSkeleton />
+								<div className='min-h-[445px] h-[445px] w-full flex justify-center content-center'>
+									<Spinner />
+								</div>
 							)
 							: (
-								<UserTable
+								<MyImprovementPlansTable
 									data={tableData}
-									handleUsersChanged={onUsersChanged}
+									handleUsersChanged={onImprovementPlansChanged}
 								/>
 							)
 						}

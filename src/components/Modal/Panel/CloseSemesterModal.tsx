@@ -1,5 +1,6 @@
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import { useToast } from '@/hooks/toastProvider'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@nextui-org/react'
 
@@ -10,6 +11,7 @@ interface CloseSemesterModalProps {
 
 export default function CloseSemesterModal ({ isOpen, onOpenChange }: CloseSemesterModalProps) {
 	const { showToast, updateToast } = useToast()
+	const { setPermissions } = usePermissionsStore()
 
 	const handleSubmit = async () => {
 		const yesterday = new Date()
@@ -19,11 +21,32 @@ export default function CloseSemesterModal ({ isOpen, onOpenChange }: CloseSemes
 		const day = String(yesterday.getDate()).padStart(2, '0')
 		const formattedYesterday = `${year}-${month}-${day}`
 		const notification = showToast('Procesando...')
-		DateSemesterService.close({ closing_date: formattedYesterday }).then((res) => {
+		DateSemesterService.close({
+			closing_date: formattedYesterday
+		}).then((res) => {
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
 				useYearSemesterStore.setState({
-					closingDate: formattedYesterday
+					closingDate: formattedYesterday,
+					isClosed: true
+				})
+				setPermissions({
+					createStandard: false,
+					readStandard: false,
+					updateStandard: false,
+					deleteStandard: false,
+					createPlan: false,
+					readPlan: false,
+					updatePlan: false,
+					deletePlan: false,
+					createEvidence: false,
+					readEvidence: false,
+					updateEvidence: false,
+					deleteEvidence: false,
+					createUser: false,
+					readUser: false,
+					updateUser: false,
+					deleteUser: false
 				})
 			} else {
 				updateToast(notification, res.message, 'error')

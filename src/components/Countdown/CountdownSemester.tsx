@@ -23,15 +23,15 @@ export default function CountdownSemester () {
 				const days = String(Math.max(0, Math.floor(difference / (1000 * 60 * 60 * 24)))).padStart(2, '0')
 				const hours = String(Math.max(0, Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)))).padStart(2, '0')
 				const minutes = String(Math.max(0, Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60)))).padStart(2, '0')
-
 				setTimeLeft({ days, hours, minutes })
+			} else {
+				setTimeLeft({ days: '00', hours: '00', minutes: '00' })
 			}
 		}
 
 		const interval = setInterval(() => {
 			calculateTimeLeft()
 		}, 1000)
-
 		return () => clearInterval(interval)
 	}, [closingDate])
 

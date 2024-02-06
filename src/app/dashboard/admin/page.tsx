@@ -28,7 +28,7 @@ export default function AdminPage() {
 							<SemesterConfigurationsCard/>
 							<GenerateReportForm />
 						</div>
-						<div className='flex-1 flex flex-col my-4 gap-4 items-start'>
+						<div className='flex flex-col my-4 gap-4 items-start w-full'>
 							<PlanPerStandardChart/>
 							<PlanChart/>
 						</div>

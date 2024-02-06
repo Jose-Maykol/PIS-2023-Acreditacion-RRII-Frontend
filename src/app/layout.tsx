@@ -15,7 +15,7 @@ import { useRouter } from 'next/navigation'
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	const { setYear, setSemester } = useYearSemesterStore()
-	const { setPermissions, setRole, role } = usePermissionsStore()
+	const { setPermissions, setRole } = usePermissionsStore()
 	const [redirected, setRedirected] = useState(false)
 	const router = useRouter()
 
@@ -38,7 +38,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			}
 			if (authUser) {
 				const jsonAuthUser = JSON.parse(authUser)
-				setRole(jsonAuthUser.role)
+				const role = jsonAuthUser.role
+				setRole(role)
 				if (role === 'administrador') {
 					setPermissions({
 						createStandard: true,
@@ -78,7 +79,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 						deleteUser: false
 					})
 				}
-				console.log('permissions', usePermissionsStore.getState())
 			}
 			if (!authUser && !redirected) {
 				setRedirected(true)

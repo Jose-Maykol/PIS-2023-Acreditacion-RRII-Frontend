@@ -20,7 +20,7 @@ import { useQuery, useQueryClient } from 'react-query'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-	const { role } = usePermissionsStore()
+	const { setPermissions, role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
 	const queryClient = useQueryClient()
@@ -57,6 +57,26 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				useYearSemesterStore.getState().setId(id)
 				useYearSemesterStore.getState().setIsClosed(isClosed)
 				useYearSemesterStore.getState().setClosingDate(closingDate)
+				if (isClosed || (new Date(closingDate) < new Date())) {
+					setPermissions({
+						createStandard: false,
+						readStandard: false,
+						updateStandard: false,
+						deleteStandard: false,
+						createPlan: false,
+						readPlan: false,
+						updatePlan: false,
+						deletePlan: false,
+						createEvidence: false,
+						readEvidence: false,
+						updateEvidence: false,
+						deleteEvidence: false,
+						createUser: false,
+						readUser: false,
+						updateUser: false,
+						deleteUser: false
+					})
+				}
 			},
 			staleTime: Infinity,
 			enabled: !!year && !!semester
@@ -65,7 +85,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
-			<SideBar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} standards={standards} role={role}/>
+			<SideBar standards={standards} role={role}/>
 			<div className={'flex-grow h-screen max-h-screen flex flex-col'}>
 				<Header />
 				<main className='flex-1 no-scrollbar bg-gray-100'>

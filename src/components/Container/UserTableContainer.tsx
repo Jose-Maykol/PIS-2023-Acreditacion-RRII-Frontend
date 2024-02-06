@@ -9,13 +9,16 @@ export default function UserTableContainer() {
 	const [searchQuery, setSearchQuery] = useState('')
 	const [totalPages, setTotalPages] = useState(1)
 
-	const { data, isLoading, error, refetch } = useQuery(
+	const { data, isLoading, error, refetch, isFetching } = useQuery(
 		['users', currentPage, searchQuery],
 		() => UsersService.list({
 			page: currentPage,
 			search: searchQuery,
 			items: 8
-		})
+		}),
+		{
+			keepPreviousData: true
+		}
 	)
 
 	useEffect(() => {
@@ -41,8 +44,9 @@ export default function UserTableContainer() {
 
 	return (
 		<UserTablePresentation
-			tableData={data?.data.users}
+			tableData={data?.data.users || []}
 			isLoading={isLoading}
+			isFetching={isFetching}
 			error={error}
 			currentPage={currentPage}
 			totalPages={totalPages}

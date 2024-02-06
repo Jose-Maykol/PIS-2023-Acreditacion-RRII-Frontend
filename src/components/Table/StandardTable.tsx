@@ -135,7 +135,7 @@ export default function StandardTable () {
 						<Link
 							href={`/dashboard/standards/${standard.id}/narrative`}
 						>
-							{getCommonIcon('link', 17, 'fill-sky-300 hover:fill-sky-600')}
+							{getCommonIcon('redirect', 17, 'fill-sky-300 hover:fill-sky-600')}
 						</Link>
 					</Tooltip>
 				</div>

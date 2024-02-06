@@ -25,7 +25,10 @@ interface EditSemesterModalProps {
 	onOpenChange: (isOpen: boolean) => void
 }
 
-export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
+export default function EditSemesterModal({
+	isOpen,
+	onOpenChange
+}: EditSemesterModalProps) {
 	/* const semesters = [{ value: 'A' }, { value: 'B' }] */
 	const [isOpenCalendar, setIsOpenCalendar] = useState(false)
 	const [date, setDate] = useState(new Date())
@@ -93,7 +96,8 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
 				useYearSemesterStore.setState({
-					closingDate: dateFormated
+					closingDate: dateFormated,
+					isClosed: true
 				})
 			} else {
 				updateToast(notification, res.message, 'error')

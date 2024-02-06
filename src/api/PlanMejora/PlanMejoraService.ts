@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // TODO: Add PM interfaces
 // import { AssignedUsers, StandardValues } from '@/types/Standard'
 import { BaseService } from '../Base/BaseService'
@@ -50,8 +51,9 @@ export class PlanMejoraService extends BaseService {
 		return res
 	}
 
-	public static async readUser(year: number, semester: 'A' | 'B') {
-		const res = await api.get(`/${year}/${semester}/${url.readUser}`)
+	public static async readUser(params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/${url.readUser}`, { params })
 		return res.data
 	}
 }

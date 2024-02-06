@@ -17,7 +17,7 @@ export default function DashboardPage() {
 					</div>
 				</div>
 			</ContentWrapper>
-			<ContentWrapper className='bg-white h-[670px] -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
+			<ContentWrapper className='bg-white min-h-[585px] h-auto -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
 				<div className='flex w-full mb-5'>
 					<h2 className='text-xl font-semibold uppercase'>Lista de Planes de Mejora</h2>
 				</div>

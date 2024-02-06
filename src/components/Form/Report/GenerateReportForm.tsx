@@ -189,9 +189,9 @@ export default function GenerateReportForm() {
 	}
 
 	return (
-		<div className='border border-lightBlue-600 border-dashed rounded-lg p-4'>
+		<div className='border border-lightBlue-600 border-dashed rounded-lg p-4 max-w-[600px]'>
 			<h2 className='text-lg font-semibold text-lightBlue-600'>Generar reporte</h2>
-			<form className='pt-4 w-[600px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
+			<form className='pt-4 w-[568px] max-w-[568px] flex flex-row flex-wrap gap-5' onSubmit={handleSubmit}>
 				<Select
 					defaultSelectedKeys={[reports[0].value]}
 					name='report'
