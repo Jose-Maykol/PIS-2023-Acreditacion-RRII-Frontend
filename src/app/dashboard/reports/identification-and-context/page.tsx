@@ -61,7 +61,8 @@ export default function IdentificationContextReportPage() {
 	useEffect(() => {
 		ReportService.readContextIdentification()
 			.then((res) => {
-				if (res.status === 200) {
+				// if (res.status === 200) {
+					if (res.data.data.length !== 0) {
 					let data = res.data.data
 					const { region, province, district } = data.region_province_district
 					const { date_id, updated_at, id, created_at, ...rest } = data
