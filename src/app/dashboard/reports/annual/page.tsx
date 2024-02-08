@@ -56,7 +56,7 @@ export default function AnnualReportPage() {
 	useEffect(() => {
 		ReportService.readFacultyStaff()
 			.then((res) => {
-				if (res.status === 200) {
+				if (res.data.data.length !== 0) {
 					setInitialValues(res.data.data[0])
 					setIsEditing(true)
 				}
