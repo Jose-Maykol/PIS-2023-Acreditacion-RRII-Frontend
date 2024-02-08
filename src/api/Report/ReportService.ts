@@ -6,8 +6,8 @@ const url = {
 	summaryPlans: 'plans/export',
 	evidences: 'evidences/export',
 	plan: 'plans/:id/export',
-	context: 'standards/context/export',
-	anual: 'standards/anual/export',
+	context: 'ident-context/export',
+	anual: 'faculty-staff/export',
 	createContextIdentification: 'ident-context/',
 	facultyStaff: 'faculty-staff'
 }
