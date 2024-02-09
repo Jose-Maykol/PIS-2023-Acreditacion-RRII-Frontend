@@ -57,7 +57,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			const notification = showToast('Procesando...')
 			updateToast(notification, 'Se ha liberado la narrativa', 'success')
 		})
-		toggleSidebar(false)
+		// toggleSidebar(false)
 	}
 
 	const handleSaveNarrative = () => {
@@ -76,7 +76,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			router.push(`/dashboard/standards/${id}/narrative`)
 		}
 		setIsEditingNarrative(false)
-		toggleSidebar(false)
+		// toggleSidebar(false)
 	}
 
 	useEffect(() => {
