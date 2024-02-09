@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 'use client'
 
-import React, { Dispatch, SetStateAction } from 'react'
+import React, { Dispatch, SetStateAction, useCallback } from 'react'
 
 import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
@@ -16,19 +16,22 @@ import Link from 'next/link'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
 import { ImprovementPlans, StandardOption } from '@/types/ImprovementPlan'
 import { useRouter } from 'next/navigation'
+import { useToast } from '@/hooks/toastProvider'
 
 type TableProps = {
 	id?: string
 	improvementPlans: Array<ImprovementPlans>
 	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
 	standardsOptions?: Array<StandardOption>
+	isManager: boolean
 }
 
 export default function ImprovementPlansTable({
 	id,
 	improvementPlans,
 	setImprovementPlans,
-	standardsOptions
+	standardsOptions,
+	isManager
 }: TableProps) {
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
@@ -39,6 +42,8 @@ export default function ImprovementPlansTable({
 
 	const rowsPerPage = 10
 	const hasSearchFilter = Boolean(filterValue)
+
+	const { showToast, updateToast } = useToast()
 
 	const filteredItems = React.useMemo(() => {
 		let filteredPlans = [...improvementPlans]
@@ -80,6 +85,15 @@ export default function ImprovementPlansTable({
 
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
+
+	const handleVerifyPermission = useCallback((path: string) => {
+		if (!isManager) {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+			return
+		}
+		router.push(path)
+	}, [isManager])
 
 	const renderCell = React.useCallback(
 		(improvementPlan: ImprovementPlans, columnKey: React.Key) => {
@@ -148,17 +162,18 @@ export default function ImprovementPlansTable({
 							</Link>
 						</Tooltip>
 						<Tooltip content='Editar Plan de Mejora'>
-							<Link
-								href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}
+							<div
+								onClick={() => handleVerifyPermission(`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`)}
 							>
 								<span className='text-default-400 cursor-pointer active:opacity-50'>
 									<PencilIcon width={15} height={15} fill='fill-warning' />
 								</span>
-							</Link>
+							</div>
 						</Tooltip>
 						<DeleteImprovementPlanModal
 							planId={improvementPlan.id}
 							setImprovementPlans={setImprovementPlans}
+							isManager={isManager}
 						/>
 					</div>
 				)
@@ -237,7 +252,7 @@ export default function ImprovementPlansTable({
 							<Button
 								color='primary'
 								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
-								onClick={() => router.push(`/dashboard/standards/${id}/evidence_improvements/new`)}
+								onClick={() => handleVerifyPermission(`/dashboard/standards/${id}/evidence_improvements/new`)}
 							>
 								Crear PM
 							</Button>
