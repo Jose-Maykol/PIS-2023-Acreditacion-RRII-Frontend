@@ -105,6 +105,7 @@ export default function MyImprovementPlansTable({
 						? (
 							<DeleteImprovementPlanModal
 								planId={improvementPlan.id}
+								isManager={true}
 								setImprovementPlans={handleUsersChanged}
 							/>
 						)
