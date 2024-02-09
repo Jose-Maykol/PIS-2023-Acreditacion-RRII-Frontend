@@ -87,11 +87,11 @@ export default function ImprovementPlansTable({
 	}, [page, filteredItems, rowsPerPage])
 
 	const handleVerifyPermission = useCallback((path: string) => {
-		if (!isManager) {
-			const notification = showToast('Procesando...')
-			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
-			return
-		}
+		// if (!isManager) {
+		// 	const notification = showToast('Procesando...')
+		// 	updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+		// 	return
+		// }
 		router.push(path)
 	}, [isManager])
 
