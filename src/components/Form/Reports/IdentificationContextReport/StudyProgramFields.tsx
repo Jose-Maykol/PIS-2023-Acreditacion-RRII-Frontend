@@ -33,6 +33,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -47,6 +48,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.academic_level && formik.errors.academic_level}
 					size='sm'
 					type='text'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -61,6 +63,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.cui && formik.errors.cui}
 					size='sm'
 					type='text'
+					maxLength={10}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -75,6 +78,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.grade_denomination && formik.errors.grade_denomination}
 					size='sm'
 					type='text'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -89,6 +93,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.title_denomination && formik.errors.title_denomination}
 					size='sm'
 					type='text'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -103,6 +108,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.authorized_offer && formik.errors.authorized_offer}
 					size='sm'
 					type='text'
+					maxLength={64}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -125,6 +131,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -145,6 +152,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='email'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-3'>
@@ -165,6 +173,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={20}
 				/>
 			</div>
 		</div>
