@@ -2,13 +2,13 @@
 
 import { Chip, Progress, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@nextui-org/react'
 import { columns, statusColorMap } from '../../utils/data_improvement_plans'
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
 import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 import TrashIcon from '../Icons/TrashIcon'
 
 interface MyImprovementPlansTableProps {
@@ -20,7 +20,7 @@ export default function MyImprovementPlansTable({
 	data,
 	handleUsersChanged
 }: MyImprovementPlansTableProps) {
-	const { isClosed } = useYearSemesterStore()
+	const { permissions } = usePermissionsStore()
 
 	const renderCell = useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
@@ -76,7 +76,7 @@ export default function MyImprovementPlansTable({
 			)
 		case 'actions':
 			return (
-				<div className='relative flex gap-4'>
+				<div className='relative flex gap-4 justify-center items-center h-full'>
 					<Tooltip content='Detalle'>
 						<Link
 							href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/details`}
@@ -86,12 +86,9 @@ export default function MyImprovementPlansTable({
 							</span>
 						</Link>
 					</Tooltip>
-					<Tooltip content='Editar Plan de Mejora'>
-						{isClosed === true
-							? (
-								<PencilIcon width={15} height={15} fill='fill-gray-400' />
-							)
-							: (
+					{permissions.updatePlan
+						? (
+							<Tooltip content='Editar Plan de Mejora'>
 								<Link
 									href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
 								>
@@ -99,9 +96,12 @@ export default function MyImprovementPlansTable({
 										<PencilIcon width={15} height={15} fill='fill-warning' />
 									</span>
 								</Link>
-							)}
-					</Tooltip>
-					{isClosed === true
+							</Tooltip>
+						)
+						: (
+							<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
+						)}
+					{permissions.deletePlan
 						? (
 							<DeleteImprovementPlanModal
 								planId={improvementPlan.id}
@@ -109,7 +109,7 @@ export default function MyImprovementPlansTable({
 							/>
 						)
 						: (
-							<TrashIcon width={15} height={15} fill='fill-gray-400' />
+							<TrashIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
 						)
 					}
 				</div>
