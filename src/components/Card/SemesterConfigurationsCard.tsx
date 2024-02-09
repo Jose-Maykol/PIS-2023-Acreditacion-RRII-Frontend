@@ -65,7 +65,7 @@ export default function SemesterConfigurationsCard() {
 	return (
 		<div className='flex-1 rounded-lg p-4 border border-lightBlue-600 border-dashed w-full min-w-[300px] max-h-[300px]'>
 			<div className='flex flex-row justify-between items-center w-full'>
-				<h2 className='text-lg font-semibold text-lightBlue-600'>Configurar semestre actual</h2>
+				<h2 className='text-lg font-semibold text-lightBlue-600'>Configuraciones y datos de semestre</h2>
 				<Button
 					color='primary'
 					onPress={handleCreateSemesterOpen}

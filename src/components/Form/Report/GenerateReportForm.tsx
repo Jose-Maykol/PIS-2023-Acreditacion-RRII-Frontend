@@ -61,13 +61,17 @@ export default function GenerateReportForm() {
 		const notification = showToast('Generando reporte...')
 		ReportService.generateSummaryPlansReport()
 			.then((res) => {
-				const url = window.URL.createObjectURL(new Blob([res.data]))
-				const link = document.createElement('a')
-				link.href = url
-				link.setAttribute('download', 'reporte_plan_resumen.docx')
-				document.body.appendChild(link)
-				link.click()
-				updateToast(notification, 'Reporte generado', 'success')
+				if (res.status === 404) {
+					updateToast(notification, 'No se encontró ningún plan de mejora en este periodo.', 'error')
+				} else {
+					const url = window.URL.createObjectURL(new Blob([res.data]))
+					const link = document.createElement('a')
+					link.href = url
+					link.setAttribute('download', 'reporte_plan_resumen.docx')
+					document.body.appendChild(link)
+					link.click()
+					updateToast(notification, 'Reporte generado', 'success')
+				}
 			}).catch((err) => {
 				updateToast(notification, err.message, 'error')
 			})
@@ -77,14 +81,19 @@ export default function GenerateReportForm() {
 		const notification = showToast('Generando reporte...')
 		ReportService.generateContextReport()
 			.then((res) => {
-				const url = window.URL.createObjectURL(new Blob([res.data]))
-				const link = document.createElement('a')
-				link.href = url
-				link.setAttribute('download', 'reporte_identificacion_contexto.docx')
-				document.body.appendChild(link)
-				link.click()
-				updateToast(notification, 'Reporte generado', 'success')
+				if (res.status === 404) {
+					updateToast(notification, 'Este periodo no cuenta con datos de contexto', 'error')
+				} else {
+					const url = window.URL.createObjectURL(new Blob([res.data]))
+					const link = document.createElement('a')
+					link.href = url
+					link.setAttribute('download', 'reporte_identificacion_contexto.docx')
+					document.body.appendChild(link)
+					link.click()
+					console.log('res', res)
+				}
 			}).catch((err) => {
+				console.log('err', err)
 				updateToast(notification, err.message, 'error')
 			})
 	}
@@ -93,13 +102,17 @@ export default function GenerateReportForm() {
 		const notification = showToast('Generando reporte...')
 		ReportService.generateAnualReport(params)
 			.then((res) => {
-				const url = window.URL.createObjectURL(new Blob([res.data]))
-				const link = document.createElement('a')
-				link.href = url
-				link.setAttribute('download', 'reporte_anual_RRII.xlsx')
-				document.body.appendChild(link)
-				link.click()
-				updateToast(notification, 'Reporte generado', 'success')
+				if (res.status === 404) {
+					updateToast(notification, 'Este año no cuenta con datos completos de personal docente', 'error')
+				} else {
+					const url = window.URL.createObjectURL(new Blob([res.data]))
+					const link = document.createElement('a')
+					link.href = url
+					link.setAttribute('download', 'reporte_anual_RRII.xlsx')
+					document.body.appendChild(link)
+					link.click()
+					updateToast(notification, 'Reporte generado', 'success')
+				}
 			}).catch((err) => {
 				updateToast(notification, err.message, 'error')
 			})
