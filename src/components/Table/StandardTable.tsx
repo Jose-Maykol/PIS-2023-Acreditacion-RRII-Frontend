@@ -22,6 +22,8 @@ import { StandardUsers } from '@/types/Standard'
 import { getCommonIcon } from '@/utils/utils'
 import Link from 'next/link'
 import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
+import PencilIcon from '../Icons/PencilIcon'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'logrado satisfactoriamente': 'success',
@@ -38,6 +40,7 @@ export default function StandardTable () {
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
 	const [reload, setReload] = useState<boolean>(false)
 	const { year, semester } = useYearSemesterStore()
+	const { permissions } = usePermissionsStore()
 
 	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
@@ -130,7 +133,12 @@ export default function StandardTable () {
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
-					<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />
+					{permissions.updateStandard
+						? (
+							<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />)
+						: (
+							<PencilIcon width={20} height={20} fill='fill-gray-300 hover:cursor-not-allowed' />
+						)}
 					<Tooltip content='Ver Estandar'>
 						<Link
 							href={`/dashboard/standards/${standard.id}/narrative`}

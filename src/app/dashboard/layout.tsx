@@ -23,9 +23,9 @@ import { usePathname } from 'next/navigation'
 // }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-	const { setPermissions, role, permissions } = usePermissionsStore()
+	const { setPermissions, role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
-	const { year, semester } = useYearSemesterStore()
+	const { year, semester, setId, setIsClosed, setClosingDate } = useYearSemesterStore()
 	const queryClient = useQueryClient()
 	const { narrativeBlockedId, setNarrativeBlockedId, unlockNarrative, setIsEditingNarrative, isNarrativeBlock } = useNarrativeStore()
 	const { showToast, updateToast } = useToast()
@@ -70,11 +70,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				const id = data.data[0].id
 				const closingDate = data.data[0].closing_date
 				const isClosed = data.data[0].is_closed
-				useYearSemesterStore.getState().setId(id)
-				useYearSemesterStore.getState().setIsClosed(isClosed)
-				useYearSemesterStore.getState().setClosingDate(closingDate)
-				console.log(isClosed || (new Date(closingDate) < new Date()))
-				if ((isClosed || (new Date(closingDate) < new Date())) === true) {
+				setId(id)
+				setIsClosed(isClosed)
+				setClosingDate(closingDate)
+				if (new Date(closingDate) < new Date()) {
 					setPermissions({
 						createStandard: false,
 						readStandard: false,
@@ -93,48 +92,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 						updateUser: false,
 						deleteUser: false
 					})
-				} else {
-					if (role === 'administrador') {
-						setPermissions({
-							createStandard: true,
-							readStandard: true,
-							updateStandard: true,
-							deleteStandard: true,
-							createPlan: true,
-							readPlan: true,
-							updatePlan: true,
-							deletePlan: true,
-							createEvidence: true,
-							readEvidence: true,
-							updateEvidence: true,
-							deleteEvidence: true,
-							createUser: true,
-							readUser: true,
-							updateUser: true,
-							deleteUser: true
-						})
-					} else if (role === 'docente') {
-						setPermissions({
-							createStandard: false,
-							readStandard: true,
-							updateStandard: false,
-							deleteStandard: false,
-							createPlan: true,
-							readPlan: true,
-							updatePlan: true,
-							deletePlan: true,
-							createEvidence: true,
-							readEvidence: true,
-							updateEvidence: true,
-							deleteEvidence: true,
-							createUser: false,
-							readUser: true,
-							updateUser: false,
-							deleteUser: false
-						})
-					}
 				}
-				console.log('permisos', permissions)
 			},
 			staleTime: Infinity,
 			enabled: !!year && !!semester

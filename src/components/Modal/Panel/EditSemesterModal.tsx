@@ -38,7 +38,7 @@ export default function EditSemesterModal({
 	const [isValidSemester, setIsValidSemester] = useState<boolean | null >(null) */
 	// const [isValidDate, setIsValidDate] = useState<boolean | null >(null)
 	/* const [touchedSemester, setTouchedSemester] = useState(false) */
-	const { year, semester, closingDate } = useYearSemesterStore()
+	// const { year, semester, closingDate } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
 
 	/* const validateYear = (value:string) => {
@@ -94,7 +94,7 @@ export default function EditSemesterModal({
 			closing_date: dateFormated
 		}).then((res) => {
 			if (res.status === 1) {
-				updateToast(notification, res.message, 'success')
+				updateToast(notification, 'Fecha de cierre actualizada', 'success')
 				useYearSemesterStore.setState({
 					closingDate: dateFormated,
 					isClosed: true

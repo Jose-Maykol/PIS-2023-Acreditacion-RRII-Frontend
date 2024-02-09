@@ -2,7 +2,7 @@
 
 import { Chip, Progress, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@nextui-org/react'
 import { columns, statusColorMap } from '../../utils/data_improvement_plans'
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImprovementPlanModal'
 import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
