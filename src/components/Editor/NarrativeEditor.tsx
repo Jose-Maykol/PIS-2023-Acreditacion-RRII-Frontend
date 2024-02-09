@@ -38,7 +38,6 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 	const loadNarrative = useMemo(() => {
 		return (id: number) => {
 			NarrativeService.getNarrative(id).then((res) => {
-				console.log('carga de narrativa', res.data)
 				setContent(res.data.narrative)
 			})
 		}
@@ -58,6 +57,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			const notification = showToast('Procesando...')
 			updateToast(notification, 'Se ha liberado la narrativa', 'success')
 		})
+		toggleSidebar(false)
 	}
 
 	const handleSaveNarrative = () => {
@@ -76,6 +76,7 @@ export default function NarrativeEditor({ id } : NarrativeEditorProps) {
 			router.push(`/dashboard/standards/${id}/narrative`)
 		}
 		setIsEditingNarrative(false)
+		toggleSidebar(false)
 	}
 
 	useEffect(() => {
