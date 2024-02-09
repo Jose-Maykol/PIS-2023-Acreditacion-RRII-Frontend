@@ -31,7 +31,7 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 	}
 
 	const [improvementPlans, setImpmrovementPlans] = useState<ImprovementPlans[]>([])
-	const [isManager, setIsManager] = useState<boolean>(false)
+	const [isManager, setIsManager] = useState<boolean>(true)
 
 	useEffect(() => {
 		PlanMejoraService.readByStandard(params.id)

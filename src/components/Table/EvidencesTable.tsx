@@ -38,7 +38,7 @@ export default function EvidencesTable({
 	const rowsPerPage = 100
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
-	const [isManager, setIsManager] = useState<boolean>(false)
+	const [isManager, setIsManager] = useState<boolean>(true)
 	const [evidence, setEvidence] = useState<Evidence>({
 		id: '',
 		code: '',
