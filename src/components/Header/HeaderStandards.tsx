@@ -8,7 +8,6 @@ import { StandardService } from '@/api/Estandar/StandardService'
 import { StandardHeader, StandardValues } from '@/types/Standard'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
 
 const HeaderStandards = ({ id }: { id: string }) => {
 	const [standardHeader, setStandardHeader] = useState<StandardHeader>({
@@ -28,12 +27,11 @@ const HeaderStandards = ({ id }: { id: string }) => {
 	})
 
 	const [isRead, setIsRead] = useState<boolean>(true)
-	const [reload, setReload] = useState<boolean>(false)
+	const [refresh, setRefresh] = useState<boolean>(false)
 	const { year, semester } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
-	const { setNarrativeEnable, setNarrativeDisable } = useNarrativeStore()
 
-	const handleChange = (key: string, value: string) => {
+	const onTextareaChange = (key: string, value: string) => {
 		setStandardHeader((prev) => ({
 			...prev,
 			[key]: value
@@ -42,7 +40,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager, narrative_is_active: isNarrativeEdit } = res.data
+			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
 			setStandardHeader({
 				name,
 				description,
@@ -55,16 +53,11 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					isManager
 				}
 			})
-			if (isNarrativeEdit) {
-				setNarrativeEnable()
-			} else {
-				setNarrativeDisable()
-			}
 		})
-		setReload(false)
-	}, [reload, year, semester])
+		setRefresh(false)
+	}, [refresh, year, semester])
 
-	const handleUpdateHeader = async () => {
+	const onSubmit = async () => {
 		const notification = showToast('Procesando...')
 		const { name, description, dimension, factor, standardRelated } : StandardValues = standardHeader
 		await StandardService.updateHeader(
@@ -77,18 +70,20 @@ const HeaderStandards = ({ id }: { id: string }) => {
 				standardRelated
 			}).then((res) => {
 			if (res.status === 1) {
-				setReload(true)
+				setRefresh(true)
 				updateToast(notification, res.message, 'success')
 			} else {
 				updateToast(notification, res.message, 'error')
 			}
+		}).catch((err) => {
+			updateToast(notification, err.response.data.msg, 'error')
 		})
 		setIsRead(true)
 	}
 
-	const handleCancelUpdateHeader = () => {
+	const onCancel = () => {
 		setIsRead(true)
-		setReload(true)
+		setRefresh(true)
 	}
 
 	return (
@@ -100,7 +95,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					className='max-w-4xl'
 					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 					value={standardHeader.name.toUpperCase()}
-					onValueChange={(value) => handleChange('name', value)}
+					onValueChange={(value) => onTextareaChange('name', value)}
 					classNames={{
 						base: 'bg-transparent',
 						input: `scrollbar-hide text-3xl font-bold ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`,
@@ -114,7 +109,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					maxRows={2}
 					variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 					value={standardHeader.description}
-					onValueChange={(value) => handleChange('description', value)}
+					onValueChange={(value) => onTextareaChange('description', value)}
 					classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 				/>
 			</div>
@@ -126,7 +121,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						maxRows={1}
 						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.factor}
-						onValueChange={(value) => handleChange('factor', value)}
+						onValueChange={(value) => onTextareaChange('factor', value)}
 						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 					/>
 				</div>
@@ -137,7 +132,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						maxRows={1}
 						variant={isRead || !standardHeader.permissions.isAdministrator ? 'bordered' : 'faded'}
 						value={standardHeader.dimension}
-						onValueChange={(value) => handleChange('dimension', value)}
+						onValueChange={(value) => onTextareaChange('dimension', value)}
 						classNames={{ input: `scrollbar-hide ${isRead || !standardHeader.permissions.isAdministrator ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 					/>
 				</div>
@@ -149,7 +144,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					maxRows={2}
 					variant={isRead ? 'bordered' : 'faded'}
 					value={standardHeader.standardRelated}
-					onValueChange={(value) => handleChange('standardRelated', value)}
+					onValueChange={(value) => onTextareaChange('standardRelated', value)}
 					classNames={{ input: `scrollbar-hide ${isRead ? '' : 'text-black'}`, inputWrapper: 'rounded-md' }}
 				/>
 			</div>
@@ -162,7 +157,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					{!isRead && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={handleCancelUpdateHeader}
+							onPress={onCancel}
 							color='danger'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
@@ -182,7 +177,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					{!isRead && standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={handleUpdateHeader}
+							onPress={onSubmit}
 							color='success'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
@@ -192,7 +187,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 					{!isRead && !standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
-							onPress={handleUpdateHeader}
+							onPress={onSubmit}
 							color='success'
 							startContent={<PencilIcon width={15} height={15} fill='fill-white' />}
 						>
