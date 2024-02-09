@@ -123,6 +123,11 @@ export default function SideBar({
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
 			<ul className={'flex-1 text-sm list-none my-3 h-full overflow-auto scrollbar-hide'}>
+				{ standards.length === 0 && (
+					<div className='text-sm text-gray-400 self-center h-full w-full flex items-center justify-center text-center'>
+						<p className='uppercase text-sm'>No hay estándares disponibles</p>
+					</div>
+				)}
 				{Array.isArray(standards) &&
 					standards.map((standard: PartialStandard, index: number) => (
 						<SideBarItem
