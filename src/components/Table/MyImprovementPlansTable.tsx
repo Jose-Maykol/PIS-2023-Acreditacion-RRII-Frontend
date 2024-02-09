@@ -8,8 +8,6 @@ import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import { usePermissionsStore } from '@/store/usePermissionsStore'
-import TrashIcon from '../Icons/TrashIcon'
 
 interface MyImprovementPlansTableProps {
   data: ImprovementPlans[]
@@ -20,8 +18,6 @@ export default function MyImprovementPlansTable({
 	data,
 	handleUsersChanged
 }: MyImprovementPlansTableProps) {
-	const { permissions } = usePermissionsStore()
-
 	const renderCell = useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 		switch (columnKey) {
@@ -86,32 +82,20 @@ export default function MyImprovementPlansTable({
 							</span>
 						</Link>
 					</Tooltip>
-					{permissions.updatePlan
-						? (
-							<Tooltip content='Editar Plan de Mejora'>
-								<Link
-									href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
-								>
-									<span className='text-default-400 cursor-pointer active:opacity-50'>
-										<PencilIcon width={15} height={15} fill='fill-warning' />
-									</span>
-								</Link>
-							</Tooltip>
-						)
-						: (
-							<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
-						)}
-					{permissions.deletePlan
-						? (
-							<DeleteImprovementPlanModal
-								planId={improvementPlan.id}
-								setImprovementPlans={handleUsersChanged}
-							/>
-						)
-						: (
-							<TrashIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
-						)
-					}
+					<Tooltip content='Editar Plan de Mejora'>
+						<Link
+							href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
+						>
+							<span className='text-default-400 cursor-pointer active:opacity-50'>
+								<PencilIcon width={15} height={15} fill='fill-warning' />
+							</span>
+						</Link>
+					</Tooltip>
+					<DeleteImprovementPlanModal
+						planId={improvementPlan.id}
+						isManager={true}
+						setImprovementPlans={handleUsersChanged}
+					/>
 				</div>
 			)
 		default:
