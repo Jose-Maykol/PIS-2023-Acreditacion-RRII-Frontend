@@ -21,7 +21,7 @@ import { useQuery, useQueryClient } from 'react-query'
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
 	const { setPermissions, role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
-	const { year, semester } = useYearSemesterStore()
+	const { year, semester, setId, setIsClosed, setClosingDate } = useYearSemesterStore()
 	const queryClient = useQueryClient()
 
 	useInactivityMonitor()
@@ -50,10 +50,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 				const id = data.data[0].id
 				const closingDate = data.data[0].closing_date
 				const isClosed = data.data[0].is_closed
-				useYearSemesterStore.getState().setId(id)
-				useYearSemesterStore.getState().setIsClosed(isClosed)
-				useYearSemesterStore.getState().setClosingDate(closingDate)
-				if (isClosed || (new Date(closingDate) < new Date())) {
+				setId(id)
+				setIsClosed(isClosed)
+				setClosingDate(closingDate)
+				if (new Date(closingDate) < new Date()) {
 					setPermissions({
 						createStandard: false,
 						readStandard: false,

@@ -77,7 +77,7 @@ export default function SemesterConfigurationsCard() {
 			<div className='pt-4 flex justify-between items-center gap-4'>
 				<p>{year} - {semester}</p>
 				<div>
-					<Tooltip content='Editar semestre'>
+					<Tooltip content='Editar fecha de cierre del semestre'>
 						<Button
 							isIconOnly
 							startContent={<PencilIcon width={16} height={16} fill='fill-lightBlue-600'/>}

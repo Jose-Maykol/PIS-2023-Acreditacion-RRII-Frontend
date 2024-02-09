@@ -1,9 +1,8 @@
 import { ImprovementPlans } from '@/types/ImprovementPlan'
 import { Pagination, Spinner } from '@nextui-org/react'
-import MyImprovementPlansTable from '../Table/MyImprovementPlansTable'
+// import MyImprovementPlansTable from '../Table/MyImprovementPlansTable'
 import FilterMyImprovementPlansTable from '../Filter/FilterMyImprovementPlansTable'
-
-
+import dynamic from 'next/dynamic'
 
 interface MyImprovementPlansTablePresentationProps {
   tableData: ImprovementPlans[]
@@ -16,6 +15,13 @@ interface MyImprovementPlansTablePresentationProps {
   onSearchChange: (searchQuery: string) => void
   onImprovementPlansChanged: () => void
 }
+
+const MyImprovementPlansTable = dynamic(() => import('../Table/MyImprovementPlansTable'), {
+	loading: () => <div className='min-h-[445px] h-[445px] w-full flex justify-center content-center'>
+		<Spinner />
+	</div>,
+	ssr: false
+})
 
 export default function MyImprovementPlansTablePresentation({
 	tableData,
