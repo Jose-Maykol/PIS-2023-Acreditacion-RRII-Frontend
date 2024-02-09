@@ -11,7 +11,11 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import useInactivityMonitor from '@/hooks/useInactivityMonitor'
 import InactivityModal from '@/components/Modal/Auth/InactivityModal'
+import { NarrativeService } from '@/api/Narrative/narrativeService'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useQuery, useQueryClient } from 'react-query'
+import { useToast } from '@/hooks/toastProvider'
+import { usePathname } from 'next/navigation'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -19,22 +23,34 @@ import { useQuery, useQueryClient } from 'react-query'
 // }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-	const [isSidebarOpen, setIsSidebarOpen] = useState(true)
 	const { setPermissions, role } = usePermissionsStore()
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester } = useYearSemesterStore()
 	const queryClient = useQueryClient()
+	const { narrativeBlockedId, setNarrativeBlockedId, unlockNarrative, setIsEditingNarrative, isNarrativeBlock } = useNarrativeStore()
+	const { showToast, updateToast } = useToast()
+	const pathname = usePathname()
+
 
 	useInactivityMonitor()
-	const toggleSidebar = () => {
-		setIsSidebarOpen(!isSidebarOpen)
-	}
 
 	useEffect(() => {
 		if (year && semester) {
 			BaseService.configure(year, semester)
 		}
-	}, [year, semester, queryClient])
+		if (narrativeBlockedId || pathname.split('/')[4] !== 'narrative') {
+			NarrativeService.unlockNarrative(String(narrativeBlockedId)).then((res) => {
+				console.log('res de blockNarrative', res.data)
+				const notification = showToast('Procesando...')
+				updateToast(notification, 'Narrativa liberada', 'info')
+				setNarrativeBlockedId(null)
+				unlockNarrative(false)
+				setIsEditingNarrative(false)
+			}).catch((err: any) => {
+				console.log('err de blockNarrative', err)
+			})
+		}
+	}, [year, semester, queryClient, isNarrativeBlock])
 
 	useQuery(
 		['standards', year, semester],

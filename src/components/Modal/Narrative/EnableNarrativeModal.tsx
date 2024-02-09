@@ -5,6 +5,7 @@ import CustomModal from '../CustomModal'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import WarningIcon from '@/components/Icons/WarningIcon'
 import { useToast } from '@/hooks/toastProvider'
+import { useRouter } from 'next/navigation'
 
 interface EnableNarrativeModalProps {
 	id: string
@@ -15,6 +16,7 @@ interface EnableNarrativeModalProps {
 
 export default function EnableNarrativeModal({ id, isOpen, onConfirmation, onCancel }: EnableNarrativeModalProps) {
 	const { showToast, updateToast } = useToast()
+	const router = useRouter()
 
 	const header: ReactNode = (
 		<h2 className='flex flex-col gap-1 text-lightBlue-600 uppercase'>
@@ -42,6 +44,7 @@ export default function EnableNarrativeModal({ id, isOpen, onConfirmation, onCan
 			updateToast(notification, 'Ocurrio un error al habilitar la Narrativa', 'error')
 		})
 		onConfirmation()
+		router.refresh()
 	}
 
 	return (
