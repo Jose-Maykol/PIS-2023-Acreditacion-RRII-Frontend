@@ -9,67 +9,99 @@ import { FacultyStaffPart1Fields } from '@/components/Form/Reports/FacultyStaffR
 import { FacultyStaffPart2Fields } from '@/components/Form/Reports/FacultyStaffReport/FacultyStaffPart2Fields'
 import { FacultyStaffPart3Fields } from '@/components/Form/Reports/FacultyStaffReport/FacultyStaffPart3Fields'
 import { Button } from '@nextui-org/react'
-import AngleDoubleRightIcon from '@/components/Icons/AngleDoubleRightIcon'
 import CloseIcon from '@/components/Icons/CloseIcon'
 import { ReportService } from '@/api/Report/ReportService'
 import showToast from '../identification-and-context/toastHelper'
+import { useEffect, useState } from 'react'
+import SaveIcon from '@/components/Icons/SaveIcon'
 
 export default function AnnualReportPage() {
 	const router = useRouter()
 
+	const [isEditing, setIsEditing] = useState(false)
+	const [initialValues, setInitialValues] = useState({
+		number_extraordinary_professor: 0,
+		number_ordinary_professor_main: 0,
+		number_ordinary_professor_associate: 0,
+		number_ordinary_professor_assistant: 0,
+		number_contractor_professor: 0,
+		ordinary_professor_exclusive_dedication: 0,
+		ordinary_professor_fulltime: 0,
+		ordinary_professor_parttime: 0,
+		contractor_professor_fulltime: 0,
+		contractor_professor_parttime: 0,
+		distinguished_researcher: 0,
+		researcher_level_i: 0,
+		researcher_level_ii: 0,
+		researcher_level_iii: 0,
+		researcher_level_iv: 0,
+		researcher_level_v: 0,
+		researcher_level_vi: 0,
+		researcher_level_vii: 0,
+		number_publications_indexed: 0,
+		intellectual_property_indecopi: 0,
+		number_research_project_inexecution: 0,
+		number_research_project_completed: 0,
+		number_professor_inperson_academic_movility: 0,
+		number_professor_virtual_academic_movility: 0,
+		number_vacancies: 0,
+		number_applicants: 0,
+		number_admitted_candidates: 0,
+		number_enrolled_students: 0,
+		number_graduates: 0,
+		number_alumni: 0,
+		number_degree_recipients: 0
+	})
+
+	useEffect(() => {
+		ReportService.readFacultyStaff()
+			.then((res) => {
+				if (res.data.data.length !== 0) {
+					setInitialValues(res.data.data[0])
+					setIsEditing(true)
+				}
+			})
+			.catch((error) => {
+				console.log(error)
+			})
+	}, [])
+
 	const formik = useFormik({
-		initialValues: {
-			number_extraordinary_professor: 0,
-			number_ordinary_professor_main: 0,
-			number_ordinary_professor_associate: 0,
-			number_ordinary_professor_assistant: 0,
-			number_contractor_professor: 0,
-			ordinary_professor_exclusive_dedication: 0,
-			ordinary_professor_fulltime: 0,
-			ordinary_professor_parttime: 0,
-			contractor_professor_fulltime: 0,
-			contractor_professor_parttime: 0,
-			distinguished_researcher: 0,
-			researcher_level_i: 0,
-			researcher_level_ii: 0,
-			researcher_level_iii: 0,
-			researcher_level_iv: 0,
-			researcher_level_v: 0,
-			researcher_level_vi: 0,
-			researcher_level_vii: 0,
-			number_publications_indexed: 0,
-			intellectual_property_indecopi: 0,
-			number_research_project_inexecution: 0,
-			number_research_project_completed: 0,
-			number_professor_inperson_academic_movility: 0,
-			number_professor_virtual_academic_movility: 0,
-			number_vacancies: 0,
-			number_applicants: 0,
-			number_admitted_candidates: 0,
-			number_enrolled_students: 0,
-			number_graduates: 0,
-			number_alumni: 0,
-			number_degree_recipients: 0
-		},
+		initialValues,
 		validationSchema,
+		enableReinitialize: true,
 		onSubmit: (values) => {
 			const facultyStaffData = {
 				...values,
 				number_contractor_professor:
 					values.contractor_professor_fulltime + values.contractor_professor_parttime
 			}
-			console.log(facultyStaffData)
-			ReportService.createFacultyStaffReport(facultyStaffData)
-				.then((res) => {
-					if (res.status === 201) {
-						showToast('success', 'Datos del Personal guardados con éxito')
-						router.back()
-					}
-				})
-				.catch((error) => {
-					console.log(error)
-					showToast('error', 'Ocurrió un problema, intentar nuevamente')
-				})
+
+			if (isEditing) {
+				ReportService.updateFacultyStaff(facultyStaffData)
+					.then((res) => {
+						if (res.status === 200) {
+							showToast('success', 'Datos del Personal actualizados con éxito')
+							router.back()
+						}
+					})
+					.catch((error) => {
+						console.log(error)
+						showToast('error', 'Ocurrió un problema, intentar nuevamente')
+					})
+			} else {
+				ReportService.createFacultyStaff(facultyStaffData)
+					.then((res) => {
+						if (res.status === 201) {
+							showToast('success', 'Datos del Personal guardados con éxito')
+							router.back()
+						}
+					})
+					.catch((error) => {
+						console.log(error)
+						showToast('error', 'Ocurrió un problema, intentar nuevamente')
+					})
+			}
 		}
 	})
 
@@ -100,10 +132,10 @@ export default function AnnualReportPage() {
 						</Button>
 						<Button
 							color='primary'
-							endContent={<AngleDoubleRightIcon width={15} height={15} fill='fill-blue-300' />}
+							endContent={<SaveIcon width={15} height={15} fill='fill-blue-300' />}
 							type='submit'
 						>
-							Subir
+							Guardar
 						</Button>
 					</div>
 				</form>

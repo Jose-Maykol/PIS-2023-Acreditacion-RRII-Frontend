@@ -250,7 +250,7 @@ export const FacultyStaffPart1Fields = ({ formik }: { formik: any }) => {
 						/>
 					</div>
 				</div>
-				<hr className='mt-5'/>
+				<hr className='mt-5' />
 			</div>
 		</div>
 	)

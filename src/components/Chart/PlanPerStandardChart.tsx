@@ -45,7 +45,6 @@ export default function PlanPerStandardChart() {
 				})
 			},
 			retry: 2,
-			staleTime: 1000 * 60 * 5, // 5 minutos
 			enabled: !!year && !!semester
 		}
 	)

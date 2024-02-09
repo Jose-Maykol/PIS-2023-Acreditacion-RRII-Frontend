@@ -8,12 +8,14 @@ import { useRouter } from 'next/navigation'
 import { Button } from '@nextui-org/react'
 import TrashIcon from '../Icons/TrashIcon'
 import SaveIcon from '../Icons/SaveIcon'
+import { useQueryClient } from 'react-query'
 
 
 export default function CreateStandardContainer() {
 	const [standards, setStandards] = useState<Standard[]>([])
 	const [editingStandard, setEditingStandard] = useState<Standard | null>(null)
 	const { showToast, updateToast } = useToast()
+	const queryClient = useQueryClient()
 	const router = useRouter()
 
 	const addStandard = (newStandard: Standard) => {
@@ -63,6 +65,7 @@ export default function CreateStandardContainer() {
 				updateToast(notification, res.message, 'error')
 			}
 		})
+		queryClient.refetchQueries('standards')
 		router.push('/dashboard/admin')
 	}
 
