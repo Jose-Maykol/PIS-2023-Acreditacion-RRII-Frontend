@@ -105,7 +105,7 @@ export default function EvidencesTable({
 		}
 
 		return filteredEvidences
-	}, [evidencesManagement, filterValue, statusFilter])
+	}, [evidencesManagement, filterValue, statusFilter, isManager])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -114,7 +114,7 @@ export default function EvidencesTable({
 		const end = start + rowsPerPage
 
 		return filteredItems.slice(start, end)
-	}, [page, filteredItems, rowsPerPage])
+	}, [page, filteredItems, rowsPerPage, isManager])
 
 	const handleSelectOption = useCallback((key: string, fileId?: number) => {
 		if (!isManager && key !== 'download-evidence') {
@@ -422,7 +422,7 @@ export default function EvidencesTable({
 				</div>
 			</div>
 		)
-	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter, breadcrumbs])
+	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter, breadcrumbs, isManager])
 
 	const classNames = React.useMemo(
 		() => ({

@@ -181,7 +181,7 @@ export default function ImprovementPlansTable({
 				return cellValue
 			}
 		},
-		[]
+		[isManager]
 	)
 
 	const onSearchChange = React.useCallback((value?: string) => {
@@ -267,7 +267,8 @@ export default function ImprovementPlansTable({
 		standardFilter,
 		onSearchChange,
 		improvementPlans.length,
-		hasSearchFilter
+		hasSearchFilter,
+		isManager
 	])
 
 	const bottomContent = React.useMemo(() => {
@@ -286,7 +287,7 @@ export default function ImprovementPlansTable({
 				)}
 			</div>
 		)
-	}, [items.length, page, pages, hasSearchFilter])
+	}, [items.length, page, pages, hasSearchFilter, isManager])
 
 	const classNames = React.useMemo(
 		() => ({
