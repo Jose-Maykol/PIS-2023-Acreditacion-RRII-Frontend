@@ -134,7 +134,6 @@ export class EvidenceService extends BaseService {
 		folder_id: number
 		is_evidence : boolean
 	}) {
-		console.log('params folrder', params)
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.createFolder}`, params)
 		return res.data

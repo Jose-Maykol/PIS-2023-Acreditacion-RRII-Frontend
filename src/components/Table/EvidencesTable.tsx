@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import PlusIcon from '../Icons/PlusIcon'
@@ -13,7 +13,7 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils'
-import { columns } from '@/utils/data_evidence'
+import { columns, columnsPlans } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
@@ -21,6 +21,7 @@ import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useToast } from '@/hooks/toastProvider'
 
 export default function EvidencesTable({
 	id,
@@ -37,6 +38,7 @@ export default function EvidencesTable({
 	const rowsPerPage = 100
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
+	const [isManager, setIsManager] = useState<boolean>(false)
 	const [evidence, setEvidence] = useState<Evidence>({
 		id: '',
 		code: '',
@@ -71,6 +73,7 @@ export default function EvidencesTable({
 		showPreviewPdf: false
 	})
 	const { isNarrativeEnabled } = useNarrativeStore()
+	const { showToast, updateToast } = useToast()
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
@@ -81,6 +84,7 @@ export default function EvidencesTable({
 					return evidence
 				}
 			)
+			setIsManager(res.data.isManager)
 			setEvidencesManagement([...arr])
 		})
 		setReload(false)
@@ -112,7 +116,12 @@ export default function EvidencesTable({
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const handleSelectOption = (key: string) => {
+	const handleSelectOption = useCallback((key: string, fileId?: number) => {
+		if (!isManager && key !== 'download-evidence') {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+			return
+		}
 		switch (key) {
 		case 'upload-evidence':
 			setModalManager({
@@ -127,7 +136,7 @@ export default function EvidencesTable({
 			})
 			break
 		case 'download-evidence':
-			handleDownload()
+			handleDownload(fileId)
 			break
 		case 'rename-evidence':
 			setModalManager({
@@ -147,7 +156,7 @@ export default function EvidencesTable({
 				showModalMove: true
 			})
 		}
-	}
+	}, [evidence, modalManager, isManager])
 
 	const renderCell = React.useCallback((evidence: Evidence, columnKey: React.Key) => {
 		switch (columnKey) {
@@ -187,6 +196,7 @@ export default function EvidencesTable({
 			)
 
 		case 'actions':
+			console.log('isManager', isManager)
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
 					<CustomDropdown
@@ -219,7 +229,7 @@ export default function EvidencesTable({
 								uid: 'delete-evidence',
 								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
 								color: 'danger',
-								// className: isNarrativeEnabled ? 'hidden' : undefined,
+								className: isNarrativeEnabled ? 'hidden' : undefined,
 								startContent: (
 									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
 								)
@@ -229,13 +239,13 @@ export default function EvidencesTable({
 						mode='action'
 						onAction={(key: string) => {
 							setEvidence(evidence)
-							handleSelectOption(key)
+							handleSelectOption(key, evidence.file_id)
 						}}
 					/>
 				</div>
 			)
 		}
-	}, [])
+	}, [isManager, isNarrativeEnabled])
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
@@ -251,9 +261,11 @@ export default function EvidencesTable({
 		setPage(1)
 	}, [])
 
-	const handleDownload = React.useCallback(() => {
-		if (evidence && evidence.file_id) {
-			EvidenceService.downloadFile(String(evidence.file_id)).then((res) => {
+	const handleDownload = React.useCallback((fileId?: number) => {
+		if (fileId) {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Preparando el archivo para descargar', 'info')
+			EvidenceService.downloadFile(String(fileId)).then((res) => {
 				// Obtener el header de Content-Disposition para extraer el nombre del archivo
 				const contentDisposition = res.headers['content-disposition']
 				let filename = 'descarga'
@@ -274,6 +286,8 @@ export default function EvidencesTable({
 				document.body.removeChild(link)
 				URL.revokeObjectURL(url)
 			})
+		} else {
+			console.log('Error al descargar el archivo')
 		}
 	}, [])
 
@@ -412,7 +426,7 @@ export default function EvidencesTable({
 
 	const classNames = React.useMemo(
 		() => ({
-			base: 'max-h-[590px] overflow-auto',
+			base: 'max-h-[590px] overflow-auto select-none',
 			// table: 'min-h-[580px]',
 			wrapper: ['min-h-[590px] overflow-auto'],
 			th: [
@@ -444,7 +458,7 @@ export default function EvidencesTable({
 		<>
 			<CustomTable
 				items={items}
-				columns={columns}
+				columns={ plandId ? columnsPlans : columns}
 				renderCell={renderCell}
 				topContent={topContent}
 				// bottomContent={bottomContent}
