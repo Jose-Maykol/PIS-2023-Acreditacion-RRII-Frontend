@@ -124,7 +124,7 @@ export default function GenerateReportForm() {
 		} else if (reportType === 'context') {
 			setActiveFilters(true)
 		} else if (reportType === 'anual') {
-			setActiveFilters(false)
+			setActiveFilters(true)
 		}
 	}
 
@@ -148,12 +148,17 @@ export default function GenerateReportForm() {
 		} else if (reportType === 'context') {
 			downloadContextReport()
 		} else if (reportType === 'anual') {
-			downloadAnualReport(params)
+			downloadAnualReport({
+				startYear: year,
+				endYear: year,
+				startSemester: 'A',
+				endSemester: 'B'
+			})
 		}
 	}
 
 	const { isLoading } = useQuery(
-		['generateReports', year, semester],
+		['generateReports'],
 		() => DateSemesterService.getAll(), {
 			onSuccess(res) {
 				const data = res.data as YearSemester[]
