@@ -69,28 +69,17 @@ export class EvidenceService extends BaseService {
 	}
 
 	public static async viewEvidence(id: string) {
-		console.log('view evidence', id)
 		const config = {
-			timeout: 60000
-			// headers: {
-			// 	'Content-Type': 'multipart/form-data'
-			// }
+			timeout: 20000
 		}
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.view.replace(':id', id)}`, config)
-		console.log('res narrativa view', res.data)
 		return res.data
 	}
 
 	public static async viewEvidenceNarrative(id: string) {
-		const config = {
-			timeout: 60000
-			// headers: {
-			// 	'Content-Type': 'multipart/form-data'
-			// }
-		}
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.viewEvidence.replace(':id', id)}`, config)
+		const res = await api.get(`/${year}/${semester}/${url.viewEvidence.replace(':id', id)}`)
 		return res.data
 	}
 

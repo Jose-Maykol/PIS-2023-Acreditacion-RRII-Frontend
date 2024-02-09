@@ -4,29 +4,21 @@ import React, { useState, useEffect } from 'react'
 
 import { Tabs, Tab } from '@nextui-org/react'
 import { useRouter, usePathname } from 'next/navigation'
-import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
-import { useToast } from '@/hooks/toastProvider'
 
 export default function TabStandard({ id, children }: { id: string; children: React.ReactNode }) {
 	const { push } = useRouter()
 	const pathname = usePathname()
 
 	const [selected, setSelected] = useState('narrative')
-	const { narrativeBlockedId, setNarrativeBlockedId } = useNarrativeStore()
-	const { showToast, updateToast } = useToast()
+	const { unlockNarrative, narrativeBlockedId } = useNarrativeStore()
 
 	useEffect(() => {
-		setSelected(pathname.split('/')[4] || 'narrative')
-		console.log("id blockeado", narrativeBlockedId)
-		if (selected !== 'narrative' && narrativeBlockedId) {
-			NarrativeService.unlockNarrative(String(narrativeBlockedId)).then((res) => {
-				const notification = showToast('Procesando...')
-				updateToast(notification, 'Se ha liberado la narrativa', 'success')
-			})
-			setNarrativeBlockedId(null)
+		if (pathname.split('/')[4] !== 'narrative' || String(narrativeBlockedId) !== id) {
+			unlockNarrative(true)
 		}
-	}, [pathname, id, narrativeBlockedId])
+		setSelected(pathname.split('/')[4] || 'narrative')
+	}, [pathname, id])
 
 	const tabs = [
 		{

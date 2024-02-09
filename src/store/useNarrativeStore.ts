@@ -10,6 +10,8 @@ interface NarrativeStore {
     setIsEditingNarrative: (value: boolean) => void
     narrativeBlockedId: number | null
     setNarrativeBlockedId: (id: number | null) => void
+    isNarrativeBlock: boolean
+    unlockNarrative: (value: boolean) => void
 }
 
 export const useNarrativeStore = create<NarrativeStore>((set) => ({
@@ -21,5 +23,7 @@ export const useNarrativeStore = create<NarrativeStore>((set) => ({
 	isEditingNarrative: false,
 	setIsEditingNarrative: (value: boolean) => set({ isEditingNarrative: value }),
 	narrativeBlockedId: null,
-	setNarrativeBlockedId: (id: number | null) => set({ narrativeBlockedId: id })
+	setNarrativeBlockedId: (id: number | null) => set({ narrativeBlockedId: id }),
+	isNarrativeBlock: false,
+	unlockNarrative: (value: boolean) => set({ isNarrativeBlock: value })
 }))
