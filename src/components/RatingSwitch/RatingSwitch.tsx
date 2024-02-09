@@ -17,7 +17,7 @@ const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string
 	const handleSwitchClick = async (newRating: number) => {
 		const notification = showToast('Procesando...')
 		if (!isManager) {
-			updateToast(notification, 'No tienes permisos para realizar esta acción', 'warning')
+			updateToast(notification, 'No tienes permisos para realizar esta acción', 'error')
 			return
 		}
 		await StandardService.updateStatusStandard(standardID, newRating + 1).then((res) => {

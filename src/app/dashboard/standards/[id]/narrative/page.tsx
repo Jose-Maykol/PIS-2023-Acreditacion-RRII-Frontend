@@ -22,7 +22,7 @@ type NarrativePageParams = {
 export default function NarrativePage({ params }: NarrativePageParams) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { year, semester } = useYearSemesterStore()
-	const { isNarrativeBlock } = useNarrativeStore()
+	const { isNarrativeBlock, setNarrativeEnabled } = useNarrativeStore()
 	const [narrative, setNarrative] = useState<string>('')
 	const [isEditable, setIsEditable] = useState<boolean>(false)
 	const [isEditMode, setIsEditMode] = useState<boolean>(false)
@@ -43,6 +43,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 				setData(res.data)
 				setIsEditable(res.data.narrative_is_active)
 				setIsEditMode(res.data.narrative_is_active)
+				setNarrativeEnabled(res.data.narrative_is_active)
 				setNarrative(res.data.narrative)
 			}).catch((err: any) => {
 				console.log('err de getNarrative', err)
@@ -51,19 +52,18 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 		setRefresh(false)
 	}, [year, semester, isNarrativeBlock, refresh])
 
-	const handleEditNarrative = () => {
-		NarrativeService.blockNarrative(String(id)).then((res) => {
-			console.log(res.data)
+	const handleEditNarrative = async () => {
+		await NarrativeService.blockNarrative(String(id)).then((res) => {
 			if (res.data.is_block && res.data.is_same_user) {
 				router.push(`/dashboard/standards/${id}/narrative/edit`)
-			} else {
+			} else if (res.data.is_block && !res.data.is_same_user) {
 				const notification = showToast('verificando')
 				updateToast(notification, `La narrativa ya esta siendo editada por ${res.data.user_name}`, 'info')
 			}
-			setRefresh(true)
 		}).catch((err: any) => {
 			console.log('err de blockNarrative', err)
 		})
+		setRefresh(true)
 	}
 
 	const createMarkup = () => {

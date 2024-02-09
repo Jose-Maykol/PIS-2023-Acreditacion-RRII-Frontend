@@ -11,11 +11,7 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import useInactivityMonitor from '@/hooks/useInactivityMonitor'
 import InactivityModal from '@/components/Modal/Auth/InactivityModal'
-import { NarrativeService } from '@/api/Narrative/narrativeService'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useQuery, useQueryClient } from 'react-query'
-import { useToast } from '@/hooks/toastProvider'
-import { usePathname } from 'next/navigation'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -27,10 +23,6 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	const [standards, setStandards] = useState<PartialStandard[]>([])
 	const { year, semester, setId, setIsClosed, setClosingDate } = useYearSemesterStore()
 	const queryClient = useQueryClient()
-	const { narrativeBlockedId, setNarrativeBlockedId, unlockNarrative, setIsEditingNarrative, isNarrativeBlock } = useNarrativeStore()
-	const { showToast, updateToast } = useToast()
-	const pathname = usePathname()
-
 
 	useInactivityMonitor()
 
@@ -38,19 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		if (year && semester) {
 			BaseService.configure(year, semester)
 		}
-		if (narrativeBlockedId || pathname.split('/')[4] !== 'narrative') {
-			NarrativeService.unlockNarrative(String(narrativeBlockedId)).then((res) => {
-				console.log('res de blockNarrative', res.data)
-				const notification = showToast('Procesando...')
-				updateToast(notification, 'Narrativa liberada', 'info')
-				setNarrativeBlockedId(null)
-				unlockNarrative(false)
-				setIsEditingNarrative(false)
-			}).catch((err: any) => {
-				console.log('err de blockNarrative', err)
-			})
-		}
-	}, [year, semester, queryClient, isNarrativeBlock])
+	}, [year, semester, queryClient])
 
 	useQuery(
 		['standards', year, semester],

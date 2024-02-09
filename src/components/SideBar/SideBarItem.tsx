@@ -2,8 +2,10 @@
 
 import { Tooltip } from '@nextui-org/react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import React from 'react'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useToast } from '@/hooks/toastProvider'
 
 interface SideBarItemProps {
   isOpen: boolean
@@ -30,6 +32,18 @@ export default function SideBarItem({
 	const iconFill = React.cloneElement(icon as React.ReactElement, {
 		fill: fillClassName
 	})
+	const { isEditingNarrative } = useNarrativeStore()
+	const { showToast, updateToast } = useToast()
+	const router = useRouter()
+
+	const handleClick = (link: any) => {
+		if (isEditingNarrative) {
+			const notification = showToast('verificando...')
+			updateToast(notification, 'No es posible realizar esta acción mientras la narrativa este siendo editada', 'info')
+			return
+		}
+		router.push(link)
+	}
 
 	return (
 		<>
@@ -69,7 +83,7 @@ export default function SideBarItem({
 											isOpen ? 'p-3' : 'p-1'
 										} w-full h-8 my-1 hover:bg-gray-300 rounded-md ${backgroundColor}`}
 									>
-										<Link
+										{/* <Link
 											href={link}
 											className={`text-base-regular flex flex-row items-center h-full w-full ${
 												isOpen ? '' : 'justify-center'
@@ -77,7 +91,16 @@ export default function SideBarItem({
 										>
 											{iconFill}
 											{isOpen && <span className='pl-2 font-bold uppercase'>{text}</span>}
-										</Link>
+										</Link> */}
+										<div
+											onClick={() => handleClick(link)}
+											className={`text-base-regular flex flex-row items-center h-full w-full ${
+												isOpen ? '' : 'justify-center'
+											}`}
+										>
+											{iconFill}
+											{isOpen && <span className='pl-2 font-bold uppercase'>{text}</span>}
+										</div>
 									</li>
 								</Tooltip>
 							)
