@@ -38,6 +38,7 @@ export type ImprovementPlans = {
 	plan_status: string
 	standard_name: string
 	user_name: string
+	standard_id: number
 }
 
 export type planItem = {

@@ -5,7 +5,6 @@ import { useQuery } from 'react-query'
 import { useDebouncedCallback } from 'use-debounce'
 import MyImprovementPlansTablePresentation from '../Presentation/MyImprovementPlansTablePresentation'
 
-
 export default function MyImprovementPlansTableContainer() {
 	const { year, semester } = useYearSemesterStore()
 	const [currentPage, setCurrentPage] = useState(1)

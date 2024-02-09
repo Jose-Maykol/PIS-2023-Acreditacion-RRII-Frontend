@@ -1,3 +1,5 @@
+'use client'
+
 import { Chip, Progress, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Tooltip } from '@nextui-org/react'
 import { columns, statusColorMap } from '../../utils/data_improvement_plans'
 import React, { useCallback } from 'react'
@@ -6,7 +8,8 @@ import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import { useParams } from 'next/navigation'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import TrashIcon from '../Icons/TrashIcon'
 
 interface MyImprovementPlansTableProps {
   data: ImprovementPlans[]
@@ -17,8 +20,8 @@ export default function MyImprovementPlansTable({
 	data,
 	handleUsersChanged
 }: MyImprovementPlansTableProps) {
-	const params = useParams()
-	const { id } = params
+	const { isClosed } = useYearSemesterStore()
+
 	const renderCell = useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 		switch (columnKey) {
@@ -76,7 +79,7 @@ export default function MyImprovementPlansTable({
 				<div className='relative flex gap-4'>
 					<Tooltip content='Detalle'>
 						<Link
-							href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/details`}
+							href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/details`}
 						>
 							<span className='text-default-400 cursor-pointer active:opacity-50'>
 								<EyeIcon width={15} height={15} fill='fill-gray-400 hover:fill-gray-900' />
@@ -84,18 +87,31 @@ export default function MyImprovementPlansTable({
 						</Link>
 					</Tooltip>
 					<Tooltip content='Editar Plan de Mejora'>
-						<Link
-							href={`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`}
-						>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<PencilIcon width={15} height={15} fill='fill-warning' />
-							</span>
-						</Link>
+						{isClosed === true
+							? (
+								<PencilIcon width={15} height={15} fill='fill-gray-400' />
+							)
+							: (
+								<Link
+									href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
+								>
+									<span className='text-default-400 cursor-pointer active:opacity-50'>
+										<PencilIcon width={15} height={15} fill='fill-warning' />
+									</span>
+								</Link>
+							)}
 					</Tooltip>
-					<DeleteImprovementPlanModal
-						planId={improvementPlan.id}
-						setImprovementPlans={handleUsersChanged}
-					/>
+					{isClosed === true
+						? (
+							<DeleteImprovementPlanModal
+								planId={improvementPlan.id}
+								setImprovementPlans={handleUsersChanged}
+							/>
+						)
+						: (
+							<TrashIcon width={15} height={15} fill='fill-gray-400' />
+						)
+					}
 				</div>
 			)
 		default:

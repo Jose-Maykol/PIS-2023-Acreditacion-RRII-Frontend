@@ -26,9 +26,9 @@ export default function FilterMyImprovementPlansTable({
 				value={searchQuery}
 				onValueChange={onSearchChange}
 			/>
-			<div className='flex gap-3'>
+			{/* <div className='flex gap-3'>
 				a
-			</div>
+			</div> */}
 		</div>
 	)
 }
