@@ -12,8 +12,7 @@ import {
 	Button,
 	Popover,
 	PopoverTrigger,
-	PopoverContent,
-	Spinner
+	PopoverContent
 } from '@nextui-org/react'
 import { columns, valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
@@ -23,8 +22,8 @@ import { StandardUsers } from '@/types/Standard'
 import { getCommonIcon } from '@/utils/utils'
 import Link from 'next/link'
 import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
+import { usePermissionsStore } from '@/store/usePermissionsStore'
 import PencilIcon from '../Icons/PencilIcon'
-import { useQuery } from 'react-query'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'logrado satisfactoriamente': 'success',
@@ -39,29 +38,16 @@ export default function StandardTable () {
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
-	const [semesterIsClosed, setSemesterIsClosed] = useState<boolean>(false)
 	const [reload, setReload] = useState<boolean>(false)
 	const { year, semester } = useYearSemesterStore()
+	const { permissions } = usePermissionsStore()
 
-	/* 	useEffect(() => {
+	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
 			setStandardsManagement(res.data.standards)
-			setSemesterIsClosed(res.data.isSemesterClosed)
 		})
 		setReload(false)
-	}, [reload, year, semester]) */
-
-	const { data, isLoading, isFetching } = useQuery(
-		['standards', year, semester, reload],
-		() => StandardService.getStandardsAndAssignedUsers(),
-		{
-			onSuccess: (data) => {
-				setStandardsManagement(data.data.standards)
-				setSemesterIsClosed(data.data.isSemesterClosed)
-			},
-			refetchOnWindowFocus: false
-		}
-	)
+	}, [reload, year, semester])
 
 	const filteredItems = useMemo(() => {
 		let filteredStandards = [...standardsManagement]
@@ -147,7 +133,7 @@ export default function StandardTable () {
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
-					{ semesterIsClosed === false
+					{permissions.updateStandard
 						? (
 							<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />)
 						: (
@@ -165,7 +151,7 @@ export default function StandardTable () {
 		default:
 			return <div>{cellValue.toString()}</div>
 		}
-	}, [semesterIsClosed])
+	}, [])
 
 	const onSearchChange = useCallback((value?: string) => {
 		if (value) {
@@ -211,6 +197,7 @@ export default function StandardTable () {
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
+
 						/>
 					</div>
 				</div>
@@ -263,25 +250,14 @@ export default function StandardTable () {
 	)
 
 	return (
-		<>
-			{ isLoading && isFetching && !data
-				? (
-					<div className='flex justify-center items-center h-[590px]'>
-						<Spinner/>
-					</div>
-				)
-				: (
-					<CustomTable
-						items={items}
-						columns={columns}
-						renderCell={renderCell}
-						topContent={topContent}
-						bottomContent={bottomContent}
-						emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
-						classNames={classNames}
-					/>
-				)
-			}
-		</>
+		<CustomTable
+			items={items}
+			columns={columns}
+			renderCell={renderCell}
+			topContent={topContent}
+			bottomContent={bottomContent}
+			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
+			classNames={classNames}
+		/>
 	)
 }
