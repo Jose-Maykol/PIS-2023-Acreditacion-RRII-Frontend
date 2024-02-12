@@ -8,7 +8,6 @@ import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
-import { usePermissionsStore } from '@/store/usePermissionsStore'
 import TrashIcon from '../Icons/TrashIcon'
 
 interface MyImprovementPlansTableProps {
@@ -20,8 +19,6 @@ export default function MyImprovementPlansTable({
 	data,
 	handleUsersChanged
 }: MyImprovementPlansTableProps) {
-	const { permissions } = usePermissionsStore()
-
 	const renderCell = useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 		switch (columnKey) {
@@ -86,7 +83,7 @@ export default function MyImprovementPlansTable({
 							</span>
 						</Link>
 					</Tooltip>
-					{permissions.updatePlan
+					{improvementPlan.isSemesterClosed === true
 						? (
 							<Tooltip content='Editar Plan de Mejora'>
 								<Link
@@ -101,7 +98,7 @@ export default function MyImprovementPlansTable({
 						: (
 							<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
 						)}
-					{permissions.deletePlan
+					{improvementPlan.isSemesterClosed === true
 						? (
 							<DeleteImprovementPlanModal
 								planId={improvementPlan.id}

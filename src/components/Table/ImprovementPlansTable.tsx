@@ -17,6 +17,7 @@ import DeleteImprovementPlanModal from '../Modal/ImprovementPlan/DeleteImproveme
 import { ImprovementPlans, StandardOption } from '@/types/ImprovementPlan'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
+import TrashIcon from '../Icons/TrashIcon'
 
 type TableProps = {
 	id?: string
@@ -161,20 +162,33 @@ export default function ImprovementPlansTable({
 								</span>
 							</Link>
 						</Tooltip>
-						<Tooltip content='Editar Plan de Mejora'>
-							<div
-								onClick={() => handleVerifyPermission(`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`)}
-							>
-								<span className='text-default-400 cursor-pointer active:opacity-50'>
-									<PencilIcon width={15} height={15} fill='fill-warning' />
-								</span>
-							</div>
-						</Tooltip>
-						<DeleteImprovementPlanModal
-							planId={improvementPlan.id}
-							setImprovementPlans={setImprovementPlans}
-							isManager={isManager}
-						/>
+						{improvementPlan.isSemesterClosed === true
+							? (
+								<Tooltip content='Editar Plan de Mejora'>
+									<div
+										onClick={() => handleVerifyPermission(`/dashboard/standards/${id}/evidence_improvements/${improvementPlan.id}/edit`)}
+									>
+										<span className='text-default-400 cursor-pointer active:opacity-50'>
+											<PencilIcon width={15} height={15} fill='fill-warning' />
+										</span>
+									</div>
+								</Tooltip>
+							)
+							: (
+								<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
+							)}
+						{improvementPlan.isSemesterClosed === true
+							? (
+								<DeleteImprovementPlanModal
+									planId={improvementPlan.id}
+									setImprovementPlans={setImprovementPlans}
+									isManager={isManager}
+								/>
+							)
+							: (
+								<TrashIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
+							)
+						}
 					</div>
 				)
 			default:
