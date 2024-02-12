@@ -14,10 +14,11 @@ import { ReportService } from '@/api/Report/ReportService'
 import showToast from '../identification-and-context/toastHelper'
 import { useEffect, useState } from 'react'
 import SaveIcon from '@/components/Icons/SaveIcon'
+import { useQueryClient } from 'react-query'
 
 export default function AnnualReportPage() {
 	const router = useRouter()
-
+	const queryClient = useQueryClient()
 	const [isEditing, setIsEditing] = useState(false)
 	const [initialValues, setInitialValues] = useState({
 		number_extraordinary_professor: 0,
@@ -82,6 +83,7 @@ export default function AnnualReportPage() {
 					.then((res) => {
 						if (res.status === 200) {
 							showToast('success', 'Datos del Personal actualizados con éxito')
+							queryClient.invalidateQueries('dateSemesterStatus')
 							router.back()
 						}
 					})
@@ -94,6 +96,7 @@ export default function AnnualReportPage() {
 					.then((res) => {
 						if (res.status === 201) {
 							showToast('success', 'Datos del Personal guardados con éxito')
+							queryClient.invalidateQueries('dateSemesterStatus')
 							router.back()
 						}
 					})

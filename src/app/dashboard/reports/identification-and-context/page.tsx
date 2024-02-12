@@ -28,9 +28,11 @@ import showToast from './toastHelper'
 import { InterestedGroup, QualityMember } from '@/types/Reports'
 import { ReportService } from '@/api/Report/ReportService'
 import SaveIcon from '@/components/Icons/SaveIcon'
+import { useQueryClient } from 'react-query'
 
 export default function IdentificationContextReportPage() {
 	const router = useRouter()
+	const queryClient = useQueryClient()
 	const [isEditing, setIsEditing] = useState(false)
 	const [initialValues, setInitialValues] = useState({
 		name_institution: '',
@@ -134,6 +136,7 @@ export default function IdentificationContextReportPage() {
 							if (res.status === 200) {
 								setSubmitClicked(false)
 								showToast('success', 'Reporte actualizado con éxito')
+								queryClient.invalidateQueries('dateSemesterStatus')
 								router.push('/dashboard/admin')
 							}
 						})
@@ -148,6 +151,7 @@ export default function IdentificationContextReportPage() {
 							if (res.status === 201) {
 								setSubmitClicked(false)
 								showToast('success', 'Reporte creado con éxito')
+								queryClient.invalidateQueries('dateSemesterStatus')
 								router.push('/dashboard/admin')
 							}
 						})
