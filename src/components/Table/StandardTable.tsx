@@ -165,7 +165,7 @@ export default function StandardTable () {
 		default:
 			return <div>{cellValue.toString()}</div>
 		}
-	}, [])
+	}, [semesterIsClosed])
 
 	const onSearchChange = useCallback((value?: string) => {
 		if (value) {
@@ -211,7 +211,6 @@ export default function StandardTable () {
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
 					</div>
 				</div>
