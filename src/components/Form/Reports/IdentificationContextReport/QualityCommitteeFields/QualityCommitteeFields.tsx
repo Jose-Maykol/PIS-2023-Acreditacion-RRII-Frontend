@@ -170,6 +170,7 @@ const QualityCommitteeFields = ({
 								errorMessage={errors.name}
 								size='sm'
 								type='text'
+								maxLength={100}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -183,6 +184,7 @@ const QualityCommitteeFields = ({
 								errorMessage={errors.lastname}
 								size='sm'
 								type='text'
+								maxLength={100}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -196,6 +198,7 @@ const QualityCommitteeFields = ({
 								errorMessage={errors.position}
 								size='sm'
 								type='text'
+								maxLength={64}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -209,6 +212,7 @@ const QualityCommitteeFields = ({
 								errorMessage={errors.email}
 								size='sm'
 								type='email'
+								maxLength={100}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -222,6 +226,7 @@ const QualityCommitteeFields = ({
 								errorMessage={errors.telephone}
 								size='sm'
 								type='phone'
+								maxLength={20}
 							/>
 						</div>
 					</div>

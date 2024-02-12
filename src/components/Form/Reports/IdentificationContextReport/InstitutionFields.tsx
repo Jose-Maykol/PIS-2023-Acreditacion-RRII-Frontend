@@ -26,6 +26,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.name_institution && formik.errors.name_institution}
 					size='sm'
 					type='text'
+					maxLength={255}
 				/>
 			</div>
 			<div className='grid grid-cols-3 gap-3'>
@@ -41,6 +42,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 						errorMessage={formik.touched.region && formik.errors.region}
 						size='sm'
 						type='text'
+						maxLength={100}
 					/>
 				</div>
 				<div className='flex flex-col mb-4'>
@@ -55,6 +57,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 						errorMessage={formik.touched.province && formik.errors.province}
 						size='sm'
 						type='text'
+						maxLength={100}
 					/>
 				</div>
 				<div className='flex flex-col mb-4'>
@@ -69,6 +72,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 						errorMessage={formik.touched.district && formik.errors.district}
 						size='sm'
 						type='text'
+						maxLength={100}
 					/>
 				</div>
 			</div>
@@ -86,6 +90,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.address_headquarters && formik.errors.address_headquarters}
 					size='sm'
 					type='text'
+					maxLength={255}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -104,6 +109,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={20}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -118,6 +124,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					errorMessage={formik.touched.web_page && formik.errors.web_page}
 					size='sm'
 					type='url'
+					maxLength={255}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -138,6 +145,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={64}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -158,6 +166,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					placeholder='Ejemplo: 2000-12-31'
 					size='sm'
 					type='text'
+					maxLength={10}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -180,6 +189,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='text'
+					maxLength={255}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -200,6 +210,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='email'
+					maxLength={100}
 				/>
 			</div>
 			<div className='flex flex-col mb-4'>
@@ -220,6 +231,7 @@ const InstitutionFields = ({ formik }: { formik: any }) => {
 					}
 					size='sm'
 					type='phone'
+					maxLength={20}
 				/>
 			</div>
 		</div>

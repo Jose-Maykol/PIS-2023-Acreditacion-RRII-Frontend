@@ -167,6 +167,7 @@ const InterestedGroupsFields = ({
 								onChange={handleChange}
 								isInvalid={Boolean(errors.interested)}
 								errorMessage={errors.interested}
+								maxLength={100}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -180,6 +181,7 @@ const InterestedGroupsFields = ({
 								onChange={handleChange}
 								isInvalid={Boolean(errors.type)}
 								errorMessage={errors.type}
+								maxLength={100}
 							/>
 						</div>
 						<div className='flex flex-col'>
@@ -202,6 +204,7 @@ const InterestedGroupsFields = ({
 								onChange={handleChange}
 								isInvalid={Boolean(errors.main_requirement_study_program)}
 								errorMessage={errors.main_requirement_study_program}
+								maxLength={100}
 							/>
 						</div>
 					</div>

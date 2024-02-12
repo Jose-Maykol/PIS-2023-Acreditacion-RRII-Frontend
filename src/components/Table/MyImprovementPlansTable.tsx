@@ -8,6 +8,7 @@ import { ImprovementPlans } from '@/types/ImprovementPlan'
 import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
+import TrashIcon from '../Icons/TrashIcon'
 
 interface MyImprovementPlansTableProps {
   data: ImprovementPlans[]
@@ -82,20 +83,33 @@ export default function MyImprovementPlansTable({
 							</span>
 						</Link>
 					</Tooltip>
-					<Tooltip content='Editar Plan de Mejora'>
-						<Link
-							href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
-						>
-							<span className='text-default-400 cursor-pointer active:opacity-50'>
-								<PencilIcon width={15} height={15} fill='fill-warning' />
-							</span>
-						</Link>
-					</Tooltip>
-					<DeleteImprovementPlanModal
-						planId={improvementPlan.id}
-						isManager={true}
-						setImprovementPlans={handleUsersChanged}
-					/>
+					{improvementPlan.isSemesterClosed === true
+						? (
+							<Tooltip content='Editar Plan de Mejora'>
+								<Link
+									href={`/dashboard/standards/${improvementPlan.standard_id}/evidence_improvements/${improvementPlan.id}/edit`}
+								>
+									<span className='text-default-400 cursor-pointer active:opacity-50'>
+										<PencilIcon width={15} height={15} fill='fill-warning' />
+									</span>
+								</Link>
+							</Tooltip>
+						)
+						: (
+							<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
+						)}
+					{improvementPlan.isSemesterClosed === true
+						? (
+							<DeleteImprovementPlanModal
+								planId={improvementPlan.id}
+								isManager={true}
+								setImprovementPlans={handleUsersChanged}
+							/>
+						)
+						: (
+							<TrashIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
+						)
+					}
 				</div>
 			)
 		default:
