@@ -29,6 +29,7 @@ export function estadoPlanMejoraToColor(estado: EstadoPlanMejora): [string, stri
 }
 
 export type ImprovementPlans = {
+	isSemesterClosed: boolean
 	advance: number
 	code: string
 	id: number
