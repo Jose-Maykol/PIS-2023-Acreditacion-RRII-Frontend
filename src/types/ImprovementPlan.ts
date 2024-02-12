@@ -29,6 +29,7 @@ export function estadoPlanMejoraToColor(estado: EstadoPlanMejora): [string, stri
 }
 
 export type ImprovementPlans = {
+	isSemesterClosed: boolean
 	advance: number
 	code: string
 	id: number
@@ -38,6 +39,7 @@ export type ImprovementPlans = {
 	plan_status: string
 	standard_name: string
 	user_name: string
+	standard_id: number
 }
 
 export type planItem = {
@@ -50,7 +52,7 @@ export type planItemNew = {
 }
 
 export type ImprovementPlan = {
-	id: number,
+	id: number
 	advance: number
 	code: string
 	duration: number
@@ -72,9 +74,7 @@ export type ImprovementPlan = {
 	semester: string
 }
 
-export type FormDataKeys = {
-	name: string
-	code: string
-	opportunity_for_improvement: string
-	// TODO: Completar keys
+export interface StandardOption {
+	label: string
+	uid: string
 }

@@ -1,7 +1,7 @@
 import PencilIcon from '@/components/Icons/PencilIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { Button, Input } from '@nextui-org/react'
 import { ChangeEvent, useState } from 'react'
 
@@ -43,6 +43,7 @@ export default function DynamicInputItem({
 				value={singleInputValue}
 				onChange={handleChange}
 				disabled={!isEditing}
+				maxLength={255}
 			/>
 			<Button
 				isIconOnly

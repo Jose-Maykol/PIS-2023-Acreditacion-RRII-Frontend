@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 
 import { Selection, Input, Button, Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
 import PlusIcon from '../Icons/PlusIcon'
@@ -13,13 +13,15 @@ import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
 import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils'
-import { columns } from '@/utils/data_evidence'
+import { columns, columnsPlans } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import UploadEvidenceModal from '@/components/Modal/Evidence/UploadEvidenceModal'
 import RenameEvidenceModal from '../Modal/Evidence/RenameEvidenceModal'
 import DeleteEvidenceModal from '../Modal/Evidence/DeleteEvidenceModal'
 import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
+import { useNarrativeStore } from '@/store/useNarrativeStore'
+import { useToast } from '@/hooks/toastProvider'
 
 export default function EvidencesTable({
 	id,
@@ -36,14 +38,16 @@ export default function EvidencesTable({
 	const rowsPerPage = 100
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
+	const [isManager, setIsManager] = useState<boolean>(true)
 	const [evidence, setEvidence] = useState<Evidence>({
 		id: '',
-		uid: 0,
 		code: '',
 		name: '',
 		path: '',
 		user_id: 0,
 		evidence_type_id: 0,
+		file_id: 0,
+		folder_id: 0,
 		standard_id: 0,
 		date_id: 0,
 		created_at: '',
@@ -59,32 +63,31 @@ export default function EvidencesTable({
 		path: '/',
 		key: 0
 	}])
-	const [blobURL, setBlobURL] = useState<string>('')
 	const [reload, setReload] = useState<boolean>(false)
 	const [modalManager, setModalManager] = useState({
 		showModalUpload: false,
 		showModalRename: false,
 		showModalDelete: false,
 		showModalCreateFolder: false,
-		showModalMove: false
+		showModalMove: false,
+		showPreviewPdf: false
 	})
+	const { isNarrativeEnabled } = useNarrativeStore()
+	const { showToast, updateToast } = useToast()
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
-			console.log('res.data', res.data)
 			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
 				(evidence: Evidence) => {
-					evidence.uid = Number(evidence.code.split('-')[1])
-					evidence.id = `${evidence.code}`
+					evidence.id = evidence.type === 'evidence' ? `${evidence.type}-${evidence.file_id}` : `${evidence.type}-${evidence.folder_id}`
 					evidence.name = evidence.name ?? evidence.path.split('/').pop()
 					return evidence
 				}
 			)
-			// console.log('useEffect', res.data)
+			setIsManager(res.data.isManager)
 			setEvidencesManagement([...arr])
 		})
 		setReload(false)
-		console.log('breadcrumbs', breadcrumbs)
 	}, [reload, params])
 
 	const filteredItems = React.useMemo(() => {
@@ -102,7 +105,7 @@ export default function EvidencesTable({
 		}
 
 		return filteredEvidences
-	}, [evidencesManagement, filterValue, statusFilter])
+	}, [evidencesManagement, filterValue, statusFilter, isManager])
 
 	const pages = Math.ceil(filteredItems.length / rowsPerPage)
 
@@ -111,9 +114,14 @@ export default function EvidencesTable({
 		const end = start + rowsPerPage
 
 		return filteredItems.slice(start, end)
-	}, [page, filteredItems, rowsPerPage])
+	}, [page, filteredItems, rowsPerPage, isManager])
 
-	const handleSelectOption = (key: string, fileId?: string) => {
+	const handleSelectOption = useCallback((key: string, fileId?: number) => {
+		if (!isManager && key !== 'download-evidence') {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+			return
+		}
 		switch (key) {
 		case 'upload-evidence':
 			setModalManager({
@@ -148,7 +156,7 @@ export default function EvidencesTable({
 				showModalMove: true
 			})
 		}
-	}
+	}, [evidence, modalManager, isManager])
 
 	const renderCell = React.useCallback((evidence: Evidence, columnKey: React.Key) => {
 		switch (columnKey) {
@@ -159,6 +167,18 @@ export default function EvidencesTable({
 					<p className='text-bold text-md'>{evidence.name}</p>
 				</div>
 			)
+		case 'evidence_code':
+			if (evidence.evidence_code) {
+				return (
+					<div className='flex'>
+						<p>{evidence.evidence_code}</p>
+					</div>
+				)
+			} else {
+				return (
+					<div className='flex'><p className='text-center'>---</p></div>
+				)
+			}
 		case 'full_name':
 			return (
 				<div className='flex flex-col'>
@@ -176,6 +196,7 @@ export default function EvidencesTable({
 			)
 
 		case 'actions':
+			console.log('isManager', isManager)
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
 					<CustomDropdown
@@ -208,6 +229,7 @@ export default function EvidencesTable({
 								uid: 'delete-evidence',
 								label: evidence.type === 'folder' ? 'Eliminar carpeta' : 'Eliminar archivo',
 								color: 'danger',
+								className: isNarrativeEnabled ? 'hidden' : undefined,
 								startContent: (
 									getCommonIcon('trash', 20, 'fill-red-500 group-hover/dropdown:fill-white')
 								)
@@ -217,13 +239,13 @@ export default function EvidencesTable({
 						mode='action'
 						onAction={(key: string) => {
 							setEvidence(evidence)
-							handleSelectOption(key, String(evidence.uid))
+							handleSelectOption(key, evidence.file_id)
 						}}
 					/>
 				</div>
 			)
 		}
-	}, [])
+	}, [isManager, isNarrativeEnabled])
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
@@ -239,9 +261,11 @@ export default function EvidencesTable({
 		setPage(1)
 	}, [])
 
-	const handleDownload = React.useCallback((fileId?: string) => {
+	const handleDownload = React.useCallback((fileId?: number) => {
 		if (fileId) {
-			EvidenceService.downloadFile(fileId).then((res) => {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Preparando el archivo para descargar', 'info')
+			EvidenceService.downloadFile(String(fileId)).then((res) => {
 				// Obtener el header de Content-Disposition para extraer el nombre del archivo
 				const contentDisposition = res.headers['content-disposition']
 				let filename = 'descarga'
@@ -262,41 +286,32 @@ export default function EvidencesTable({
 				document.body.removeChild(link)
 				URL.revokeObjectURL(url)
 			})
+		} else {
+			console.log('Error al descargar el archivo')
 		}
 	}, [])
 
 	const onRowActionClick = React.useCallback((key: string) => {
 		const type = key.split('-')[0]
 		const id = key.split('-')[1]
-		if (type === 'F') {
-			const evidence = evidencesManagement.filter((evidence) => evidence.uid === Number(id))[0]
-			setBreadcrumbs([
-				...breadcrumbs,
-				{
-					name: evidence.name,
-					path: evidence.path,
-					key: evidence.uid
-				}
-			])
+		if (type === 'folder') {
+			const evidence = evidencesManagement.filter((evidence) => evidence.folder_id === Number(id))[0]
+			if (evidence.folder_id) {
+				setBreadcrumbs([
+					...breadcrumbs,
+					{
+						name: evidence.name,
+						path: evidence.path,
+						key: evidence.folder_id
+					}
+				])
+			}
 			setParams({
 				parent_id: Number(id)
 			})
 		} else {
-			EvidenceService.viewEvidence(id).then((res) => {
-				if (res.data.extension === 'pdf') {
-					const base64Data = res.data.content
-					const binaryString = atob(base64Data)
-					const byteArray = new Uint8Array(binaryString.length)
-					for (let i = 0; i < binaryString.length; i++) {
-						byteArray[i] = binaryString.charCodeAt(i)
-					}
-					const pdfBlob = new Blob([byteArray], { type: 'application/pdf' })
-					const pdfUrl = URL.createObjectURL(pdfBlob)
-					setBlobURL(pdfUrl)
-				} else {
-					handleDownload(id)
-				}
-			})
+			setEvidence(evidencesManagement.filter((evidence) => evidence.file_id === Number(id))[0])
+			setModalManager({ ...modalManager, showPreviewPdf: true })
 		}
 	}, [evidencesManagement])
 
@@ -407,11 +422,11 @@ export default function EvidencesTable({
 				</div>
 			</div>
 		)
-	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter, breadcrumbs])
+	}, [filterValue, statusFilter, onSearchChange, evidencesManagement.length, hasSearchFilter, breadcrumbs, isManager])
 
 	const classNames = React.useMemo(
 		() => ({
-			base: 'max-h-[590px] overflow-auto',
+			base: 'max-h-[590px] overflow-auto select-none',
 			// table: 'min-h-[580px]',
 			wrapper: ['min-h-[590px] overflow-auto'],
 			th: [
@@ -443,7 +458,7 @@ export default function EvidencesTable({
 		<>
 			<CustomTable
 				items={items}
-				columns={columns}
+				columns={ plandId ? columnsPlans : columns}
 				renderCell={renderCell}
 				topContent={topContent}
 				// bottomContent={bottomContent}
@@ -451,10 +466,13 @@ export default function EvidencesTable({
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>
-			{blobURL && (
+			{modalManager.showPreviewPdf && (
 				<PdfVisualizer
-					blobURL={blobURL}
-					setBlobURL={setBlobURL}
+					id={String(evidence.file_id)}
+					onClose={() => setModalManager({
+						...modalManager,
+						showPreviewPdf: false
+					})}
 				/>
 			)}
 			{modalManager.showModalUpload && (
@@ -462,6 +480,7 @@ export default function EvidencesTable({
 					id={id}
 					typeEvidence={typeEvidence}
 					path={breadcrumbs[breadcrumbs.length - 1].path}
+					folderId = {String(breadcrumbs[breadcrumbs.length - 1].key)}
 					openModal={modalManager.showModalUpload}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalUpload: false })}
 					onReload={() => setReload(true)}
@@ -478,7 +497,7 @@ export default function EvidencesTable({
 			)}
 			{modalManager.showModalDelete && (
 				<DeleteEvidenceModal
-					id={String(evidence.uid)}
+					id={String(evidence.type === 'folder' ? evidence.folder_id : evidence.file_id)}
 					type={evidence.type}
 					openModal={modalManager.showModalDelete}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalDelete: false })}
@@ -490,6 +509,7 @@ export default function EvidencesTable({
 					id={parseInt(id)}
 					typeEvidence={parseInt(typeEvidence)}
 					path={breadcrumbs[breadcrumbs.length - 1].path}
+					folderId = {breadcrumbs[breadcrumbs.length - 1].key}
 					openModal={modalManager.showModalCreateFolder}
 					onCloseModal={() => setModalManager({ ...modalManager, showModalCreateFolder: false })}
 					onReload={() => setReload(true)}

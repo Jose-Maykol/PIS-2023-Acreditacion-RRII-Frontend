@@ -1,7 +1,7 @@
 'use client'
 
-import React, { useEffect, useState, useCallback, useMemo, Key } from 'react'
-
+import React, { useState, useCallback, useMemo, Key } from 'react'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import {
 	Chip,
 	Tooltip,
@@ -12,7 +12,8 @@ import {
 	Button,
 	Popover,
 	PopoverTrigger,
-	PopoverContent
+	PopoverContent,
+	Spinner
 } from '@nextui-org/react'
 import { columns, valorationOptions } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
@@ -22,6 +23,8 @@ import { StandardUsers } from '@/types/Standard'
 import { getCommonIcon } from '@/utils/utils'
 import Link from 'next/link'
 import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
+import PencilIcon from '../Icons/PencilIcon'
+import { useQuery } from 'react-query'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'logrado satisfactoriamente': 'success',
@@ -36,14 +39,29 @@ export default function StandardTable () {
 	const rowsPerPage = 8
 	const hasSearchFilter = Boolean(filterValue)
 	const [standardsManagement, setStandardsManagement] = useState<StandardUsers[]>([])
+	const [semesterIsClosed, setSemesterIsClosed] = useState<boolean>(false)
 	const [reload, setReload] = useState<boolean>(false)
+	const { year, semester } = useYearSemesterStore()
 
-	useEffect(() => {
+	/* 	useEffect(() => {
 		StandardService.getStandardsAndAssignedUsers().then((res) => {
-			setStandardsManagement(res.data)
+			setStandardsManagement(res.data.standards)
+			setSemesterIsClosed(res.data.isSemesterClosed)
 		})
 		setReload(false)
-	}, [reload])
+	}, [reload, year, semester]) */
+
+	const { data, isLoading, isFetching } = useQuery(
+		['standards', year, semester, reload],
+		() => StandardService.getStandardsAndAssignedUsers(),
+		{
+			onSuccess: (data) => {
+				setStandardsManagement(data.data.standards)
+				setSemesterIsClosed(data.data.isSemesterClosed)
+			},
+			refetchOnWindowFocus: false
+		}
+	)
 
 	const filteredItems = useMemo(() => {
 		let filteredStandards = [...standardsManagement]
@@ -110,7 +128,7 @@ export default function StandardTable () {
 							</Popover>
 						)
 						: (
-							<p>Sin encargados</p>
+							<p>Sin Encargados</p>
 						)}
 				</div>)
 			}
@@ -119,7 +137,7 @@ export default function StandardTable () {
 		case 'standard_status':
 			if (typeof cellValue === 'string') {
 				return (
-					<Chip className='capitalize' color={statusColorMap[standard.standard_status]} size='md' variant='flat'>
+					<Chip className='capitalize' color={statusColorMap[standard.standard_status]} size='md' variant='flat' radius='md'>
 						{cellValue}
 					</Chip>
 				)
@@ -129,12 +147,17 @@ export default function StandardTable () {
 		case 'actions':
 			return (
 				<div className='relative flex items-center gap-2 justify-center'>
-					<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />
+					{ semesterIsClosed === false
+						? (
+							<AssignmentModal id={standard.id.toString()} onReload={() => setReload(true)} />)
+						: (
+							<PencilIcon width={20} height={20} fill='fill-gray-300 hover:cursor-not-allowed' />
+						)}
 					<Tooltip content='Ver Estandar'>
 						<Link
 							href={`/dashboard/standards/${standard.id}/narrative`}
 						>
-							{getCommonIcon('link', 17, 'fill-sky-300 hover:fill-sky-600')}
+							{getCommonIcon('redirect', 17, 'fill-sky-300 hover:fill-sky-600')}
 						</Link>
 					</Tooltip>
 				</div>
@@ -142,7 +165,7 @@ export default function StandardTable () {
 		default:
 			return <div>{cellValue.toString()}</div>
 		}
-	}, [])
+	}, [semesterIsClosed])
 
 	const onSearchChange = useCallback((value?: string) => {
 		if (value) {
@@ -165,6 +188,7 @@ export default function StandardTable () {
 					<Input
 						isClearable
 						className='w-full sm:max-w-[44%]'
+						radius='sm'
 						placeholder='Buscar por nombre, apellido o correo'
 						startContent={getCommonIcon('search', 15, 'fill-gray-500')}
 						defaultValue={filterValue}
@@ -187,7 +211,6 @@ export default function StandardTable () {
 							selectedKeys={statusFilter}
 							selectionMode='multiple'
 							onSelectionChange={setStatusFilter}
-
 						/>
 					</div>
 				</div>
@@ -204,7 +227,7 @@ export default function StandardTable () {
 	const bottomContent = useMemo(() => {
 		return (
 			<div className='py-2 px-2 flex justify-center'>
-				{ pages !== 1 && (
+				{ pages >= 1 && (
 					<Pagination
 						isCompact
 						showControls
@@ -240,14 +263,25 @@ export default function StandardTable () {
 	)
 
 	return (
-		<CustomTable
-			items={items}
-			columns={columns}
-			renderCell={renderCell}
-			topContent={topContent}
-			bottomContent={bottomContent}
-			emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
-			classNames={classNames}
-		/>
+		<>
+			{ isLoading && isFetching && !data
+				? (
+					<div className='flex justify-center items-center h-[590px]'>
+						<Spinner/>
+					</div>
+				)
+				: (
+					<CustomTable
+						items={items}
+						columns={columns}
+						renderCell={renderCell}
+						topContent={topContent}
+						bottomContent={bottomContent}
+						emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
+						classNames={classNames}
+					/>
+				)
+			}
+		</>
 	)
 }

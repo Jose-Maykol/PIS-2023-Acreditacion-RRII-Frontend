@@ -15,18 +15,29 @@ import {
 	SelectItem
 } from '@nextui-org/react'
 import { useMemo, useState } from 'react'
-import { toast } from 'react-toastify'
+import { useToast } from '@/hooks/toastProvider'
 
-export default function RoleUserModel({ userId, onUserChanged }: {userId: number, onUserChanged: () => void}) {
+interface RoleUserModalProps {
+	userId: number
+	onUserChanged: () => void
+	role: string
+}
+
+export default function RoleUserModal({
+	userId,
+	onUserChanged,
+	role
+}: RoleUserModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const [isValid, setIsValid] = useState<boolean>(false)
 	const [touched, setTouched] = useState(false)
 	const [statusValue, setStatusValue] = useState<Selection>(new Set([]))
+	const { showToast, updateToast } = useToast()
 
 	const handleSubmit = async () => {
 		setTouched(true)
 		if ((statusValue as any).size > 0) {
-			const notification = toast.loading('Procesando...')
+			const notification = showToast('Procesando...')
 			UsersService.updateRole(
 				userId,
 				{
@@ -34,29 +45,9 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 				}
 			).then((res) => {
 				if (res.status === 1) {
-					toast.update(notification, {
-						render: res.message,
-						type: 'success',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'success')
 				} else {
-					toast.update(notification, {
-						render: res.message,
-						type: 'error',
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: true,
-						draggable: true,
-						isLoading: false,
-						theme: 'light'
-					})
+					updateToast(notification, res.message, 'error')
 				}
 				onUserChanged()
 				setTouched(false)
@@ -71,9 +62,7 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 		() => [
 			{ label: 'Administrador', value: 1 },
 			{ label: 'Docente', value: 2 }
-		],
-		[]
-	)
+		], [])
 
 	const handleRoleValue = (value: Selection): void => {
 		setStatusValue(value)
@@ -103,12 +92,14 @@ export default function RoleUserModel({ userId, onUserChanged }: {userId: number
 							</ModalHeader>
 							<ModalBody>
 								<Select
+									defaultSelectedKeys={[roles.find(item => item.label.toLowerCase() === role.toLowerCase())?.value.toString() || '2']}
 									items={roles}
 									label='Rol'
 									placeholder='Selecciona rol de usuario'
 									variant='bordered'
 									errorMessage={isValid || !touched ? '' : 'Seleccione un rol'}
 									isInvalid={!(isValid || !touched)}
+									disallowEmptySelection
 									onSelectionChange={handleRoleValue}
 									onClose={() => setTouched(true)}
 								>

@@ -1,6 +1,6 @@
 import { IconProps } from '@/types/IconProps'
 
-export default function LinkIcon({ width, height, fill = 'fill-black' }: IconProps) {
+export default function RedirectIcon({ width, height, fill = 'fill-black' }: IconProps) {
 	return (
 		<svg
 			className={fill}

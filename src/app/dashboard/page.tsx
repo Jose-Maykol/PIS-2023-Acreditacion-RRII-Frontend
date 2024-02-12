@@ -1,34 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import MyImprovementPlansTableContainer from '@/components/Container/MyImprovementPlansTableContainer'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import BookMarkIcon from '@/components/Icons/BookMarkIcon'
-import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
-import { useYearSemesterStore } from '@/store/useYearSemesterStore'
-import { ImprovementPlans } from '@/types/PlanMejora'
-import dynamic from 'next/dynamic'
-
+import React from 'react'
 export default function DashboardPage() {
-	const [myImprovementPlans, setMyImprovementPlans] = useState<ImprovementPlans[]>([])
-	const { year, semester } = useYearSemesterStore()
-	const ImprovementPlansTable = dynamic(() => import('@/components/Table/ImprovementPlansTable'), {
-		ssr: false
-	})
-
-	const loadMyImprovementPlans = useMemo(() => {
-		return (year: number, semester: 'A' | 'B') => {
-			PlanMejoraService.readUser(year, semester).then((res) => {
-				setMyImprovementPlans(res.data)
-			}).catch(console.log)
-		}
-	}, [])
-
-	useEffect(() => {
-		if (year && semester) {
-			loadMyImprovementPlans(year, semester)
-		}
-	}, [year, semester, loadMyImprovementPlans])
-
 	return (
 		<div className='h-full bg-gray-100'>
 			<ContentWrapper className='bg-lightBlue-600 p-5 h-[300px]'>
@@ -40,11 +17,11 @@ export default function DashboardPage() {
 					</div>
 				</div>
 			</ContentWrapper>
-			<ContentWrapper className='bg-white h-[670px] -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
+			<ContentWrapper className='bg-white min-h-[585px] h-auto -top-24 w-[96%] m-auto rounded-md py-5 px-10'>
 				<div className='flex w-full mb-5'>
 					<h2 className='text-xl font-semibold uppercase'>Lista de Planes de Mejora</h2>
 				</div>
-				<ImprovementPlansTable improvementPlans={myImprovementPlans} setImprovementPlans={setMyImprovementPlans}/>
+				<MyImprovementPlansTableContainer />
 			</ContentWrapper>
 		</div>
 	)

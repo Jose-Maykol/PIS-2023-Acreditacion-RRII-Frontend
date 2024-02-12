@@ -2,14 +2,16 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import { Button, Chip, ChipProps, Divider } from '@nextui-org/react'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { ReportService } from '@/api/Report/ReportService'
 import EyeIcon from '@/components/Icons/EyeIcon'
 import ImprovementEvidencesModal from '@/components/Modal/Evidence/ImprovementEvidencesModal'
+import ArrowIcon from '@/components/Icons/ArrowIcon'
 
 const statusOptions = new Map([
 	[1, 'planificado'],
@@ -34,6 +36,7 @@ interface ImprovementPlanDetailsPageProps {
 }
 
 export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDetailsPageProps) {
+	const router = useRouter()
 	const [showModal, setShowModal] = useState<boolean>(false)
 
 	const [plan, setPlan] = useState({
@@ -81,7 +84,12 @@ export default function ImprovementPlanDetailsPage({ params }: ImprovementPlanDe
 		<ContentWrapper className='bg-white w-[96%] m-auto rounded-md'>
 			<div className='px-5 py-8'>
 				<div className='flex justify-between items-center mb-3'>
-					<h1 className='uppercase text-lg font-bold'>Detalles de plan de mejora</h1>
+					<div className='flex items-center'>
+						<Button isIconOnly variant='light' onClick={() => router.back()}>
+							<ArrowIcon width={16} height={16} />
+						</Button>
+						<h1 className='uppercase text-lg font-bold'>Detalles de plan de mejora</h1>
+					</div>
 					<div className='flex'>
 						<Button
 							color='primary'

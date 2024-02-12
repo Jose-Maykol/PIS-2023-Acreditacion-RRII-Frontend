@@ -38,8 +38,47 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 			}
 			if (authUser) {
 				const jsonAuthUser = JSON.parse(authUser)
-				setPermissions(jsonAuthUser.permissions)
-				setRole(jsonAuthUser.role)
+				const role = jsonAuthUser.role
+				setRole(role)
+				if (role === 'administrador') {
+					setPermissions({
+						createStandard: true,
+						readStandard: true,
+						updateStandard: true,
+						deleteStandard: true,
+						createPlan: true,
+						readPlan: true,
+						updatePlan: true,
+						deletePlan: true,
+						createEvidence: true,
+						readEvidence: true,
+						updateEvidence: true,
+						deleteEvidence: true,
+						createUser: true,
+						readUser: true,
+						updateUser: true,
+						deleteUser: true
+					})
+				} else if (role === 'docente') {
+					setPermissions({
+						createStandard: false,
+						readStandard: true,
+						updateStandard: false,
+						deleteStandard: false,
+						createPlan: true,
+						readPlan: true,
+						updatePlan: true,
+						deletePlan: true,
+						createEvidence: true,
+						readEvidence: true,
+						updateEvidence: true,
+						deleteEvidence: true,
+						createUser: false,
+						readUser: true,
+						updateUser: false,
+						deleteUser: false
+					})
+				}
 			}
 			if (!authUser && !redirected) {
 				setRedirected(true)
@@ -49,7 +88,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
 	}, [])
 
 	return (
-		<html lang='en'>
+		<html lang='es'>
 			<body>
 				<Providers>
 					<main>{children}</main>

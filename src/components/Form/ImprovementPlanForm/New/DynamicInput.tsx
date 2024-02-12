@@ -3,7 +3,7 @@ import PlusIcon from '@/components/Icons/PlusIcon'
 import { Button, Input, ScrollShadow, Tooltip } from '@nextui-org/react'
 import DynamicInputItem from './DynamicInputItem'
 import { ChangeEvent, useState } from 'react'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 
 export default function DynamicInput({
 	identifier,
@@ -71,14 +71,18 @@ export default function DynamicInput({
 
 	return (
 		<div>
-			<div className='flex items-center gap-3'>
+			<div className='flex flex-col'>
 				<Tooltip
 					color='foreground'
 					placement='top-start'
-					offset={15}
 					content={tooltip}
 					closeDelay={100}
 				>
+					<label className='text-default-600 text-sm mt-2'>
+						{label}
+					</label>
+				</Tooltip>
+				<div className='flex items-center gap-3'>
 					<Input
 						id={identifier}
 						name={identifier}
@@ -87,23 +91,23 @@ export default function DynamicInput({
 						isInvalid={isEmptyValue}
 						errorMessage={isEmptyValue && 'El campo no puede estar vacío'}
 						className='mb-4'
-						label={label}
 						size='sm'
 						type='text'
 						variant='underlined'
+						maxLength={255}
 					/>
-				</Tooltip>
-				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
-					<PlusIcon width={15} height={15} fill='fill-white' />
-				</Button>
+					<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
+						<PlusIcon width={15} height={15} fill='fill-white' />
+					</Button>
+				</div>
 			</div>
-			{(formik.touched[identifier] && formik.errors[identifier]) ? (
+			{formik.touched[identifier] && formik.errors[identifier] ? (
 				<p style={{ color: '#F31260', fontSize: 12, marginTop: '-.75rem', marginLeft: '.25rem' }}>
 					Campo requerido
 				</p>
 			) : null}
 			{inputValues.length <= 2 ? (
-				<div> {renderInputItems()} </div>
+				<div className='mb-2'> {renderInputItems()} </div>
 			) : (
 				<ScrollShadow hideScrollBar size={7} className='h-[140px]'>
 					{renderInputItems()}

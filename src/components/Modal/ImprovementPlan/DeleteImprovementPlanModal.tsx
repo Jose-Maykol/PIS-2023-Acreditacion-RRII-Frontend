@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import TrashIcon from '@/components/Icons/TrashIcon'
-import { ImprovementPlans } from '@/types/PlanMejora'
+import { ImprovementPlans } from '@/types/ImprovementPlan'
 
 import {
 	Button,
@@ -13,24 +13,36 @@ import {
 	Tooltip,
 	useDisclosure
 } from '@nextui-org/react'
-import { Dispatch, SetStateAction } from 'react'
-import { toast } from 'react-toastify'
+import { Dispatch, SetStateAction, useCallback } from 'react'
+import { useToast } from '@/hooks/toastProvider'
 
 type DeleteImprovementPlanModalProps = {
 	planId: number
 	setImprovementPlans: Dispatch<SetStateAction<ImprovementPlans[]>>
+	isManager: boolean
 }
 
 export default function DeleteImprovementPlanModal({
 	planId,
-	setImprovementPlans
+	setImprovementPlans,
+	isManager
 }: DeleteImprovementPlanModalProps) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
+	const { showToast, updateToast } = useToast()
+
+	const handleVerifyPermission = useCallback(() => {
+		if (!isManager) {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+			return
+		}
+		onOpen()
+	}, [isManager])
 
 	return (
 		<div className='flex flex-col gap-2'>
 			<Tooltip color='danger' content='Eliminar Plan de Mejora'>
-				<span className='text-danger cursor-pointer active:opacity-50' onClick={onOpen}>
+				<span className='text-danger cursor-pointer active:opacity-50' onClick={handleVerifyPermission}>
 					<TrashIcon width={17} height={17} fill='fill-danger-400 hover:fill-danger-900' />
 				</span>
 			</Tooltip>
@@ -60,29 +72,14 @@ export default function DeleteImprovementPlanModal({
 									onPress={() => {
 										PlanMejoraService.delete(planId)
 											.then((res) => {
+												const notification = showToast('Eliminando...')
 												if (res.data.status === 1) {
-													toast.success('Plan de mejora eliminado satisfactoriamente', {
-														autoClose: 2000,
-														hideProgressBar: false,
-														closeOnClick: true,
-														pauseOnHover: true,
-														draggable: true,
-														isLoading: false,
-														theme: 'light'
-													})
+													updateToast(notification, 'Plan de mejora eliminado satisfactoriamente', 'success')
 													setImprovementPlans((previous: Array<ImprovementPlans>) =>
 														previous.filter((plan) => plan.id !== planId)
 													)
 												} else {
-													toast.error('Ocurrió un error al elimnar plan de mejora', {
-														autoClose: 2000,
-														hideProgressBar: false,
-														closeOnClick: true,
-														pauseOnHover: true,
-														draggable: true,
-														isLoading: false,
-														theme: 'light'
-													})
+													updateToast(notification, 'Ocurrió un error al elimnar plan de mejora', 'error')
 												}
 											})
 											.catch(console.log)

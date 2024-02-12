@@ -1,9 +1,10 @@
 import { User } from './User'
 
 export interface Standard {
-	id: number
+	id?: number
 	name: string
-	nro_standard: number
+	description: string
+	nro_standard?: number
 	factor?: string
 	dimension?: string
 	related_standards?: string
@@ -14,6 +15,7 @@ export interface Standard {
 	user_email?: string
 	date_id?: number
 	registration_status_id?: number
+	is_editing?: boolean
 }
 
 export interface PartialStandard {

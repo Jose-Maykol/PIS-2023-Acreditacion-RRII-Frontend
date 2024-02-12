@@ -1,5 +1,5 @@
 /* eslint-disable multiline-ternary */
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { Button, Input, ScrollShadow, Tooltip } from '@nextui-org/react'
 import { ChangeEvent, useEffect, useState } from 'react'
 
@@ -18,7 +18,7 @@ export default function DynamicInput({
 	label: string
 	tooltip: string
 	onChange: (formDataField: string, value: planItem[]) => void
-	defaultValues: planItem[],
+	defaultValues: planItem[]
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	formik: any
 }) {
@@ -78,14 +78,13 @@ export default function DynamicInput({
 
 	return (
 		<div>
-			<div className='flex items-center gap-3'>
-				<Tooltip
-					color='foreground'
-					placement='top-start'
-					offset={15}
-					content={tooltip}
-					closeDelay={100}
-				>
+			<div className='flex flex-col'>
+				<Tooltip color='foreground' placement='top-start' content={tooltip} closeDelay={100}>
+					<label className='text-default-600 text-sm mt-2'>
+						{label}
+					</label>
+				</Tooltip>
+				<div className='flex items-center gap-3'>
 					<Input
 						id={identifier}
 						name={identifier}
@@ -94,17 +93,17 @@ export default function DynamicInput({
 						isInvalid={isEmptyValue}
 						errorMessage={isEmptyValue && 'El campo no puede estar vacío'}
 						className='mb-4'
-						label={label}
 						size='sm'
 						type='text'
 						variant='underlined'
+						maxLength={255}
 					/>
-				</Tooltip>
-				<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
-					<PlusIcon width={15} height={15} fill='fill-white' />
-				</Button>
+					<Button isIconOnly color='primary' aria-label='Add' variant='solid' onClick={handleAdd}>
+						<PlusIcon width={15} height={15} fill='fill-white' />
+					</Button>
+				</div>
 			</div>
-			{(formik.touched[identifier] && formik.errors[identifier]) ? (
+			{formik.touched[identifier] && formik.errors[identifier] ? (
 				<p style={{ color: '#F31260', fontSize: 12, marginTop: '-.75rem', marginLeft: '.25rem' }}>
 					Campo requerido
 				</p>

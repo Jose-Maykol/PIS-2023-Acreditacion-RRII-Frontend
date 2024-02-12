@@ -4,6 +4,7 @@ import { BaseService } from '../Base/BaseService'
 import api from '../axios'
 
 const url = {
+	createVarious: 'standards/various',
 	listStandarPartial: 'standards/partial',
 	standardsAssignments: 'standards/users',
 	standards: 'standards/:id',
@@ -21,6 +22,12 @@ export class StandardService extends BaseService {
 		return res
 	}
 
+	public static async createVarious (params: any) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.createVarious}`, params)
+		return res.data
+	}
+
 	public static async getPartial () {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.listStandarPartial}`)
@@ -36,6 +43,12 @@ export class StandardService extends BaseService {
 	public static async getHeader (id:string) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.get(`/${year}/${semester}/${url.header.replace(':id', id)}`)
+		return res.data
+	}
+
+	public static async getHeaders (params: { year: string, semester: string }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.get(`/${year}/${semester}/standards/headers`, { params })
 		return res.data
 	}
 

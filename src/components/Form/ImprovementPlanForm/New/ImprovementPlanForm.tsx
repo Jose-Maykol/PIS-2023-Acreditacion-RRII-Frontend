@@ -2,12 +2,12 @@ import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import {
 	Button,
-	Checkbox,
 	Divider,
 	Input,
 	Select,
 	SelectItem,
 	Slider,
+	Switch,
 	Tooltip
 } from '@nextui-org/react'
 
@@ -15,7 +15,7 @@ import CloseIcon from '@/components/Icons/CloseIcon'
 import SaveIcon from '@/components/Icons/SaveIcon'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
 import DynamicInput from './DynamicInput'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { useFormik } from 'formik'
 import { validationSchema } from '../FormValidation'
@@ -25,7 +25,8 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
-	const [submitting, setSubmitting] = useState(false)
+
+	const [submitClicked, setSubmitClicked] = useState(false)
 
 	const formik = useFormik({
 		initialValues: {
@@ -50,9 +51,17 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			semester: ''
 		},
 		validationSchema,
+		validate: (values) => {
+			try {
+				validationSchema.validateSync(values, { abortEarly: false })
+			} catch (errors) {
+				if (submitClicked) {
+					showToast('error', 'Completar los campos requeridos')
+					setSubmitClicked(false)
+				}
+			}
+		},
 		onSubmit: (values) => {
-			setSubmitting(true)
-
 			const newPlan = {
 				name: values.name,
 				code: values.code,
@@ -98,7 +107,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
-			setSubmitting(false)
 		}
 	})
 
@@ -112,12 +120,15 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 
 			<Divider className='mb-5' />
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registrar el nombre del plan de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el nombre del plan de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Nombre:</label>
+				</Tooltip>
 				<Input
 					id='name'
 					name='name'
@@ -126,20 +137,22 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 					errorMessage={formik.touched.name && formik.errors.name}
-					className='mb-3'
-					placeholder='Nombre:'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
-			</Tooltip>
+			</div>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registrar el código con el formato OMXX-YY-ZZZZ'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el código con el formato OMXX-YY-ZZZZ'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Código:</label>
+				</Tooltip>
 				<Input
 					id='code'
 					name='code'
@@ -148,13 +161,12 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 					errorMessage={formik.touched.code && formik.errors.code}
-					className='mb-3'
-					placeholder='Código:'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={12}
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='problems_opportunities'
@@ -171,12 +183,15 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				formik={formik}
 			/>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				content='Registre la denominación de la oportunidad de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registre la denominación de la oportunidad de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Oportunidad de mejora:</label>
+				</Tooltip>
 				<Input
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
@@ -191,12 +206,12 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 					}
 					className='mb-3'
-					placeholder='Oportunidad de mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='improvement_actions'
@@ -205,8 +220,6 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				onChange={handleInputValues}
 				formik={formik}
 			/>
-
-			{/* <p>{JSON.stringify(formik.errors)}</p> */}
 
 			<Tooltip
 				color='foreground'
@@ -257,13 +270,15 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				</div>
 			</Tooltip>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={20}
-				content='Registrar la duración en meses'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-1'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar la duración en meses'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Duración (meses):</label>
+				</Tooltip>
 				<Input
 					id='duration'
 					name='duration'
@@ -273,14 +288,13 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
 					errorMessage={formik.touched.duration && formik.errors.duration}
 					className='max-w-xs mb-3 mt-3'
-					label='Duración (meses):'
 					min={1}
 					max={24}
 					size='sm'
 					type='number'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='resources'
@@ -387,14 +401,15 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
 				</Tooltip>
-				<Checkbox
+				<Switch
 					name='efficacy_evaluation'
 					isSelected={isSelected}
 					onValueChange={setIsSelected}
 					onChange={formik.handleChange}
+					size='sm'
 				>
-					<span className='text-sm'>{isSelected ? 'Sí' : 'No'}</span>
-				</Checkbox>
+					{isSelected ? 'Sí' : 'No'}
+				</Switch>
 			</div>
 
 			<div className='flex gap-4 justify-end p-3'>
@@ -410,7 +425,7 @@ export default function ImprovementPlanForm({ standardId }: { standardId: string
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
-					isDisabled={submitting}
+					onClick={() => setSubmitClicked(true)}
 				>
 					Guardar
 				</Button>

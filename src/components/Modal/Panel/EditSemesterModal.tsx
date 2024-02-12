@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
 	Button,
 	Input,
@@ -7,33 +8,51 @@ import {
 	ModalBody,
 	ModalContent,
 	ModalFooter,
-	ModalHeader
+	ModalHeader,
+	Popover,
+	PopoverContent,
+	PopoverTrigger
 } from '@nextui-org/react'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
+import Calendar from 'react-calendar'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import CalendarIcon from '@/components/Icons/CalendarIcon'
+import '@/components/Calendar/Calendar.css'
+
 interface EditSemesterModalProps {
 	isOpen: boolean
 	onOpenChange: (isOpen: boolean) => void
 }
 
-export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemesterModalProps) {
+export default function EditSemesterModal({
+	isOpen,
+	onOpenChange
+}: EditSemesterModalProps) {
 	/* const semesters = [{ value: 'A' }, { value: 'B' }] */
-	const [dateValue, setDateValue] = useState<string>('')
+	const [isOpenCalendar, setIsOpenCalendar] = useState(false)
+	const [date, setDate] = useState(new Date())
 	/* const [yearValue, setYearValue] = useState<string >('')
 	const [semesterValue, setSemesterValue] = useState<Selection>(new Set([]))
 	const [isValidYear, setIsValidYear] = useState<boolean | null >(null)
 	const [isValidSemester, setIsValidSemester] = useState<boolean | null >(null) */
-	const [isValidDate, setIsValidDate] = useState<boolean | null >(null)
+	// const [isValidDate, setIsValidDate] = useState<boolean | null >(null)
 	/* const [touchedSemester, setTouchedSemester] = useState(false) */
-	const { year, semester, closingDate } = useYearSemesterStore()
+	// const { year, semester, closingDate } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
 
 	/* const validateYear = (value:string) => {
 		return /^\d{4}$/.test(value)
 	} */
 
-	const validateDate = (value:string) => {
+	const onChangeDate = (value : any, event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+		if (value instanceof Date) {
+			setDate(value)
+			setIsOpenCalendar(false)
+		}
+	}
+
+	/* const validateDate = (value:string) => {
 		// valida la fecha en formato dd-mm-yyyy
 		return /^\d{4}-\d{2}-\d{2}$/.test(value)
 	}
@@ -41,7 +60,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 	const handleDateValue = (value: string): void => {
 		setDateValue(value)
 		setIsValidDate(validateDate(value))
-	}
+	} */
 
 	/* const handleYearValue = (value: string): void => {
 		setYearValue(value)
@@ -69,14 +88,16 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 		}).catch((err) => {
 			updateToast(notification, err.response.data.message, 'error')
 		}) */
-		console.log(dateValue)
+		const dateFormated = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+		console.log(dateFormated)
 		DateSemesterService.close({
-			closing_date: dateValue
+			closing_date: dateFormated
 		}).then((res) => {
 			if (res.status === 1) {
-				updateToast(notification, res.message, 'success')
+				updateToast(notification, 'Fecha de cierre actualizada', 'success')
 				useYearSemesterStore.setState({
-					closingDate: dateValue
+					closingDate: dateFormated,
+					isClosed: true
 				})
 			} else {
 				updateToast(notification, res.message, 'error')
@@ -86,14 +107,6 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 		})
 	}
 
-	useEffect(() => {
-		/* 		if (year && semester) {
-			setYearValue(year.toString())
-			setSemesterValue(new Set([semester.toString()]))
-		} */
-		setDateValue(closingDate || '')
-	}, [year, semester, closingDate])
-
 	return (
 		<Modal
 			isOpen={isOpen}
@@ -101,7 +114,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 				onOpenChange(false)
 				/* setYearValue(year?.toString() as string)
 				setSemesterValue(new Set([semester as 'A' | 'B'])) */
-				setDateValue(closingDate || '')
+				// setDateValue(closingDate || '')
 				/* setIsValidYear(null)
 				setIsValidSemester(null)
 				setTouchedSemester(false) */
@@ -145,17 +158,38 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 							>
 								{(semesters) => <SelectItem key={semesters.value}>{semesters.value}</SelectItem>}
 							</Select> */}
-							<Input
-								value={dateValue}
-								autoFocus
-								label='Fecha de cierre'
-								placeholder='yyyy-mm-dd'
-								variant='bordered'
-								color={!isValidDate && isValidDate !== null ? 'danger' : 'default'}
-								isInvalid={!isValidDate && isValidDate !== null }
-								errorMessage={!isValidDate && isValidDate !== null ? 'Fecha invalida' : ''}
-								onValueChange={handleDateValue}
-							/>
+							<div className='flex flex-row gap-2 items-end'>
+								<Input
+									label='Fecha de cierre'
+									placeholder='yyyy-mm-dd'
+									variant='bordered'
+									// color={!isValidDate && isValidDate !== null ? 'danger' : 'default'}
+									// isInvalid={!isValidDate && isValidDate !== null }
+									// errorMessage={!isValidDate && isValidDate !== null ? 'Fecha invalida' : ''}
+									onValueChange={() => setDate.toString()}
+									value={date.toLocaleDateString()}
+									classNames={{ label: 'text-neutral-400', input: 'text-neutral-400' }}
+									isReadOnly
+								/>
+								<Popover placement='top' isOpen={isOpenCalendar} onOpenChange={(open) => setIsOpenCalendar(open)}>
+									<PopoverTrigger>
+										<Button
+											color='primary'
+											isIconOnly
+											startContent={<CalendarIcon width={35} height={35} fill='fill-white' />}
+											className='h-[56px] w-[56px] min-w-[56px]'
+										/>
+									</PopoverTrigger>
+									<PopoverContent className='px-2 pb-4'>
+										<Calendar
+											onChange={onChangeDate}
+											value={date}
+											prev2Label={null}
+											next2Label={null}
+										/>
+									</PopoverContent>
+								</Popover>
+							</div>
 						</ModalBody>
 						<ModalFooter>
 							<Button
@@ -171,7 +205,7 @@ export default function EditSemesterModal({ isOpen, onOpenChange }: EditSemester
 							</Button>
 							<Button
 								color='primary'
-								isDisabled={!isValidDate && dateValue === ''}/* {!isValidYear || !isValidSemester || !touchedSemester} */
+								// isDisabled={!isValidDate && dateValue === ''}/* {!isValidYear || !isValidSemester || !touchedSemester} */
 								onPress={() => {
 									handleSubmit()
 									onClose()

@@ -4,18 +4,18 @@ import { useEffect, useState } from 'react'
 
 import {
 	Button,
-	Checkbox,
 	Divider,
 	Input,
 	Select,
 	SelectItem,
 	Slider,
+	Switch,
 	Tooltip
 } from '@nextui-org/react'
 
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import { semesters, years, status } from '@/utils/data_improvement_plans'
-import { planItem } from '@/types/PlanMejora'
+import { planItem } from '@/types/ImprovementPlan'
 
 import DynamicInput from './DynamicInput'
 import CloseIcon from '@/components/Icons/CloseIcon'
@@ -38,9 +38,9 @@ export default function ImprovementPlanEditForm({
 	const router = useRouter()
 	const [isSelected, setIsSelected] = useState(false)
 	const [advanceValue, setAdvanceValue] = useState(0)
-	const [submitting, setSubmitting] = useState(false)
 
 	const [showModal, setShowModal] = useState<boolean>(false)
+	const [submitClicked, setSubmitClicked] = useState(false)
 
 	const [formData, setFormData] = useState({
 		id: 0,
@@ -78,11 +78,19 @@ export default function ImprovementPlanEditForm({
 		initialValues: formData,
 		validationSchema,
 		enableReinitialize: true,
+		validate: (values) => {
+			try {
+				validationSchema.validateSync(values, { abortEarly: false })
+			} catch (errors) {
+				if (submitClicked) {
+					showToast('error', 'Completar los campos requeridos')
+					setSubmitClicked(false)
+				}
+			}
+		},
 		onSubmit: (values) => {
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { year, semester, ...remainingPlan } = formData
-
-			setSubmitting(true)
 
 			const newPlan = {
 				...remainingPlan,
@@ -131,8 +139,6 @@ export default function ImprovementPlanEditForm({
 			} else {
 				showToast('info', 'Estado y Avance (%) deben estar en los rangos definidos')
 			}
-
-			setSubmitting(false)
 		}
 	})
 
@@ -146,13 +152,15 @@ export default function ImprovementPlanEditForm({
 
 			<Divider className='mb-5' />
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registrar el nombre del plan de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el nombre del plan de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Nombre:</label>
+				</Tooltip>
 				<Input
 					id='name'
 					name='name'
@@ -161,21 +169,22 @@ export default function ImprovementPlanEditForm({
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.name && Boolean(formik.errors.name)}
 					errorMessage={formik.touched.name && formik.errors.name}
-					className='mb-4'
-					label='Nombre del Plan de Mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
-			</Tooltip>
+			</div>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registrar el código con el formato OMXX-YY-ZZZZ'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar el código con el formato OMXX-YY-ZZZZ'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Código:</label>
+				</Tooltip>
 				<Input
 					id='code'
 					name='code'
@@ -184,14 +193,13 @@ export default function ImprovementPlanEditForm({
 					onBlur={formik.handleBlur}
 					isInvalid={formik.touched.code && Boolean(formik.errors.code)}
 					errorMessage={formik.touched.code && formik.errors.code}
-					className='mb-4'
-					label='Código:'
 					placeholder='OMXX-YY-ZZZZ'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={12}
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='problems_opportunities'
@@ -210,13 +218,15 @@ export default function ImprovementPlanEditForm({
 				formik={formik}
 			/>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={15}
-				content='Registre la denominación de la oportunidad de mejora'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-3'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registre la denominación de la oportunidad de mejora'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Oportunidad de mejora:</label>
+				</Tooltip>
 				<Input
 					id='opportunity_for_improvement'
 					name='opportunity_for_improvement'
@@ -231,12 +241,12 @@ export default function ImprovementPlanEditForm({
 						formik.touched.opportunity_for_improvement && formik.errors.opportunity_for_improvement
 					}
 					className='mb-3'
-					label='Oportunidad de mejora:'
 					size='sm'
 					type='text'
 					variant='underlined'
+					maxLength={255}
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='improvement_actions'
@@ -296,13 +306,15 @@ export default function ImprovementPlanEditForm({
 				</div>
 			</Tooltip>
 
-			<Tooltip
-				color='foreground'
-				placement='top-start'
-				offset={20}
-				content='Registrar la duración en meses'
-				closeDelay={100}
-			>
+			<div className='flex flex-col mb-1'>
+				<Tooltip
+					color='foreground'
+					placement='top-start'
+					content='Registrar la duración en meses'
+					closeDelay={100}
+				>
+					<label className='text-default-600 text-sm'>Duración (meses):</label>
+				</Tooltip>
 				<Input
 					id='duration'
 					name='duration'
@@ -312,14 +324,13 @@ export default function ImprovementPlanEditForm({
 					isInvalid={formik.touched.duration && Boolean(formik.errors.duration)}
 					errorMessage={formik.touched.duration && formik.errors.duration}
 					className='max-w-xs mb-3'
-					label='Duración (meses):'
 					min={1}
 					max={24}
 					size='sm'
 					type='number'
 					variant='underlined'
 				/>
-			</Tooltip>
+			</div>
 
 			<DynamicInput
 				identifier='resources'
@@ -458,14 +469,15 @@ export default function ImprovementPlanEditForm({
 				>
 					<label className='text-default-600 text-sm'>Eficacia:</label>
 				</Tooltip>
-				<Checkbox
+				<Switch
 					name='efficacy_evaluation'
 					isSelected={isSelected}
 					onValueChange={setIsSelected}
 					onChange={formik.handleChange}
+					size='sm'
 				>
-					<span className='text-sm'>{isSelected ? 'Sí' : 'No'}</span>
-				</Checkbox>
+					{isSelected ? 'Sí' : 'No'}
+				</Switch>
 			</div>
 
 			<div className='flex gap-4 justify-end p-3'>
@@ -481,7 +493,7 @@ export default function ImprovementPlanEditForm({
 					className='text-white'
 					startContent={<SaveIcon width={16} height={16} fill='fill-white' />}
 					type='submit'
-					isDisabled={submitting}
+					onClick={() => setSubmitClicked(true)}
 				>
 					Guardar
 				</Button>

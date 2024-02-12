@@ -27,7 +27,7 @@ export default function ToastProvider({ children }: ToastProviderProps) {
 	const showToast = (message: string): Id => {
 		const notification = toast.loading(message, {
 			position: toast.POSITION.TOP_RIGHT,
-			autoClose: false,
+			autoClose: 5000,
 			hideProgressBar: false,
 			closeOnClick: true,
 			pauseOnHover: true,
