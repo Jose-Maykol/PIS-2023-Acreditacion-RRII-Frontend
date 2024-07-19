@@ -30,6 +30,8 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 				} else {
 					updateToast(notification, res.message, 'error')
 				}
+			}).catch((err) => {
+				updateToast(notification, err.response.data.message, 'error')
 			})
 		} else {
 			await EvidenceService.deleteFolder(id).then((res) => {
@@ -38,6 +40,8 @@ export default function DeleteEvidenceModal({ id, type, openModal, onCloseModal,
 				} else {
 					updateToast(notification, res.message, 'error')
 				}
+			}).catch((err) => {
+				updateToast(notification, err.response.data.message, 'error')
 			})
 		}
 		handleCloseModal()

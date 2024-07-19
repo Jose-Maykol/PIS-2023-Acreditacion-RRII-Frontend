@@ -62,4 +62,5 @@ export interface StandardHeader extends StandardValues {
 		isAdministrator: boolean
 		isManager: boolean
 	}
+	nroStandard: number
 }

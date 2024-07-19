@@ -23,7 +23,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 		permissions: {
 			isAdministrator: false,
 			isManager: false
-		}
+		},
+		nroStandard: 0
 	})
 
 	const [isRead, setIsRead] = useState<boolean>(true)
@@ -40,7 +41,9 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	useEffect(() => {
 		StandardService.getHeader(id).then((res) => {
-			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager } = res.data
+			console.log(res.data)
+			const { name, description, dimension, factor, related_standards: standardRelated, standard_status: status, isAdministrator, isManager, nro_standard: nroStandard
+			} = res.data
 			setStandardHeader({
 				name,
 				description,
@@ -51,7 +54,8 @@ const HeaderStandards = ({ id }: { id: string }) => {
 				permissions: {
 					isAdministrator,
 					isManager
-				}
+				},
+				nroStandard
 			})
 		})
 		setRefresh(false)
@@ -102,7 +106,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						inputWrapper: `border-none rounded-md ${isRead || !standardHeader.permissions.isAdministrator ? 'bg-transparent px-0' : 'bg-white px-2'}`
 					}}
 				/>
-				<p className='text-white text-xl uppercase'>Estándar #{id}</p>
+				<p className='text-white text-xl uppercase'>Estándar #{standardHeader.nroStandard}</p>
 				<hr className='my-2 w-full'></hr>
 				<Textarea
 					isReadOnly={isRead || !standardHeader.permissions.isAdministrator}

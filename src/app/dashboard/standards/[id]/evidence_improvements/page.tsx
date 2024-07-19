@@ -36,13 +36,14 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 	useEffect(() => {
 		PlanMejoraService.readByStandard(params.id)
 			.then((res) => {
-				setIsManager(res.data.data.is_manager)
-				setImpmrovementPlans(res.data.data.plans)
+				setIsManager(res.data.data.isManager)
+				setImpmrovementPlans(res.data.data.plans)	
 			})
 			.catch(console.log)
 	}, [])
 
 	const standardsOptions = initializeStandardsOptions(improvementPlans)
+	console.log(isManager)
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>
