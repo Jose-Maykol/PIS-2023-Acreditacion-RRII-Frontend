@@ -1,7 +1,7 @@
 /* eslint-disable multiline-ternary */
 'use client'
 
-import React, { Dispatch, SetStateAction, useCallback } from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 
 import { Chip, Tooltip, Pagination, Selection, Input, Button, Progress } from '@nextui-org/react'
 import EyeIcon from '../Icons/EyeIcon'
@@ -32,7 +32,7 @@ export default function ImprovementPlansTable({
 	improvementPlans,
 	setImprovementPlans,
 	standardsOptions,
-	isManager
+	isManager,
 }: TableProps) {
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
@@ -87,16 +87,16 @@ export default function ImprovementPlansTable({
 		return filteredItems.slice(start, end)
 	}, [page, filteredItems, rowsPerPage])
 
-	const handleVerifyPermission = useCallback((path: string) => {
-		// if (!isManager) {
-		// 	const notification = showToast('Procesando...')
-		// 	updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
-		// 	return
-		// }
+	const handleVerifyPermission = (path: string) => {
+		if (!isManager) {
+			const notification = showToast('Procesando...')
+			updateToast(notification, 'Usted no tiene permisos para realizar esta acción', 'error')
+			return
+		}
 		router.push(path)
-	}, [isManager])
+	}
 
-	const renderCell = React.useCallback(
+	const renderCell =
 		(improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 			const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 
@@ -162,7 +162,7 @@ export default function ImprovementPlansTable({
 								</span>
 							</Link>
 						</Tooltip>
-						{improvementPlan.isSemesterClosed === true
+						{improvementPlan.isSemesterClosed !== true
 							? (
 								<Tooltip content='Editar Plan de Mejora'>
 									<div
@@ -177,7 +177,7 @@ export default function ImprovementPlansTable({
 							: (
 								<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
 							)}
-						{improvementPlan.isSemesterClosed === true
+						{improvementPlan.isSemesterClosed !== true
 							? (
 								<DeleteImprovementPlanModal
 									planId={improvementPlan.id}
@@ -194,9 +194,7 @@ export default function ImprovementPlansTable({
 			default:
 				return cellValue
 			}
-		},
-		[isManager]
-	)
+		}
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
