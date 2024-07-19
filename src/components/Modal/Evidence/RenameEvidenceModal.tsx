@@ -45,6 +45,8 @@ export default function RenameEvidenceModal({ evidence, openModal, onCloseModal,
 				} else {
 					updateToast(notification, res.message, 'error')
 				}
+			}).catch((err) => {
+				updateToast(notification, err.response.data.message, 'error')
 			})
 		} else {
 			await EvidenceService.renameFolder(String(evidence.folder_id), {
