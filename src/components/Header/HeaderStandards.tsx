@@ -29,7 +29,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 
 	const [isRead, setIsRead] = useState<boolean>(true)
 	const [refresh, setRefresh] = useState<boolean>(false)
-	const { year, semester } = useYearSemesterStore()
+	const { year, semester, isClosed } = useYearSemesterStore()
 	const { showToast, updateToast } = useToast()
 
 	const onTextareaChange = (key: string, value: string) => {
@@ -168,7 +168,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						Cancelar
 						</Button>
 					)}
-					{isRead && (standardHeader.permissions.isAdministrator || standardHeader.permissions.isManager) && (
+					{!isClosed && isRead && (standardHeader.permissions.isAdministrator || standardHeader.permissions.isManager) && (
 						<Button
 							className='text-white self-end uppercase'
 							onPress={() => setIsRead(false)}
@@ -178,7 +178,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						Editar
 						</Button>
 					)}
-					{!isRead && standardHeader.permissions.isAdministrator && (
+					{!isClosed && !isRead && standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
 							onPress={onSubmit}
@@ -188,7 +188,7 @@ const HeaderStandards = ({ id }: { id: string }) => {
 						Guardar
 						</Button>
 					)}
-					{!isRead && !standardHeader.permissions.isAdministrator && (
+					{!isClosed && !isRead && !standardHeader.permissions.isAdministrator && (
 						<Button
 							className='text-white self-end uppercase'
 							onPress={onSubmit}

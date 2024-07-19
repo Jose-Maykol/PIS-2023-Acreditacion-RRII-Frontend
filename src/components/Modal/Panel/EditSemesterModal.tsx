@@ -89,7 +89,7 @@ export default function EditSemesterModal({
 			updateToast(notification, err.response.data.message, 'error')
 		}) */
 		const dateFormated = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-		console.log(dateFormated)
+		
 		DateSemesterService.close({
 			closing_date: dateFormated
 		}).then((res) => {
@@ -97,7 +97,7 @@ export default function EditSemesterModal({
 				updateToast(notification, 'Fecha de cierre actualizada', 'success')
 				useYearSemesterStore.setState({
 					closingDate: dateFormated,
-					isClosed: true
+					isClosed: res.data.is_closed
 				})
 			} else {
 				updateToast(notification, res.message, 'error')

@@ -47,9 +47,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		['dateSemester', year, semester],
 		DateSemesterService.getInfo, {
 			onSuccess(data) {
-				const id = data.data[0].id
-				const closingDate = data.data[0].closing_date
-				const isClosed = data.data[0].is_closed
+				const id = data.data.id
+				const closingDate = data.data.closing_date
+				const isClosed = data.data.is_closed
 				setId(id)
 				setIsClosed(isClosed)
 				setClosingDate(closingDate)

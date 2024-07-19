@@ -22,6 +22,7 @@ import CreateFolderModal from '../Modal/Evidence/CreateFolderModal'
 import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useToast } from '@/hooks/toastProvider'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 export default function EvidencesTable({
 	id,
@@ -74,6 +75,7 @@ export default function EvidencesTable({
 	})
 	const { isNarrativeEnabled } = useNarrativeStore()
 	const { showToast, updateToast } = useToast()
+	const { isClosed } = useYearSemesterStore()
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params, plandId).then((res) => {
@@ -88,7 +90,7 @@ export default function EvidencesTable({
 			setEvidencesManagement([...arr])
 		})
 		setReload(false)
-	}, [reload, params])
+	}, [reload, params, isClosed])
 
 	const filteredItems = React.useMemo(() => {
 		let filteredEvidences = [...evidencesManagement]
@@ -241,6 +243,7 @@ export default function EvidencesTable({
 							setEvidence(evidence)
 							handleSelectOption(key, evidence.file_id)
 						}}
+						disabledKeys={isClosed ? ['rename-evidence', 'move-evidence', 'delete-evidence'] : undefined}
 					/>
 				</div>
 			)
@@ -417,6 +420,7 @@ export default function EvidencesTable({
 							placement='bottom-end'
 							mode='action'
 							onAction={(key: string) => handleSelectOption(key)}
+							disabledKeys={isClosed ? ['upload-evidence', 'create-folder'] : undefined}
 						/>
 					</div>
 				</div>

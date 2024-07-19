@@ -3,6 +3,7 @@
 import { PlanMejoraService } from '@/api/PlanMejora/PlanMejoraService'
 import ContentWrapper from '@/components/ContentWrapper/ContentWrapper'
 import ImprovementPlansTable from '@/components/Table/ImprovementPlansTable'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { ImprovementPlans } from '@/types/ImprovementPlan'
 import { useEffect, useState } from 'react'
 
@@ -32,6 +33,7 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 
 	const [improvementPlans, setImpmrovementPlans] = useState<ImprovementPlans[]>([])
 	const [isManager, setIsManager] = useState<boolean>(true)
+	const { isClosed } = useYearSemesterStore()
 
 	useEffect(() => {
 		PlanMejoraService.readByStandard(params.id)
@@ -40,10 +42,9 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 				setImpmrovementPlans(res.data.data.plans)	
 			})
 			.catch(console.log)
-	}, [])
+	}, [isClosed])
 
 	const standardsOptions = initializeStandardsOptions(improvementPlans)
-	console.log(isManager)
 
 	return (
 		<ContentWrapper className='bg-white h-[670px] w-[96%] m-auto rounded-md py-5 px-10'>

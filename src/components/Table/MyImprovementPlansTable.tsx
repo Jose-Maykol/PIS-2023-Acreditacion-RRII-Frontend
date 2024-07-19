@@ -9,6 +9,7 @@ import Link from 'next/link'
 import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 interface MyImprovementPlansTableProps {
   data: ImprovementPlans[]
@@ -19,6 +20,7 @@ export default function MyImprovementPlansTable({
 	data,
 	handleUsersChanged
 }: MyImprovementPlansTableProps) {
+	const { isClosed } = useYearSemesterStore()
 	const renderCell = useCallback((improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 		const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 		switch (columnKey) {
@@ -83,7 +85,7 @@ export default function MyImprovementPlansTable({
 							</span>
 						</Link>
 					</Tooltip>
-					{improvementPlan.isSemesterClosed === true
+					{!isClosed
 						? (
 							<Tooltip content='Editar Plan de Mejora'>
 								<Link
@@ -98,7 +100,7 @@ export default function MyImprovementPlansTable({
 						: (
 							<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
 						)}
-					{improvementPlan.isSemesterClosed === true
+					{!isClosed
 						? (
 							<DeleteImprovementPlanModal
 								planId={improvementPlan.id}

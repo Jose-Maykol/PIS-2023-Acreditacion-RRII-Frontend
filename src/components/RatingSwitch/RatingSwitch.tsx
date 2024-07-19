@@ -24,11 +24,13 @@ const RatingSwitch = ({ standardID, isManager, statusID } : { standardID: string
 			console.log(res)
 			if (res.status === 1) {
 				updateToast(notification, res.message, 'success')
+				setRating(newRating)
 			} else {
 				updateToast(notification, res.message, 'error')
 			}
+		}).catch((err) => {
+			updateToast(notification, err.response.data.message, 'error')
 		})
-		setRating(newRating)
 	}
 
 	const getPropsRating = (index: number): { value: number; color: string } => {

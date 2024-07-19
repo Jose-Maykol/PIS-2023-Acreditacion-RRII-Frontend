@@ -15,7 +15,8 @@ interface CustomDropdownProps {
 	itemsClassName?: string
 	onSelectionChange?: (key: any) => void
 	onAction?: (key: any) => void
-	mode: DropdownMode
+	mode: DropdownMode,
+	disabledKeys?: any[]
 }
 
 function CustomDropdown({
@@ -30,7 +31,8 @@ function CustomDropdown({
 	itemsClassName,
 	onSelectionChange,
 	onAction,
-	mode
+	mode,
+	disabledKeys
 }: CustomDropdownProps) {
 	return (
 		<Dropdown placement={placement}>
@@ -43,6 +45,7 @@ function CustomDropdown({
 				selectionMode={selectionMode}
 				onSelectionChange={mode === 'selector' ? onSelectionChange : undefined}
 				onAction={mode === 'action' ? onAction : undefined}
+				disabledKeys={disabledKeys}
 			>
 				{items.map((item: any) => (
 					<DropdownItem

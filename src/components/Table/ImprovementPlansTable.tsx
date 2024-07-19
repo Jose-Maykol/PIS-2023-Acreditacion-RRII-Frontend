@@ -18,6 +18,7 @@ import { ImprovementPlans, StandardOption } from '@/types/ImprovementPlan'
 import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
 import TrashIcon from '../Icons/TrashIcon'
+import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 
 type TableProps = {
 	id?: string
@@ -45,6 +46,7 @@ export default function ImprovementPlansTable({
 	const hasSearchFilter = Boolean(filterValue)
 
 	const { showToast, updateToast } = useToast()
+	const { isClosed } = useYearSemesterStore()
 
 	const filteredItems = React.useMemo(() => {
 		let filteredPlans = [...improvementPlans]
@@ -96,7 +98,7 @@ export default function ImprovementPlansTable({
 		router.push(path)
 	}
 
-	const renderCell =
+	const renderCell = React.useCallback(
 		(improvementPlan: ImprovementPlans, columnKey: React.Key) => {
 			const cellValue = improvementPlan[columnKey as keyof ImprovementPlans]
 
@@ -162,7 +164,7 @@ export default function ImprovementPlansTable({
 								</span>
 							</Link>
 						</Tooltip>
-						{improvementPlan.isSemesterClosed !== true
+						{!isClosed
 							? (
 								<Tooltip content='Editar Plan de Mejora'>
 									<div
@@ -177,7 +179,7 @@ export default function ImprovementPlansTable({
 							: (
 								<PencilIcon width={15} height={15} fill='fill-gray-300 hover:cursor-not-allowed' />
 							)}
-						{improvementPlan.isSemesterClosed !== true
+						{!isClosed
 							? (
 								<DeleteImprovementPlanModal
 									planId={improvementPlan.id}
@@ -194,7 +196,8 @@ export default function ImprovementPlansTable({
 			default:
 				return cellValue
 			}
-		}
+		}, 
+		[isClosed])
 
 	const onSearchChange = React.useCallback((value?: string) => {
 		if (value) {
@@ -265,6 +268,7 @@ export default function ImprovementPlansTable({
 								color='primary'
 								endContent={<PlusIcon width={15} height={15} fill='fill-white' />}
 								onClick={() => handleVerifyPermission(`/dashboard/standards/${id}/evidence_improvements/new`)}
+								isDisabled={isClosed ?? false}
 							>
 								Crear PM
 							</Button>
