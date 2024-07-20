@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Button, Popover, PopoverTrigger, PopoverContent, Input, Tooltip, CircularProgress } from '@nextui-org/react'
+import { Button, Popover, PopoverTrigger, PopoverContent, Input, Tooltip, CircularProgress, Chip } from '@nextui-org/react'
 import CustomModal from '@/components/Modal/CustomModal'
 import { toast } from 'react-toastify'
 import UploadIcon from '@/components/Icons/UploadIcon'
@@ -9,6 +9,14 @@ import TrashIcon from '@/components/Icons/TrashIcon'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { getFileIcon, getCommonIcon } from '@/utils/utils'
 import { useToast } from '@/hooks/toastProvider'
+import { v4 as uuid } from 'uuid'
+interface FileUpload {
+	uuid: string
+	file: File
+	progress: number
+	status: string
+}
+
 
 interface UploadEvidenceModalProps {
 	id: string
@@ -21,6 +29,30 @@ interface UploadEvidenceModalProps {
 	planId?: string
 }
 
+interface Status {
+    color: 'default' | 'warning' | 'success' | 'danger';
+    text: string;
+}
+
+const statusUpload: Record<'pending' | 'incompleted' | 'completed' | 'error', Status> = {
+	pending: {
+		color: 'default',
+		text: 'En espera'
+	},
+	incompleted: {
+		color: 'warning',
+		text: 'Duplicado'
+	},
+	completed: {
+		color: 'success',
+		text: 'Subido'
+	},
+	error: {
+		color: 'danger',
+		text: 'No subido'
+	}
+}
+
 const UploadEvidenceModal = ({
 	id,
 	typeEvidence,
@@ -31,12 +63,13 @@ const UploadEvidenceModal = ({
 	onReload,
 	planId
 }: UploadEvidenceModalProps) => {
-	const [files, setFiles] = useState<File[]>([])
+	const [files, setFiles] = useState<FileUpload[]>([])
 	const [totalSize, setTotalSize] = useState<number>(0)
 	const fileInputRef = useRef<HTMLInputElement | null>(null)
 	const [newNameEvidence, setNewNameEvidence] = useState<string>('')
 	const [openPopovers, setOpenPopovers] = useState<{ [key: string]: boolean }>({})
 	const [progress, setProgress] = useState<any>({})
+	const [filesUploadStatus, setFilesUploadStatus] = useState<{ [key: string]: 'pending' | 'incompleted' | 'completed' | 'error' }>({})
 	const [isSendingForm, setIsSendingForm] = useState<boolean>(false)
 
 	const togglePopover = (index: number) => {
@@ -88,15 +121,15 @@ const UploadEvidenceModal = ({
 				return
 			}
 		}
-		setFiles([...files, ...newFiles])
+		setFiles(prevFiles => [...prevFiles, ...newFiles.map(file => ({ uuid: uuid(), file, progress: 0, status: 'pending' }))])
 		setTotalSize(newTotalSize)
 	}
 
-	const removeFile = (index: number) => {
-		const updatedFiles = [...files]
-		const removedFile = updatedFiles.splice(index, 1)[0]
+	const removeFile = (uuid: string) => {
+		const updatedFiles = [...files].filter((fileUpload: FileUpload) => fileUpload.uuid !== uuid)
+		const removedFile = files.find((fileUpload: FileUpload) => fileUpload.uuid === uuid)
 		setFiles(updatedFiles)
-		setTotalSize(totalSize - removedFile.size)
+		setTotalSize(totalSize - (removedFile?.file.size || 0))
 	}
 
 	const handleCloseModal = () => {
@@ -106,19 +139,19 @@ const UploadEvidenceModal = ({
 		onReload()
 	}
 
-	const handleOpenPopover = (index: number, name: string) => {
-		setNewNameEvidence(name)
-		togglePopover(index)
-	}
+	// const handleOpenPopover = (index: number, name: string) => {
+	// 	setNewNameEvidence(name)
+	// 	togglePopover(index)
+	// }
 
-	const handleRenameFile = (index: number) => {
-		const updatedFiles = [...files]
-		const newName = newNameEvidence.endsWith('.pdf') ? newNameEvidence : `${newNameEvidence}.pdf`
-		updatedFiles[index] = new File([files[index]], newName, { type: 'application/pdf' })
-		setFiles(updatedFiles)
-		setNewNameEvidence('')
-		setOpenPopovers(prevState => ({ ...prevState, [index]: false }))
-	}
+	// const handleRenameFile = (index: number) => {
+	// 	const updatedFiles = [...files]
+	// 	const newName = newNameEvidence.endsWith('.pdf') ? newNameEvidence : `${newNameEvidence}.pdf`
+	// 	updatedFiles[index] = new File([files[index]], newName, { type: 'application/pdf' })
+	// 	setFiles(updatedFiles)
+	// 	setNewNameEvidence('')
+	// 	setOpenPopovers(prevState => ({ ...prevState, [index]: false }))
+	// }
 
 	const handleUploadEvidences = async () => {
 		setIsSendingForm(true)
@@ -129,7 +162,7 @@ const UploadEvidenceModal = ({
 		if (folderId) formDataBase.append('folder_id', folderId)
 		if (planId) formDataBase.append('plan_id', planId)
 
-		const uploadPromises = files.map((file, index) => {
+		const uploadPromises = files.map(({ uuid, file }) => {
 			const formData = new FormData()
 			for (const key of formDataBase.keys()) {
 				formData.append(key, String(formDataBase.get(key)))
@@ -137,8 +170,23 @@ const UploadEvidenceModal = ({
 			formData.append('file', file)
 			return new Promise((resolve, reject) => {
 				EvidenceService.uploadEvidences(formData, (progressPercentaje: any) => {
-					setProgress((prevState: any) => ({ ...prevState, [index]: progressPercentaje }))
-				}).then(resolve).catch(reject)
+					setProgress((prevState: any) => ({ ...prevState, [uuid]: progressPercentaje }))
+				}).then(
+					(response: any) => {
+						console.log(response.data)
+						setFilesUploadStatus((prevState: any) => ({ ...prevState, [uuid]: 'completed' }))
+						resolve(response)
+					}
+				).catch(
+					(error: any) => {
+						if (error.response.status === 422) {
+							setFilesUploadStatus((prevState: any) => ({ ...prevState, [uuid]: 'incompleted' }))
+						} else {
+							setFilesUploadStatus((prevState: any) => ({ ...prevState, [uuid]: 'error' }))
+						}
+						reject(error)
+					}
+				)
 			})
 		})
 
@@ -146,10 +194,7 @@ const UploadEvidenceModal = ({
 			await Promise.all(uploadPromises)
 			toast.success('Todos los archivos se han subido exitosamente')
 		} catch (error: any) {
-			toast.error(`Error al subir los archivos: ${error.data.message}`)
-		} finally {
-			setIsSendingForm(false)
-			handleCloseModal()
+			toast.error('Uno o más archivos no se pudieron subir')
 		}
 	}
 
@@ -167,9 +212,9 @@ const UploadEvidenceModal = ({
 		<div className='h-full flex flex-row gap-5'>
 			<div className='w-[60%] rounded-lg overflow-y-auto py-2 px-4 scrollbar-hide'>
 				<p className='text-center text-black text-md font-bold'>Archivos subidos</p>
-				{[...files].reverse().map((file, index) => (
+				{[...files].reverse().map(({ uuid, file }, index) => (
 					<div
-						key={index}
+						key={uuid}
 						className='flex items-center justify-between mt-2 h-14 border-b-2 border-lightBlue-300'
 					>
 						<Tooltip content={file.name}>
@@ -189,19 +234,28 @@ const UploadEvidenceModal = ({
 						</Tooltip>
 						{isSendingForm
 							? (
-								<>
-									<CircularProgress
-										aria-label='Loading Files...'
-										size='md'
-										value={progress[index] || 0}
-										color={progress[index] === 100 ? 'success' : 'primary'}
-										showValueLabel={true}
-									/>
+								<> {
+									!(statusUpload[filesUploadStatus[uuid]])?.color
+										? (
+											<CircularProgress
+												aria-label='Loading Files...'
+												size='md'
+												value={progress[uuid] || 0}
+												color={progress[uuid] === 100 ? 'success' : 'primary'}
+												showValueLabel={true}
+											/>
+										)
+										: (
+											<div>
+												<Chip color={(statusUpload[filesUploadStatus[uuid]])?.color ?? 'default'} variant='flat' size='sm'><span className='text-xs'>{(statusUpload[filesUploadStatus[uuid]])?.text}</span></Chip>
+											</div>
+										)
+								}
 								</>
 							)
 							: (
 								<div className='flex items-center mr-2'>
-									<Popover placement='left' showArrow offset={10} isOpen={openPopovers[index] || false} onOpenChange={() => handleOpenPopover(index, file.name)}>
+									{/* <Popover placement='left' showArrow offset={10} isOpen={openPopovers[index] || false} onOpenChange={() => handleOpenPopover(index, file.name)}>
 										<PopoverTrigger>
 											<Button isIconOnly color='primary' variant='light' size='sm'>
 												{getCommonIcon('pencil', 20, 'fill-primary')}
@@ -233,8 +287,8 @@ const UploadEvidenceModal = ({
 												</div>
 											)}
 										</PopoverContent>
-									</Popover>
-									<Button isIconOnly color='danger' variant='light' size='sm' onPress={() => removeFile(index)}>
+									</Popover> */}
+									<Button isIconOnly color='danger' variant='light' size='sm' onClick={() => removeFile(uuid)}>
 										{getCommonIcon('trash', 20, 'fill-danger')}
 									</Button>
 								</div>
@@ -269,7 +323,7 @@ const UploadEvidenceModal = ({
 						color='primary'
 						size='sm'
 						className='text-white text-sm rounded'
-						onPress={() => fileInputRef.current?.click()}
+						onClick={() => fileInputRef.current?.click()}
 					>
 						Seleccionar Archivos
 					</Button>
@@ -291,17 +345,36 @@ const UploadEvidenceModal = ({
 			body={body}
 			footer={
 				<div className='w-full flex justify-center gap-10'>
-					<Button color='danger' variant='flat' onPress={handleCloseModal}>
-						Cancelar
-					</Button>
-					<Button
-						className='bg-lightBlue-600 text-white'
-						variant='solid'
-						isDisabled={!files.length}
-						onPress={handleUploadEvidences}
-					>
-						Subir
-					</Button>
+					{
+						!isSendingForm
+							? (
+								<>
+									<Button color='danger' variant='flat' onClick={handleCloseModal}>
+								Cancelar
+									</Button>
+									<Button
+										className='bg-lightBlue-600 text-white'
+										variant='solid'
+										isDisabled={!files.length}
+										onClick={handleUploadEvidences}
+									>
+								Subir
+									</Button>
+								</>
+							)
+							: (
+								<Button
+									className='bg-lightBlue-600 text-white'
+									variant='solid'
+									onClick={() => {
+										setIsSendingForm(false)
+										handleCloseModal()
+									}}
+								>
+								Continuar
+								</Button>
+							)
+					}
 				</div>
 			}
 		/>
