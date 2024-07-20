@@ -90,7 +90,7 @@ export default function GenerateReportForm() {
 					link.setAttribute('download', 'reporte_identificacion_contexto.docx')
 					document.body.appendChild(link)
 					link.click()
-					console.log('res', res)
+					updateToast(notification, 'Reporte generado', 'success')
 				}
 			}).catch((err) => {
 				console.log('err', err)

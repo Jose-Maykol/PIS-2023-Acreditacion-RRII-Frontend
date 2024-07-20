@@ -15,7 +15,7 @@ const StudyProgramFields = ({ formik }: { formik: any }) => {
 	return (
 		<div>
 			<div className='flex flex-col mb-3'>
-				<label className='text-default-600 text-sm ml-1'>Resolución de lincenciamiento:</label>
+				<label className='text-default-600 text-sm ml-1'>Resolución de licenciamiento:</label>
 				<Input
 					name='resolution_authorizing_offering_program'
 					id='resolution_authorizing_offering_program'
