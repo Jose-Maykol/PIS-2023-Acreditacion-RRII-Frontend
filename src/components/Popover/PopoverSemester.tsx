@@ -6,12 +6,14 @@ import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { Button, Popover, PopoverContent, PopoverTrigger } from '@nextui-org/react'
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function PopoverSemester() {
 	const { year, semester } = useYearSemesterStore()
 	const [listYearSemester, setListYearSemester] = useState([])
 	const [isOpen, setIsOpen] = useState(false)
 	const { newToast } = useToast()
+	const router = useRouter()
 
 	const getSemesters = useCallback(() => {
 		DateSemesterService.getAll().then((res) => {
@@ -22,6 +24,23 @@ export default function PopoverSemester() {
 			setListYearSemester(periods.flat())
 		})
 	}, [])
+
+	const handleButtonClick = async (item: any) => {
+		const { setYear, setSemester } = useYearSemesterStore.getState()
+
+		setYear(item.year)
+		setSemester(item.semester)
+
+		localStorage.setItem('year', item.year)
+		localStorage.setItem('semester', item.semester)
+
+		newToast('Semestre actualizado', 'success')
+
+		setIsOpen(false)
+
+		router.push('/dashboard')
+		router.refresh()
+	}
 
 	useEffect(() => {
 		if (year && semester) {
@@ -53,14 +72,7 @@ export default function PopoverSemester() {
 										key={item.year + item.semester}
 										className='border border-lightBlue-600 p-2 rounded-md'
 										variant='bordered'
-										onClick={() => {
-											useYearSemesterStore.getState().setYear(item.year)
-											useYearSemesterStore.getState().setSemester(item.semester)
-											localStorage.setItem('year', item.year)
-											localStorage.setItem('semester', item.semester)
-											newToast('Semestre actualizado', 'success')
-											setIsOpen(false)
-										}}
+										onClick={() => handleButtonClick(item)}
 									>
 										{item.year}-{item.semester}
 									</Button>

@@ -27,6 +27,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 	useInactivityMonitor()
 
 	useEffect(() => {
+		setStandards([])
+		queryClient.invalidateQueries(['standards', year, semester])
 		if (year && semester) {
 			BaseService.configure(year, semester)
 		}
