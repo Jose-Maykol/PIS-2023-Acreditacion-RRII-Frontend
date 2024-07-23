@@ -2,6 +2,7 @@
 import { AssignedUsers, StandardValues } from '@/types/Standard'
 import { BaseService } from '../Base/BaseService'
 import api from '../axios'
+import { StandardPartialAPIResponse } from '@/types/api'
 
 const url = {
 	createVarious: 'standards/various',
@@ -17,10 +18,10 @@ const url = {
 }
 
 export class StandardService extends BaseService {
-	public static async getAll () {
-		const res = await api.get('/estandar')
-		return res
-	}
+	// public static async getAll () {
+	// 	const res = await api.get('/estandar')
+	// 	return res
+	// }
 
 	public static async createVarious (params: any) {
 		const { year, semester } = BaseService.getConfig()
@@ -30,7 +31,7 @@ export class StandardService extends BaseService {
 
 	public static async getPartial () {
 		const { year, semester } = BaseService.getConfig()
-		const res = await api.get(`/${year}/${semester}/${url.listStandarPartial}`)
+		const res = await api.get<StandardPartialAPIResponse>(`/${year}/${semester}/${url.listStandarPartial}`)
 		return res.data
 	}
 

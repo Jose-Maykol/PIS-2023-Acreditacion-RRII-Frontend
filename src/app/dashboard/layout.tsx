@@ -11,7 +11,10 @@ import { usePermissionsStore } from '@/store/usePermissionsStore'
 import DateSemesterService from '@/api/DateSemester/DateSemester'
 import useInactivityMonitor from '@/hooks/useInactivityMonitor'
 import InactivityModal from '@/components/Modal/Auth/InactivityModal'
+
 import { useQuery, useQueryClient } from 'react-query'
+import { QueryStatus } from '@/types/common'
+import { StandardPartialAPIResponse } from '@/types/api'
 
 // export const metadata: Metadata = {
 // 	title: 'Sistema de Gestión de Calidad',
@@ -34,16 +37,25 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 		}
 	}, [year, semester, queryClient])
 
-	useQuery(
+	const query = useQuery<StandardPartialAPIResponse>(
 		['standards', year, semester],
 		StandardService.getPartial, {
 			onSuccess(data) {
-				setStandards(data.data)
+				setStandards(data.data || [])
 			},
 			staleTime: Infinity,
 			enabled: !!year && !!semester
 		}
 	)
+
+	const queryStandardStatus: QueryStatus<StandardPartialAPIResponse> = {
+		isIdle: query.isIdle,
+		isFetching: query.isFetching,
+		isLoading: query.isLoading,
+		isSuccess: query.isSuccess,
+		isError: query.isError,
+		error: query.error
+	}
 
 	useQuery(
 		['dateSemester', year, semester],
@@ -83,7 +95,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
 	return (
 		<div className='flex w-screen h-screen overflow-x-hidden'>
-			<SideBar standards={standards} role={role}/>
+			<SideBar standards={standards} queryStandardStatus={queryStandardStatus} role={role}/>
 			<div className={'flex-grow h-screen max-h-screen flex flex-col'}>
 				<Header />
 				<main className='flex-1 no-scrollbar bg-gray-100'>

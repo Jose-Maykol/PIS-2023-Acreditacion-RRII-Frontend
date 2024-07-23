@@ -1,5 +1,3 @@
-// 'use client'
-
 import Image from 'next/image'
 import Link from 'next/link'
 import SideBarItem from './SideBarItem'
@@ -10,20 +8,25 @@ import AngleDoubleRightIcon from '../Icons/AngleDoubleRightIcon'
 import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 import ReportIcon from '../Icons/ReportIcon'
-import { Button } from '@nextui-org/react'
+import { Button, Spinner } from '@nextui-org/react'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useSidebarStore } from '@/store/useSidebarStore'
+import { StandardPartialAPIResponse } from '@/types/api'
+import { QueryStatus } from '@/types/common'
 
 export default function SideBar({
 	standards,
+	queryStandardStatus,
 	role
 }: {
 	standards: PartialStandard[]
+	queryStandardStatus: QueryStatus<StandardPartialAPIResponse>
 	role: string
 }) {
 	const isAdmin = role === 'administrador'
 	const { isSidebarOpen, toggleSidebar } = useSidebarStore()
 	const { isEditingNarrative } = useNarrativeStore()
+	const { isLoading, isFetching } = queryStandardStatus
 
 	return (
 		<nav
@@ -123,6 +126,11 @@ export default function SideBar({
 				<h3 className='text-xs text-gray-600 uppercase font-semibold'>estándares</h3>
 			)}
 			<ul className={'flex-1 text-sm list-none my-3 h-full overflow-auto scrollbar-hide'}>
+				{ (isLoading || isFetching) && (
+					<div className='self-center h-full w-full flex items-center justify-center text-center'>
+						<Spinner label='Cargando...' color='primary' labelColor='primary' size='sm'/>
+					</div>
+				)}
 				{ standards.length === 0 && (
 					<div className='text-sm text-gray-400 self-center h-full w-full flex items-center justify-center text-center'>
 						<p className='uppercase text-sm'>No hay estándares disponibles</p>
