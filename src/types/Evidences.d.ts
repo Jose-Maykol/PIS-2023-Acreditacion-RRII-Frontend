@@ -11,7 +11,7 @@ export interface Evidence {
     folder_id?: number; //
     evidence_id?: number;
     evidence_type_id: number;
-    evidence_code?: number;
+    evidence_code?: string;
     file_id?: number;
     folder_id?: number;
     standard_id: number;

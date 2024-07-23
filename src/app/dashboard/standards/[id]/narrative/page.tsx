@@ -24,6 +24,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	const { year, semester } = useYearSemesterStore()
 	const { isNarrativeBlock, setNarrativeEnabled } = useNarrativeStore()
 	const [narrative, setNarrative] = useState<string>('')
+	const [narrativeDocumentExist, setNarrativeDocumentExist] = useState<boolean>(false)
 	const [isEditable, setIsEditable] = useState<boolean>(false)
 	const [isEditMode, setIsEditMode] = useState<boolean>(false)
 	const [openModal, setOpenModal] = useState<boolean>(false)
@@ -45,6 +46,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 				setIsEditMode(res.data.narrative_is_active)
 				setNarrativeEnabled(res.data.narrative_is_active)
 				setNarrative(res.data.narrative)
+				setNarrativeDocumentExist(res.data.document_id !== null)
 			}).catch((err: any) => {
 				console.log('err de getNarrative', err)
 			})
@@ -64,10 +66,6 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 			console.log('err de blockNarrative', err)
 		})
 		setRefresh(true)
-	}
-
-	const createMarkup = () => {
-		return { __html: narrative || '' }
 	}
 
 	const handleOnValueChange = () => {
@@ -154,9 +152,14 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 							)}
 						</div></>)}
 				</div>
-				{narrative
+				{narrativeDocumentExist
 					? (
-						<div className='flex flex-col items-start p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1' dangerouslySetInnerHTML={createMarkup()} />
+						<div className='p-4 border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1'>
+							<iframe
+								className='w-full h-[600px]'
+								src={`https://docs.google.com/document/d/${data.document_id}/preview`}>
+							</iframe>
+						</div>
 					)
 					: (
 						<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>
