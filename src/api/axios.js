@@ -3,7 +3,7 @@ import { SERVER_PATH } from '../../config'
 
 const api = axios.create({
 	baseURL: `${SERVER_PATH}/api`,
-	timeout: 5000,
+	timeout: 15000,
 	headers: {
 		Accept: 'application/json',
 		'Content-Type': 'application/json'
