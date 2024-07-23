@@ -39,7 +39,7 @@ export default function EvidenceImprovementsPage({ params }: EvidenceImprovement
 		PlanMejoraService.readByStandard(params.id)
 			.then((res) => {
 				setIsManager(res.data.data.isManager)
-				setImpmrovementPlans(res.data.data.plans)	
+				setImpmrovementPlans(res.data.data.plans)
 			})
 			.catch(console.log)
 	}, [isClosed])

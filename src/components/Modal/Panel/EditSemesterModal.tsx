@@ -89,7 +89,7 @@ export default function EditSemesterModal({
 			updateToast(notification, err.response.data.message, 'error')
 		}) */
 		const dateFormated = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-		
+
 		DateSemesterService.close({
 			closing_date: dateFormated
 		}).then((res) => {
