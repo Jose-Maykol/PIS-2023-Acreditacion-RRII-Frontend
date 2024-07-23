@@ -7,6 +7,7 @@ import CustomModal from '../CustomModal'
 import { Evidence } from '@/types/Evidences'
 import CustomTable from '@/components/Table/CustomTable'
 import { getFileIcon, getCommonIcon } from '@/utils/utils'
+import { EmptyEvidenceData } from '@/components/Table/EmptyEvidenceData'
 
 interface MoveEvidenceModalProps {
 	evidence: Evidence
@@ -163,7 +164,7 @@ export default function MoveEvidenceModal({ evidence, breadcrumbs, openModal, on
 						<hr className='w-full'></hr>
 					</div>
 				</>}
-				emptyContent={<div className='flex justify-center items-center min-h-[200px] w-full'>No se encontro elementos</div>}
+				emptyContent={<EmptyEvidenceData description='No hay carpetas'/>}
 				classNames={classNames}
 				hideHeader
 			/>

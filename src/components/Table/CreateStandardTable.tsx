@@ -3,6 +3,7 @@ import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow
 import React, { useCallback } from 'react'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
+import { EmptyData } from './EmptyData'
 
 interface CreateStandardTableProps {
   standards: Standard[],
@@ -82,7 +83,7 @@ export default function CreateStandardTable({
 					)}
 				</TableHeader>
 				<TableBody
-					emptyContent={'No hay estándares'}
+					emptyContent={<EmptyData description='No hay estandares registrados' />}
 					items={standards}
 				>
 					{(item) => (

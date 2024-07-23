@@ -5,6 +5,7 @@ import { Chart as ChartJS, ArcElement, Tooltip, Legend, ChartOptions } from 'cha
 import { useState } from 'react'
 import { Pie } from 'react-chartjs-2'
 import { useQuery } from 'react-query'
+import EmptyEvidenceIcon from '../Icons/EmptyEvidenceIcon'
 
 ChartJS.register(ArcElement, Tooltip, Legend)
 
@@ -67,7 +68,8 @@ export default function PlanChart() {
 	if (data && data.data.every((plan: data) => plan.value === 0)) {
 		return (
 			<div className='h-[400px] max-h-[400px] w-full min-w-[400px] border border-lightBlue-600 border-dashed rounded-lg p-4 flex flex-col items-center justify-center'>
-				<h2 className='text-neutral-400 text-sm'>No hay datos para mostrar</h2>
+				<EmptyEvidenceIcon width={100} height={100} fill='fill-neutral-400'/>
+				<h2 className='text-neutral-400 text-sm pt-3'>No hay datos para mostrar</h2>
 			</div>
 		)
 	}

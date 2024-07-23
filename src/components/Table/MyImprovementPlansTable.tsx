@@ -10,6 +10,7 @@ import EyeIcon from '../Icons/EyeIcon'
 import PencilIcon from '../Icons/PencilIcon'
 import TrashIcon from '../Icons/TrashIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { EmptyData } from './EmptyData'
 
 interface MyImprovementPlansTableProps {
   data: ImprovementPlans[]
@@ -136,7 +137,7 @@ export default function MyImprovementPlansTable({
 			</TableHeader>
 			<TableBody
 				items={data}
-				emptyContent='No hay planes de mejora encontrados'
+				emptyContent={<EmptyData description='No tienes planes de mejora registrados' />}
 			>
 				{(item) => (
 					<TableRow key={item.id}>

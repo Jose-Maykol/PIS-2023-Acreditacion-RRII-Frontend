@@ -5,6 +5,7 @@ import { Bar } from 'react-chartjs-2'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { useQuery } from 'react-query'
 import { Spinner } from '@nextui-org/react'
+import EmptyEvidenceIcon from '../Icons/EmptyEvidenceIcon'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, BarElement, BarController, Tooltip, Legend)
 
@@ -76,7 +77,8 @@ export default function PlanPerStandardChart() {
 	if (data && data.data.every((plan: data) => plan.total_plans === 0)) {
 		return (
 			<div className='h-[440px] max-h-[440px] w-full border border-lightBlue-600 border-dashed rounded-lg p-4 flex flex-col items-center justify-center'>
-				<p className='text-neutral-400 text-sm'>No hay datos para mostrar</p>
+				<EmptyEvidenceIcon width={100} height={100} fill='fill-neutral-400'/>
+				<p className='text-neutral-400 text-sm pt-3'>No hay datos para mostrar</p>
 			</div>
 		)
 	}

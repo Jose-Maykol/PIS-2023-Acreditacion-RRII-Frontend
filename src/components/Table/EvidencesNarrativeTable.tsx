@@ -13,6 +13,7 @@ import { columnsEvidenceNarrative } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import LinkToIcon from '../Icons/LinkToIcon'
+import { EmptyEvidenceData } from './EmptyEvidenceData'
 
 
 export default function EvidencesNarrativeTable({
@@ -311,7 +312,7 @@ export default function EvidencesNarrativeTable({
 				renderCell={renderCell}
 				topContent={topContent}
 				// bottomContent={bottomContent}
-				emptyContent={<div>No se encontro elementos</div>}
+				emptyContent={<EmptyEvidenceData description='No se encontraron resultados'/>}
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>

@@ -19,6 +19,7 @@ import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/toastProvider'
 import TrashIcon from '../Icons/TrashIcon'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { EmptyData } from './EmptyData'
 
 type TableProps = {
 	id?: string
@@ -33,7 +34,7 @@ export default function ImprovementPlansTable({
 	improvementPlans,
 	setImprovementPlans,
 	standardsOptions,
-	isManager,
+	isManager
 }: TableProps) {
 	const router = useRouter()
 	const [filterValue, setFilterValue] = React.useState('')
@@ -196,7 +197,7 @@ export default function ImprovementPlansTable({
 			default:
 				return cellValue
 			}
-		}, 
+		},
 		[isClosed])
 
 	const onSearchChange = React.useCallback((value?: string) => {
@@ -340,11 +341,7 @@ export default function ImprovementPlansTable({
 			renderCell={renderCell}
 			topContent={topContent}
 			bottomContent={bottomContent}
-			emptyContent={
-				<div className='flex justify-center items-center min-h-[400px] w-full'>
-					No se encontro elementos
-				</div>
-			}
+			emptyContent={<EmptyData description='No hay planes de mejora para mostrar' />}
 			classNames={classNames}
 		/>
 	)

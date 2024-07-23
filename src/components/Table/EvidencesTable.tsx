@@ -23,6 +23,7 @@ import MoveEvidenceModal from '../Modal/Evidence/MoveEvidenceModal'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useToast } from '@/hooks/toastProvider'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
+import { EmptyEvidenceData } from './EmptyEvidenceData'
 
 export default function EvidencesTable({
 	id,
@@ -466,7 +467,7 @@ export default function EvidencesTable({
 				renderCell={renderCell}
 				topContent={topContent}
 				// bottomContent={bottomContent}
-				emptyContent={<div>No se encontro elementos</div>}
+				emptyContent={<EmptyEvidenceData description='No hay evidencias para mostrar' />}
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
 			/>

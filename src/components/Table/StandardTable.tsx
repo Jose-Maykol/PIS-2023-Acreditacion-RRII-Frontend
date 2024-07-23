@@ -25,6 +25,7 @@ import Link from 'next/link'
 import AssignmentModal from '../Modal/StandardManagement/AssignmentModal'
 import PencilIcon from '../Icons/PencilIcon'
 import { useQuery } from 'react-query'
+import { EmptyData } from './EmptyData'
 
 const statusColorMap: Record<string, ChipProps['color']> = {
 	'logrado satisfactoriamente': 'success',
@@ -277,7 +278,7 @@ export default function StandardTable () {
 						renderCell={renderCell}
 						topContent={topContent}
 						bottomContent={bottomContent}
-						emptyContent={<div className='flex justify-center items-center min-h-[400px] w-full'>No se encontro elementos</div>}
+						emptyContent={<EmptyData description='No hay estandares para mostrar' />}
 						classNames={classNames}
 					/>
 				)

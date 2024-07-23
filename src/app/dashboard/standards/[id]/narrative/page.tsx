@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic'
 import EnableNarrativeModal from '@/components/Modal/Narrative/EnableNarrativeModal'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useToast } from '@/hooks/toastProvider'
+import { EmptyEvidenceData } from '@/components/Table/EmptyEvidenceData'
 
 type NarrativePageParams = {
 	params: {
@@ -160,7 +161,7 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 					)
 					: (
 						<div className='flex flex-col items-center justify-center border rounded-md divide-gray-600 border-opacity-50 w-full min-h-[656px] outline-dashed outline-1 text-gray-400'>
-							Aun no hay narrativa
+							<EmptyEvidenceData description='Este estandar aún no tiene una narrativa'/>
 						</div>
 					)}
 			</div>
