@@ -7,7 +7,8 @@ const url = {
 	deleteNarrative: 'narratives',
 	enableNarrative: 'standards/:id/narratives/enable',
 	blockNarrative: 'standards/:id/narratives/block',
-	unlockNarrative: 'standards/:id/narratives/unlock'
+	unlockNarrative: 'standards/:id/narratives/unlock',
+	insertNarrative: 'standards/:id/narratives/insert'
 }
 
 export class NarrativeService extends BaseService {
@@ -44,6 +45,12 @@ export class NarrativeService extends BaseService {
 	public static async unlockNarrative (id: string) {
 		const { year, semester } = BaseService.getConfig()
 		const res = await api.post(`/${year}/${semester}/${url.unlockNarrative.replace(':id', id)}`)
+		return res.data
+	}
+
+	public static async insertNarrative (id: string, params: { evidence_code: string, url_evidence: string }) {
+		const { year, semester } = BaseService.getConfig()
+		const res = await api.post(`/${year}/${semester}/${url.insertNarrative.replace(':id', id)}`, params)
 		return res.data
 	}
 }

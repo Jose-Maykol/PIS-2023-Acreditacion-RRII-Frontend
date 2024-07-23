@@ -5,14 +5,14 @@ import React, { useEffect, useState, useMemo } from 'react'
 import { Input, Button, Breadcrumbs, BreadcrumbItem, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Select, Selection, SelectItem } from '@nextui-org/react'
 import { typeFiles } from '../../utils/StandardData'
 import CustomTable from './CustomTable'
-import CustomDropdown from '../Dropdown/CustomDropdown'
 import { EvidenceService } from '@/api/Evidence/EvidenceService'
 import { Evidence } from '@/types/Evidences'
-import { getFileIcon, getCommonIcon, formatIsoDateToCustom } from '@/utils/utils'
+import { getFileIcon, getCommonIcon } from '@/utils/utils'
 import { columnsEvidenceNarrative } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
 import { useNarrativeStore } from '@/store/useNarrativeStore'
 import LinkToIcon from '../Icons/LinkToIcon'
+import { NarrativeService } from '@/api/Narrative/narrativeService'
 
 
 export default function EvidencesNarrativeTable({
@@ -36,7 +36,6 @@ export default function EvidencesNarrativeTable({
 		path: '/',
 		key: 0
 	}])
-	const [blobURL, setBlobURL] = useState<string>('')
 	const [evidenceId, setEvidenceId] = useState<string>('')
 	const [isOpenModal, setIsOpenModal] = useState<boolean>(false)
 	const [reload, setReload] = useState<boolean>(false)
@@ -44,7 +43,6 @@ export default function EvidencesNarrativeTable({
 
 	useEffect(() => {
 		EvidenceService.getEvidencesByType(id, typeEvidence, params).then((res) => {
-			console.log('res.data', res.data)
 			const arr: Evidence[] = [...res.data.folders, ...res.data.evidences].map(
 				(evidence: Evidence) => {
 					evidence.id = evidence.type === 'evidence' ? `${evidence.type}-${evidence.file_id}` : `${evidence.type}-${evidence.folder_id}`
@@ -57,6 +55,16 @@ export default function EvidencesNarrativeTable({
 		setReload(false)
 		console.log('breadcrumbs', breadcrumbs)
 	}, [reload, params, typeEvidence])
+
+	const linkEvidence = (evidence: Evidence) => {
+		const { protocol, host } = window.location
+		const url:string = `${protocol}//${host}/evidences/${evidence.file_id}`
+		const code:string = evidence.evidence_code ?? ''
+		NarrativeService.insertNarrative(id, {
+			evidence_code: code,
+			url_evidence: url
+		})
+	}
 
 	const filteredItems = React.useMemo(() => {
 		let filteredEvidences = [...evidencesManagement]
@@ -118,7 +126,7 @@ export default function EvidencesNarrativeTable({
 			if (evidence.evidence_id) {
 				return (
 					<div className='invisible flex items-center justify-end group-hover/item:visible'>
-						<Button startContent={<LinkToIcon width={16} height={16} fill='fill-white'/>} color='success' className='text-white' size='sm' onClick={() => setEvidenceNarrative(evidence)}>Vincular</Button>
+						<Button startContent={<LinkToIcon width={16} height={16} fill='fill-white'/>} color='success' className='text-white' size='sm' onClick={() => linkEvidence(evidence)}>Vincular</Button>
 					</div>
 				)
 			} else {
@@ -229,22 +237,6 @@ export default function EvidencesNarrativeTable({
 						onValueChange={onSearchChange}
 					/>
 					<div className='flex gap-3'>
-						{/* <CustomDropdown
-							mode='selector'
-							triggerElement={
-								<Button endContent={getCommonIcon('chevron', 10)} variant='faded'>
-									Filtro por tipos
-								</Button>
-							}
-							triggerClassName='hidden sm:flex'
-							items={typeFiles}
-							itemsClassName='capitalize'
-							disallowEmptySelection
-							closeOnSelect={false}
-							selectedKeys={statusFilter}
-							selectionMode='multiple'
-							onSelectionChange={setStatusFilter}
-						/> */}
 						<Select
 							items={typesEvidences}
 							variant='bordered'
@@ -310,7 +302,6 @@ export default function EvidencesNarrativeTable({
 				columns={columnsEvidenceNarrative}
 				renderCell={renderCell}
 				topContent={topContent}
-				// bottomContent={bottomContent}
 				emptyContent={<div>No se encontro elementos</div>}
 				classNames={classNames}
 				onRowActionClick={onRowActionClick}
