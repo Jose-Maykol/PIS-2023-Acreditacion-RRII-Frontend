@@ -11,7 +11,6 @@ import { PartialStandard } from '@/types/Standard'
 import StandardIcon from '../Icons/StandardIcon'
 import ReportIcon from '../Icons/ReportIcon'
 import { Button } from '@nextui-org/react'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
 import { useSidebarStore } from '@/store/useSidebarStore'
 
 export default function SideBar({
@@ -23,7 +22,6 @@ export default function SideBar({
 }) {
 	const isAdmin = role === 'administrador'
 	const { isSidebarOpen, toggleSidebar } = useSidebarStore()
-	const { isEditingNarrative } = useNarrativeStore()
 
 	return (
 		<nav
@@ -36,7 +34,7 @@ export default function SideBar({
 					isSidebarOpen ? 'justify-end' : 'justify-center pl-1'
 				}`}
 			>
-				<Button isIconOnly onPress={() => toggleSidebar(isSidebarOpen)} isDisabled={isEditingNarrative}>
+				<Button isIconOnly onPress={() => toggleSidebar(isSidebarOpen)}>
 					<div className={`${
 						isSidebarOpen ? 'rotate-0' : 'rotate-180'
 					} transform transition duration-1000 ease-in-out`}>

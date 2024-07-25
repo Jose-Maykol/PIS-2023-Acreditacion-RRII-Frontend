@@ -10,7 +10,6 @@ import { Evidence } from '@/types/Evidences'
 import { getFileIcon, getCommonIcon } from '@/utils/utils'
 import { columnsEvidenceNarrative } from '@/utils/data_evidence'
 import PdfVisualizer from '@/components/PdfVisualizer/PdfVisualizer'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
 import LinkToIcon from '../Icons/LinkToIcon'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 
@@ -27,7 +26,6 @@ export default function EvidencesNarrativeTable({
 	const rowsPerPage = 100
 	const hasSearchFilter = Boolean(filterValue)
 	const [evidencesManagement, setEvidencesManagement] = useState<Evidence[]>([])
-	const { setEvidenceNarrative } = useNarrativeStore()
 	const [params, setParams] = useState<{ parent_id: number | null }>({
 		parent_id: null
 	})

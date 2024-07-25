@@ -4,8 +4,6 @@ import { Tooltip } from '@nextui-org/react'
 import Link from 'next/link'
 import { useRouter, usePathname } from 'next/navigation'
 import React from 'react'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
-import { useToast } from '@/hooks/toastProvider'
 
 interface SideBarItemProps {
   isOpen: boolean
@@ -32,16 +30,9 @@ export default function SideBarItem({
 	const iconFill = React.cloneElement(icon as React.ReactElement, {
 		fill: fillClassName
 	})
-	const { isEditingNarrative } = useNarrativeStore()
-	const { showToast, updateToast } = useToast()
 	const router = useRouter()
 
 	const handleClick = (link: any) => {
-		if (isEditingNarrative) {
-			const notification = showToast('verificando...')
-			updateToast(notification, 'No es posible realizar esta acción mientras la narrativa este siendo editada', 'info')
-			return
-		}
 		router.push(link)
 	}
 

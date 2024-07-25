@@ -4,14 +4,12 @@
 import PencilIcon from '@/components/Icons/PencilIcon'
 import TrashIcon from '@/components/Icons/TrashIcon'
 import { Button, useDisclosure, Switch, Avatar, Badge, Popover, PopoverTrigger, PopoverContent, Card, CardHeader, Chip } from '@nextui-org/react'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NarrativeService } from '@/api/Narrative/narrativeService'
 import { useYearSemesterStore } from '@/store/useYearSemesterStore'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import EnableNarrativeModal from '@/components/Modal/Narrative/EnableNarrativeModal'
-import { useNarrativeStore } from '@/store/useNarrativeStore'
-import { useToast } from '@/hooks/toastProvider'
 
 type NarrativePageParams = {
 	params: {
@@ -22,7 +20,6 @@ type NarrativePageParams = {
 export default function NarrativePage({ params }: NarrativePageParams) {
 	const { isOpen, onOpen, onOpenChange } = useDisclosure()
 	const { year, semester } = useYearSemesterStore()
-	const { isNarrativeBlock, setNarrativeEnabled } = useNarrativeStore()
 	const [narrative, setNarrative] = useState<string>('')
 	const [narrativeDocumentExist, setNarrativeDocumentExist] = useState<boolean>(false)
 	const [isEditable, setIsEditable] = useState<boolean>(false)
@@ -32,7 +29,6 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 	const [data, setData] = useState<any>({})
 	const id = Number(params.id)
 	const router = useRouter()
-	const { showToast, updateToast } = useToast()
 
 	const DeleteNarrativeModal = dynamic(() => import('@/components/Modal/Narrative/DeleteNarrativeModal'), {
 		ssr: false
@@ -44,7 +40,6 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 				setData(res.data)
 				setIsEditable(res.data.narrative_is_active)
 				setIsEditMode(res.data.narrative_is_active)
-				setNarrativeEnabled(res.data.narrative_is_active)
 				setNarrative(res.data.narrative)
 				setNarrativeDocumentExist(res.data.document_id !== null)
 			}).catch((err: any) => {
@@ -52,19 +47,10 @@ export default function NarrativePage({ params }: NarrativePageParams) {
 			})
 		}
 		setRefresh(false)
-	}, [year, semester, isNarrativeBlock, refresh])
+	}, [year, semester, refresh])
 
 	const handleEditNarrative = async () => {
-		await NarrativeService.blockNarrative(String(id)).then((res) => {
-			if (res.data.is_block && res.data.is_same_user) {
-				router.push(`/dashboard/standards/${id}/narrative/edit`)
-			} else if (res.data.is_block && !res.data.is_same_user) {
-				const notification = showToast('verificando')
-				updateToast(notification, `La narrativa ya esta siendo editada por ${res.data.user_name}`, 'info')
-			}
-		}).catch((err: any) => {
-			console.log('err de blockNarrative', err)
-		})
+		router.push(`/dashboard/standards/${id}/narrative/edit`)
 		setRefresh(true)
 	}
 
