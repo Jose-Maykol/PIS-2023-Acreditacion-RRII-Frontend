@@ -60,10 +60,6 @@ export default function EvidencesLayout({ params }: { params: { id: number }}) {
 		}).finally(() => setLoadingManager({ ...loadingManager, loadingPreview: false }))
 	}
 
-	// if (!evidenceData) {
-	// 	return null
-	// }
-
 	if (loadingManager.loadingPage) {
 		return (
 			<div className='flex items-center justify-center w-full h-screen bg-neutral-800 '>
