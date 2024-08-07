@@ -4,7 +4,8 @@ const nextConfig = {}
 module.exports = nextConfig
 
 module.exports = {
-	async redirects () {
+	basePath: '/acreditacion-app/app',
+	async redirects() {
 		return [
 			{
 				source: '/',

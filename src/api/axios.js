@@ -2,7 +2,7 @@ import axios from 'axios'
 import { SERVER_PATH } from '../../config'
 
 const api = axios.create({
-	baseURL: `${SERVER_PATH}/api`,
+	baseURL: `${SERVER_PATH}/acreditacion-app/api`,
 	timeout: 5000,
 	headers: {
 		Accept: 'application/json',

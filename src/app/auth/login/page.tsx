@@ -52,7 +52,7 @@ export default function AuthPage() {
 				localStorage.setItem('semester', semester.toString())
 			}
 		}
-		const url = `${SERVER_PATH}/api/auth/google`
+		const url = `${SERVER_PATH}/acreditacion-app/api/auth/google`
 		window.location.href = url
 	}
 
@@ -60,12 +60,13 @@ export default function AuthPage() {
 		DateSemesterService.getAll().then((res) => {
 			const data: YearSemester[] = res.data
 			setYearSemester(res.data)
-			const valueYear = Array.from(new Set(data.map(data => data.year)))
-				.map(year => ({ value: year.toString() }))
+			const valueYear = Array.from(new Set(data.map((data) => data.year))).map((year) => ({
+				value: year.toString()
+			}))
 			setYears(valueYear)
 			const valueSemesters = data.reduce((result, data) => {
 				if (data.year === parseInt(years[0].value)) {
-					const semesterValues = data.semester.map(s => ({ value: s }))
+					const semesterValues = data.semester.map((s) => ({ value: s }))
 					result.push(...semesterValues)
 				}
 				return result
@@ -77,7 +78,7 @@ export default function AuthPage() {
 	const filterSemester = (data: YearSemester[], selectedYear: string): { value: string }[] => {
 		return data.reduce((result, item) => {
 			if (item.year === parseInt(selectedYear)) {
-				const semesterValues = item.semester.map(s => ({ value: s }))
+				const semesterValues = item.semester.map((s) => ({ value: s }))
 				result.push(...semesterValues)
 			}
 			return result
@@ -118,12 +119,15 @@ export default function AuthPage() {
 
 	return (
 		<div className='flex flex-row items-center w-[800px] h-[600px] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-3xl overflow-hidden'>
-			<form className='flex flex-col justify-between flex-1 bg-lightBlue-600 w-max h-[600px] p-12' onSubmit={handleLoginWithGoogle}>
+			<form
+				className='flex flex-col justify-between flex-1 bg-lightBlue-600 w-max h-[600px] p-12'
+				onSubmit={handleLoginWithGoogle}
+			>
 				<div className='text-white'>
 					<p className='text-lg'>Bienvenido al sistema</p>
 					<h1 className='text-3xl uppercase font-bold'>GESTIÓN DE ESTÁNDARES DE ACREDITACIÓN</h1>
 				</div>
-				<div className='flex flex-col gap-3 m-auto' >
+				<div className='flex flex-col gap-3 m-auto'>
 					<Select
 						defaultSelectedKeys={[years[0].value]}
 						name='year'
@@ -134,14 +138,13 @@ export default function AuthPage() {
 						onSelectionChange={handleYearValue}
 						// onClose={() => setTouchedYear(true)}
 						disallowEmptySelection
-						className='w-[200px]'>
-						{
-							years.map((year) => (
-								<SelectItem key={year.value} value={year.value}>
-									{year.value}
-								</SelectItem>
-							))
-						}
+						className='w-[200px]'
+					>
+						{years.map((year) => (
+							<SelectItem key={year.value} value={year.value}>
+								{year.value}
+							</SelectItem>
+						))}
 					</Select>
 					<Select
 						defaultSelectedKeys={[semesters[0].value]}
@@ -153,24 +156,21 @@ export default function AuthPage() {
 						// onSelectionChange={handleSemesterValue}
 						// onClose={() => setTouchedSemester(true)}
 						disallowEmptySelection
-						className='w-[200px]'>
-						{
-							semesters.map((semester) => (
-								<SelectItem key={semester.value} value={semester.value}>
-									{semester.value}
-								</SelectItem>
-							))
-						}
+						className='w-[200px]'
+					>
+						{semesters.map((semester) => (
+							<SelectItem key={semester.value} value={semester.value}>
+								{semester.value}
+							</SelectItem>
+						))}
 					</Select>
 				</div>
 				<Button
 					color='default'
 					radius='sm'
 					type='submit'
-					startContent={<Image
-						alt='logo-unsa'
-						className='w-5 mx-1'
-						src={logoUnsa}/>}>
+					startContent={<Image alt='logo-unsa' className='w-5 mx-1' src={logoUnsa} />}
+				>
 					<strong className='mx-2 uppercase text-xs'>Accede con tu cuenta institucional</strong>
 				</Button>
 			</form>
@@ -180,7 +180,8 @@ export default function AuthPage() {
 					height={500}
 					width={400}
 					className='w-auto h-[500px] p-8'
-					src={login}/>
+					src={login}
+				/>
 			</div>
 		</div>
 	)
