@@ -88,7 +88,7 @@ export default function AuthPage() {
 	useEffect(() => {
 		if (typeof window !== 'undefined' && window.localStorage) {
 			if (localStorage.getItem('access_token')) {
-				window.location.href = '/dashboard'
+				window.location.href = '/acreditacion-app/app/dashboard'
 			}
 		}
 		const paramsGoogle = location.search
@@ -111,7 +111,7 @@ export default function AuthPage() {
 					// Se guardan los datos en el local storage
 					localStorage.setItem('access_token', token)
 					localStorage.setItem('auth_user', JSON.stringify(authUser))
-					window.location.href = '/dashboard'
+					window.location.href = '/acreditacion-app/app/dashboard'
 				}
 			})
 		}
